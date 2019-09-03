@@ -12,7 +12,7 @@ description: ""
 
 **七龙珠里的元气弹**
 
-![img](https://mmbiz.qpic.cn/mmbiz_png/Rwm5ZPsZ6wv1JpL1ZMF85QXQJWgpuP3l1dtaw10HAkvQ3cFF9KW0SBV7WFH3gsQWicfCgZibSa6lia7DwMZ2rwyTA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![EBX-IqpUYAEkJTP?format=jpg&name=medium](https://tva1.sinaimg.cn/large/006y8mN6ly1g6m8onj2xij30sg0jx0ui.jpg)
 
 这是一群香港示威者把激光笔的光束汇聚到一张反光板上，以干扰警方行动。像七龙珠里孙悟空把大家的力量汇聚起来形成超大元气弹的画面。非常有想象力。
 
@@ -36,11 +36,13 @@ description: ""
 
 这是个创造快乐的游戏，拥有它的朋友可以玩玩我制作的地图：9PB-WGX-WVF
 
-![img](https://mmbiz.qpic.cn/mmbiz_png/Rwm5ZPsZ6wv1JpL1ZMF85QXQJWgpuP3l72QYNYa9ibPqjR9icajMeNV2ddkuaT5eRIxYLicKnLYdR8fp0libQ7pUKQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![image-20190902163956190](https://tva1.sinaimg.cn/large/006y8mN6ly1g6m8pb1q5fj30qm0dg17n.jpg)
 
 **任意听播客**
 
 这个网站<https://getpodcast.xyz>可以把最受欢迎的中文博客添加到任意你常用的podcast客户端。
+
+![image-20190902164259542](https://tva1.sinaimg.cn/large/006y8mN6ly1g6m8phqnqhj31cn0u07k1.jpg)
 
 
 

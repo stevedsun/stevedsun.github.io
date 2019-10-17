@@ -61,7 +61,7 @@ url = "https://twitter.com/way2steve"
 [[params.social]]
 name = "RSS"
 icon = "rss"
-url = "http://sund.site/index.rss.xml"
+url = "http://sund.site/index.xml"
 
 
 # Enable tags.

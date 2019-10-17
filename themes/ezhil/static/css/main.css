@@ -122,7 +122,11 @@ ul.flat {
 ul.flat li {
     display: inline-block;
     list-style: none;
-	margin-left: 0
+    margin-left: 0
+}
+
+ul.flat li a {
+    font-weight: bold;
 }
 
 .prevent-collapse {
@@ -170,8 +174,7 @@ ul {
 }
 
 .header {
-	margin-bottom: 20px;
-	padding-bottom: 20px;
+    padding-bottom: 20px;
 }
 
 .header h1,
@@ -183,7 +186,7 @@ ul {
 }
 
 .header h2 {
-    font-size: 1.125rem;
+    font-size: 1.0rem;
 }
 
 .header nav {
@@ -211,7 +214,8 @@ ul {
 
 .header .site-description {
 	display: flex;
-	justify-content: space-between;
+    justify-content: space-between;
+    margin-top: 10px;
 }
 
 .header .site-description nav {
@@ -265,7 +269,7 @@ ul {
 
 .footer {
 	text-align: right;
-	font-size: 0.75em;
+	font-size: x-small;
 	color: #999;
 	border-top: 1px solid #f4f4f4;
     padding: 20px 0;
@@ -314,4 +318,8 @@ ul {
 	body {
 		font-size: 14px;
 	}
+}
+
+.more-article {
+    font-size: small;
 }

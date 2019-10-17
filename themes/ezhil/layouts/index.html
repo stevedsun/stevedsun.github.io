@@ -6,9 +6,6 @@
 		 {{ partial "head.html" . }}
 
 		<div class="recent-posts section">
-			<h2 class="section-header">
-				Recent posts
-			</h2>
 			<div class="posts">
 				{{- $.Scratch.Set "counter" 0 -}}
 				{{- range .Data.Pages -}}
@@ -24,7 +21,7 @@
 				{{- end -}}
 				{{- end -}}
 
-				<a href="/posts">All articles →</a>
+				<a href="/posts" class="more-article">...更多文章</a>
 			</div>
 		</div>
 	</div>

@@ -26,15 +26,15 @@ disqusShortname = "v2steve"
 	featherIconsCDN = true
 
 # Main menu which appears below site header.
-[[menu.main]]
-name = "Home"
-url = "/"
-weight = 1
+# [[menu.main]]
+# name = "Home"
+# url = "/"
+# weight = 1
 
-[[menu.main]]
-name = "All posts"
-url = "/posts"
-weight = 2
+# [[menu.main]]
+# name = "All posts"
+# url = "/posts"
+# weight = 2
 
 # [[menu.main]]
 # name = "About"

@@ -1,6 +1,6 @@
 baseURL = "http://sund.site/"
 languageCode = "en-us"
-title = "失眠下坠"
+title = "電波障害"
 theme = "ezhil"
 
 # Enable syntax highlighting.
@@ -15,7 +15,7 @@ disqusShortname = "v2steve"
 
 [params]
 	# Blog subtitle which appears below blog title. Supports markdown.
-	subtitle = "Boringly normal blog of SUN Di"
+    subtitle = "微信公众号「電波障害」的博客"
 	# Number of posts to show in recent posts list (Optional). Defaults to 10.
 	recentPostsCount = 10
 	# Content types which are excluded from recent posts and archive page (Optional). Defaults to ["page"]
@@ -56,12 +56,12 @@ url = "https://github.com/sundiontheway"
 [[params.social]]
 name = "Twitter"
 icon = "twitter"
-url = "https://twitter.com/v2steve"
+url = "https://twitter.com/way2steve"
 
 [[params.social]]
 name = "RSS"
 icon = "rss"
-url = "http://sund.site/index.xml"
+url = "http://sund.site/index.rss.xml"
 
 
 # Enable tags.

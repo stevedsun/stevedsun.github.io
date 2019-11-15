@@ -1,5 +1,5 @@
 # Site settings
-baseurl = "https://sund.site"
+baseurl = "http://sund.site"
 languageCode = "en-us"
 title = "電波障害"
 theme = "hugo-cactus-theme"

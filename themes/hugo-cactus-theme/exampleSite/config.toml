@@ -1,20 +1,20 @@
 # Site settings
-baseurl = "https://sund.site/"
-themesDir = "./themes"
+baseurl = "https://example.org/"
+themesDir = "../.."
 languageCode = "en-us"
-title = "電波障害"
+title = "Hugo Cactus Theme"
 theme = "hugo-cactus-theme"
 # Enter your tracking code to enable Google Analytics
-googleAnalytics = "UA-64688885-1"
+googleAnalytics = ""
 # Disable comments by leaving disqusShortname empty
-disqusShortname = "v2steve"
+disqusShortname = "spf13"
 
 [params]
-	name = "Steve Sun"
-	description = "Blog of Steve Sun"
-	bio = "Programmer, Ricoh GR II User"
+	name = "John Doe"
+	description = "Describe your website"
+	bio = "Blogger & Programmer"
 	# Enter optionally your twitter account
-	twitter = "https://twitter.com/way2steve"
+	twitter = "Your Twitter account"
 	enableRSS = true
 
 	# Integrate Javascript files or stylesheets by adding the url to the external assets or by
@@ -34,7 +34,7 @@ disqusShortname = "v2steve"
 	readMore = ""
 	copyright = ""
 	# Sharing options and author information in posts
-	aboutAuthor = "微信公众号: 電波障害"
+	aboutAuthor = "I'm an blogger."
 	tweet = ""
 	share = ""
 	# 404 page
@@ -48,7 +48,7 @@ disqusShortname = "v2steve"
 
 # Add additional social link entries underneath
 [social]
-    twitter  = "https://twitter.com/way2steve"
-    github   = "https://www.github.com/sundiontheway"
-    instagram = "https://www.instagram.com/_steve_sun_/?hl=zh-cn"
-    rss = "https://sund.site/index.xml"
+    twitter  = "https://www.twitter.com/"
+    facebook = "https://www.facebook.com/"
+    github   = "https://www.github.com/"
+    dribble  = "https://www.dribbble.com/"

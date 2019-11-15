@@ -1,7 +1,7 @@
 ---
 title: Python 巧妙地将rpc接口封装成pythonic的链式调用
 date: 2016-10-25T15:40:43
-description: "这是一个外国人实现的Zabbix(一个开源监控工具)的Python Client——pyzabbix里的代码片段"
+description: ""
 ---
 
 这是一个外国人实现的Zabbix(一个开源监控工具)的Python Client——pyzabbix里的代码片段。

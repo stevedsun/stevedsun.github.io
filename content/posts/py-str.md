@@ -1,7 +1,7 @@
 ---
 title: "Python2 中字符类型的一些坑"
 date: 2017-01-11T11:09:00
-description: "Python 2.x 处理字符经常会出现意料之外的效果。其中最大的原因就是对`str`类型做了双重标准"
+description: "Python 2.x对str类型的双重标准"
 ---
 
 

@@ -1,7 +1,7 @@
 ---
 title:  "Python yield关键字的底层实现"
 date: 2016-12-28T18:00:00
-description: "这几天面试被问到类似的问题，顺便看了看Python的源码，参考网上的教程，总结一下yield关键字在C层面是如何实现的"
+description: "总结一下yield关键字在C层面是如何实现的"
 ---
 
 这几天面试被问到类似的问题，顺便看了看Python的源码，参考网上的教程，总结一下yield关键字在C层面是如何实现的。

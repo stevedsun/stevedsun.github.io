@@ -1,7 +1,7 @@
 ---
 title: "macbook安装ubuntu"
 date: 2013-01-04T00:00:00
-description: "如何在macbook上安装Ubuntu"
+description: ""
 ---
 
 __注意，ubuntu和xubuntu安装上有一定差别，请严格按照你选择的系统版本流程安装__

@@ -30,7 +30,7 @@ disqusShortname = "v2steve"
 	# Pagination links
 	olderPosts = ""
 	newerPosts = ""
-	readMore = ""
+	readMore = "更多文章"
 	copyright = ""
 	# Sharing options and author information in posts
 	aboutAuthor = "微信公众号: 電波障害"

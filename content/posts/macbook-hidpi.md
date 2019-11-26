@@ -6,24 +6,52 @@ description: ""
 
 ---
 
-以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体非常小，换成 1080P 又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI，这里需要趟好几个坑才能最终实现目的，总结出来供后来趟坑者参考。下文的教程结合了 Github 上[某个热心群众的分享](https://github.com/syscl/Enable-HiDPI-OSX/issues/49)。本教程使用的系统版本：MacOS 10.15.1。
+以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户[ZeRo° Xu](https://github.com/xzhih) 在 [一键开启HiDPI脚本](https://github.com/xzhih/one-key-hidpi) 里的 [Github Issue](https://github.com/syscl/Enable-HiDPI-OSX/issues/49) 和一篇博文 [《为 mac 连接的 2k 显示器开启 HiDPI》](https://www.smslit.top/2019/01/02/mac_hidpi/)。
 
-## 0. 安装 RDM
+
+
+## 什么是 HiDPI
+
+引用自 Github 用户 [ZeRo° Xu](https://github.com/xzhih) ：
+
+> 它使用横纵 2 个物理像素也就是 4 个物理像素来显示 1 个像素区域，结果就是图像的细节得到翻倍、更清晰、边缘更平滑。
+>
+> 拿 13 寸的 MacBook Pro 举例，它的屏幕物理分辨率是 2560 x 1600，所以原生的 HIDPI 分辨率就是 1280x800。更高的一档 1440x900 hidpi 缩放分辨率，则是虚拟出一个 2880x1800 的分辨率，再进行软缩放输入。所以你能发现苹果的电脑总是有很高的分辨率。
+>
+> 好了，既然你的屏幕是 1080p，本身就没有那么多像素去合成 HIDPI，如果以原生的显示计算，你这屏幕的 1080p 分辨率应该是 960x540，这么低的分辨率你是没法用的，所以就有了这个脚本。
+>
+> 这个脚本的功能是虚拟出比你的屏幕物理分辨率更高的假分辨率，也就是你看到的 3360 x 1888，这样你就可以使用 1680 x 944 hidpi 这个缩放分辨率了。
+>
+> 如果你要开启 1080p 的 HIDPI 分辨率，就虚拟一个 3840 x 2160 的假分辨率，然后 MacOS 会使用 4 个像素来显示 1 个像素区域，也就是和你物理分辨率一样的 1080p 分辨率，开不开启看起来没任何区别，最大的效果就是显卡压力增大系统变卡、截图可以得到高分辨率图像。
+
+## 自动配置 HiDPI
+
+上文 [链接](https://github.com/xzhih/one-key-hidpi) 里提到一键配置脚本，你不妨先按照脚本的步骤开启 HiDPI 试试。但是脚本并没有适配所有显示器的情况（至少我的 Dell P2416D 使用后无效），所以就有了下面的步骤。
+
+## 手动配置 HiDPI
+
+本教程测试环境：
+
+- 笔记本：MacBook Pro (Retina, 15-inch, Mid 2015)
+- 显示器：Dell P2416D
+- 操作系统：MacOS Catalina (Version 10.15.1)
+
+### 0. 安装 RDM
 
 相信很多人已经装过这个工具了，它是用来修改显示分辨率的，如果没装，请在[RDM下载页面](https://avi.alkalay.net/software/RDM/)安装它。
 
-## 1. 关闭 Mac 的 SIP
+### 1. 关闭 Mac 的 SIP
 
 SIP 是苹果公司为防止你胡乱篡改系统文件用的保护机制，请先按照下面步骤把它关闭，以便后续操作：
 
-1. 关机
+1. 关机（最好先手机拍个照把这4步记录下来）
 2. 按`command（⌘）+ R`+电源键开机，自动进入恢复模式
 3. 选择上边菜单栏的`实用工具`中的`终端`
 4. 输入命令`csrutil disable`
 
-最后终端显示`Successfully……`等一大堆文字就说明你成功了。你可以输入`reboot`重启。等下文的全部设置都完成后，你如果想恢复 SIP，就重复步骤 1 到 3，在第 4 步输入`csrutil enable`就好了。
+最后终端显示 「Successfully……」 等一大堆文字就说明你成功了。你可以输入`reboot`重启。等下文的全部设置都完成后，你如果想恢复 SIP，就重复步骤 1 到 3，在第 4 步输入`csrutil enable`就好了。
 
-## 2. 开启 macOS 的 HiDPI 选项
+### 2. 开启 macOS 的 HiDPI 选项
 
 再次重启后进入系统，打开终端输入
 
@@ -31,7 +59,7 @@ SIP 是苹果公司为防止你胡乱篡改系统文件用的保护机制，请�
 sudo defaults write /Library/Preferences/com.apple.windowserver.plist DisplayResolutionEnabled -bool true
 ```
 
-## 3. 查询你的外接显示器的编号
+### 3. 查询你的外接显示器的编号
 
 这一步相当重要，先介绍两个命令
 
@@ -40,7 +68,7 @@ ioreg -l | grep "DisplayVendorID"
 ioreg -l | grep "DisplayProductID"
 ```
 
-我其实也不懂它们是什么意思，猜测上边的是显示器供应商 ID，下边的是产品 ID。重要的是你要找到你的显示器对应的`DisplayVendorID`和`DisplayProductID`，按照下面的步骤来。
+这两条命令用来查询你的显示器供应商 ID `DisplayVendorID` 和产品 ID `DisplayProductID`。接下来你要找到你的显示器对应的`DisplayVendorID`和`DisplayProductID`：
 
 1. 拔掉显示器的 HDMI 或者 DP 线
 2. 分别输入上面两个命令之后`return(↩)`，每个命令会返回一个带有数字的结果。那个数字就是 macbook 默认的`DisplayVendorID`和`DisplayProductID`了
@@ -52,7 +80,13 @@ ioreg -l | grep "DisplayProductID"
 
 之后在这个刚建好的文件夹下增加一个文件，命名为`DisplayProductID-[你刚才查到的DisplayProductID的16进制数]`，例如`DisplayProductID-a0c3`。
 
-复制下面的内容，粘贴到你刚创建好的文件里。
+### 4. 为你的显示器生成 plist 文件
+
+到 [这个网站](https://comsysto.github.io/Display-Override-PropertyList-File-Parser-and-Generator-with-HiDPI-Support-For-Scaled-Resolutions/) ，在左侧的空里分别输入显示器型号，DisplayProductID 和 DisplayVendorID，注意填16进制的数字，并且检查下后边10进制的数字是不是和你刚才命令查到的一致。如果需要添加自己额外的分辨率，直接在下边新建一条分辨率配置就行。最后，复制右边生成 XML 格式文本，粘贴到刚才新建的文件里。（也可以直接从网站下载文件，去掉文件名后缀 `.plist` ）
+
+<img src="https://tva1.sinaimg.cn/large/006y8mN6ly1g9bg60hippj30nm0rqwha.jpg" alt="显示器配置" style="zoom:50%;" />
+
+XML 文件类似下边这样：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -79,9 +113,7 @@ ioreg -l | grep "DisplayProductID"
 </plist>
 ```
 
-修改上述文件中两个值，把`41156`替换成你显示器`DisplayProductID`的 10 进制数字（注意不是 16 进制了哦），把`4268`替换成你显示器的`DisplayVendorID`的 10 进制数字。保存文件。
-
-## 4. 复制配置文件到系统配置目录
+### 4. 复制 plist 配置文件到系统配置目录
 
 这一步就是把刚才新建的配置文件复制到你系统目录里，你直接复制通常会提示你系统目录是「只读」的，不允许你胡作非为。所以你先要在终端执行下面的命令：
 
@@ -93,7 +125,7 @@ sudo mount -uw /
 
 接下来打开系统文件夹`/System/Library/Displays/Contents/Resources/Overrides/`，你会发现一大堆跟你刚才文件夹命名相似的目录。把你新建的文件夹丢进去，和它们混在一起，假装它原来就是其中一员。重启。
 
-## 5. 修改分辨率
+### 5. 修改分辨率
 
 重启之后又进入系统，首先打开 RDM，你会在菜单栏看见它：
 

@@ -1,5 +1,5 @@
 ---
-title: "Kevin Kelly's Hacking and 《列子天瑞》的盗亦有道"
+title: "Kevin Kelly's Hacking 和 《列子天瑞》的盗亦有道"
 date: 2019-12-05T23:15:43+08:00
 description: ""
 ---

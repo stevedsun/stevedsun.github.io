@@ -29,7 +29,7 @@ description: ""
 
 斯诺登在《永久记录》中提到，美国中央情报局的监控系统，可以随时打开全球任何人的摄像头、麦克风，他的一些中情局同事甚至用截取到的女性裸照作为内部的「流通货币」。
 
-![](/Users/dsun/Downloads/配图1.jpeg)
+![](https://tva1.sinaimg.cn/large/006tNbRwgy1g9oqelxc04j31120rttc1.jpg)
 
 ## 机器并不像人一样学习，人工智能也没有真正的智能
 

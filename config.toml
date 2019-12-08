@@ -1,12 +1,16 @@
 # Site settings
-baseurl = "http://sund.site"
+baseurl = "http://sund.site/"
 languageCode = "en-us"
-title = "電波障害"
+title = "电波障害"
 theme = "hugo-cactus-theme"
 # Enter your tracking code to enable Google Analytics
 googleAnalytics = "UA-64688885-1"
 # Disable comments by leaving disqusShortname empty
 disqusShortname = "v2steve"
+rssLimit = 10  # 限制 RSS 文章输出的数量
+
+[author]
+    name = "Steve Sun"
 
 [params]
 	name = "Steve Sun"
@@ -33,7 +37,7 @@ disqusShortname = "v2steve"
 	readMore = "更多文章"
 	copyright = ""
 	# Sharing options and author information in posts
-	aboutAuthor = "微信公众号: 電波障害"
+	aboutAuthor = "微信公众号: 电波障害"
 	tweet = ""
 	share = ""
 	# 404 page

@@ -53,7 +53,7 @@ description: ""
 
 聊天软件是除了浏览器之外第二大上网工具，[一天世界](https://yitianshijie.net/)曾经整理了一个聊天软件安全性的表格，请参考选择适合自己的聊天工具（「人生最痛苦的是梦醒了无路可走」——鲁迅）
 
-![](https://itgonglun.files.wordpress.com/2017/07/screen-shot-2017-07-19-at-21-55-34.png?w=599&h=529&zoom=2)
+![聊天软件安全性](https://tva1.sinaimg.cn/large/006tNbRwgy1g9oqs2klvuj30xa0te44r.jpg)
 
 ### 尽量不填写真实的个人信息
 
@@ -71,7 +71,7 @@ description: ""
 
 值得一提的是，自己家的 WiFi 也时不时换一下密码。现在随便下载个黑客软件进入你家 WiFi 截取你流量搞个[中间人攻击](https://baike.baidu.com/item/%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB)根本没有技术含量。
 
-###「盯紧」摄像头
+### 「盯紧」摄像头
 
 以前某个国产社交软件后台启动摄像头，并把视频传到网络上。现在都能搜到当年泄露的部分女孩子只穿内衣，在不知情时拍摄的视频。请在非不要时，不给任何 App 摄像头、麦克风或任何读取你敏感信息的权限。
 

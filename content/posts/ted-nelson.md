@@ -1,7 +1,7 @@
 ---
 title: "互联网曾经有另一种可能"
 date: 2019-12-15T16:42:22+08:00
-description: ""
+description: "一个失落的平行世界里，有着万维网的另一种可能。"
 ---
 
 ![《Computer Lib》](https://tva1.sinaimg.cn/large/006tNbRwgy1g9xipmwzxxj313s0oaqm6.jpg)

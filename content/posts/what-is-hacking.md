@@ -1,7 +1,7 @@
 ---
 title: "Kevin Kelly's Hacking 和 《列子天瑞》的盗亦有道"
 date: 2019-12-05T23:15:43+08:00
-description: ""
+description: "「万物自天成，盗者本无心」"
 ---
 
 [凯文凯利](https://kk.org/)在《失控》中有一句话：

@@ -2,11 +2,9 @@
 
 title: "Nintendo Switch 联机优化策略"
 date: 2019-10-07T22:18:00+08:00
-description: ""
+description: "这篇文章旨在帮助苦于Nintendo Switch联机延迟大，速度慢的玩家，提高游玩体验。"
 
 ---
-
-这篇文章旨在帮助苦于Nintendo Switch联机延迟大，速度慢的玩家，提高游玩体验。
 
 ## 简单方法
 

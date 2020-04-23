@@ -11,7 +11,6 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
 
 [author]
     name = "Steve Sun"
-
 [params]
 	name = "Steve Sun"
 	description = "Blog of Steve Sun"
@@ -53,5 +52,4 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
 [social]
     twitter  = "https://twitter.com/way2steve"
     github   = "https://www.github.com/sundiontheway"
-    instagram = "http://stevesun.zine.press"
     rss = "https://sund.site/index.xml"

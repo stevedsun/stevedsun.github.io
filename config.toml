@@ -16,7 +16,7 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
 	description = "Blog of Steve Sun"
 	bio = "Programmer, Ricoh GR II User"
 	# Enter optionally your twitter account
-	twitter = "https://twitter.com/way2steve"
+	twitter = "way2steve"
 	enableRSS = true
 
 	# Integrate Javascript files or stylesheets by adding the url to the external assets or by

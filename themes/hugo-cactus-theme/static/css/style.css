@@ -180,10 +180,15 @@ a,
 	transition: all 0.15s ease;
 }
 
-ul, ol 	{ margin:0; padding:0; margin-bottom: 20px; }
-ul { list-style-type:circle; }
+ul, ol 	{
+    margin:0;
+    padding:0;
+    margin-bottom: 20px;
+    padding-left: 30px;
+}
+/* ul { list-style-type:circle; } */
 ol { list-style: decimal; }
-li	{  list-style-position:inside; }
+/* li	{  list-style-position:inside; } */
 
 /* Line Height */
 #post-body, p { line-height:1.7; }
@@ -394,7 +399,7 @@ Post List
 
 #post-list li,#archive-list li {
 	border-top: 1px solid #eee;
-	padding-top: 20px;
+	padding-top: 10px;
 	padding-bottom: 20px;
 	list-style-type: none;
 	margin-bottom: 0;

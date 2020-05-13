@@ -188,6 +188,10 @@ li	{  list-style-position:inside; }
 /* Line Height */
 #post-body, p { line-height:1.7; }
 
+#post-body {
+    text-align: justify;
+}
+
 b, strong { font-weight: 500;
   color: #1E2025; }
 em, i { font-style: italic; }

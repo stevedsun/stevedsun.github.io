@@ -1,20 +1,45 @@
 # Site settings
 baseurl = "https://sund.site/"
-languageCode = "en-us"
+languageCode = "zh-cn"
 title = "电波障害"
 theme = "hugo-cactus-theme"
 # Enter your tracking code to enable Google Analytics
 googleAnalytics = "UA-64688885-1"
 # Disable comments by leaving disqusShortname empty
-# disqusShortname = "v2steve"
+disqusShortname = "v2steve"
 rssLimit = 10  # 限制 RSS 文章输出的数量
+
+[menu]
+  [[menu.main]]
+    name = "工具教程"
+    post = "<span class='alert'>New!</span>"
+    url = "/cool-tools/"
+    weight = -113
+
+  [[menu.main]]
+    name = "数据工程字典"
+    post = "<span class='alert'>New!</span>"
+    url = "/data-engineering/"
+    weight = -111
+
+  [[menu.main]]
+    name = "思维方式"
+    post = "<span class='alert'>New!</span>"
+    url = "/thinking/"
+    weight = -112
+
+  [[menu.main]]
+    identifier = "about"
+    name = "关于我"
+    url = "/about/"
+    weight = -110
 
 [author]
     name = "Steve Sun"
 [params]
 	name = "Steve Sun"
-	description = "Blog of Steve Sun"
-	bio = "Programmer, Ricoh GR II User"
+	description = "工具、思维方式和数据工程"
+	bio = "工具、思维方式和数据工程 | 微信公众号: 电波障害"
 	# Enter optionally your twitter account
 	twitter = "way2steve"
 	enableRSS = true

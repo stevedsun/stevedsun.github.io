@@ -28,11 +28,11 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
 	# translate or customize each string of the theme.
 
 	# Navigation links
-	home = ""
-	subscribe = ""
+	home = "首页"
+	subscribe = "订阅"
 	# Pagination links
-	olderPosts = ""
-	newerPosts = ""
+	olderPosts = "较早的文章"
+	newerPosts = "更新的文章"
 	readMore = "更多文章"
 	copyright = ""
 	# Sharing options and author information in posts

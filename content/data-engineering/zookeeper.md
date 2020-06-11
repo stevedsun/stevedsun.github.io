@@ -2,6 +2,7 @@
 title: ZooKeeper 帮助手册
 date: 2014-10-14T00:00:00
 description: "官方手册的个人翻译"
+aliases :  [/posts/zookeeper/]
 ---
 
 原文地址：

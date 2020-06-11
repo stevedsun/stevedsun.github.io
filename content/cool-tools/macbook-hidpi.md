@@ -3,7 +3,7 @@
 title: "为 Mac OS 10.15 开启 HiDPI，让 2K 显示器更舒适"
 date: 2019-11-24T16:11:00+08:00
 description: "本文教你强行开启 macbook 的 HiDPI 设置"
-
+aliases :  [/posts/MacBook-hidpi/]
 ---
 
 以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户[ZeRo° Xu](https://github.com/xzhih) 在 [一键开启HiDPI脚本](https://github.com/xzhih/one-key-hidpi) 里的 [Github Issue](https://github.com/syscl/Enable-HiDPI-OSX/issues/49) 和一篇博文 [《为 mac 连接的 2k 显示器开启 HiDPI》](https://www.smslit.top/2019/01/02/mac_hidpi/)。

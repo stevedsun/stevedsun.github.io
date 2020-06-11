@@ -2,6 +2,7 @@
 title: "一篇心得，开始2020年写作之旅"
 date: 2019-12-28T18:49:56+08:00
 description: "写作者分享思想，同时也帮助自己思考。"
+aliases :  [/posts/2019-12-28_learn-to-write/]
 ---
 
 ![iga-palacz-zG0LiuCEMvA-unsplash](https://tva1.sinaimg.cn/large/006tNbRwgy1gacm51mivyj31900u0qv5.jpg)

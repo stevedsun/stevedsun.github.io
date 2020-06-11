@@ -2,6 +2,7 @@
 title: "一个购买数字商品的必备技能"
 date: 2020-03-30T23:39:33+08:00
 description: "关键时刻还是要借助万能的淘宝"
+aliases :  [/posts/2020-3-30_us-paypal/]
 ---
 
 ![图像](https://pbs.twimg.com/media/ET46ksZUUAA9t_l?format=jpg&name=large)

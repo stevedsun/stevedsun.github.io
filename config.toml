@@ -11,7 +11,7 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
 
 [menu]
   [[menu.main]]
-    name = "工具教程"
+    name = "工具说明书"
     post = "<span class='alert'>New!</span>"
     url = "/cool-tools/"
     weight = -113
@@ -20,13 +20,13 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
     name = "数据工程字典"
     post = "<span class='alert'>New!</span>"
     url = "/data-engineering/"
-    weight = -111
+    weight = -112
 
   [[menu.main]]
-    name = "思维方式"
+    name = "脑洞"
     post = "<span class='alert'>New!</span>"
     url = "/thinking/"
-    weight = -112
+    weight = -111
 
   [[menu.main]]
     identifier = "about"

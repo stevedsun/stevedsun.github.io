@@ -6,10 +6,6 @@ description: "官方手册的个人翻译"
 
 原文地址：
 <http://zookeeper.apache.org/doc/r3.4.6/zookeeperProgrammers.html>  
-翻译：$teve  
-博客地址：<http://www.sund.site>  
-
-<!--more-->
 
 本文假设你已经具有一定分布式计算的基础知识。你将在第一部分看到以下内容：
 

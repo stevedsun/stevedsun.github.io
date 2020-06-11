@@ -65,8 +65,8 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
 	tweet = ""
 	share = ""
 	# 404 page
-	title404 = ""
-	subtitle404 = ""
+	title404 = "页面似乎不见了"
+	subtitle404 = "看看它在不在文章列表里?"
 
 	# Choose a font for the social icons in the footer. Either "mono-social" or "font-awesome"
 	iconFont = "mono-social"

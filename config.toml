@@ -17,9 +17,8 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
     weight = -113
 
   [[menu.main]]
-    name = "数据工程字典"
-    post = "<span class='alert'>New!</span>"
-    url = "/data-engineering/"
+    name = "数据工程维基"
+    url = "https://www.notion.so/dsun/d7b50db4b21445339ea867258f4f2039?v=cb71ea8670d2486f867bb1be43b0e7e9"
     weight = -112
 
   [[menu.main]]

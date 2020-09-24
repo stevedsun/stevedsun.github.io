@@ -38,7 +38,7 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
 [params]
 	name = "Steve Sun"
 	description = "工具、思维方式和数据工程"
-	bio = "工具、思维方式和数据工程 | 微信公众号: 电波障害"
+	bio = "工具、思维方式和数据工程"
 	# Enter optionally your twitter account
 	twitter = "way2steve"
 	enableRSS = true

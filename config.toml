@@ -6,7 +6,7 @@ theme = "hugo-cactus-theme"
 # Enter your tracking code to enable Google Analytics
 googleAnalytics = "UA-64688885-1"
 # Disable comments by leaving disqusShortname empty
-disqusShortname = "v2steve"
+# disqusShortname = "v2steve"
 rssLimit = 10  # 限制 RSS 文章输出的数量
 
 [menu]
@@ -16,10 +16,10 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
     url = "/cool-tools/"
     weight = -113
 
-  [[menu.main]]
-    name = "数据工程维基"
-    url = "https://www.notion.so/dsun/d7b50db4b21445339ea867258f4f2039?v=cb71ea8670d2486f867bb1be43b0e7e9"
-    weight = -112
+#  [[menu.main]]
+#    name = "数据工程维基"
+#    url = "https://www.notion.so/dsun/d7b50db4b21445339ea867258f4f2039?v=cb71ea8670d2486f867bb1be43b0e7e9"
+#    weight = -112
 
   [[menu.main]]
     name = "脑洞"

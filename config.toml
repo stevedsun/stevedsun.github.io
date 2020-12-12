@@ -22,7 +22,7 @@ rssLimit = 10  # 限制 RSS 文章输出的数量
 #    weight = -112
 
   [[menu.main]]
-    name = "脑洞"
+    name = "思维方式"
     post = "<span class='alert'>New!</span>"
     url = "/thinking/"
     weight = -111

@@ -1,79 +1,149 @@
-# Site settings
-baseurl = "https://sund.site/"
-languageCode = "zh-cn"
+baseURL = "https://sund.site"
 title = "电波障害"
-theme = "hugo-cactus-theme"
-# Enter your tracking code to enable Google Analytics
-googleAnalytics = "UA-64688885-1"
-# Disable comments by leaving disqusShortname empty
-# disqusShortname = "v2steve"
-rssLimit = 10  # 限制 RSS 文章输出的数量
+
+theme = "fuji"
+hasCJKLanguage = true
+enableEmoji = true
+enableRobotsTXT = true
+disableKinds = ["taxonomy"]
+ignoreErrors = ["error-disable-taxonomy"]
+
+## Change this two to switch between different language
+languageCode = "zh-cn"  # For RSS, view https://www.rssboard.org/rss-language-codes
+defaultContentLanguage = "zh-hans"  # For HTML page, now support: en, zh-hans, zh-hant, ja, nl
+
+summaryLength = 100 # Custom summary length, add <!--more--> in post file to custom split point
+paginate = 10
+
+# googleAnalytics = "UA-64688885-1" # Set your Google Analytics UA here
+
+[outputFormats]
+  [outputFormats.SearchIndex]
+    isPlainText = true
+    notAlternative = true
+    mediaType = "application/json"
+    path = "/search/"
+
+[outputs]
+  home = ["HTML", "RSS", "SearchIndex"]
+
+[permalinks]
+  posts = "/:year/:month/:title/" # Custom post links, e.g. "/:year/:month/:title/"
+
+[params]
+  author = "Steve Sun" # You can also set author in post front matter individually
+  subTitle = "关于技术、科技生活，希望每篇文章都能讲清楚一件事。"
+
+  # Source URL of the website, will appear in the footer
+  #sourceURL = "https://github.com/stevexsun/my_blog"
+
+  # Use CloudFlare Workers to accelerate the Google Analytics
+  # If you are using this please comment the googleAnalytics above
+  # Check https://github.com/SukkaW/cloudflare-workers-async-google-analytics for more details
+  # googleAnalyticsTid = "UA-000000000-0"
+  # googleAnalyticsRoute = "https://*.*.workers.dev/"
+
+  # Google AdSense
+  # The AdSense code will be inserted between the head tags of your site.
+  # googleAdsense = "0000000000000000"
+
+  # Word counter and read time indicator in post metadata
+  showWordCounter = true
+  showReadTime = false
+
+  # License in the footer
+  showLicenseInFooter = false
+
+  # License at the end of each post
+  showLicense = true
+  showToc = true
+
+  # Copyright
+  copyrightStartYear = "2021"
+
+  # Open Graph & Twitter Card variables
+  # You can also set description and images in post front matter individually
+  description = "A minimal Hugo theme with nice theme color."
+  og = "/img/og.png" # This will use the image called og.png in static/img folder
+
+  # Posts shown in homepage
+  mainSections = ["posts"]
+
+  # Bangumi image chart id
+  # bgmImageChart = "000000"
+
+  # License
+  license = "CC BY-NC-SA 4.0"
+  licenseLink = "http://creativecommons.org/licenses/by-nc-sa/4.0/"
+
+  # Comments
+  # utterances, see: https://utteranc.es/
+  # utterancesRepo = "*/*"
+  # utterancesIssueTerm = "pathname"
+
+  # Disqus, see: https://disqus.com/admin/install/platforms/universalcode/
+  # disqusShortname = "*********"
+  # Also use DisqusJS for accessing from Mainland China, see: https://github.com/SukkaW/DisqusJS
+  # If you want to set multiple api key, see theme's README for more details
+  # disqusJSApi = "https://*********/"
+  # disqusJSApikey = "**********"
+
+  # custom lazyload placeholder
+  # 16:9
+  lazyPlaceholder = "/assets/lazyload/dsrca_loading_480x270.svg"
+  # 32:9
+  lazyPlaceholderRow = "/assets/lazyload/dsrca_loading_960x270.svg"
+  # 8:9
+  lazyPlaceholderCol = "/assets/lazyload/dsrca_loading_480x540.svg"
+
+  # Let images display in full brightness under dark mode
+  # disableDarkImage = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true  # Enable user to embed HTML snippets in Markdown content
+  [markup.highlight]
+    codeFences = false  # Disable Hugo's code highlighter
+
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[taxonomies]
+  tag = "tags"
 
 [menu]
-  [[menu.main]]
-    name = "工具说明书"
-    post = "<span class='alert'>New!</span>"
-    url = "/cool-tools/"
-    weight = -113
-
-#  [[menu.main]]
-#    name = "数据工程维基"
-#    url = "https://www.notion.so/dsun/d7b50db4b21445339ea867258f4f2039?v=cb71ea8670d2486f867bb1be43b0e7e9"
-#    weight = -112
-
-  [[menu.main]]
-    name = "思维方式"
-    post = "<span class='alert'>New!</span>"
-    url = "/thinking/"
-    weight = -111
-
-  [[menu.main]]
-    identifier = "about"
-    name = "关于我"
+  [[menu.nav]]
+    name = "首页"
+    url = "/"
+    weight = 1
+#  [[menu.nav]]
+#    name = "归档"
+#    url = "/archives/"
+#    weight = 2
+  [[menu.nav]]
+    name = "关于"
     url = "/about/"
-    weight = -110
+    weight = 3
+#  [[menu.nav]]
+#    name = "搜索"
+#    url = "/search/"
+#    weight = 4
+  [[menu.nav]]
+    name = "RSS"
+    url = "/index.xml"
+    weight = 5
 
-[author]
-    name = "Steve Sun"
-[params]
-	name = "Steve Sun"
-	description = "工具、思维方式和数据工程"
-	bio = "工具、思维方式和数据工程"
-	# Enter optionally your twitter account
-	twitter = "way2steve"
-	enableRSS = true
-
-	# Integrate Javascript files or stylesheets by adding the url to the external assets or by
-	# linking local files with their path relative to the static folder, e.g. "css/styles.css"
-	customCSS = []
-	customJS  = []
-
-	# The variables below are optionally too and can be used to
-	# translate or customize each string of the theme.
-
-	# Navigation links
-	home = "首页"
-	subscribe = "订阅"
-	# Pagination links
-	olderPosts = "较早的文章"
-	newerPosts = "更新的文章"
-	readMore = "更多文章"
-	copyright = ""
-	# Sharing options and author information in posts
-	aboutAuthor = "微信公众号: 电波障害"
-	tweet = ""
-	share = ""
-	# 404 page
-	title404 = "页面似乎不见了"
-	subtitle404 = "看看它在不在文章列表里?"
-
-	# Choose a font for the social icons in the footer. Either "mono-social" or "font-awesome"
-	iconFont = "mono-social"
-    # The social icons can be styled differently if you use mono as font - circle, rounded, or empty
-    socialIconStyle = "circle"
-
-# Add additional social link entries underneath
-[social]
-    twitter  = "https://twitter.com/way2steve"
-    github   = "https://www.github.com/sundiontheway"
-    rss = "https://sund.site/index.xml"
+  [[menu.link]]
+    name = "GitHub"
+    url = "https://github.com/stevedsun"
+    weight = 1
+  [[menu.link]]
+    name = "Twitter"
+    url = "https://twitter.com/way2steve"
+    weight = 2
+  [[menu.link]]
+    name = "SSPAI"
+    url = "https://sspai.com/u/radiowave/posts"
+    weight = 3

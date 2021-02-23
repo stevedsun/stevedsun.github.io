@@ -3,6 +3,7 @@
 title: "为 Mac OS 10.15 开启 HiDPI，让 2K 显示器更舒适"
 date: 2019-11-24T16:11:00+08:00
 description: "本文教你强行开启 macbook 的 HiDPI 设置"
+tags: [Mac]
 aliases :  [/posts/MacBook-hidpi/]
 ---
 

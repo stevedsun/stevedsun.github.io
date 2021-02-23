@@ -1,6 +1,7 @@
 ---
 title: "macbook安装ubuntu"
 date: 2013-01-04T00:00:00
+tags: [Mac,Linux]
 description: ""
 ---
 

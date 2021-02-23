@@ -2,6 +2,7 @@
 title: "我们的隐私被谁拿走了"
 date: 2019-12-08T02:41:29+08:00
 description: "斯诺登的新书告诉我们的真相"
+tags: [读书]
 aliases :  [/posts/permanent-record/]
 ---
 

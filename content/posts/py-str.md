@@ -1,6 +1,7 @@
 ---
 title: "Python2 中字符类型的一些坑"
 date: 2017-01-11T11:09:00
+tags: [python]
 description: "Python 2.x对str类型的双重标准"
 ---
 

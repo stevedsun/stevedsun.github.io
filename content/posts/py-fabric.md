@@ -1,6 +1,7 @@
 ---
 title: "Python Fabric库无法启动后台进程的问题和解决办法"
 date: 2016-10-19T16:25:51
+tags: [python]
 description: "近期在调试fabric执行远程脚本时遇到的问题和产生原因"
 ---
 

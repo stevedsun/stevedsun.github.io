@@ -2,6 +2,7 @@
 title: "制定一个人的日本旅行计划"
 date: 2019-04-11T13:19:04+08:00
 description: "提高旅行体验，我从三个方面制定旅行计划"
+tags: [旅行]
 aliases :  [/posts/jp-travel/]
 ---
 

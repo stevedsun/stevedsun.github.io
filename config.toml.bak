@@ -1,0 +1,84 @@
+# Site settings
+baseurl = "https://sund.site/"
+languageCode = "zh-cn"
+title = "电波障害"
+# theme = "hugo-cactus-theme"
+theme = "fuji"
+# Enter your tracking code to enable Google Analytics
+googleAnalytics = "UA-64688885-1"
+# Disable comments by leaving disqusShortname empty
+# disqusShortname = "v2steve"
+rssLimit = 10  # 限制 RSS 文章输出的数量
+
+showLicense = true # Enable or disable license for all post
+showToc = true # Enable or disable ToC for all post
+showComments = false
+
+[menu]
+  [[menu.main]]
+    name = "工具说明书"
+    post = "<span class='alert'>New!</span>"
+    url = "/cool-tools/"
+    weight = -113
+
+#  [[menu.main]]
+#    name = "数据工程维基"
+#    url = "https://www.notion.so/dsun/d7b50db4b21445339ea867258f4f2039?v=cb71ea8670d2486f867bb1be43b0e7e9"
+#    weight = -112
+
+  [[menu.main]]
+    name = "思维方式"
+    post = "<span class='alert'>New!</span>"
+    url = "/thinking/"
+    weight = -111
+
+  [[menu.main]]
+    identifier = "about"
+    name = "关于我"
+    url = "/about/"
+    weight = -110
+
+[author]
+    name = "Steve Sun"
+[params]
+	name = "Steve Sun"
+	description = "工具、思维方式和数据工程"
+	bio = "工具、思维方式和数据工程"
+	# Enter optionally your twitter account
+	twitter = "way2steve"
+	enableRSS = true
+
+	# Integrate Javascript files or stylesheets by adding the url to the external assets or by
+	# linking local files with their path relative to the static folder, e.g. "css/styles.css"
+	customCSS = []
+	customJS  = []
+
+	# The variables below are optionally too and can be used to
+	# translate or customize each string of the theme.
+
+	# Navigation links
+	home = "首页"
+	subscribe = "订阅"
+	# Pagination links
+	olderPosts = "较早的文章"
+	newerPosts = "更新的文章"
+	readMore = "更多文章"
+	copyright = ""
+	# Sharing options and author information in posts
+	aboutAuthor = "微信公众号: 电波障害"
+	tweet = ""
+	share = ""
+	# 404 page
+	title404 = "页面似乎不见了"
+	subtitle404 = "看看它在不在文章列表里?"
+
+	# Choose a font for the social icons in the footer. Either "mono-social" or "font-awesome"
+	iconFont = "mono-social"
+    # The social icons can be styled differently if you use mono as font - circle, rounded, or empty
+    socialIconStyle = "circle"
+
+# Add additional social link entries underneath
+[social]
+    twitter  = "https://twitter.com/way2steve"
+    github   = "https://www.github.com/sundiontheway"
+    rss = "https://sund.site/index.xml"

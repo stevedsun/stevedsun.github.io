@@ -2,6 +2,7 @@
 title: "如何用七天重建小汤山医院"
 date: 2020-02-05T22:41:23+08:00
 description: "如何在 7 日内竣工一座医院？"
+tags: [日常记录]
 aliases :  [/posts/2020-2-5_xiaotangshan/]
 ---
 

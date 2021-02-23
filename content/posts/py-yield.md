@@ -1,6 +1,7 @@
 ---
 title:  "Python yield关键字的底层实现"
 date: 2016-12-28T18:00:00
+tags: [python]
 description: "总结一下yield关键字在C层面是如何实现的"
 ---
 

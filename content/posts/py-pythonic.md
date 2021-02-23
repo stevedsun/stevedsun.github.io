@@ -1,6 +1,7 @@
 ---
 title: Python 巧妙地将rpc接口封装成pythonic的链式调用
 date: 2016-10-25T15:40:43
+tags: [python]
 description: ""
 ---
 

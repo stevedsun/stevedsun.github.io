@@ -2,6 +2,7 @@
 title: "抛弃笔记本，完全用标签管理笔记有什么需要注意的"
 date: 2019-11-18T13:49:00+08:00
 description: "分析检索分类的难题"
+tags: [效率工具]
 aliases :  [/posts/all-tag-in-evernote/]
 ---
 

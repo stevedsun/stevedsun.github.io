@@ -9,7 +9,10 @@ jobs:
   hugo-deploy-gh-pages:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: themes/fuji
     - name: hugo-deploy-gh-pages
       uses: khanhicetea/gh-actions-hugo-deploy-gh-pages@master
       env:

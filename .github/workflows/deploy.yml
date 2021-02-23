@@ -12,7 +12,7 @@ jobs:
     - name: Checkout repository and submodules
       uses: actions/checkout@v2
       with:
-        submodules: themes/fuji
+        submodules: recursive
     - name: hugo-deploy-gh-pages
       uses: khanhicetea/gh-actions-hugo-deploy-gh-pages@master
       env:

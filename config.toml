@@ -32,7 +32,7 @@ paginate = 10
 
 [params]
   author = "Steve Sun" # You can also set author in post front matter individually
-  subTitle = "关于技术、科技生活，希望每篇文章都能讲清楚一件事。"
+  subTitle = "技艺是偶然性的艺术"
 
   # Source URL of the website, will appear in the footer
   #sourceURL = "https://github.com/stevexsun/my_blog"
@@ -59,7 +59,7 @@ paginate = 10
   showToc = true
 
   # Copyright
-  copyrightStartYear = "2021"
+  copyrightStartYear = "2013"
 
   # Open Graph & Twitter Card variables
   # You can also set description and images in post front matter individually

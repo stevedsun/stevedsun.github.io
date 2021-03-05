@@ -115,14 +115,14 @@ Python对于内存块的管理类似对象的策略，每次内存分配一整�
 
 管理多个pool的数据对象是arena。下图可见，pool结构是一次性分配好一块内存，而arena则是通过指针连向一块pool。
 
-![](http://oitrb85kl.bkt.clouddn.com/14823938546859.jpg)
+![](https://i.loli.net/2021/03/05/2duvofnkP9LEO8x.jpg)
 
 而python维护一个名叫arenas的数组，数组元素就是arena对象。arena之间通过由两条链表相连。它们分别是：
 
 - *unused_arena_objects* 是单向量表，指向未分配pool的arena
 - *usable_arenas* 是双向链表，表示已经分配了pool的arena
 
-![](http://oitrb85kl.bkt.clouddn.com/14823982727813.jpg)
+![](https://i.loli.net/2021/03/05/duFq5I6lWACjQyw.jpg)
 
 
 > 当一个arena的area_object没有与pool集合建立联系时，这时的arena处于“未使用”状态；一旦建立了联系，这时arena就转换到了“可用”状态。对于每一种状态，都有一个arena的链表。“未使用”的arena的链表表头是unused_arena_objects、arena与arena之间通过nextarena连接，是一个单向链表；而“可用”的arena的链表表头是usable_arenas、arena与arena之间通过nextarena和prevarena连接，是一个双向链表。
@@ -131,7 +131,7 @@ Python对于内存块的管理类似对象的策略，每次内存分配一整�
 
 Pool有三种状态full、empty和used。其中full不需要连接起来，其他两种状态会被freepools和usedpools连接起来方便管理。
 
-![](http://oitrb85kl.bkt.clouddn.com/14823959192457.jpg)
+![](https://i.loli.net/2021/03/05/mZr1P7ocQYbpCFB.jpg)
 
 ### arena的分配
 
@@ -172,7 +172,7 @@ arena可以指向32位pool集合，也可以指向64位pool集合。分配内存
 
 ### 内存池全景
 
-![](http://oitrb85kl.bkt.clouddn.com/14824602797340.jpg)
+![](https://i.loli.net/2021/03/05/1Lh6u4awv8ZyQ9H.jpg)
 
 ## Python垃圾回收机制
 
@@ -184,13 +184,13 @@ arena可以指向32位pool集合，也可以指向64位pool集合。分配内存
 
 根据系统内所有对象的引用情况建立有向图，沿着有向图从根开始的逐层染色，黑色代表该节点所有引用都检查过了，灰色表示节点是可达的，当所有灰色节点都变为黑色，检查结束。
 
-![](http://oitrb85kl.bkt.clouddn.com/14827327074653.jpg)
+![](https://i.loli.net/2021/03/05/2a1kYDnyT4fBQxP.jpg)
 
 ### Python 中的标记清除
 
 Python的对象由三大部分组成，PyGC_Head，PyObject_Head和本体。其中PyObject_Head里存计数器用来标记当前节点是否可回收，但是对于循环引用的情况，就需要PyGC_Head里的refs，python会根据一些触发条件进行三色模型的标记，某个对象的「可达次数」标记在PyGC_Head里，当这个可达次数为0时，代表对象不可达，也就需要回收之。PyGC_Head之间有一条双向链表连接了所有对象，将他们纳入内存回收管理系统里。
 
-![](http://oitrb85kl.bkt.clouddn.com/14827329727421.jpg)
+![](https://i.loli.net/2021/03/05/UT5ry697VXINBQp.jpg)
 
 #### 流程
 
@@ -202,7 +202,7 @@ Python的对象由三大部分组成，PyGC_Head，PyObject_Head和本体。其�
 
  > 这种以空间换时间的总体思想是：将系统中的所有内存块根据其存活时间划分为不同的集合，每一个集合就称为一个“代”，垃圾收集的频率随着“代”的存活时间的增大而减小，也就是说，活得越长的对象，就越可能不是垃圾，就应该越少去收集。
 
-![](http://oitrb85kl.bkt.clouddn.com/14827333551255.jpg)
+![](https://i.loli.net/2021/03/05/mQuPrwyD73ZjhBv.jpg)
 
 > Python采用了三代的分代收集机制，如果当前收集的是第1代，那么在开始垃圾收集之前，Python会将比其“年轻”的所有代的内存链表（当然，在这里只有第0代）整个地链接到第1代内存链表之后，这个操作是通过gc_list_merge实现的。
 

@@ -83,7 +83,7 @@ Python使用散列表(时间复杂度O(1))而非红黑树(时间复杂度O(logN)
 **Hash冲突(碰撞)**不同的值映射到相同的键时，就产生了冲突。一般解决办法有：
 
 - 开链法(哈希桶)：
-![](http://s5.51cto.com/wyfs02/M01/7F/F0/wKioL1cylpXiOV0YAAA7ZFeMdkQ563.png)
+![](https://i.loli.net/2021/03/05/bQuAwlOTUIXkJ7x.gif)
 
 - 开放定址法：
 hash一次没有命中就再hash一次，直到找到为止……(二次探测)

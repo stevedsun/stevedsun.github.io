@@ -69,7 +69,7 @@ g()
 
 **Python运行时环境** Python在运行时用PyInterpreterState结构维护进程运行环境，PyThreadState维护线程运行环境，PyFrameObject维护栈帧运行环境，三者是依次包含关系，如下图所示：
 
-![WX20161207-161314](media/WX20161207-161314.png)
+![](https://i.loli.net/2021/03/05/GHImB214fvxSXgk.png)
 
 Python虚拟机就是一个「软CPU」，动态加载上述三种结构进内存，并模拟操作系统执行过程。程序执行后，先创建各个运行时环境，再将栈帧中的字节码载入，循环遍历解释执行。
 
@@ -86,7 +86,7 @@ i = 1
 
 异常处理的操作都在`Python/traceback.c`文件里，python每次调用一层函数，就创建改函数对应的PyFrameObject对象来保存函数运行时信息，PythonFrameObject里调用PyEval_EvalFrameEx循环解释字节码，如果抛出异常就创建PyTraceBackObject对象，将对象交给上一层PyFrameObject里的PyTracebackObject组成链表，最后返回最上层PyRun_SimpleFileExFlags函数，该函数调用PyErr_Print遍历PyTraceBackObject链表打印出异常信息。
 
-![](media/14815110885241.jpg)
+![](https://i.loli.net/2021/03/05/9bEUBjYov8mZy3s.jpg)
 
 ## 函数对象的实现
 
@@ -101,7 +101,7 @@ PyFunctionObject是函数对象。在python调用函数时，生成PyFunctionObj
 
 值得注意的是，**python在执行阶段，将对函数参数的键值查找，转换为索引查找**，即在转换PyCodeObject为PyFrameObject时，将参数信息按位置参数、键参数按照一定顺序存储在f_localsplus变量中，再用索引来查找对应参数，而需要查找键值。这样提高了运行时效率。下图是`foo('Rboert', age=5)`在内存中的存储形式。
 
-![](media/14816848258744.jpg)
+![](https://i.loli.net/2021/03/05/IGy8JTzZpgmN6sL.jpg)
 
 ## 闭包的实现
 
@@ -112,14 +112,14 @@ Python在编译阶段就把函数闭包内层和闭包外层使用的变量存�
 
 在执行阶段，PyFrameObject的f_localsplus中也为闭包的变量划分的内存区域，如下图所示：
 
-![](media/14816821828263.jpg)
+![](https://i.loli.net/2021/03/05/fUB4wC36dAc7rqt.jpg)
 
 
 ## 元类
 
 元类`<type type>`和其他类的关系如下图：
 
-![](media/14816960356209.jpg)
+![](https://i.loli.net/2021/03/05/N76woqSlmR28Oyt.jpg)
 
 **可调用性（callable）** ，只要一个对象对应的class对象中实现了“__call__”操作（更确切地说，在Python内部的PyTypeObject中，tp_call不为空）那么这个对象就是一个可调用的对象，换句话说，在Python中，所谓“调用”，就是执行对象的type所对应的class对象的tp_call操作。
 
@@ -136,7 +136,7 @@ Python在编译阶段就把函数闭包内层和闭包外层使用的变量存�
 >  1. Python虚拟机按照instance属性、class属性的顺序选择属性，即instance属性优先于class属性；
 >  2. 如果在class属性中发现同名的data descriptor，那么该descriptor会优先于instance属性被Python虚拟机选择
 
-![](media/14819554697766.jpg)
+![](https://i.loli.net/2021/03/05/1xKk3IVPdjWb8iB.jpg)
 
 ### 引申：Python 黑魔法 Descriptor (描述器)
 
@@ -169,7 +169,7 @@ func()
 
 比较绑定方法与非绑定方法可知，通过[1]的方式每次都要绑定一次实例，开销非常大，下图比较的是[1]和[3]两种方式，绑定操作的执行次数。
 
-![](media/14819572457542.jpg)
+![](https://i.loli.net/2021/03/05/TpCcdaYmHlQnXzE.jpg)
 
 结论： **调用类实例绑定的方法时，如果方法执行次数非常多，最好将方法赋值给一个变量，防止重复绑定增加开销**
 

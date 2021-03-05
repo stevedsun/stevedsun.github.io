@@ -1,0 +1,90 @@
+<!doctype html><html lang=zh-hans><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=HandheldFriendly content="True"><meta http-equiv=x-ua-compatible content="IE=edge"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=generator content="Hugo 0.79.1"><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><meta name=msapplication-TileColor content="#da532c"><meta name=theme-color content="#ffffff"><title>《Python源码剖析》第二部分——Python虚拟机基础 - 电波障害</title><meta name=author content="Steve Sun"><meta name=description content="A minimal Hugo theme with nice theme color."><meta name=keywords content="python"><meta property="og:title" content="《Python源码剖析》第二部分——Python虚拟机基础"><meta name=twitter:title content="《Python源码剖析》第二部分——Python虚拟机基础"><meta property="og:type" content="article"><meta property="og:url" content="https://sund.site/2017/07/python%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86python%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E7%A1%80/"><meta property="og:description" content="Python执行环境 在编译过程中，这些包含在Python源代码中的静态信息都会被Python编译器收集起来，编译的结果中包含了字符串，常量值，字节码等在源代码中出现的一切有用的静态信息。在Python"><meta name=twitter:description content="Python执行环境 在编译过程中，这些包含在Python源代码中的静态信息都会被Python编译器收集起来，编译的结果中包含了字符串，常量值，字节码等在源代码中出现的一切有用的静态信息。在Python"><meta property="og:image" content="https://sund.site/img/og.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://sund.site/img/og.png"><meta property="article:published_time" content="2017-07-13T00:00:00+00:00"><meta property="article:modified_time" content="2017-07-13T00:00:00+00:00"><style>@media(prefers-color-scheme:dark){body[data-theme=auto] img{filter:brightness(60%)}}body[data-theme=dark] img{filter:brightness(60%)}</style><link rel=stylesheet href=https://sund.site/assets/css/fuji.min.css></head><body data-theme=auto><script data-cfasync=false>var fujiThemeData=localStorage.getItem('fuji_data-theme');if(!fujiThemeData){localStorage.setItem('fuji_data-theme','auto');}else{if(fujiThemeData!=='auto'){document.body.setAttribute('data-theme',fujiThemeData==='dark'?'dark':'light');}}</script><header><div class="container-lg clearfix"><div class="col-12 header"><a class=title-main href=https://sund.site>电波障害</a>
+<span class=title-sub>技艺是偶然性的艺术</span></div></div></header><main><div class="container-lg clearfix"><div class="col-12 col-md-9 float-left content"><article><h2 class="post-item post-title"><a href=https://sund.site/2017/07/python%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86python%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E7%A1%80/>《Python源码剖析》第二部分——Python虚拟机基础</a></h2><div class="post-item post-meta"><span><i class="iconfont icon-today-sharp"></i>&nbsp;2017-07-13</span><span><i class="iconfont icon-file-tray-sharp"></i>&nbsp;4071 字</span><span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;<a href=/tags/python>python</a>&nbsp;</span></div><div class="post-content markdown-body"><h2 id=python执行环境>Python执行环境</h2><blockquote><p>在编译过程中，这些包含在Python源代码中的静态信息都会被Python编译器收集起来，编译的结果中包含了字符串，常量值，字节码等在源代码中出现的一切有用的静态信息。在Python运行期间，这些源文件中提供的静态信息最终会被存储在一个运行时的对象中，当Python运行结束后，这个运行时对象中所包含的信息甚至还会被存储在一种文件中。这个对象和文件就是我们这章探索的重点：PyCodeObject对象和pyc文件。</p></blockquote><blockquote><p>在程序运行期间，编译结果存在于内存的PyCodeObject对象中；而Python结束运行后，编译结果又被保存到了pyc文件中。当下一次运行相同的程序时，Python会根据pyc文件中记录的编译结果直接建立内存中的PyCodeObject对象，而不用再次对源文件进行编译了。</p></blockquote><p>从文章摘录可见，python生成的不是编译后的文件，而是<code>.py</code>文件对应的静态信息——PyCodeObject，这里包括了字节码指令序列、字符串、常量。每个名字空间(类、模块、函数)都对应一个独立的PyCodeObject。(python连编译后的文件里存的都是个对象！)</p><p>不被import的py文件不会生成pyc。标准库里有py_compile等方法也可以生成pyc。</p><p><strong>import机制</strong> 导入某个模块时，先查找对应的pyc，如果没有pyc就生成然后import这个pyc。(所以实际导入的并不是py文件，而是py文件编译后的PyCodeObject)。</p><p><strong>PyFrameObject</strong> Python程序运行时的「执行环境」。参考操作系统执行可执行文件的过程。Python也是将函数对应的执行环境封装成栈帧的形式加载进内存。</p><pre><code class=language-c>typedef struct _frame {
+    PyObject_VAR_HEAD
+    struct _frame *f_back;  //执行环境链上的前一个frame
+    PyCodeObject *f_code;   //PyCodeObject对象
+    PyObject *f_builtins;   //builtin名字空间
+    PyObject *f_globals;    //global名字空间
+    PyObject *f_locals;     //local名字空间
+    PyObject **f_valuestack;    //运行时栈的栈底位置
+    PyObject **f_stacktop;      //运行时栈的栈顶位置
+    ……
+    int f_lasti;        //上一条字节码指令在f_code中的偏移位置
+    int f_lineno;       //当前字节码对应的源代码行
+    ……
+    //动态内存，维护（局部变量+cell对象集合+free对象集合+运行时栈）所需要的空间
+    PyObject *f_localsplus[1];  
+} PyFrameObject;
+</code></pre><p>Python标准库的<code>sys._getframe()</code>可以动态的在程序执行时获取当前内存中活跃的PyFrameObject信息。</p><h2 id=legb-规则>LEGB 规则</h2><p>即python作用域的查找顺序是<code>local</code>-<code>enclosing</code>-<code>global</code>-<code>buildin</code>。看下面代码：</p><pre><code class=language-python>a = 1
+
+def g():
+  print a
+
+def f():
+  print a //[1]
+  a = 2 //[2]
+  print a
+
+g()
+</code></pre><p>代码在[1]处会抛出异常，原因是python在编译阶段就把静态数据(局部变量、全局变量、字节码)放入pyc里，执行到<code>f()</code>里时，查找到<code>a</code>是在local作用域里定义的而不是global里，但是此时local的a还没赋值，所以就会抛出异常。由此可见，<strong>python作用域信息是在静态编译时就处理好了的</strong>。</p><h2 id=python-虚拟机运行框架>Python 虚拟机运行框架</h2><blockquote><p>运行时环境是一个全局的概念，而执行环境实际就是一个栈帧，是一个与某个Code Block对应的概念。</p></blockquote><blockquote><p>在PyCodeObject对象的co_code域中保存着字节码指令和字节码指令的参数，Python虚拟机执行字节码指令序列的过程就是从头到尾遍历整个co_code、依次执行字节码指令的过程。</p></blockquote><p>由上文引用可见，python在编译阶段将代码块的字节码保存在PyCodeObject的co_code属性里，然后在执行阶段从头到尾遍历这个co_code属性解读字节码。</p><p><strong>Python运行时环境</strong> Python在运行时用PyInterpreterState结构维护进程运行环境，PyThreadState维护线程运行环境，PyFrameObject维护栈帧运行环境，三者是依次包含关系，如下图所示：</p><p><img class=img-zoomable src=media/WX20161207-161314.png alt=WX20161207-161314></p><p>Python虚拟机就是一个「软CPU」，动态加载上述三种结构进内存，并模拟操作系统执行过程。程序执行后，先创建各个运行时环境，再将栈帧中的字节码载入，循环遍历解释执行。</p><h2 id=python字节码>Python字节码</h2><pre><code class=language-c>i = 1
+0   LOAD_CONST   0  (1)
+3   STORE_NAME   0  (i)
+</code></pre><p>例如python的一条语句<code>i=1</code>可以解释为下面两行字节码，最左边的第1列数字代表这行字节码在内存中的偏移位置，第2列是字节码的名字(CPU并不关心名字，它只是根据偏移量读出字节码，所以这个名字是方便阅读用的)，第3列是字节码的参数，如<code>LOAD_CONST</code>对应的数据在变量<code>f->f_code->co_consts</code>里，0就是这个参数位于<code>f->f_code->co_consts</code>的偏移量。最后一列的括号里是从参数里取到的value。</p><h2 id=python-的异常抛出机制>Python 的异常抛出机制</h2><p>异常处理的操作都在<code>Python/traceback.c</code>文件里，python每次调用一层函数，就创建改函数对应的PyFrameObject对象来保存函数运行时信息，PythonFrameObject里调用PyEval_EvalFrameEx循环解释字节码，如果抛出异常就创建PyTraceBackObject对象，将对象交给上一层PyFrameObject里的PyTracebackObject组成链表，最后返回最上层PyRun_SimpleFileExFlags函数，该函数调用PyErr_Print遍历PyTraceBackObject链表打印出异常信息。</p><p><img class=img-zoomable src=media/14815110885241.jpg alt></p><h2 id=函数对象的实现>函数对象的实现</h2><p>PyFunctionObject是函数对象。在python调用函数时，生成PyFunctionObject对象，该对象的f_global指针用来将外层的全局变量传递给函数内部，然后在<code>ceval.c</code>文件的<code>fast_function</code>里解出PyFunctionObject对象里携带的信息，创建新的PyFrameObject对象(上文说过这个对象是维护运行时环境的)，最后调用执行字节码的函数<code>PyEval_EvalFrameEx</code>执行真正函数字节码。</p><p><strong>Python执行一段代码需要什么？</strong> 从书中描述可见，python执行一段代码需要做几件事：</p><ul><li>从源码编译出 PyCodeObject 保存变量和字节码</li><li>执行阶段，从PyCodeObject里取出信息交给 PyFrameObject，执行 PyEval_EvalFrameEx 解释字节码</li><li>如果遇到函数调用，就把函数对应的代码段从 PyCodeObject 存入 PyFunctionObject 对象，然后把这个函数对象通过参数传给新创建的 PyFrameObject ，在内层空间执行 PyEval_EvalFrameEx 解释字节码</li><li>将结果或异常存入 PyFrameObject 的变量( 异常是存入f_blockstack里，外层判断f_blockstack里的数据是被except捕获还是没有捕获而继续下一步操作) 抛给外层</li></ul><p>值得注意的是，<strong>python在执行阶段，将对函数参数的键值查找，转换为索引查找</strong>，即在转换PyCodeObject为PyFrameObject时，将参数信息按位置参数、键参数按照一定顺序存储在f_localsplus变量中，再用索引来查找对应参数，而需要查找键值。这样提高了运行时效率。下图是<code>foo('Rboert', age=5)</code>在内存中的存储形式。</p><p><img class=img-zoomable src=media/14816848258744.jpg alt></p><h2 id=闭包的实现>闭包的实现</h2><p>Python在编译阶段就把函数闭包内层和闭包外层使用的变量存入PyCodeObject中：</p><ul><li>co_cellvars：通常是一个tuple，保存嵌套的作用域中使用的变量名集合；</li><li>co_freevars：通常也是一个tuple，保存使用了的外层作用域中的变量名集合。</li></ul><p>在执行阶段，PyFrameObject的f_localsplus中也为闭包的变量划分的内存区域，如下图所示：</p><p><img class=img-zoomable src=media/14816821828263.jpg alt></p><h2 id=元类>元类</h2><p>元类<code>&lt;type type></code>和其他类的关系如下图：</p><p><img class=img-zoomable src=media/14816960356209.jpg alt></p><p><strong>可调用性（callable）</strong> ，只要一个对象对应的class对象中实现了“<strong>call</strong>”操作（更确切地说，在Python内部的PyTypeObject中，tp_call不为空）那么这个对象就是一个可调用的对象，换句话说，在Python中，所谓“调用”，就是执行对象的type所对应的class对象的tp_call操作。</p><h2 id=descriptor>Descriptor</h2><blockquote><p>在PyType_Ready中，Python虚拟机会填充tp_dict，其中与操作名对应的是一个个descriptor
+对于一个Python中的对象obj，如果obj.__ class__对应的class对象中存在__get__、__set__和__delete__三种操作，那么obj就可称为Python一个descriptor。</p></blockquote><blockquote><p>如果细分，那么descriptor还可分为如下两种：</p></blockquote><ol><li>data descriptor : type中定义了__get__和__set__的descriptor；</li><li>non data descriptor : type中只定义了__get__的descriptor。
+在Python虚拟机访问instance对象的属性时，descriptor的一个作用是影响Python虚拟机对属性的选择。从PyObject_GenericGetAttr的伪代码可以看出，Python虚拟机会在instance对象自身的__dict__中寻找属性，也会在instance对象对应的class对象的mro列表中寻找</li></ol><blockquote><ol><li>Python虚拟机按照instance属性、class属性的顺序选择属性，即instance属性优先于class属性；</li><li>如果在class属性中发现同名的data descriptor，那么该descriptor会优先于instance属性被Python虚拟机选择</li></ol></blockquote><p><img class=img-zoomable src=media/14819554697766.jpg alt></p><h3 id=引申python-黑魔法-descriptor-描述器>引申：Python 黑魔法 Descriptor (描述器)</h3><ul><li><a href=http://www.jianshu.com/p/250f0d305c35>http://www.jianshu.com/p/250f0d305c35</a></li><li><a href=http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html>http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html</a></li></ul><h2 id=bound-method和unbound-method>Bound Method和Unbound Method</h2><p>假设有下面两种对类方法的调用：</p><pre><code class=language-python>class A(object):
+    def f(self):
+        pass
+
+a = A()
+# [1]
+a.f()  
+
+# [2]
+A.f(a)
+
+# [3]
+func = a.f
+func()
+</code></pre><p>在代码[1]里，实例a调用类方法f，python底层会自动完成实例a和类方法f之间的绑定动作(调用<code>func_ descr_get(A.f, a, A)</code>，将实例地址和函数对象PyFunctionObject封装到一个PyMethodObject)，而代码[2]里直接通过A调用，则f为非绑定的PyMethodObject，里面没有实例信息，需要传入a。</p><p>比较绑定方法与非绑定方法可知，通过[1]的方式每次都要绑定一次实例，开销非常大，下图比较的是[1]和[3]两种方式，绑定操作的执行次数。</p><p><img class=img-zoomable src=media/14819572457542.jpg alt></p><p>结论： <strong>调用类实例绑定的方法时，如果方法执行次数非常多，最好将方法赋值给一个变量，防止重复绑定增加开销</strong></p></div></article><div class="license markdown-body"><blockquote><p>除特殊注明部分，本站内容采用 <a rel=license href=http://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a> 进行许可。</p></blockquote></div></div><aside class="col-12 col-md-3 float-left sidebar"><div class="sidebar-item sidebar-pages"><h3>页面</h3><ul><li><a href=/>首页</a></li><li><a href=/about/>关于</a></li><li><a href=/index.xml>RSS</a></li></ul></div><div class="sidebar-item sidebar-links"><h3>链接</h3><ul><li><a href=https://github.com/stevedsun target=_blank><span>GitHub</span></a></li><li><a href=https://twitter.com/way2steve target=_blank><span>Twitter</span></a></li><li><a href=https://sspai.com/u/radiowave/posts target=_blank><span>SSPAI</span></a></li></ul></div><div class="sidebar-item sidebar-tags"><h3>标签</h3><div><span><a href=/tags/linux/>Linux</a></span>
+<span><a href=/tags/mac/>Mac</a></span>
+<span><a href=/tags/nintendo/>Nintendo</a></span>
+<span><a href=/tags/notion/>notion</a></span>
+<span><a href=/tags/python/>python</a></span>
+<span><a href=/tags/zettelkasten/>zettelkasten</a></span>
+<span><a href=/tags/zookeeper/>zookeeper</a></span>
+<span><a href=/tags/%E4%B8%8D%E8%83%BD%E8%AF%B4%E7%9A%84%E7%A7%98%E5%AF%86/>不能说的秘密</a></span>
+<span><a href=/tags/%E5%86%99%E4%BD%9C/>写作</a></span>
+<span><a href=/tags/%E6%80%9D%E7%BB%B4/>思维</a></span>
+<span><a href=/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E5%8C%96/>技术文化</a></span>
+<span><a href=/tags/%E6%8A%95%E8%B5%84/>投资</a></span>
+<span><a href=/tags/%E6%91%84%E5%BD%B1/>摄影</a></span>
+<span><a href=/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/>效率工具</a></span>
+<span><a href=/tags/%E6%97%85%E8%A1%8C/>旅行</a></span>
+<span><a href=/tags/%E6%97%A5%E5%B8%B8%E8%AE%B0%E5%BD%95/>日常记录</a></span>
+<span><a href=/tags/%E7%94%B5%E5%BD%B1/>电影</a></span>
+<span><a href=/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/>职业规划</a></span>
+<span><a href=/tags/%E8%AF%91%E6%96%87/>译文</a></span>
+<span><a href=/tags/%E8%AF%BB%E4%B9%A6/>读书</a></span>
+<span><a href=/tags/%E8%BE%93%E5%85%A5%E6%B3%95/>输入法</a></span></div></div><div class="sidebar-item sidebar-toc"><h3>目录</h3><nav id=TableOfContents><ul><li><a href=#python执行环境>Python执行环境</a></li><li><a href=#legb-规则>LEGB 规则</a></li><li><a href=#python-虚拟机运行框架>Python 虚拟机运行框架</a></li><li><a href=#python字节码>Python字节码</a></li><li><a href=#python-的异常抛出机制>Python 的异常抛出机制</a></li><li><a href=#函数对象的实现>函数对象的实现</a></li><li><a href=#闭包的实现>闭包的实现</a></li><li><a href=#元类>元类</a></li><li><a href=#descriptor>Descriptor</a><ul><li><a href=#引申python-黑魔法-descriptor-描述器>引申：Python 黑魔法 Descriptor (描述器)</a></li></ul></li><li><a href=#bound-method和unbound-method>Bound Method和Unbound Method</a></li></ul></nav></div></aside></div><div class=btn><div class=btn-menu id=btn-menu><i class="iconfont icon-grid-sharp"></i></div><div class=btn-toggle-mode><i class="iconfont icon-contrast-sharp"></i></div><div class=btn-scroll-top><i class="iconfont icon-chevron-up-circle-sharp"></i></div></div><aside class=sidebar-mobile style=display:none><div class=sidebar-wrapper><div class="sidebar-item sidebar-pages"><h3>页面</h3><ul><li><a href=/>首页</a></li><li><a href=/about/>关于</a></li><li><a href=/index.xml>RSS</a></li></ul></div><div class="sidebar-item sidebar-links"><h3>链接</h3><ul><li><a href=https://github.com/stevedsun target=_blank><span>GitHub</span></a></li><li><a href=https://twitter.com/way2steve target=_blank><span>Twitter</span></a></li><li><a href=https://sspai.com/u/radiowave/posts target=_blank><span>SSPAI</span></a></li></ul></div><div class="sidebar-item sidebar-tags"><h3>标签</h3><div><span><a href=/tags/linux/>Linux</a></span>
+<span><a href=/tags/mac/>Mac</a></span>
+<span><a href=/tags/nintendo/>Nintendo</a></span>
+<span><a href=/tags/notion/>notion</a></span>
+<span><a href=/tags/python/>python</a></span>
+<span><a href=/tags/zettelkasten/>zettelkasten</a></span>
+<span><a href=/tags/zookeeper/>zookeeper</a></span>
+<span><a href=/tags/%E4%B8%8D%E8%83%BD%E8%AF%B4%E7%9A%84%E7%A7%98%E5%AF%86/>不能说的秘密</a></span>
+<span><a href=/tags/%E5%86%99%E4%BD%9C/>写作</a></span>
+<span><a href=/tags/%E6%80%9D%E7%BB%B4/>思维</a></span>
+<span><a href=/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E5%8C%96/>技术文化</a></span>
+<span><a href=/tags/%E6%8A%95%E8%B5%84/>投资</a></span>
+<span><a href=/tags/%E6%91%84%E5%BD%B1/>摄影</a></span>
+<span><a href=/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/>效率工具</a></span>
+<span><a href=/tags/%E6%97%85%E8%A1%8C/>旅行</a></span>
+<span><a href=/tags/%E6%97%A5%E5%B8%B8%E8%AE%B0%E5%BD%95/>日常记录</a></span>
+<span><a href=/tags/%E7%94%B5%E5%BD%B1/>电影</a></span>
+<span><a href=/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/>职业规划</a></span>
+<span><a href=/tags/%E8%AF%91%E6%96%87/>译文</a></span>
+<span><a href=/tags/%E8%AF%BB%E4%B9%A6/>读书</a></span>
+<span><a href=/tags/%E8%BE%93%E5%85%A5%E6%B3%95/>输入法</a></span></div></div><div class="sidebar-item sidebar-toc"><h3>目录</h3><nav id=TableOfContents><ul><li><a href=#python执行环境>Python执行环境</a></li><li><a href=#legb-规则>LEGB 规则</a></li><li><a href=#python-虚拟机运行框架>Python 虚拟机运行框架</a></li><li><a href=#python字节码>Python字节码</a></li><li><a href=#python-的异常抛出机制>Python 的异常抛出机制</a></li><li><a href=#函数对象的实现>函数对象的实现</a></li><li><a href=#闭包的实现>闭包的实现</a></li><li><a href=#元类>元类</a></li><li><a href=#descriptor>Descriptor</a><ul><li><a href=#引申python-黑魔法-descriptor-描述器>引申：Python 黑魔法 Descriptor (描述器)</a></li></ul></li><li><a href=#bound-method和unbound-method>Bound Method和Unbound Method</a></li></ul></nav></div></div></aside></main><footer><div class="container-lg clearfix"><div class="col-12 footer"><span>&copy; 2013-2021
+<a href=https://sund.site>Steve Sun</a>
+| 基于 <a href=https://github.com/dsrkafuu/hugo-theme-fuji/ target=_blank>Fuji-v2</a> & <a href=https://gohugo.io/ target=_blank>Hugo</a> 构建</span></div></div></footer><script defer src=https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js></script><script defer src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.0/lazysizes.min.js></script><script defer src=https://cdn.jsdelivr.net/npm/prismjs@1.23.0/components/prism-core.min.js></script><script defer src=https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/autoloader/prism-autoloader.min.js></script><script defer src=/assets/js/fuji.min.js></script></body></html>

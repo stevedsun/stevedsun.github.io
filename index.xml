@@ -1275,7 +1275,387 @@ ioreg -l | grep &amp;quot;DisplayProductID&amp;quot;
 &lt;p>回到秋川麻里惠的故事线，因为「我」把麻里惠的护身符留给了「真实与虚无之河」的摆渡人，所以麻里惠的身份永远介于真实和虚无之间，也就是说，麻里惠到底是不是免色的女儿永远成了谜。故事的最后章节，麻里惠躲在免色家衣橱里看到的「好像是免色却是不是免色」的人影，就是免色探求麻里惠真实身份的本我的隐喻。麻里惠紧紧抓住衣柜里的女人衣服（其实是她生母留在免色家，被免色珍藏起来的衣物），并且被「骑士团长」告知：「衣服会保护你」。这恰恰说明，免色在故事的最后，内心依然是爱着麻里惠的生母，所以最后放弃了探求麻里惠的真实血缘身份。不去打扰麻里惠平静的生活。这也是「我」在地下世界做出的决定和真实世界产生了某种联系，最后拯救了麻里惠平静的生活，让真相永远隐藏起来。&lt;/p>
 &lt;p>免色先生最后和麻里惠的姑姑笙子热恋，似乎不再关心麻里惠的身世了……这是我唯一觉得村上春树有点草率的处理。&lt;/p>
 &lt;h2 id="题外话">题外话&lt;/h2>
-&lt;p>在读完《刺杀骑士团长》上册后，我正好休年假去日本旅行，期间在箱根的山里住了一宿民宿。箱根距离书中主人公居住的小田原市不远，在山里吹着风听雨声时，真的有种置身小说里的感觉。我住的那间和屋非常简陋，风一吹四周的窗子和木板拉门都会吱吱嘎嘎作响。晚间寂静无人的乡村里还能隐约听到风铃的声音，像极了书里主人公在深夜听到后山摇铃声的场景。只有日本的作家才能写出这样的故事，用那种日本人细腻、敏感的神经，探索人心里不易察觉的感受。也希望林少华老师晚年幸福，不要再接手村上春树的作品翻译工作了。:)&lt;/p></description></item><item><title>一些投资知识</title><link>https://sund.site/2017/01/%E4%B8%80%E4%BA%9B%E6%8A%95%E8%B5%84%E7%9F%A5%E8%AF%86/</link><pubDate>Thu, 19 Jan 2017 13:25:55 +0800</pubDate><guid>https://sund.site/2017/01/%E4%B8%80%E4%BA%9B%E6%8A%95%E8%B5%84%E7%9F%A5%E8%AF%86/</guid><description>&lt;h2 id="资产配置">资产配置&lt;/h2>
+&lt;p>在读完《刺杀骑士团长》上册后，我正好休年假去日本旅行，期间在箱根的山里住了一宿民宿。箱根距离书中主人公居住的小田原市不远，在山里吹着风听雨声时，真的有种置身小说里的感觉。我住的那间和屋非常简陋，风一吹四周的窗子和木板拉门都会吱吱嘎嘎作响。晚间寂静无人的乡村里还能隐约听到风铃的声音，像极了书里主人公在深夜听到后山摇铃声的场景。只有日本的作家才能写出这样的故事，用那种日本人细腻、敏感的神经，探索人心里不易察觉的感受。也希望林少华老师晚年幸福，不要再接手村上春树的作品翻译工作了。:)&lt;/p></description></item><item><title>《Python源码剖析》第三部分——Python虚拟机进阶</title><link>https://sund.site/2017/07/python%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86python%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%BF%9B%E9%98%B6/</link><pubDate>Fri, 14 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/2017/07/python%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86python%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%BF%9B%E9%98%B6/</guid><description>&lt;h2 id="python-环境初始化">Python 环境初始化&lt;/h2>
+&lt;p>进程启动后创建PyInterpreterObject，PyInterpreterObject里面维护了全局module映射表&lt;code>interp-&amp;gt;modules&lt;/code>，该表默认初始化为__buildin__模块，&lt;/p>
+&lt;h2 id="python-的-import-机制">Python 的 import 机制&lt;/h2>
+&lt;blockquote>
+&lt;p>Python虚拟机在执行“import A”时，会为package A创建一个module对象，同时会在该module维护的dict中添加两个表示元信息的属性：&lt;strong>name__和__path&lt;/strong>。而Python虚拟机从A/&lt;strong>init&lt;/strong>.py中执行“import mod1”时，也会为mod1创建一个module对象，同时也会设置__name__属性，但是这时就不设置__path__属性了。&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>package是由module聚合而成。更清楚的表述是：module属于一个package。我们不能说，module1属于module2。我们前面已经看到，module的路径实际上是一种树状结构，从图14-11中可以看到，在这个树状结构中，module的父节点只能是package，而不可能是另一个module。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="gil">GIL&lt;/h2>
+&lt;p>Python虚拟机使用一个全局解释器锁（Global Interpreter Lock，GIL）来互斥线程对python虚拟机的使用。&lt;/p>
+&lt;p>注意这里GIL是解释器一级的互斥锁，也就是同一时间只能有一个线程占用python解释器。所以&lt;strong>GIL是用来让操作系统中分配的多个线程互斥的使用python解释器的，是建立在系统线程调度基础之上的一套C API互斥机制&lt;/strong>，是比操作系统线程资源更大粒度的锁。&lt;/p>
+&lt;p>Python的线程是基于操作系统原生线程的，所以python的线程不是「虚拟出来的」。&lt;/p>
+&lt;blockquote>
+&lt;p>那么究竟Python会在众多的等待线程中选择哪一个幸运儿呢？答案是，不知道。没错，对于这个问题，Python完全没有插手，而是交给了底层的操作系统来解决。也就是说，Python借用了底层操作系统所提供的线程调度机制来决定下一个进入Python解释器的线程究竟是谁。&lt;/p>
+&lt;/blockquote>
+&lt;p>GIL在C里对应的结构：&lt;/p>
+&lt;pre>&lt;code class="language-c">[thread_nt.h]
+typedef struct NRMUTEX {
+LONG owned ;
+DWORD thread_id ;
+HANDLE hevent ;
+} NRMUTEX, *PNRMUTEX ;
+&lt;/code>&lt;/pre>
+&lt;p>其中&lt;code>owned&lt;/code>初始化为-1，表示锁可用，否则为不可用。&lt;code>thread_id&lt;/code>代表线程id，最后一个是平台相关的变量，win32上是一个event内核对象。&lt;/p>
+&lt;h2 id="多线程---标准调度">多线程 - 标准调度&lt;/h2>
+&lt;blockquote>
+&lt;p>当Python启动时，是并不支持多线程的。换句话说，Python中支持多线程的数据结构以及GIL都是没有创建的，Python之所以有这种行为是因为大多数的Python程序都不需要多线程的支持&lt;/p>
+&lt;/blockquote>
+&lt;p>书中指出，由于python的多线程标准调度机制是有代价的，所以默认单线程不初始化GIL。&lt;/p>
+&lt;ol>
+&lt;li>主线程启动后，会用&lt;code>ident = PyThread_start_new_thread(t_bootstrap, (void*) boot);&lt;/code>函数调用操作系统内核接口创建子线程，然后主线程挂起等待&lt;code>obj.done&lt;/code>。注意，此时主线程中持有GIL。&lt;/li>
+&lt;li>主线程等待的这段时间里，子线程将自己的线程id等信息设置好，通知内核对象&lt;code>obj.done&lt;/code>，唤醒等待中的主线程。此刻，主线程和子线程都同时由操作系统调度，但是主线程一直持有着GIL。&lt;/li>
+&lt;li>子线程继续执行后进入python解释器，发现需要等待获取GIL。此时子线程主动将自己挂起(而不是由操作系统挂起)。这样就进入了两个线程通过GIL调度的阶段。&lt;/li>
+&lt;li>主线程被唤醒后，继续执行，直到python内置的时钟计时器&lt;code>_Py_Ticker&lt;/code>结束才将自己挂起，让出GIL(&lt;code>_Py_Ticker&lt;/code>会在每次执行一条字节码后自动减1，初始默认为100)。&lt;/li>
+&lt;/ol>
+&lt;p>通过上面4步，python的两个线程就完成了从系统调度上升到python标准GIL调度的流程。&lt;/p>
+&lt;h2 id="阻塞调度">阻塞调度&lt;/h2>
+&lt;p>如同上面流程介绍的，标准调度是python使用软件时钟调度线程，那么有时候python的线程会自我阻塞，比如&lt;code>raw_input()&lt;/code>、&lt;code>sleep()&lt;/code>等函数，这时python就会使用阻塞调度的方式。&lt;/p>
+&lt;ol>
+&lt;li>主线程调用&lt;code>sleep(1)&lt;/code>后，调用&lt;code>Py_BEGIN_ALLOW_THREADS&lt;/code>立刻释放GIL，然后调用操作系统的sleep操作。此时主线程就由操作系统自动管理。&lt;/li>
+&lt;li>子线程拿到GIL。此时主线程和子线程同时可被操作系统调度。操作系统在执行一段时间子线程后会挂起，调度主线程，发现主线程sleep没结束就挂起主线程，就继续唤醒子线程执行。&lt;/li>
+&lt;li>当主线程sleep结束，操作系统唤醒主线程。主线程调用&lt;code>Py_END_ALLOW_THREADS&lt;/code>再次申请GIL，重新进入python标准调度流程。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>可见python在保证线程安全的前提下，允许线程在某些时刻脱离GIL标准调度流程。&lt;/strong>&lt;/p>
+&lt;p>其中&lt;code>Py_BEGIN_ALLOW_THREADS&lt;/code>和&lt;code>Py_END_ALLOW_THREADS&lt;/code>两个负责释放和等待GIL的宏的实现如下。&lt;/p>
+&lt;pre>&lt;code class="language-c">[ceval.h]
+#define Py_BEGIN_ALLOW_THREADS { \
+PyThreadState *_save; \
+_save = PyEval_SaveThread();
+#define Py_END_ALLOW_THREADS PyEval_RestoreThread(_save); \
+}
+[ceval.c]
+PyThreadState* PyEval_SaveThread(void)
+{
+PyThreadState *tstate = PyThreadState_Swap(NULL);
+if (interpreter_lock)
+PyThread_release_lock(interpreter_lock);
+return tstate;
+}
+void PyEval_RestoreThread(PyThreadState *tstate)
+{
+if (interpreter_lock) {
+int err = errno;
+PyThread_acquire_lock(interpreter_lock, 1);
+errno = err;
+}
+PyThreadState_Swap(tstate);
+}
+&lt;/code>&lt;/pre>
+&lt;h2 id="用户级互斥">用户级互斥&lt;/h2>
+&lt;p>用户级的互斥锁利用操作系统的互斥机制实现，同时要考虑防止和GIL形成死锁。所以过程与阻塞调度类似需要使用&lt;code>Py_BEGIN_ALLOW_THREADS&lt;/code>和&lt;code>Py_END_ALLOW_THREADS&lt;/code>这两个宏。&lt;/p>
+&lt;ol>
+&lt;li>线程a调用lock对象加锁，lock对象内部调用系统互斥机制，同时执行&lt;code>Py_BEGIN_ALLOW_THREADS&lt;/code>释放GIL防止死锁。&lt;/li>
+&lt;li>线程b获得GIL，执行到某处释放锁，lock对象内部调用系统机制释放锁，同时底层调用了&lt;code>Py_END_ALLOW_THREADS&lt;/code>等待GIL。&lt;/li>
+&lt;li>线程a被系统唤醒，获取GIL，一气呵成。&lt;/li>
+&lt;/ol>
+&lt;h2 id="子线程的销毁">子线程的销毁&lt;/h2>
+&lt;blockquote>
+&lt;p>在线程的全部计算完成之后，Python将销毁线程。需要注意的是，Python主线程的销毁与子线程的销毁是不同的，因为主线程的销毁动作必须要销毁Python的运行时环境，而子线程的销毁则不需要进行这些动作。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="内存管理">内存管理&lt;/h2>
+&lt;p>大块内存管理直接调用C的malloc和free接口，小块内存分配则由python的内存池管理机制调度。&lt;/p>
+&lt;h3 id="小块内存管理的对象">小块内存管理的对象&lt;/h3>
+&lt;p>Python的内存块叫block，每个block大小不同，都是8的整数倍。管理block的叫pool，一个pool是4K。pool管理&lt;strong>相同大小&lt;/strong>的一堆block。pool对象的szindex变量保存了这个pool对应的block大小。&lt;/p>
+&lt;blockquote>
+&lt;p>，一个pool可能管理了100个32个字节的block，也可能管理了100个64个字节的block，但是绝不会有一个管理了50个32字节的block和50个64字节的block的pool存在&lt;/p>
+&lt;/blockquote>
+&lt;p>Python对于内存块的管理类似对象的策略，每次内存分配一整个block，回收时先将不用的Block加入闲置的队列里等待重新利用，不是直接回收。(惰性回收策略)&lt;/p>
+&lt;p>管理多个pool的数据对象是arena。下图可见，pool结构是一次性分配好一块内存，而arena则是通过指针连向一块pool。&lt;/p>
+&lt;p>&lt;img class="img-zoomable" src="http://oitrb85kl.bkt.clouddn.com/14823938546859.jpg" alt="" />
+&lt;/p>
+&lt;p>而python维护一个名叫arenas的数组，数组元素就是arena对象。arena之间通过由两条链表相连。它们分别是：&lt;/p>
+&lt;ul>
+&lt;li>&lt;em>unused_arena_objects&lt;/em> 是单向量表，指向未分配pool的arena&lt;/li>
+&lt;li>&lt;em>usable_arenas&lt;/em> 是双向链表，表示已经分配了pool的arena&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img class="img-zoomable" src="http://oitrb85kl.bkt.clouddn.com/14823982727813.jpg" alt="" />
+&lt;/p>
+&lt;blockquote>
+&lt;p>当一个arena的area_object没有与pool集合建立联系时，这时的arena处于“未使用”状态；一旦建立了联系，这时arena就转换到了“可用”状态。对于每一种状态，都有一个arena的链表。“未使用”的arena的链表表头是unused_arena_objects、arena与arena之间通过nextarena连接，是一个单向链表；而“可用”的arena的链表表头是usable_arenas、arena与arena之间通过nextarena和prevarena连接，是一个双向链表。&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Pool是python管理内存的对象，arena虽然更上层，但是arena内的pool集合可能管理32字节的block，也可能管理64字节的block，所以arena无法决定销毁和分配内存。Python仍然以pool为单位管理内存开销。(pool有size概念，arena没有size概念)&lt;/strong>&lt;/p>
+&lt;p>Pool有三种状态full、empty和used。其中full不需要连接起来，其他两种状态会被freepools和usedpools连接起来方便管理。&lt;/p>
+&lt;p>&lt;img class="img-zoomable" src="http://oitrb85kl.bkt.clouddn.com/14823959192457.jpg" alt="" />
+&lt;/p>
+&lt;h3 id="arena的分配">arena的分配&lt;/h3>
+&lt;p>arena可以指向32位pool集合，也可以指向64位pool集合。分配内存的过程如下：&lt;/p>
+&lt;ol>
+&lt;li>先在usable_arenas链表上找可用的arena，然后找到符合要求的pool&lt;/li>
+&lt;li>如果没有可用的arena，则从arenas数组里摘下来新的arena，放在usable_arenas里，然后初始化pool&lt;/li>
+&lt;li>从usedpools链表里找可用的blocks&lt;/li>
+&lt;li>usedpools没有可用的pool，就从freepools链表分配一个empty状态的pool&lt;/li>
+&lt;/ol>
+&lt;h3 id="python编译时指定内存上限">Python编译时指定内存上限&lt;/h3>
+&lt;blockquote>
+&lt;p>当Python在WITH_MEMORY_LIMITS编译符号打开的背景下进行编译时，Python内部的另一个符号会被激活，这个名为SMALL_MEMORY_LIMIT的符号限制了整个内存池的大小，同时，也就限制了可以创建的arena的个数。在默认情况下，不论是Win32平台，还是unix平台，这个编译符号都是没有打开的，所以通常Python都没有对小块内存的内存池的大小做任何的限制。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="小块内存管理的流程">小块内存管理的流程&lt;/h3>
+&lt;p>&lt;em>(此部分摘自书中代码注释)&lt;/em>&lt;/p>
+&lt;ol>
+&lt;li>如果申请的内存小于SMALL_REQUEST_THRESHOLD，使用Python的小块内存的内存池。否则，转向malloc&lt;/li>
+&lt;li>根据申请内存的大小获得对应的size class index&lt;/li>
+&lt;li>如果usedpools中可用的pool，使用这个pool来分配block&lt;/li>
+&lt;li>分配结束后，如果pool中的block都被分配了，将pool从usedpools中摘除&lt;/li>
+&lt;li>如果usedpools中没有可用的pool，从usable_arenas中获取pool&lt;/li>
+&lt;li>如果usable_arenas中没有就“可用”的arena，开始申请arena&lt;/li>
+&lt;li>从usable_arenas的第一个arena中获取一个pool&lt;/li>
+&lt;li>获取pool成功，进行init pool的动作，将pool放入used_pools中，并返回分配得到的block&lt;/li>
+&lt;li>获取pool失败，对arena中的pool集合进行初始化，然后转入goto到init pool的动作处，初始化一个特定的pool&lt;/li>
+&lt;/ol>
+&lt;h3 id="python-25对多次分配小内存造成内存泄漏的处理">Python 2.5对多次分配小内存造成内存泄漏的处理&lt;/h3>
+&lt;p>在2.5之前版本，Python的arena从来不释放pool。这就造成反复分配小内存后造成的arena太多而内存无法回收。&lt;/p>
+&lt;p>2.5之后的处理办法：arena有两种状态，unused和usable。上文已经介绍过。&lt;/p>
+&lt;ol>
+&lt;li>如果arena中所有的pool都是empty的，释放pool集合占用的内存。arena变成unused状态，从usable_arenas剔除&lt;/li>
+&lt;li>如果arena初始化了新的pool，arena变成usable状态，从usable_arenas链表中顺序查找位置插入该arena。注意，usable_arenas是有序链表(按照arena中pool的个数排序，pool多的arena排前边，pool少的排后边)&lt;/li>
+&lt;li>这样，再有分配内存的请求时，先从usable_arenas表头顺序查，排在前边pool多的arena就被利用的充分，pool少的arena就更有可能变成unused状态，容易被释放掉。达到节省内存的目的&lt;/li>
+&lt;/ol>
+&lt;h3 id="内存池全景">内存池全景&lt;/h3>
+&lt;p>&lt;img class="img-zoomable" src="http://oitrb85kl.bkt.clouddn.com/14824602797340.jpg" alt="" />
+&lt;/p>
+&lt;h2 id="python垃圾回收机制">Python垃圾回收机制&lt;/h2>
+&lt;p>除了计数器，python还是使用了标记-清除，分代回收机制。&lt;/p>
+&lt;h3 id="标记---清除">标记 - 清除&lt;/h3>
+&lt;h4 id="三色模型">三色模型&lt;/h4>
+&lt;p>根据系统内所有对象的引用情况建立有向图，沿着有向图从根开始的逐层染色，黑色代表该节点所有引用都检查过了，灰色表示节点是可达的，当所有灰色节点都变为黑色，检查结束。&lt;/p>
+&lt;p>&lt;img class="img-zoomable" src="http://oitrb85kl.bkt.clouddn.com/14827327074653.jpg" alt="" />
+&lt;/p>
+&lt;h3 id="python-中的标记清除">Python 中的标记清除&lt;/h3>
+&lt;p>Python的对象由三大部分组成，PyGC_Head，PyObject_Head和本体。其中PyObject_Head里存计数器用来标记当前节点是否可回收，但是对于循环引用的情况，就需要PyGC_Head里的refs，python会根据一些触发条件进行三色模型的标记，某个对象的「可达次数」标记在PyGC_Head里，当这个可达次数为0时，代表对象不可达，也就需要回收之。PyGC_Head之间有一条双向链表连接了所有对象，将他们纳入内存回收管理系统里。&lt;/p>
+&lt;p>&lt;img class="img-zoomable" src="http://oitrb85kl.bkt.clouddn.com/14827329727421.jpg" alt="" />
+&lt;/p>
+&lt;h4 id="流程">流程&lt;/h4>
+&lt;ol>
+&lt;li>在垃圾收集的第一步，就是遍历可收集对象链表，将每个对象的gc.gc_ref值设置为其ob_refcnt值。&lt;/li>
+&lt;li>接下来的动作就是要将环引用从引用中摘除。&lt;/li>
+&lt;li>有一些container对象的&lt;code>PyGC_Head.gc.gc_ref&lt;/code>还不为0，这就意味着存在对这些对象的外部引用，这些对象，就是开始标记 - 清除算法的root object集合。&lt;/li>
+&lt;/ol>
+&lt;h3 id="分代回收">分代回收&lt;/h3>
+&lt;blockquote>
+&lt;p>这种以空间换时间的总体思想是：将系统中的所有内存块根据其存活时间划分为不同的集合，每一个集合就称为一个“代”，垃圾收集的频率随着“代”的存活时间的增大而减小，也就是说，活得越长的对象，就越可能不是垃圾，就应该越少去收集。&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img class="img-zoomable" src="http://oitrb85kl.bkt.clouddn.com/14827333551255.jpg" alt="" />
+&lt;/p>
+&lt;blockquote>
+&lt;p>Python采用了三代的分代收集机制，如果当前收集的是第1代，那么在开始垃圾收集之前，Python会将比其“年轻”的所有代的内存链表（当然，在这里只有第0代）整个地链接到第1代内存链表之后，这个操作是通过gc_list_merge实现的。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="总结">总结&lt;/h3>
+&lt;ol>
+&lt;li>将比当前处理的“代”更年轻的“代”的链表合并到当前“代”中&lt;/li>
+&lt;li>在待处理链表上进行打破循环的模拟，寻找root object&lt;/li>
+&lt;li>将待处理链表中的unreachable object转移到unreachable链表中，处理完成后，当前“代”中只剩下reachable object了&lt;/li>
+&lt;li>如果可能，将当前“代”中的reachable object合并到更老的“代”中&lt;/li>
+&lt;li>对于unreachable链表中的对象，如果其带有&lt;code>__del__&lt;/code>函数，则不能安全回收，需要将这些对象收集到finalizers链表中，因此，这些对象引用的对象也不能回收,也需要放入finalizers链表中&lt;/li>
+&lt;li>处理弱引用（weakref），如果可能，调用弱引用中注册的callback操作&lt;/li>
+&lt;li>对unreachable链表上的对象进行垃圾回收操作&lt;/li>
+&lt;li>将含有&lt;code>__del__&lt;/code>操作的实例对象收集到Python内部维护的名为garbage的链表中，同时将finalizers链表中所有对象加入old链表中&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>注意，如果对象拥有&lt;code>__del__&lt;/code>方法，就不能通过垃圾回收来自动回收&lt;/strong>，所以要慎重使用这个方法。&lt;/p></description></item><item><title>《Python源码剖析》第二部分——Python虚拟机基础</title><link>https://sund.site/2017/07/python%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86python%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E7%A1%80/</link><pubDate>Thu, 13 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/2017/07/python%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86python%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E7%A1%80/</guid><description>&lt;h2 id="python执行环境">Python执行环境&lt;/h2>
+&lt;blockquote>
+&lt;p>在编译过程中，这些包含在Python源代码中的静态信息都会被Python编译器收集起来，编译的结果中包含了字符串，常量值，字节码等在源代码中出现的一切有用的静态信息。在Python运行期间，这些源文件中提供的静态信息最终会被存储在一个运行时的对象中，当Python运行结束后，这个运行时对象中所包含的信息甚至还会被存储在一种文件中。这个对象和文件就是我们这章探索的重点：PyCodeObject对象和pyc文件。&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>在程序运行期间，编译结果存在于内存的PyCodeObject对象中；而Python结束运行后，编译结果又被保存到了pyc文件中。当下一次运行相同的程序时，Python会根据pyc文件中记录的编译结果直接建立内存中的PyCodeObject对象，而不用再次对源文件进行编译了。&lt;/p>
+&lt;/blockquote>
+&lt;p>从文章摘录可见，python生成的不是编译后的文件，而是&lt;code>.py&lt;/code>文件对应的静态信息——PyCodeObject，这里包括了字节码指令序列、字符串、常量。每个名字空间(类、模块、函数)都对应一个独立的PyCodeObject。(python连编译后的文件里存的都是个对象！)&lt;/p>
+&lt;p>不被import的py文件不会生成pyc。标准库里有py_compile等方法也可以生成pyc。&lt;/p>
+&lt;p>&lt;strong>import机制&lt;/strong> 导入某个模块时，先查找对应的pyc，如果没有pyc就生成然后import这个pyc。(所以实际导入的并不是py文件，而是py文件编译后的PyCodeObject)。&lt;/p>
+&lt;p>&lt;strong>PyFrameObject&lt;/strong> Python程序运行时的「执行环境」。参考操作系统执行可执行文件的过程。Python也是将函数对应的执行环境封装成栈帧的形式加载进内存。&lt;/p>
+&lt;pre>&lt;code class="language-c">typedef struct _frame {
+PyObject_VAR_HEAD
+struct _frame *f_back; //执行环境链上的前一个frame
+PyCodeObject *f_code; //PyCodeObject对象
+PyObject *f_builtins; //builtin名字空间
+PyObject *f_globals; //global名字空间
+PyObject *f_locals; //local名字空间
+PyObject **f_valuestack; //运行时栈的栈底位置
+PyObject **f_stacktop; //运行时栈的栈顶位置
+……
+int f_lasti; //上一条字节码指令在f_code中的偏移位置
+int f_lineno; //当前字节码对应的源代码行
+……
+//动态内存，维护（局部变量+cell对象集合+free对象集合+运行时栈）所需要的空间
+PyObject *f_localsplus[1];
+} PyFrameObject;
+&lt;/code>&lt;/pre>
+&lt;p>Python标准库的&lt;code>sys._getframe()&lt;/code>可以动态的在程序执行时获取当前内存中活跃的PyFrameObject信息。&lt;/p>
+&lt;h2 id="legb-规则">LEGB 规则&lt;/h2>
+&lt;p>即python作用域的查找顺序是&lt;code>local&lt;/code>-&lt;code>enclosing&lt;/code>-&lt;code>global&lt;/code>-&lt;code>buildin&lt;/code>。看下面代码：&lt;/p>
+&lt;pre>&lt;code class="language-python">a = 1
+def g():
+print a
+def f():
+print a //[1]
+a = 2 //[2]
+print a
+g()
+&lt;/code>&lt;/pre>
+&lt;p>代码在[1]处会抛出异常，原因是python在编译阶段就把静态数据(局部变量、全局变量、字节码)放入pyc里，执行到&lt;code>f()&lt;/code>里时，查找到&lt;code>a&lt;/code>是在local作用域里定义的而不是global里，但是此时local的a还没赋值，所以就会抛出异常。由此可见，&lt;strong>python作用域信息是在静态编译时就处理好了的&lt;/strong>。&lt;/p>
+&lt;h2 id="python-虚拟机运行框架">Python 虚拟机运行框架&lt;/h2>
+&lt;blockquote>
+&lt;p>运行时环境是一个全局的概念，而执行环境实际就是一个栈帧，是一个与某个Code Block对应的概念。&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>在PyCodeObject对象的co_code域中保存着字节码指令和字节码指令的参数，Python虚拟机执行字节码指令序列的过程就是从头到尾遍历整个co_code、依次执行字节码指令的过程。&lt;/p>
+&lt;/blockquote>
+&lt;p>由上文引用可见，python在编译阶段将代码块的字节码保存在PyCodeObject的co_code属性里，然后在执行阶段从头到尾遍历这个co_code属性解读字节码。&lt;/p>
+&lt;p>&lt;strong>Python运行时环境&lt;/strong> Python在运行时用PyInterpreterState结构维护进程运行环境，PyThreadState维护线程运行环境，PyFrameObject维护栈帧运行环境，三者是依次包含关系，如下图所示：&lt;/p>
+&lt;p>&lt;img class="img-zoomable" src="media/WX20161207-161314.png" alt="WX20161207-161314" />
+&lt;/p>
+&lt;p>Python虚拟机就是一个「软CPU」，动态加载上述三种结构进内存，并模拟操作系统执行过程。程序执行后，先创建各个运行时环境，再将栈帧中的字节码载入，循环遍历解释执行。&lt;/p>
+&lt;h2 id="python字节码">Python字节码&lt;/h2>
+&lt;pre>&lt;code class="language-c">i = 1
+0 LOAD_CONST 0 (1)
+3 STORE_NAME 0 (i)
+&lt;/code>&lt;/pre>
+&lt;p>例如python的一条语句&lt;code>i=1&lt;/code>可以解释为下面两行字节码，最左边的第1列数字代表这行字节码在内存中的偏移位置，第2列是字节码的名字(CPU并不关心名字，它只是根据偏移量读出字节码，所以这个名字是方便阅读用的)，第3列是字节码的参数，如&lt;code>LOAD_CONST&lt;/code>对应的数据在变量&lt;code>f-&amp;gt;f_code-&amp;gt;co_consts&lt;/code>里，0就是这个参数位于&lt;code>f-&amp;gt;f_code-&amp;gt;co_consts&lt;/code>的偏移量。最后一列的括号里是从参数里取到的value。&lt;/p>
+&lt;h2 id="python-的异常抛出机制">Python 的异常抛出机制&lt;/h2>
+&lt;p>异常处理的操作都在&lt;code>Python/traceback.c&lt;/code>文件里，python每次调用一层函数，就创建改函数对应的PyFrameObject对象来保存函数运行时信息，PythonFrameObject里调用PyEval_EvalFrameEx循环解释字节码，如果抛出异常就创建PyTraceBackObject对象，将对象交给上一层PyFrameObject里的PyTracebackObject组成链表，最后返回最上层PyRun_SimpleFileExFlags函数，该函数调用PyErr_Print遍历PyTraceBackObject链表打印出异常信息。&lt;/p>
+&lt;p>&lt;img class="img-zoomable" src="media/14815110885241.jpg" alt="" />
+&lt;/p>
+&lt;h2 id="函数对象的实现">函数对象的实现&lt;/h2>
+&lt;p>PyFunctionObject是函数对象。在python调用函数时，生成PyFunctionObject对象，该对象的f_global指针用来将外层的全局变量传递给函数内部，然后在&lt;code>ceval.c&lt;/code>文件的&lt;code>fast_function&lt;/code>里解出PyFunctionObject对象里携带的信息，创建新的PyFrameObject对象(上文说过这个对象是维护运行时环境的)，最后调用执行字节码的函数&lt;code>PyEval_EvalFrameEx&lt;/code>执行真正函数字节码。&lt;/p>
+&lt;p>&lt;strong>Python执行一段代码需要什么？&lt;/strong> 从书中描述可见，python执行一段代码需要做几件事：&lt;/p>
+&lt;ul>
+&lt;li>从源码编译出 PyCodeObject 保存变量和字节码&lt;/li>
+&lt;li>执行阶段，从PyCodeObject里取出信息交给 PyFrameObject，执行 PyEval_EvalFrameEx 解释字节码&lt;/li>
+&lt;li>如果遇到函数调用，就把函数对应的代码段从 PyCodeObject 存入 PyFunctionObject 对象，然后把这个函数对象通过参数传给新创建的 PyFrameObject ，在内层空间执行 PyEval_EvalFrameEx 解释字节码&lt;/li>
+&lt;li>将结果或异常存入 PyFrameObject 的变量( 异常是存入f_blockstack里，外层判断f_blockstack里的数据是被except捕获还是没有捕获而继续下一步操作) 抛给外层&lt;/li>
+&lt;/ul>
+&lt;p>值得注意的是，&lt;strong>python在执行阶段，将对函数参数的键值查找，转换为索引查找&lt;/strong>，即在转换PyCodeObject为PyFrameObject时，将参数信息按位置参数、键参数按照一定顺序存储在f_localsplus变量中，再用索引来查找对应参数，而需要查找键值。这样提高了运行时效率。下图是&lt;code>foo('Rboert', age=5)&lt;/code>在内存中的存储形式。&lt;/p>
+&lt;p>&lt;img class="img-zoomable" src="media/14816848258744.jpg" alt="" />
+&lt;/p>
+&lt;h2 id="闭包的实现">闭包的实现&lt;/h2>
+&lt;p>Python在编译阶段就把函数闭包内层和闭包外层使用的变量存入PyCodeObject中：&lt;/p>
+&lt;ul>
+&lt;li>co_cellvars：通常是一个tuple，保存嵌套的作用域中使用的变量名集合；&lt;/li>
+&lt;li>co_freevars：通常也是一个tuple，保存使用了的外层作用域中的变量名集合。&lt;/li>
+&lt;/ul>
+&lt;p>在执行阶段，PyFrameObject的f_localsplus中也为闭包的变量划分的内存区域，如下图所示：&lt;/p>
+&lt;p>&lt;img class="img-zoomable" src="media/14816821828263.jpg" alt="" />
+&lt;/p>
+&lt;h2 id="元类">元类&lt;/h2>
+&lt;p>元类&lt;code>&amp;lt;type type&amp;gt;&lt;/code>和其他类的关系如下图：&lt;/p>
+&lt;p>&lt;img class="img-zoomable" src="media/14816960356209.jpg" alt="" />
+&lt;/p>
+&lt;p>&lt;strong>可调用性（callable）&lt;/strong> ，只要一个对象对应的class对象中实现了“&lt;strong>call&lt;/strong>”操作（更确切地说，在Python内部的PyTypeObject中，tp_call不为空）那么这个对象就是一个可调用的对象，换句话说，在Python中，所谓“调用”，就是执行对象的type所对应的class对象的tp_call操作。&lt;/p>
+&lt;h2 id="descriptor">Descriptor&lt;/h2>
+&lt;blockquote>
+&lt;p>在PyType_Ready中，Python虚拟机会填充tp_dict，其中与操作名对应的是一个个descriptor
+对于一个Python中的对象obj，如果obj.__ class__对应的class对象中存在__get__、__set__和__delete__三种操作，那么obj就可称为Python一个descriptor。&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>如果细分，那么descriptor还可分为如下两种：&lt;/p>
+&lt;/blockquote>
+&lt;ol>
+&lt;li>data descriptor : type中定义了__get__和__set__的descriptor；&lt;/li>
+&lt;li>non data descriptor : type中只定义了__get__的descriptor。
+在Python虚拟机访问instance对象的属性时，descriptor的一个作用是影响Python虚拟机对属性的选择。从PyObject_GenericGetAttr的伪代码可以看出，Python虚拟机会在instance对象自身的__dict__中寻找属性，也会在instance对象对应的class对象的mro列表中寻找&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;ol>
+&lt;li>Python虚拟机按照instance属性、class属性的顺序选择属性，即instance属性优先于class属性；&lt;/li>
+&lt;li>如果在class属性中发现同名的data descriptor，那么该descriptor会优先于instance属性被Python虚拟机选择&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;p>&lt;img class="img-zoomable" src="media/14819554697766.jpg" alt="" />
+&lt;/p>
+&lt;h3 id="引申python-黑魔法-descriptor-描述器">引申：Python 黑魔法 Descriptor (描述器)&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="http://www.jianshu.com/p/250f0d305c35">http://www.jianshu.com/p/250f0d305c35&lt;/a>&lt;/li>
+&lt;li>&lt;a href="http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html">http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="bound-method和unbound-method">Bound Method和Unbound Method&lt;/h2>
+&lt;p>假设有下面两种对类方法的调用：&lt;/p>
+&lt;pre>&lt;code class="language-python">class A(object):
+def f(self):
+pass
+a = A()
+# [1]
+a.f()
+# [2]
+A.f(a)
+# [3]
+func = a.f
+func()
+&lt;/code>&lt;/pre>
+&lt;p>在代码[1]里，实例a调用类方法f，python底层会自动完成实例a和类方法f之间的绑定动作(调用&lt;code>func_ descr_get(A.f, a, A)&lt;/code>，将实例地址和函数对象PyFunctionObject封装到一个PyMethodObject)，而代码[2]里直接通过A调用，则f为非绑定的PyMethodObject，里面没有实例信息，需要传入a。&lt;/p>
+&lt;p>比较绑定方法与非绑定方法可知，通过[1]的方式每次都要绑定一次实例，开销非常大，下图比较的是[1]和[3]两种方式，绑定操作的执行次数。&lt;/p>
+&lt;p>&lt;img class="img-zoomable" src="media/14819572457542.jpg" alt="" />
+&lt;/p>
+&lt;p>结论： &lt;strong>调用类实例绑定的方法时，如果方法执行次数非常多，最好将方法赋值给一个变量，防止重复绑定增加开销&lt;/strong>&lt;/p></description></item><item><title>《Python源码剖析》第一部分——Python对象基础</title><link>https://sund.site/2017/07/python%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86python%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/</link><pubDate>Wed, 12 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/2017/07/python%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86python%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/</guid><description>&lt;h2 id="python的对象初始化">Python的对象初始化&lt;/h2>
+&lt;blockquote>
+&lt;p>在Python中，对象就是为C中的结构体在堆上申请的一块内存，一般来说，对象是不能被静态初始化的，并且也不能在栈空间上生存。唯一的例外就是类型对象，Python中所有的内建的类型对象（如整数类型对象，字符串类型对象）都是被静态初始化的。&lt;/p>
+&lt;/blockquote>
+&lt;p>python 的对象不像 C 是分配在栈、堆、data segment等位置，而是全部分配在堆上！只有python内置类型在初始化时候才是被C语言层静态初始化。&lt;/p>
+&lt;p>PyObject内部就两样：引用计数器、类型对象指针。&lt;/p>
+&lt;p>类型对象的定义：&lt;/p>
+&lt;pre>&lt;code class="language-c">typedef struct _typeobject {
+PyObject_VAR_HEAD
+char *tp_name; /* For printing, in format &amp;quot;&amp;lt;module&amp;gt;.&amp;lt;name&amp;gt;&amp;quot; */
+int tp_basicsize, tp_itemsize; /* For allocation */
+/* Methods to implement standard operations */
+destructor tp_dealloc;
+printfunc tp_print;
+……
+/* More standard operations (here for binary compatibility) */
+hashfunc tp_hash;
+ternaryfunc tp_call;
+……
+} PyTypeObject;
+&lt;/code>&lt;/pre>
+&lt;p>&lt;code>PyObject_VAR_HEAD&lt;/code>是可变类型的头信息，其中除了&lt;code>PyObject_HEAD&lt;/code>的内容外，额外添加了一个代表该对象元素数量的整型。从上边代码可见，python的类型也是一个可变对象。&lt;/p>
+&lt;h2 id="python的多态">Python的多态&lt;/h2>
+&lt;p>Python中所有类型在初始化后，在C语言层面都使用同一种指针&lt;code>PyObject *&lt;/code>，所以python实现多态就非常容易。任何函数的参数都是一个PyObject类型指针，也就不存在编译器需要判断函数参数类型。&lt;/p>
+&lt;h2 id="python对象内存池">Python对象内存池&lt;/h2>
+&lt;p>Python为了避免频繁的释放对象，采用了内存池的机制，在对象引用计数为0时，不会释放内存，而是将内存交还给内存池供python重新分配使用。&lt;strong>每一种python类型，都有特定的内存池机制。&lt;/strong>&lt;/p>
+&lt;h2 id="整数对象">整数对象&lt;/h2>
+&lt;p>-5至257之间的小整数，存储在「小整数数组」里，这个数组Python自动创建，每次创建一个小整数，就指向这个数组里对应的PyIntObject值并把PyIntObject的计数加1。(因此在-5到257之间的数实际指向同一片内存空间，整数-5和-5的内存地址肯定是一样的)&lt;/p>
+&lt;p>大整数则由一个叫&lt;code>block_list&lt;/code>的链表管理，每次分配一个大整数就在&lt;code>free_list&lt;/code>(一个指向空闲内存block的指针)里拿出一个节点并把&lt;code>free_list&lt;/code>后移一个&lt;code>block&lt;/code>。关于&lt;code>free_list&lt;/code>是如何把尚未分配的内存和已被释放的内存链接起来的，可以参见书中113页的插图理解。&lt;/p>
+&lt;p>值得注意的是，python用于分配给整型的堆内存是不会自行销毁的，而是不断复用。也就是说，&lt;strong>同一时间如果同时使用的整型太多，会消耗大量内存，并且这些内存在python关闭之前一直被python持有着。&lt;/strong>&lt;/p>
+&lt;h2 id="字符串对象">字符串对象&lt;/h2>
+&lt;pre>&lt;code class="language-c">typedef struct {
+PyObject_VAR_HEAD
+long ob_shash;
+int ob_sstate;
+char ob_sval[1];
+} PyStringObject;
+&lt;/code>&lt;/pre>
+&lt;p>在Python源码中的注释显示，预存字符串的hash值(为了节省字符串比较的时间)和这里的intern机制将Python虚拟机的执行效率提升了20%。&lt;/p>
+&lt;p>&lt;strong>intern机制&lt;/strong> 将新建的字符串缓存在一个PyDictObject里，相同的字符串共用同一内存。&lt;/p>
+&lt;p>单一字符的字符串，除了用intern缓存外，还会缓存在系统自带的一个字符串缓冲池里：&lt;/p>
+&lt;pre>&lt;code class="language-c">static PyStringObject *characters[UCHAR_MAX + 1];
+&lt;/code>&lt;/pre>
+&lt;p>&lt;strong>&lt;code>+&lt;/code>操作符和&lt;code>join&lt;/code>的效率问题&lt;/strong> &lt;code>+&lt;/code>连接n个操作符会创建n-1次临时空间，&lt;code>join&lt;/code>会直接处理一个list里的字符串，只分配一次内存。节省开销。&lt;/p>
+&lt;h2 id="列表对象">列表对象&lt;/h2>
+&lt;p>参见C++ vector对象的存储方式。&lt;/p>
+&lt;h2 id="字典对象">字典对象&lt;/h2>
+&lt;p>Python使用散列表(时间复杂度O(1))而非红黑树(时间复杂度O(logN))来存储map结构。&lt;/p>
+&lt;p>**Hash冲突(碰撞)**不同的值映射到相同的键时，就产生了冲突。一般解决办法有：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>开链法(哈希桶)：
+&lt;img class="img-zoomable" src="http://s5.51cto.com/wyfs02/M01/7F/F0/wKioL1cylpXiOV0YAAA7ZFeMdkQ563.png" alt="" />
+&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>开放定址法：
+hash一次没有命中就再hash一次，直到找到为止……(二次探测)&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>小于8个元素的Dict，python使用PyDIctObject内部的smalltable数组保存元素内容。&lt;/p>
+&lt;p>PyDictObject对String类型的key做了特殊对待——简化了计算hash函数的过程(正常情况下key值是一个&lt;code>PyObject *&lt;/code>对象，需要做大量类型判断，但是对PyStringObject就省了)。&lt;/p>
+&lt;p>**装载率(使用的空间/预先分配的空间)**大于2/3时，hash冲突的概率会急速升高，这时python就会动态分配更多的空间。与其他类型一样，如果装载率太小，也会自动缩减分配的空间。&lt;/p>
+&lt;blockquote>
+&lt;p>在确定新的table的大小时，通常选用的策略是时新的table中entry的数量是现在table中Active态entry数量的4倍，选用4倍是为了使table中处于Active态的entry的分布更加稀疏，减少插入元素时的冲突概率……所以当table中Active态的entry数量非常大时，Python只会要求2倍的空间，这次又是以执行速度来交换内存空间。&lt;/p>
+&lt;/blockquote>
+&lt;p>注意这段话，执行速度和内存大小是反比关系，划分的空间越大，执行一次查找就越费时，所以分配的内存空间不是越大越好。&lt;/p>
+&lt;p>PyDictObject也使用了同PyListObject一样的缓冲池方式。参考列表对象部分内容。&lt;/p>
+&lt;p>&lt;em>&lt;strong>笔者总结：从上面的各种类型的处理规律可以总结出Python遵循的原则：小变量缓存，大变量尽量整块分配内存，回收变量时不释放内存而是尽量复用，预分配的空间既要满足需要又不能太大(太大就缩减)&lt;/strong>&lt;/em>&lt;/p></description></item><item><title>一些投资知识</title><link>https://sund.site/2017/01/%E4%B8%80%E4%BA%9B%E6%8A%95%E8%B5%84%E7%9F%A5%E8%AF%86/</link><pubDate>Thu, 19 Jan 2017 13:25:55 +0800</pubDate><guid>https://sund.site/2017/01/%E4%B8%80%E4%BA%9B%E6%8A%95%E8%B5%84%E7%9F%A5%E8%AF%86/</guid><description>&lt;h2 id="资产配置">资产配置&lt;/h2>
 &lt;p>债、股、基金等综合配置。基金有的偏股，有的偏债，有的偏另类。看清楚哪些基金适合自己。&lt;/p>
 &lt;p>每种理财产品、基金都是有一些底层资产构成。&lt;/p>
 &lt;h3 id="什么是底层资产">什么是底层资产&lt;/h3>

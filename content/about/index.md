@@ -1,7 +1,6 @@
 ---
 title: "About Me"
-date: 2020-05-10T23:33:45+08:00
-description: ""
+date: 2013-01-01T23:33:45+08:00
 ---
 
 你好，我是 [Steve Sun](https://github.com/stevedsun)。

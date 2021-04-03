@@ -32,7 +32,7 @@ params:
   # Site Author
   author: Steve Sun
   # Author biography
-  bio: An Engineer's Blog
+  bio: 孙大迪的思考和实践
   # Site Description, used in HTML meat
   description: Steve Sun's Blog
   enableRSS: true

@@ -1,6 +1,7 @@
 baseURL = "https://sund.site"
 title   = "电波障害"
-languageCode = "en-us"
+languageCode = "zh-cn"
+hasCJKLanguage = true
 theme = "hello-friend-ng"
 
 PygmentsCodeFences = true
@@ -151,9 +152,15 @@ disableHugoGeneratorInject = false
 
 [languages]
   [languages.en]
-    subtitle  = "Steve Sun's personal website"
+    subtitle  = "Steve Sun's blog"
     weight    = 1
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+
+  [languages.cn]
+    subtitle  = "Steve Sun's blog"
+    weight    = 2
+    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+
 
 [menu]
   [[menu.main]]

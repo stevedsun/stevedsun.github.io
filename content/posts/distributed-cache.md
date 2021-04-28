@@ -2,7 +2,7 @@
 title: "分布式缓存系统的设计"
 date: 2021-03-18T15:32:57+08:00
 tags: [缓存,分布式,redis]
-images: [images/default.jpg] 
+images: "/images/default.jpg"
 description: "这是一篇关于Redis构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。"
 ---
 

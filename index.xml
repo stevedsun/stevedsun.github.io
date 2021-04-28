@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>电波障害</title><link>https://sund.site/</link><description>Recent content on 电波障害</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Thu, 18 Mar 2021 15:32:57 +0800</lastBuildDate><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/2021/03/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/2021/03/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1/</guid><description>&lt;p>很久不写技术文章了。这是一篇关于Redis构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>电波障害</title><link>https://sund.site/</link><description>Recent content on 电波障害</description><generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>© 2021, Steve Sun</copyright><lastBuildDate>Thu, 18 Mar 2021 15:32:57 +0800</lastBuildDate><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/2021/03/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/2021/03/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1/</guid><description>&lt;p>很久不写技术文章了。这是一篇关于Redis构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。&lt;/p>
 &lt;p>下面就以我做过的商品预约平台项目作为引子，引出分布式缓存设计的一些要点。&lt;/p>
 &lt;p>该商品预约平台的背景如下：&lt;/p>
 &lt;ul>
@@ -770,38 +770,38 @@ ioreg -l | grep &amp;quot;DisplayProductID&amp;quot;
 &lt;p>之后在这个刚建好的文件夹下增加一个文件，命名为&lt;code>DisplayProductID-[你刚才查到的DisplayProductID的16进制数]&lt;/code>，例如&lt;code>DisplayProductID-a0c3&lt;/code>。&lt;/p>
 &lt;h3 id="4-为你的显示器生成-plist-文件">4. 为你的显示器生成 plist 文件&lt;/h3>
 &lt;p>到 &lt;a href="https://comsysto.github.io/Display-Override-PropertyList-File-Parser-and-Generator-with-HiDPI-Support-For-Scaled-Resolutions/">这个网站&lt;/a> ，在左侧的空里分别输入显示器型号，DisplayProductID 和 DisplayVendorID，注意填16进制的数字，并且检查下后边10进制的数字是不是和你刚才命令查到的一致。如果需要添加自己额外的分辨率，直接在下边新建一条分辨率配置就行。最后，复制右边生成 XML 格式文本，粘贴到刚才新建的文件里。（也可以直接从网站下载文件，去掉文件名后缀 &lt;code>.plist&lt;/code> ）&lt;/p>
-&lt;p>&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6ly1g9bg60hippj30nm0rqwha.jpg" alt="显示器配置" style="zoom:50%;" />&lt;/p>
 &lt;p>XML 文件类似下边这样：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-xml" data-lang="xml">&lt;span style="color:#75715e">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span>
-&lt;span style="color:#75715e">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;plist&lt;/span> &lt;span style="color:#a6e22e">version=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>DisplayProductID&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>41156&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>DisplayVendorID&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>4268&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>scale-resolutions&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAKAAAABaAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAFAAAAAtAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAPAAAACHAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAHgAAABDgAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAMgAAABwgAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAGQAAAA4QAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAKAgAABaAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAKrAAABgAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAFVgAAAwAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
-&lt;span style="color:#f92672">&amp;lt;/plist&amp;gt;&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-xml" data-lang="xml">&lt;span style="color:#999;font-weight:bold;font-style:italic">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span>
+&lt;span style="color:#999;font-weight:bold;font-style:italic">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;plist&lt;/span> &lt;span style="color:#008080">version=&lt;/span>&lt;span style="color:#d14">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span style="color:#000080">&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;dict&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;key&amp;gt;&lt;/span>DisplayProductID&lt;span style="color:#000080">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;integer&amp;gt;&lt;/span>41156&lt;span style="color:#000080">&amp;lt;/integer&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;key&amp;gt;&lt;/span>DisplayVendorID&lt;span style="color:#000080">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;integer&amp;gt;&lt;/span>4268&lt;span style="color:#000080">&amp;lt;/integer&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;key&amp;gt;&lt;/span>scale-resolutions&lt;span style="color:#000080">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;array&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;data&amp;gt;&lt;/span>AAAKAAAABaAAAAABACAAAA==&lt;span style="color:#000080">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;data&amp;gt;&lt;/span>AAAFAAAAAtAAAAABACAAAA==&lt;span style="color:#000080">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;data&amp;gt;&lt;/span>AAAPAAAACHAAAAABACAAAA==&lt;span style="color:#000080">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;data&amp;gt;&lt;/span>AAAHgAAABDgAAAABACAAAA==&lt;span style="color:#000080">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;data&amp;gt;&lt;/span>AAAMgAAABwgAAAABACAAAA==&lt;span style="color:#000080">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;data&amp;gt;&lt;/span>AAAGQAAAA4QAAAABACAAAA==&lt;span style="color:#000080">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;data&amp;gt;&lt;/span>AAAKAgAABaAAAAABACAAAA==&lt;span style="color:#000080">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;data&amp;gt;&lt;/span>AAAKrAAABgAAAAABACAAAA==&lt;span style="color:#000080">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;data&amp;gt;&lt;/span>AAAFVgAAAwAAAAABACAAAA==&lt;span style="color:#000080">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;/array&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;/dict&amp;gt;&lt;/span>
+&lt;span style="color:#000080">&amp;lt;/plist&amp;gt;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-复制-plist-配置文件到系统配置目录">4. 复制 plist 配置文件到系统配置目录&lt;/h3>
 &lt;p>这一步就是把刚才新建的配置文件复制到你系统目录里，你直接复制通常会提示你系统目录是「只读」的，不允许你胡作非为。所以你先要在终端执行下面的命令：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">sudo mount -uw /
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">sudo mount -uw /
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>这样，你就可以复制到系统的文件夹了。（这个命令重启后失效）&lt;/p>
 &lt;p>接下来打开系统文件夹&lt;code>/System/Library/Displays/Contents/Resources/Overrides/&lt;/code>，你会发现一大堆跟你刚才文件夹命名相似的目录。把你新建的文件夹丢进去，和它们混在一起，假装它原来就是其中一员。重启。&lt;/p>
 &lt;h3 id="5-修改分辨率">5. 修改分辨率&lt;/h3>
 &lt;p>重启之后又进入系统，首先打开 RDM，你会在菜单栏看见它：&lt;/p>
-&lt;p>&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g995pjfs3aj30io0h4gz1.jpg" alt="rdm-shot" style="zoom:50%;" />&lt;/p>
 &lt;p>Main Display 和 Display 2 就分别是你的外接显示器和 macbook 的显示器分辨率设置（位置有可能对掉，自己尝试一下）。带有 ⚡️ 符号的分辨率设置项就是开启 HiDPI 后新增出来的。如果你像我一样是 2K 显示器，可以给显示器选择&lt;code>1920x1080⚡️&lt;/code>那个配置。是不是比原生分辨率的 UI 和字体更大更清晰了。&lt;/p>
 &lt;h2 id="小结">小结&lt;/h2>
 &lt;p>本文教你强行开启 macbook 的 HiDPI 设置，并针对 2K 显示器新增了配置文件到系统配置目录里，最后用 RDM 自由设置适合你显示器的分辨率。至于 HiDPI 的原理，请自行搜索，此处不再赘述。&lt;/p>
@@ -1096,10 +1096,10 @@ ioreg -l | grep &amp;quot;DisplayProductID&amp;quot;
 &lt;p>Mac版UU加速器目前还处于免费测试阶段，可以随意使用。按照提示配置NS上的IP和DNS即可。但是如果想让联机速度突破A，甚至小于30ms延迟，就要结合第二部分「进阶方法」中的内容了。&lt;/p>
 &lt;h3 id="最方便的方法dns优化">最方便的方法：DNS优化&lt;/h3>
 &lt;p>这也是最多人的办法，以「Splatoon2」为例，四川电信在不使用任何加速器的情况下，单单设置了合适的DNS，就可以流畅体验乌贼娘了。注意这种方法在晚上8～10点高峰期间有一定概率掉线。下面提供一些我常用的DNS，不同地区效果不同，需要自己尝试。&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">218.102.23.228 &lt;span style="color:#75715e"># 一般用作日本eshop下载游戏，速度提升明显&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">218.102.23.228 &lt;span style="color:#998;font-style:italic"># 一般用作日本eshop下载游戏，速度提升明显&lt;/span>
 203.198.7.66
-168.126.63.1 &lt;span style="color:#75715e"># 著名韩国DNS节点，Splatoon2 联机常用&lt;/span>
-168.126.63.2 &lt;span style="color:#75715e"># 同上&lt;/span>
+168.126.63.1 &lt;span style="color:#998;font-style:italic"># 著名韩国DNS节点，Splatoon2 联机常用&lt;/span>
+168.126.63.2 &lt;span style="color:#998;font-style:italic"># 同上&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="进阶方法">进阶方法&lt;/h2>
 &lt;p>进阶方法可以最大限度的提升你的网络通信效率。&lt;/p>
 &lt;h3 id="路由器设置优化">路由器设置优化&lt;/h3>
@@ -1279,12 +1279,12 @@ ioreg -l | grep &amp;quot;DisplayProductID&amp;quot;
 &lt;p>那么究竟Python会在众多的等待线程中选择哪一个幸运儿呢？答案是，不知道。没错，对于这个问题，Python完全没有插手，而是交给了底层的操作系统来解决。也就是说，Python借用了底层操作系统所提供的线程调度机制来决定下一个进入Python解释器的线程究竟是谁。&lt;/p>
 &lt;/blockquote>
 &lt;p>GIL在C里对应的结构：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">[thread_nt.h]
-&lt;span style="color:#66d9ef">typedef&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> NRMUTEX {
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">[thread_nt.h]
+&lt;span style="color:#000;font-weight:bold">typedef&lt;/span> &lt;span style="color:#000;font-weight:bold">struct&lt;/span> NRMUTEX {
 LONG owned ;
 DWORD thread_id ;
 HANDLE hevent ;
-} NRMUTEX, &lt;span style="color:#f92672">*&lt;/span>PNRMUTEX ;
+} NRMUTEX, &lt;span style="color:#000;font-weight:bold">*&lt;/span>PNRMUTEX ;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>其中&lt;code>owned&lt;/code>初始化为-1，表示锁可用，否则为不可用。&lt;code>thread_id&lt;/code>代表线程id，最后一个是平台相关的变量，win32上是一个event内核对象。&lt;/p>
 &lt;h2 id="多线程---标准调度">多线程 - 标准调度&lt;/h2>
 &lt;blockquote>
@@ -1307,27 +1307,27 @@ HANDLE hevent ;
 &lt;/ol>
 &lt;p>&lt;strong>可见python在保证线程安全的前提下，允许线程在某些时刻脱离GIL标准调度流程。&lt;/strong>&lt;/p>
 &lt;p>其中&lt;code>Py_BEGIN_ALLOW_THREADS&lt;/code>和&lt;code>Py_END_ALLOW_THREADS&lt;/code>两个负责释放和等待GIL的宏的实现如下。&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">[ceval.h]
-&lt;span style="color:#75715e">#define Py_BEGIN_ALLOW_THREADS { \
-&lt;/span>&lt;span style="color:#75715e"> PyThreadState *_save; \
-&lt;/span>&lt;span style="color:#75715e"> _save = PyEval_SaveThread();
-&lt;/span>&lt;span style="color:#75715e">#define Py_END_ALLOW_THREADS PyEval_RestoreThread(_save); \
-&lt;/span>&lt;span style="color:#75715e"> }
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">[ceval.h]
+&lt;span style="color:#999;font-weight:bold;font-style:italic">#define Py_BEGIN_ALLOW_THREADS { \
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic"> PyThreadState *_save; \
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic"> _save = PyEval_SaveThread();
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic">#define Py_END_ALLOW_THREADS PyEval_RestoreThread(_save); \
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic"> }
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic">&lt;/span>
 [ceval.c]
-PyThreadState&lt;span style="color:#f92672">*&lt;/span> PyEval_SaveThread(&lt;span style="color:#66d9ef">void&lt;/span>)
+PyThreadState&lt;span style="color:#000;font-weight:bold">*&lt;/span> PyEval_SaveThread(&lt;span style="color:#458;font-weight:bold">void&lt;/span>)
 {
-PyThreadState &lt;span style="color:#f92672">*&lt;/span>tstate &lt;span style="color:#f92672">=&lt;/span> PyThreadState_Swap(NULL);
-&lt;span style="color:#66d9ef">if&lt;/span> (interpreter_lock)
+PyThreadState &lt;span style="color:#000;font-weight:bold">*&lt;/span>tstate &lt;span style="color:#000;font-weight:bold">=&lt;/span> PyThreadState_Swap(&lt;span style="color:#0086b3">NULL&lt;/span>);
+&lt;span style="color:#000;font-weight:bold">if&lt;/span> (interpreter_lock)
 PyThread_release_lock(interpreter_lock);
-&lt;span style="color:#66d9ef">return&lt;/span> tstate;
+&lt;span style="color:#000;font-weight:bold">return&lt;/span> tstate;
 }
-&lt;span style="color:#66d9ef">void&lt;/span> PyEval_RestoreThread(PyThreadState &lt;span style="color:#f92672">*&lt;/span>tstate)
+&lt;span style="color:#458;font-weight:bold">void&lt;/span> PyEval_RestoreThread(PyThreadState &lt;span style="color:#000;font-weight:bold">*&lt;/span>tstate)
 {
-&lt;span style="color:#66d9ef">if&lt;/span> (interpreter_lock) {
-&lt;span style="color:#66d9ef">int&lt;/span> err &lt;span style="color:#f92672">=&lt;/span> errno;
-PyThread_acquire_lock(interpreter_lock, &lt;span style="color:#ae81ff">1&lt;/span>);
-errno &lt;span style="color:#f92672">=&lt;/span> err;
+&lt;span style="color:#000;font-weight:bold">if&lt;/span> (interpreter_lock) {
+&lt;span style="color:#458;font-weight:bold">int&lt;/span> err &lt;span style="color:#000;font-weight:bold">=&lt;/span> errno;
+PyThread_acquire_lock(interpreter_lock, &lt;span style="color:#099">1&lt;/span>);
+errno &lt;span style="color:#000;font-weight:bold">=&lt;/span> err;
 }
 PyThreadState_Swap(tstate);
 }
@@ -1444,32 +1444,32 @@ PyThreadState_Swap(tstate);
 &lt;p>不被import的py文件不会生成pyc。标准库里有py_compile等方法也可以生成pyc。&lt;/p>
 &lt;p>&lt;strong>import机制&lt;/strong> 导入某个模块时，先查找对应的pyc，如果没有pyc就生成然后import这个pyc。(所以实际导入的并不是py文件，而是py文件编译后的PyCodeObject)。&lt;/p>
 &lt;p>&lt;strong>PyFrameObject&lt;/strong> Python程序运行时的「执行环境」。参考操作系统执行可执行文件的过程。Python也是将函数对应的执行环境封装成栈帧的形式加载进内存。&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#66d9ef">typedef&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> _frame {
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#000;font-weight:bold">typedef&lt;/span> &lt;span style="color:#000;font-weight:bold">struct&lt;/span> _frame {
 PyObject_VAR_HEAD
-&lt;span style="color:#66d9ef">struct&lt;/span> _frame &lt;span style="color:#f92672">*&lt;/span>f_back; &lt;span style="color:#75715e">//执行环境链上的前一个frame
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> PyCodeObject &lt;span style="color:#f92672">*&lt;/span>f_code; &lt;span style="color:#75715e">//PyCodeObject对象
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">*&lt;/span>f_builtins; &lt;span style="color:#75715e">//builtin名字空间
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">*&lt;/span>f_globals; &lt;span style="color:#75715e">//global名字空间
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">*&lt;/span>f_locals; &lt;span style="color:#75715e">//local名字空间
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">**&lt;/span>f_valuestack; &lt;span style="color:#75715e">//运行时栈的栈底位置
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">**&lt;/span>f_stacktop; &lt;span style="color:#75715e">//运行时栈的栈顶位置
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">……&lt;/span>
-&lt;span style="color:#66d9ef">int&lt;/span> f_lasti; &lt;span style="color:#75715e">//上一条字节码指令在f_code中的偏移位置
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> f_lineno; &lt;span style="color:#75715e">//当前字节码对应的源代码行
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">……&lt;/span>
-&lt;span style="color:#75715e">//动态内存，维护（局部变量+cell对象集合+free对象集合+运行时栈）所需要的空间
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">*&lt;/span>f_localsplus[&lt;span style="color:#ae81ff">1&lt;/span>];
+&lt;span style="color:#000;font-weight:bold">struct&lt;/span> _frame &lt;span style="color:#000;font-weight:bold">*&lt;/span>f_back; &lt;span style="color:#998;font-style:italic">//执行环境链上的前一个frame
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> PyCodeObject &lt;span style="color:#000;font-weight:bold">*&lt;/span>f_code; &lt;span style="color:#998;font-style:italic">//PyCodeObject对象
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> PyObject &lt;span style="color:#000;font-weight:bold">*&lt;/span>f_builtins; &lt;span style="color:#998;font-style:italic">//builtin名字空间
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> PyObject &lt;span style="color:#000;font-weight:bold">*&lt;/span>f_globals; &lt;span style="color:#998;font-style:italic">//global名字空间
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> PyObject &lt;span style="color:#000;font-weight:bold">*&lt;/span>f_locals; &lt;span style="color:#998;font-style:italic">//local名字空间
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> PyObject &lt;span style="color:#000;font-weight:bold">**&lt;/span>f_valuestack; &lt;span style="color:#998;font-style:italic">//运行时栈的栈底位置
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> PyObject &lt;span style="color:#000;font-weight:bold">**&lt;/span>f_stacktop; &lt;span style="color:#998;font-style:italic">//运行时栈的栈顶位置
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">……&lt;/span>
+&lt;span style="color:#458;font-weight:bold">int&lt;/span> f_lasti; &lt;span style="color:#998;font-style:italic">//上一条字节码指令在f_code中的偏移位置
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> &lt;span style="color:#458;font-weight:bold">int&lt;/span> f_lineno; &lt;span style="color:#998;font-style:italic">//当前字节码对应的源代码行
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> &lt;span style="color:#a61717;background-color:#e3d2d2">……&lt;/span>
+&lt;span style="color:#998;font-style:italic">//动态内存，维护（局部变量+cell对象集合+free对象集合+运行时栈）所需要的空间
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> PyObject &lt;span style="color:#000;font-weight:bold">*&lt;/span>f_localsplus[&lt;span style="color:#099">1&lt;/span>];
 } PyFrameObject;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Python标准库的&lt;code>sys._getframe()&lt;/code>可以动态的在程序执行时获取当前内存中活跃的PyFrameObject信息。&lt;/p>
 &lt;h2 id="legb-规则">LEGB 规则&lt;/h2>
 &lt;p>即python作用域的查找顺序是&lt;code>local&lt;/code>-&lt;code>enclosing&lt;/code>-&lt;code>global&lt;/code>-&lt;code>buildin&lt;/code>。看下面代码：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">a &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">g&lt;/span>():
-&lt;span style="color:#66d9ef">print&lt;/span> a
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">f&lt;/span>():
-&lt;span style="color:#66d9ef">print&lt;/span> a &lt;span style="color:#f92672">//&lt;/span>[&lt;span style="color:#ae81ff">1&lt;/span>]
-a &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#f92672">//&lt;/span>[&lt;span style="color:#ae81ff">2&lt;/span>]
-&lt;span style="color:#66d9ef">print&lt;/span> a
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">a &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#099">1&lt;/span>
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">g&lt;/span>():
+&lt;span style="color:#000;font-weight:bold">print&lt;/span> a
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">f&lt;/span>():
+&lt;span style="color:#000;font-weight:bold">print&lt;/span> a &lt;span style="color:#000;font-weight:bold">//&lt;/span>[&lt;span style="color:#099">1&lt;/span>]
+a &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#099">2&lt;/span> &lt;span style="color:#000;font-weight:bold">//&lt;/span>[&lt;span style="color:#099">2&lt;/span>]
+&lt;span style="color:#000;font-weight:bold">print&lt;/span> a
 g()
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>代码在[1]处会抛出异常，原因是python在编译阶段就把静态数据(局部变量、全局变量、字节码)放入pyc里，执行到&lt;code>f()&lt;/code>里时，查找到&lt;code>a&lt;/code>是在local作用域里定义的而不是global里，但是此时local的a还没赋值，所以就会抛出异常。由此可见，&lt;strong>python作用域信息是在静态编译时就处理好了的&lt;/strong>。&lt;/p>
 &lt;h2 id="python-虚拟机运行框架">Python 虚拟机运行框架&lt;/h2>
@@ -1484,9 +1484,9 @@ g()
 &lt;p>&lt;img src="https://i.loli.net/2021/03/05/GHImB214fvxSXgk.png" alt="">&lt;/p>
 &lt;p>Python虚拟机就是一个「软CPU」，动态加载上述三种结构进内存，并模拟操作系统执行过程。程序执行后，先创建各个运行时环境，再将栈帧中的字节码载入，循环遍历解释执行。&lt;/p>
 &lt;h2 id="python字节码">Python字节码&lt;/h2>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
-&lt;span style="color:#ae81ff">0&lt;/span> LOAD_CONST &lt;span style="color:#ae81ff">0&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span>)
-&lt;span style="color:#ae81ff">3&lt;/span> STORE_NAME &lt;span style="color:#ae81ff">0&lt;/span> (i)
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">i &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#099">1&lt;/span>
+&lt;span style="color:#099">0&lt;/span> LOAD_CONST &lt;span style="color:#099">0&lt;/span> (&lt;span style="color:#099">1&lt;/span>)
+&lt;span style="color:#099">3&lt;/span> STORE_NAME &lt;span style="color:#099">0&lt;/span> (i)
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>例如python的一条语句&lt;code>i=1&lt;/code>可以解释为下面两行字节码，最左边的第1列数字代表这行字节码在内存中的偏移位置，第2列是字节码的名字(CPU并不关心名字，它只是根据偏移量读出字节码，所以这个名字是方便阅读用的)，第3列是字节码的参数，如&lt;code>LOAD_CONST&lt;/code>对应的数据在变量&lt;code>f-&amp;gt;f_code-&amp;gt;co_consts&lt;/code>里，0就是这个参数位于&lt;code>f-&amp;gt;f_code-&amp;gt;co_consts&lt;/code>的偏移量。最后一列的括号里是从参数里取到的value。&lt;/p>
 &lt;h2 id="python-的异常抛出机制">Python 的异常抛出机制&lt;/h2>
 &lt;p>异常处理的操作都在&lt;code>Python/traceback.c&lt;/code>文件里，python每次调用一层函数，就创建改函数对应的PyFrameObject对象来保存函数运行时信息，PythonFrameObject里调用PyEval_EvalFrameEx循环解释字节码，如果抛出异常就创建PyTraceBackObject对象，将对象交给上一层PyFrameObject里的PyTracebackObject组成链表，最后返回最上层PyRun_SimpleFileExFlags函数，该函数调用PyErr_Print遍历PyTraceBackObject链表打印出异常信息。&lt;/p>
@@ -1541,16 +1541,16 @@ g()
 &lt;/ul>
 &lt;h2 id="bound-method和unbound-method">Bound Method和Unbound Method&lt;/h2>
 &lt;p>假设有下面两种对类方法的调用：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">A&lt;/span>(object):
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">f&lt;/span>(self):
-&lt;span style="color:#66d9ef">pass&lt;/span>
-a &lt;span style="color:#f92672">=&lt;/span> A()
-&lt;span style="color:#75715e"># [1]&lt;/span>
-a&lt;span style="color:#f92672">.&lt;/span>f()
-&lt;span style="color:#75715e"># [2]&lt;/span>
-A&lt;span style="color:#f92672">.&lt;/span>f(a)
-&lt;span style="color:#75715e"># [3]&lt;/span>
-func &lt;span style="color:#f92672">=&lt;/span> a&lt;span style="color:#f92672">.&lt;/span>f
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#000;font-weight:bold">class&lt;/span> &lt;span style="color:#458;font-weight:bold">A&lt;/span>(&lt;span style="color:#0086b3">object&lt;/span>):
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">f&lt;/span>(&lt;span style="color:#999">self&lt;/span>):
+&lt;span style="color:#000;font-weight:bold">pass&lt;/span>
+a &lt;span style="color:#000;font-weight:bold">=&lt;/span> A()
+&lt;span style="color:#998;font-style:italic"># [1]&lt;/span>
+a&lt;span style="color:#000;font-weight:bold">.&lt;/span>f()
+&lt;span style="color:#998;font-style:italic"># [2]&lt;/span>
+A&lt;span style="color:#000;font-weight:bold">.&lt;/span>f(a)
+&lt;span style="color:#998;font-style:italic"># [3]&lt;/span>
+func &lt;span style="color:#000;font-weight:bold">=&lt;/span> a&lt;span style="color:#000;font-weight:bold">.&lt;/span>f
 func()
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>在代码[1]里，实例a调用类方法f，python底层会自动完成实例a和类方法f之间的绑定动作(调用&lt;code>func_ descr_get(A.f, a, A)&lt;/code>，将实例地址和函数对象PyFunctionObject封装到一个PyMethodObject)，而代码[2]里直接通过A调用，则f为非绑定的PyMethodObject，里面没有实例信息，需要传入a。&lt;/p>
 &lt;p>比较绑定方法与非绑定方法可知，通过[1]的方式每次都要绑定一次实例，开销非常大，下图比较的是[1]和[3]两种方式，绑定操作的执行次数。&lt;/p>
@@ -1562,18 +1562,18 @@ func()
 &lt;p>python 的对象不像 C 是分配在栈、堆、data segment等位置，而是全部分配在堆上！只有python内置类型在初始化时候才是被C语言层静态初始化。&lt;/p>
 &lt;p>PyObject内部就两样：引用计数器、类型对象指针。&lt;/p>
 &lt;p>类型对象的定义：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#66d9ef">typedef&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> _typeobject {
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#000;font-weight:bold">typedef&lt;/span> &lt;span style="color:#000;font-weight:bold">struct&lt;/span> _typeobject {
 PyObject_VAR_HEAD
-&lt;span style="color:#66d9ef">char&lt;/span> &lt;span style="color:#f92672">*&lt;/span>tp_name; &lt;span style="color:#75715e">/* For printing, in format &amp;#34;&amp;lt;module&amp;gt;.&amp;lt;name&amp;gt;&amp;#34; */&lt;/span>
-&lt;span style="color:#66d9ef">int&lt;/span> tp_basicsize, tp_itemsize; &lt;span style="color:#75715e">/* For allocation */&lt;/span>
-&lt;span style="color:#75715e">/* Methods to implement standard operations */&lt;/span>
+&lt;span style="color:#458;font-weight:bold">char&lt;/span> &lt;span style="color:#000;font-weight:bold">*&lt;/span>tp_name; &lt;span style="color:#998;font-style:italic">/* For printing, in format &amp;#34;&amp;lt;module&amp;gt;.&amp;lt;name&amp;gt;&amp;#34; */&lt;/span>
+&lt;span style="color:#458;font-weight:bold">int&lt;/span> tp_basicsize, tp_itemsize; &lt;span style="color:#998;font-style:italic">/* For allocation */&lt;/span>
+&lt;span style="color:#998;font-style:italic">/* Methods to implement standard operations */&lt;/span>
 destructor tp_dealloc;
 printfunc tp_print;
-&lt;span style="color:#960050;background-color:#1e0010">……&lt;/span>
-&lt;span style="color:#75715e">/* More standard operations (here for binary compatibility) */&lt;/span>
+&lt;span style="color:#a61717;background-color:#e3d2d2">……&lt;/span>
+&lt;span style="color:#998;font-style:italic">/* More standard operations (here for binary compatibility) */&lt;/span>
 hashfunc tp_hash;
 ternaryfunc tp_call;
-&lt;span style="color:#960050;background-color:#1e0010">……&lt;/span>
+&lt;span style="color:#a61717;background-color:#e3d2d2">……&lt;/span>
 } PyTypeObject;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>PyObject_VAR_HEAD&lt;/code>是可变类型的头信息，其中除了&lt;code>PyObject_HEAD&lt;/code>的内容外，额外添加了一个代表该对象元素数量的整型。从上边代码可见，python的类型也是一个可变对象。&lt;/p>
 &lt;h2 id="python的多态">Python的多态&lt;/h2>
@@ -1585,16 +1585,16 @@ ternaryfunc tp_call;
 &lt;p>大整数则由一个叫&lt;code>block_list&lt;/code>的链表管理，每次分配一个大整数就在&lt;code>free_list&lt;/code>(一个指向空闲内存block的指针)里拿出一个节点并把&lt;code>free_list&lt;/code>后移一个&lt;code>block&lt;/code>。关于&lt;code>free_list&lt;/code>是如何把尚未分配的内存和已被释放的内存链接起来的，可以参见书中113页的插图理解。&lt;/p>
 &lt;p>值得注意的是，python用于分配给整型的堆内存是不会自行销毁的，而是不断复用。也就是说，&lt;strong>同一时间如果同时使用的整型太多，会消耗大量内存，并且这些内存在python关闭之前一直被python持有着。&lt;/strong>&lt;/p>
 &lt;h2 id="字符串对象">字符串对象&lt;/h2>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#66d9ef">typedef&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#000;font-weight:bold">typedef&lt;/span> &lt;span style="color:#000;font-weight:bold">struct&lt;/span> {
 PyObject_VAR_HEAD
-&lt;span style="color:#66d9ef">long&lt;/span> ob_shash;
-&lt;span style="color:#66d9ef">int&lt;/span> ob_sstate;
-&lt;span style="color:#66d9ef">char&lt;/span> ob_sval[&lt;span style="color:#ae81ff">1&lt;/span>];
+&lt;span style="color:#458;font-weight:bold">long&lt;/span> ob_shash;
+&lt;span style="color:#458;font-weight:bold">int&lt;/span> ob_sstate;
+&lt;span style="color:#458;font-weight:bold">char&lt;/span> ob_sval[&lt;span style="color:#099">1&lt;/span>];
 } PyStringObject;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>在Python源码中的注释显示，预存字符串的hash值(为了节省字符串比较的时间)和这里的intern机制将Python虚拟机的执行效率提升了20%。&lt;/p>
 &lt;p>&lt;strong>intern机制&lt;/strong> 将新建的字符串缓存在一个PyDictObject里，相同的字符串共用同一内存。&lt;/p>
 &lt;p>单一字符的字符串，除了用intern缓存外，还会缓存在系统自带的一个字符串缓冲池里：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#66d9ef">static&lt;/span> PyStringObject &lt;span style="color:#f92672">*&lt;/span>characters[UCHAR_MAX &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>];
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#000;font-weight:bold">static&lt;/span> PyStringObject &lt;span style="color:#000;font-weight:bold">*&lt;/span>characters[UCHAR_MAX &lt;span style="color:#000;font-weight:bold">+&lt;/span> &lt;span style="color:#099">1&lt;/span>];
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>&lt;code>+&lt;/code>操作符和&lt;code>join&lt;/code>的效率问题&lt;/strong> &lt;code>+&lt;/code>连接n个操作符会创建n-1次临时空间，&lt;code>join&lt;/code>会直接处理一个list里的字符串，只分配一次内存。节省开销。&lt;/p>
 &lt;h2 id="列表对象">列表对象&lt;/h2>
 &lt;p>参见C++ vector对象的存储方式。&lt;/p>
@@ -1717,18 +1717,18 @@ hash一次没有命中就再hash一次，直到找到为止……(二次探测)&
 &lt;h3 id="关于定投">关于定投&lt;/h3>
 &lt;p>定投可以磨平金融市场波动造成的影响，适合投资长期稳定上升的资产。3年内持续下跌的资产不适合定投。&lt;/p></description></item><item><title>Python2 中字符类型的一些坑</title><link>https://sund.site/posts/2017/01/python2-%E4%B8%AD%E5%AD%97%E7%AC%A6%E7%B1%BB%E5%9E%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/</link><pubDate>Wed, 11 Jan 2017 11:09:00 +0000</pubDate><guid>https://sund.site/posts/2017/01/python2-%E4%B8%AD%E5%AD%97%E7%AC%A6%E7%B1%BB%E5%9E%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/</guid><description>&lt;h2 id="问题">问题&lt;/h2>
 &lt;p>有一道面试题是这样的：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">a &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">u&lt;/span>&lt;span style="color:#e6db74">&amp;#39;China&amp;#39;&lt;/span>
-b &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;China&amp;#39;&lt;/span>
-c &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">u&lt;/span>&lt;span style="color:#e6db74">&amp;#39;中国&amp;#39;&lt;/span>
-d &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;中国&amp;#39;&lt;/span>
-&lt;span style="color:#75715e"># 1&lt;/span>
-&lt;span style="color:#66d9ef">print&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74"> &lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> (a, b)
-&lt;span style="color:#75715e"># 2&lt;/span>
-&lt;span style="color:#66d9ef">print&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> c
-&lt;span style="color:#75715e"># 3&lt;/span>
-&lt;span style="color:#66d9ef">print&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> d
-&lt;span style="color:#75715e"># 4&lt;/span>
-&lt;span style="color:#66d9ef">print&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74"> &lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> (c, d)
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">a &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#d14">u&lt;/span>&lt;span style="color:#d14">&amp;#39;China&amp;#39;&lt;/span>
+b &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#d14">&amp;#39;China&amp;#39;&lt;/span>
+c &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#d14">u&lt;/span>&lt;span style="color:#d14">&amp;#39;中国&amp;#39;&lt;/span>
+d &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#d14">&amp;#39;中国&amp;#39;&lt;/span>
+&lt;span style="color:#998;font-style:italic"># 1&lt;/span>
+&lt;span style="color:#000;font-weight:bold">print&lt;/span> &lt;span style="color:#d14">&amp;#39;&lt;/span>&lt;span style="color:#d14">%s&lt;/span>&lt;span style="color:#d14"> &lt;/span>&lt;span style="color:#d14">%s&lt;/span>&lt;span style="color:#d14">&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">%&lt;/span> (a, b)
+&lt;span style="color:#998;font-style:italic"># 2&lt;/span>
+&lt;span style="color:#000;font-weight:bold">print&lt;/span> &lt;span style="color:#d14">&amp;#39;&lt;/span>&lt;span style="color:#d14">%s&lt;/span>&lt;span style="color:#d14">&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">%&lt;/span> c
+&lt;span style="color:#998;font-style:italic"># 3&lt;/span>
+&lt;span style="color:#000;font-weight:bold">print&lt;/span> &lt;span style="color:#d14">&amp;#39;&lt;/span>&lt;span style="color:#d14">%s&lt;/span>&lt;span style="color:#d14">&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">%&lt;/span> d
+&lt;span style="color:#998;font-style:italic"># 4&lt;/span>
+&lt;span style="color:#000;font-weight:bold">print&lt;/span> &lt;span style="color:#d14">&amp;#39;&lt;/span>&lt;span style="color:#d14">%s&lt;/span>&lt;span style="color:#d14"> &lt;/span>&lt;span style="color:#d14">%s&lt;/span>&lt;span style="color:#d14">&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">%&lt;/span> (c, d)
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>判断打印后的效果。&lt;/p>
 &lt;p>先说正确答案，只有最后一行会报错。&lt;/p>
 &lt;h2 id="分析">分析&lt;/h2>
@@ -1748,15 +1748,15 @@ d &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp
 &lt;/ul></description></item><item><title>Python yield关键字的底层实现</title><link>https://sund.site/posts/2016/12/python-yield%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0/</link><pubDate>Wed, 28 Dec 2016 18:00:00 +0000</pubDate><guid>https://sund.site/posts/2016/12/python-yield%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0/</guid><description>&lt;p>这几天面试被问到类似的问题，顺便看了看Python的源码，参考网上的教程，总结一下yield关键字在C层面是如何实现的。&lt;/p>
 &lt;h2 id="举个栗子">举个栗子&lt;/h2>
 &lt;p>我们先看一个python生成器函数的例子：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> dis &lt;span style="color:#f92672">import&lt;/span> dis
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">func&lt;/span>():
-i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">4&lt;/span>
-&lt;span style="color:#66d9ef">yield&lt;/span> i
-&lt;span style="color:#66d9ef">print&lt;/span> i
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#000;font-weight:bold">from&lt;/span> &lt;span style="color:#555">dis&lt;/span> &lt;span style="color:#000;font-weight:bold">import&lt;/span> dis
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">func&lt;/span>():
+i &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#099">4&lt;/span>
+&lt;span style="color:#000;font-weight:bold">yield&lt;/span> i
+&lt;span style="color:#000;font-weight:bold">print&lt;/span> i
 dis(func)
-a &lt;span style="color:#f92672">=&lt;/span>func()
-a&lt;span style="color:#f92672">.&lt;/span>next()
-a&lt;span style="color:#f92672">.&lt;/span>next()
+a &lt;span style="color:#000;font-weight:bold">=&lt;/span>func()
+a&lt;span style="color:#000;font-weight:bold">.&lt;/span>next()
+a&lt;span style="color:#000;font-weight:bold">.&lt;/span>next()
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>使用python的库dis可以直接查看python虚拟机运行的字节码。&lt;code>dis(func)&lt;/code>的打印如下：&lt;/p>
 &lt;pre>&lt;code> 6 0 LOAD_CONST 1 (4)
 3 STORE_FAST 0 (i)
@@ -1769,114 +1769,114 @@ a&lt;span style="color:#f92672">.&lt;/span>next()
 16 LOAD_CONST 0 (None)
 19 RETURN_VALUE
 &lt;/code>&lt;/pre>&lt;p>我们猜测其中第二列(代表字节码偏移量)为9的指令&lt;code>YIELD_VALUE&lt;/code>就是yield关键字的执行代码，进入Python2.7.12源码目录，在解释器执行字节码的主函数&lt;code>PyEval_EvalFrameEx&lt;/code>中找到了下面一段：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c"> TARGET_NOARG(YIELD_VALUE)
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c"> TARGET_NOARG(YIELD_VALUE)
 {
-retval &lt;span style="color:#f92672">=&lt;/span> POP();
-f&lt;span style="color:#f92672">-&amp;gt;&lt;/span>f_stacktop &lt;span style="color:#f92672">=&lt;/span> stack_pointer;
-why &lt;span style="color:#f92672">=&lt;/span> WHY_YIELD;
-&lt;span style="color:#75715e">// 跳转到fast_yield处。fast_yield里处理了一下状态位然后返回结果
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">goto&lt;/span> fast_yield;
+retval &lt;span style="color:#000;font-weight:bold">=&lt;/span> POP();
+f&lt;span style="color:#000;font-weight:bold">-&amp;gt;&lt;/span>f_stacktop &lt;span style="color:#000;font-weight:bold">=&lt;/span> stack_pointer;
+why &lt;span style="color:#000;font-weight:bold">=&lt;/span> WHY_YIELD;
+&lt;span style="color:#998;font-style:italic">// 跳转到fast_yield处。fast_yield里处理了一下状态位然后返回结果
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> &lt;span style="color:#000;font-weight:bold">goto&lt;/span> fast_yield;
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>其中&lt;code>TARGET_NOARG&lt;/code>为封装了&lt;code>case&lt;/code>语句的宏，这句话的意思是，如果字节码是&lt;code>YIELD_VALUE&lt;/code>，就把栈顶元素赋值给&lt;code>retval&lt;/code>，然后跳转到&lt;code>fast_yield&lt;/code>处，&lt;code>fast_yield&lt;/code>处代码进行了一些状态判断后直接返回了&lt;code>retval&lt;/code>。&lt;/p>
 &lt;h2 id="生成器是如何记录代码返回位置的">生成器是如何记录代码返回位置的&lt;/h2>
 &lt;p>显然，如果这时候调用代码&lt;code>a.next()&lt;/code>就会直接返回yield后边的表达式结果。这对应了上面C代码的&lt;code>fast_yield&lt;/code>部分，那生成器怎么记录上次执行的位置并在下一次调用&lt;code>a.next()&lt;/code>的时候从上次的位置继续执行的呢？&lt;/p>
 &lt;p>Python在解释代码时，是将代码块加载为一个叫PyFrameObject的对象，这个对象代表了当前运行的栈帧。PyFrameObject里有个&lt;code>f_lasti&lt;/code>变量用于保存代码当前执行到了字节码的哪个位置。在第二次执行&lt;code>a.next()&lt;/code>时，生成器对象把之前携带了&lt;code>f_lasti&lt;/code>的PyFrameObject当参数传给&lt;code>PyEval_EvalFrameEx&lt;/code>，在&lt;code>PyEval_EvalFrameEx&lt;/code>里的执行一个JUMPTO就直接跳转到了上一次结束生成器时的字节码位置：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">PyObject &lt;span style="color:#f92672">*&lt;/span>
-&lt;span style="color:#a6e22e">PyEval_EvalFrameEx&lt;/span>(PyFrameObject &lt;span style="color:#f92672">*&lt;/span>f, &lt;span style="color:#66d9ef">int&lt;/span> throwflag)
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">PyObject &lt;span style="color:#000;font-weight:bold">*&lt;/span>
+&lt;span style="color:#900;font-weight:bold">PyEval_EvalFrameEx&lt;/span>(PyFrameObject &lt;span style="color:#000;font-weight:bold">*&lt;/span>f, &lt;span style="color:#458;font-weight:bold">int&lt;/span> throwflag)
 {
 ...
-&lt;span style="color:#75715e">#define FAST_DISPATCH() \
-&lt;/span>&lt;span style="color:#75715e"> { \
-&lt;/span>&lt;span style="color:#75715e"> if (!lltrace &amp;amp;&amp;amp; !_Py_TracingPossible) { \
-&lt;/span>&lt;span style="color:#75715e"> f-&amp;gt;f_lasti = INSTR_OFFSET(); \
-&lt;/span>&lt;span style="color:#75715e"> goto *opcode_targets[*next_instr++]; \
-&lt;/span>&lt;span style="color:#75715e"> } \
-&lt;/span>&lt;span style="color:#75715e"> &lt;/span>&lt;span style="color:#75715e">// 跳转到fast_next_opcode处
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">goto&lt;/span> fast_next_opcode; \
+&lt;span style="color:#999;font-weight:bold;font-style:italic">#define FAST_DISPATCH() \
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic"> { \
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic"> if (!lltrace &amp;amp;&amp;amp; !_Py_TracingPossible) { \
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic"> f-&amp;gt;f_lasti = INSTR_OFFSET(); \
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic"> goto *opcode_targets[*next_instr++]; \
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic"> } \
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic"> &lt;/span>&lt;span style="color:#998;font-style:italic">// 跳转到fast_next_opcode处
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> &lt;span style="color:#000;font-weight:bold">goto&lt;/span> fast_next_opcode; \
 }
 ...
-fast_next_opcode:
-f&lt;span style="color:#f92672">-&amp;gt;&lt;/span>f_lasti &lt;span style="color:#f92672">=&lt;/span> INSTR_OFFSET();
-&lt;span style="color:#75715e">/* line-by-line tracing support */&lt;/span>
-&lt;span style="color:#66d9ef">if&lt;/span> (_Py_TracingPossible &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span>
-tstate&lt;span style="color:#f92672">-&amp;gt;&lt;/span>c_tracefunc &lt;span style="color:#f92672">!=&lt;/span> NULL &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#f92672">!&lt;/span>tstate&lt;span style="color:#f92672">-&amp;gt;&lt;/span>tracing) {
+&lt;span style="color:#900;font-weight:bold">fast_next_opcode&lt;/span>:
+f&lt;span style="color:#000;font-weight:bold">-&amp;gt;&lt;/span>f_lasti &lt;span style="color:#000;font-weight:bold">=&lt;/span> INSTR_OFFSET();
+&lt;span style="color:#998;font-style:italic">/* line-by-line tracing support */&lt;/span>
+&lt;span style="color:#000;font-weight:bold">if&lt;/span> (_Py_TracingPossible &lt;span style="color:#000;font-weight:bold">&amp;amp;&amp;amp;&lt;/span>
+tstate&lt;span style="color:#000;font-weight:bold">-&amp;gt;&lt;/span>c_tracefunc &lt;span style="color:#000;font-weight:bold">!=&lt;/span> &lt;span style="color:#0086b3">NULL&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#000;font-weight:bold">!&lt;/span>tstate&lt;span style="color:#000;font-weight:bold">-&amp;gt;&lt;/span>tracing) {
 ...
-&lt;span style="color:#75715e">/* Reload possibly changed frame fields */&lt;/span>
-&lt;span style="color:#75715e">// 按照f-&amp;gt;f_lasti中的偏移量跳转字节码
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> JUMPTO(f&lt;span style="color:#f92672">-&amp;gt;&lt;/span>f_lasti);
+&lt;span style="color:#998;font-style:italic">/* Reload possibly changed frame fields */&lt;/span>
+&lt;span style="color:#998;font-style:italic">// 按照f-&amp;gt;f_lasti中的偏移量跳转字节码
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span> JUMPTO(f&lt;span style="color:#000;font-weight:bold">-&amp;gt;&lt;/span>f_lasti);
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>其中&lt;code>INSTR_OFFSET&lt;/code>宏正是字节码的偏移量。&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#75715e">#define INSTR_OFFSET() ((int)(next_instr - first_instr))
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>
-&lt;span style="color:#75715e">// co-&amp;gt;co_code里保存的是字节码
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>first_instr &lt;span style="color:#f92672">=&lt;/span> (&lt;span style="color:#66d9ef">unsigned&lt;/span> &lt;span style="color:#66d9ef">char&lt;/span>&lt;span style="color:#f92672">*&lt;/span>) PyString_AS_STRING(co&lt;span style="color:#f92672">-&amp;gt;&lt;/span>co_code);
-next_instr &lt;span style="color:#f92672">=&lt;/span> first_instr &lt;span style="color:#f92672">+&lt;/span> f&lt;span style="color:#f92672">-&amp;gt;&lt;/span>f_lasti &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#999;font-weight:bold;font-style:italic">#define INSTR_OFFSET() ((int)(next_instr - first_instr))
+&lt;/span>&lt;span style="color:#999;font-weight:bold;font-style:italic">&lt;/span>
+&lt;span style="color:#998;font-style:italic">// co-&amp;gt;co_code里保存的是字节码
+&lt;/span>&lt;span style="color:#998;font-style:italic">&lt;/span>first_instr &lt;span style="color:#000;font-weight:bold">=&lt;/span> (&lt;span style="color:#458;font-weight:bold">unsigned&lt;/span> &lt;span style="color:#458;font-weight:bold">char&lt;/span>&lt;span style="color:#000;font-weight:bold">*&lt;/span>) PyString_AS_STRING(co&lt;span style="color:#000;font-weight:bold">-&amp;gt;&lt;/span>co_code);
+next_instr &lt;span style="color:#000;font-weight:bold">=&lt;/span> first_instr &lt;span style="color:#000;font-weight:bold">+&lt;/span> f&lt;span style="color:#000;font-weight:bold">-&amp;gt;&lt;/span>f_lasti &lt;span style="color:#000;font-weight:bold">+&lt;/span> &lt;span style="color:#099">1&lt;/span>;
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>所以生成器对象每次执行结束都把字节码的偏移量记录下来，并把运行状态保存在PyFrameObject里，下一次运行时生成器时，python解释器直接按照偏移量寻找下一个字节码指令。&lt;/p></description></item><item><title>Python 巧妙地将rpc接口封装成pythonic的链式调用</title><link>https://sund.site/posts/2016/10/python-%E5%B7%A7%E5%A6%99%E5%9C%B0%E5%B0%86rpc%E6%8E%A5%E5%8F%A3%E5%B0%81%E8%A3%85%E6%88%90pythonic%E7%9A%84%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8/</link><pubDate>Tue, 25 Oct 2016 15:40:43 +0000</pubDate><guid>https://sund.site/posts/2016/10/python-%E5%B7%A7%E5%A6%99%E5%9C%B0%E5%B0%86rpc%E6%8E%A5%E5%8F%A3%E5%B0%81%E8%A3%85%E6%88%90pythonic%E7%9A%84%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8/</guid><description>&lt;p>这是一个外国人实现的Zabbix(一个开源监控工具)的Python Client——pyzabbix里的代码片段。&lt;/p>
 &lt;h2 id="rpc调用">RPC调用&lt;/h2>
 &lt;p>Rpc调用的流程是向rpc服务端指定的uri(如http://www.abc.com/jsonrpc.php) 发送json(或其他双方约定格式)数据包，数据包里有rpc版本信息、方法名、参数等。下面&lt;code>Zabbix&lt;/code>类里的&lt;code>do_request&lt;/code>方法就完成了将方法名和方法参数打包json后发送请求的过程。&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Zabbix&lt;/span>(object):
-&lt;span style="color:#75715e"># ... skip other class methods&lt;/span>
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">do_request&lt;/span>(self, method, params&lt;span style="color:#f92672">=&lt;/span>None):
-request_json &lt;span style="color:#f92672">=&lt;/span> {
-&lt;span style="color:#e6db74">&amp;#39;jsonrpc&amp;#39;&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;2.0&amp;#39;&lt;/span>,
-&lt;span style="color:#e6db74">&amp;#39;method&amp;#39;&lt;/span>: method,
-&lt;span style="color:#e6db74">&amp;#39;params&amp;#39;&lt;/span>: params &lt;span style="color:#f92672">or&lt;/span> {},
-&lt;span style="color:#e6db74">&amp;#39;id&amp;#39;&lt;/span>: self&lt;span style="color:#f92672">.&lt;/span>id,
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#000;font-weight:bold">class&lt;/span> &lt;span style="color:#458;font-weight:bold">Zabbix&lt;/span>(&lt;span style="color:#0086b3">object&lt;/span>):
+&lt;span style="color:#998;font-style:italic"># ... skip other class methods&lt;/span>
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">do_request&lt;/span>(&lt;span style="color:#999">self&lt;/span>, method, params&lt;span style="color:#000;font-weight:bold">=&lt;/span>&lt;span style="color:#999">None&lt;/span>):
+request_json &lt;span style="color:#000;font-weight:bold">=&lt;/span> {
+&lt;span style="color:#d14">&amp;#39;jsonrpc&amp;#39;&lt;/span>: &lt;span style="color:#d14">&amp;#39;2.0&amp;#39;&lt;/span>,
+&lt;span style="color:#d14">&amp;#39;method&amp;#39;&lt;/span>: method,
+&lt;span style="color:#d14">&amp;#39;params&amp;#39;&lt;/span>: params &lt;span style="color:#000;font-weight:bold">or&lt;/span> {},
+&lt;span style="color:#d14">&amp;#39;id&amp;#39;&lt;/span>: &lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>id,
 }
-response &lt;span style="color:#f92672">=&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>session&lt;span style="color:#f92672">.&lt;/span>post(
-self&lt;span style="color:#f92672">.&lt;/span>url,
-data&lt;span style="color:#f92672">=&lt;/span>json&lt;span style="color:#f92672">.&lt;/span>dumps(request_json),
-timeout&lt;span style="color:#f92672">=&lt;/span>self&lt;span style="color:#f92672">.&lt;/span>timeout
+response &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>session&lt;span style="color:#000;font-weight:bold">.&lt;/span>post(
+&lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>url,
+data&lt;span style="color:#000;font-weight:bold">=&lt;/span>json&lt;span style="color:#000;font-weight:bold">.&lt;/span>dumps(request_json),
+timeout&lt;span style="color:#000;font-weight:bold">=&lt;/span>&lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>timeout
 )
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="技巧">技巧&lt;/h2>
 &lt;p>但是为了方便，我们在python里一般使用&lt;code>zabbixclient.host.get(args)&lt;/code>这样的链式调用，而不用&lt;code>zabbixclient('host.get', args)&lt;/code>这样的调用方式。pyzabbix的作者巧妙的实现了这样的转换。&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Zabbix&lt;/span>(object):
-&lt;span style="color:#75715e"># ... skip other class methods&lt;/span>
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">do_request&lt;/span>(self, method, params&lt;span style="color:#f92672">=&lt;/span>None):
-request_json &lt;span style="color:#f92672">=&lt;/span> {
-&lt;span style="color:#e6db74">&amp;#39;jsonrpc&amp;#39;&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;2.0&amp;#39;&lt;/span>,
-&lt;span style="color:#e6db74">&amp;#39;method&amp;#39;&lt;/span>: method,
-&lt;span style="color:#e6db74">&amp;#39;params&amp;#39;&lt;/span>: params &lt;span style="color:#f92672">or&lt;/span> {},
-&lt;span style="color:#e6db74">&amp;#39;id&amp;#39;&lt;/span>: self&lt;span style="color:#f92672">.&lt;/span>id,
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#000;font-weight:bold">class&lt;/span> &lt;span style="color:#458;font-weight:bold">Zabbix&lt;/span>(&lt;span style="color:#0086b3">object&lt;/span>):
+&lt;span style="color:#998;font-style:italic"># ... skip other class methods&lt;/span>
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">do_request&lt;/span>(&lt;span style="color:#999">self&lt;/span>, method, params&lt;span style="color:#000;font-weight:bold">=&lt;/span>&lt;span style="color:#999">None&lt;/span>):
+request_json &lt;span style="color:#000;font-weight:bold">=&lt;/span> {
+&lt;span style="color:#d14">&amp;#39;jsonrpc&amp;#39;&lt;/span>: &lt;span style="color:#d14">&amp;#39;2.0&amp;#39;&lt;/span>,
+&lt;span style="color:#d14">&amp;#39;method&amp;#39;&lt;/span>: method,
+&lt;span style="color:#d14">&amp;#39;params&amp;#39;&lt;/span>: params &lt;span style="color:#000;font-weight:bold">or&lt;/span> {},
+&lt;span style="color:#d14">&amp;#39;id&amp;#39;&lt;/span>: &lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>id,
 }
-response &lt;span style="color:#f92672">=&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>session&lt;span style="color:#f92672">.&lt;/span>post(
-self&lt;span style="color:#f92672">.&lt;/span>url,
-data&lt;span style="color:#f92672">=&lt;/span>json&lt;span style="color:#f92672">.&lt;/span>dumps(request_json),
-timeout&lt;span style="color:#f92672">=&lt;/span>self&lt;span style="color:#f92672">.&lt;/span>timeout
+response &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>session&lt;span style="color:#000;font-weight:bold">.&lt;/span>post(
+&lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>url,
+data&lt;span style="color:#000;font-weight:bold">=&lt;/span>json&lt;span style="color:#000;font-weight:bold">.&lt;/span>dumps(request_json),
+timeout&lt;span style="color:#000;font-weight:bold">=&lt;/span>&lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>timeout
 )
-&lt;span style="color:#75715e"># python内建方法，当获取某个对象的属性时，调用该对象的该方法&lt;/span>
-&lt;span style="color:#66d9ef">def&lt;/span> __getattr__(self, attr):
-&lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;Dynamically create an object class (ie: host)&amp;#34;&amp;#34;&amp;#34;&lt;/span>
-&lt;span style="color:#75715e"># 此处把self传给ZabbixAPIObjectClass的self.parent&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> ZabbixAPIObjectClass(attr, self)
-&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZabbixAPIObjectClass&lt;/span>(object):
-&lt;span style="color:#66d9ef">def&lt;/span> __init__(self, name, parent):
-self&lt;span style="color:#f92672">.&lt;/span>name &lt;span style="color:#f92672">=&lt;/span> name
-self&lt;span style="color:#f92672">.&lt;/span>parent &lt;span style="color:#f92672">=&lt;/span> parent
-&lt;span style="color:#66d9ef">def&lt;/span> __getattr__(self, attr):
-&lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;Dynamically create a method (ie: get)&amp;#34;&amp;#34;&amp;#34;&lt;/span>
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">fn&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>args, &lt;span style="color:#f92672">**&lt;/span>kwargs):
-&lt;span style="color:#66d9ef">if&lt;/span> args &lt;span style="color:#f92672">and&lt;/span> kwargs:
-&lt;span style="color:#66d9ef">raise&lt;/span> &lt;span style="color:#a6e22e">TypeError&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Found both args and kwargs&amp;#34;&lt;/span>)
-&lt;span style="color:#75715e"># 此处把父类传进来的方法名name和子方法attr拼成rpc的方法名&lt;/span>
-&lt;span style="color:#66d9ef">return&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>parent&lt;span style="color:#f92672">.&lt;/span>do_request(
-&lt;span style="color:#e6db74">&amp;#39;{0}.{1}&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>format(self&lt;span style="color:#f92672">.&lt;/span>name, attr),
-args &lt;span style="color:#f92672">or&lt;/span> kwargs
-)[&lt;span style="color:#e6db74">&amp;#39;result&amp;#39;&lt;/span>]
-&lt;span style="color:#66d9ef">return&lt;/span> fn
+&lt;span style="color:#998;font-style:italic"># python内建方法，当获取某个对象的属性时，调用该对象的该方法&lt;/span>
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> __getattr__(&lt;span style="color:#999">self&lt;/span>, attr):
+&lt;span style="color:#d14">&amp;#34;&amp;#34;&amp;#34;Dynamically create an object class (ie: host)&amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#998;font-style:italic"># 此处把self传给ZabbixAPIObjectClass的self.parent&lt;/span>
+&lt;span style="color:#000;font-weight:bold">return&lt;/span> ZabbixAPIObjectClass(attr, &lt;span style="color:#999">self&lt;/span>)
+&lt;span style="color:#000;font-weight:bold">class&lt;/span> &lt;span style="color:#458;font-weight:bold">ZabbixAPIObjectClass&lt;/span>(&lt;span style="color:#0086b3">object&lt;/span>):
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> __init__(&lt;span style="color:#999">self&lt;/span>, name, parent):
+&lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>name &lt;span style="color:#000;font-weight:bold">=&lt;/span> name
+&lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>parent &lt;span style="color:#000;font-weight:bold">=&lt;/span> parent
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> __getattr__(&lt;span style="color:#999">self&lt;/span>, attr):
+&lt;span style="color:#d14">&amp;#34;&amp;#34;&amp;#34;Dynamically create a method (ie: get)&amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">fn&lt;/span>(&lt;span style="color:#000;font-weight:bold">*&lt;/span>args, &lt;span style="color:#000;font-weight:bold">**&lt;/span>kwargs):
+&lt;span style="color:#000;font-weight:bold">if&lt;/span> args &lt;span style="color:#000;font-weight:bold">and&lt;/span> kwargs:
+&lt;span style="color:#000;font-weight:bold">raise&lt;/span> &lt;span style="color:#900;font-weight:bold">TypeError&lt;/span>(&lt;span style="color:#d14">&amp;#34;Found both args and kwargs&amp;#34;&lt;/span>)
+&lt;span style="color:#998;font-style:italic"># 此处把父类传进来的方法名name和子方法attr拼成rpc的方法名&lt;/span>
+&lt;span style="color:#000;font-weight:bold">return&lt;/span> &lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>parent&lt;span style="color:#000;font-weight:bold">.&lt;/span>do_request(
+&lt;span style="color:#d14">&amp;#39;{0}.{1}&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>format(&lt;span style="color:#999">self&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>name, attr),
+args &lt;span style="color:#000;font-weight:bold">or&lt;/span> kwargs
+)[&lt;span style="color:#d14">&amp;#39;result&amp;#39;&lt;/span>]
+&lt;span style="color:#000;font-weight:bold">return&lt;/span> fn
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>类似地，很多接口的实现都可以照搬这种方式把参数调用改成链式调用，如pymongo，redis-py等。&lt;/p>
 &lt;h2 id="参考资料">参考资料：&lt;/h2>
 &lt;p>&lt;a href="https://github.com/lukecyca/pyzabbix">https://github.com/lukecyca/pyzabbix&lt;/a>&lt;/p></description></item><item><title>Python Fabric库无法启动后台进程的问题和解决办法</title><link>https://sund.site/posts/2016/10/python-fabric%E5%BA%93%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</link><pubDate>Wed, 19 Oct 2016 16:25:51 +0000</pubDate><guid>https://sund.site/posts/2016/10/python-fabric%E5%BA%93%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</guid><description>&lt;h2 id="问题和处理方法">问题和处理方法&lt;/h2>
 &lt;p>Python 的 Fabric 库能够方便的远程操作Linux主机执行命令或传输文件。其实现方式就是底层实现ssh协议，例如执行下面代码的run方法，在目标主机上启动一个zabbix后台服务：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> fabric &lt;span style="color:#f92672">import&lt;/span> api
-&lt;span style="color:#f92672">from&lt;/span> fabric.tasks &lt;span style="color:#f92672">import&lt;/span> Task
-&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Zabbix&lt;/span>(Task):
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">run&lt;/span>(self, kwargs):
-&lt;span style="color:#66d9ef">with&lt;/span> api&lt;span style="color:#f92672">.&lt;/span>settings(host_string&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;192.168.1.2&amp;#39;&lt;/span>, user&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;root&amp;#39;&lt;/span>, password&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;123456&amp;#39;&lt;/span>):
-api&lt;span style="color:#f92672">.&lt;/span>run(&lt;span style="color:#e6db74">&amp;#39;service zabbix_agentd start&amp;#39;&lt;/span>)
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#000;font-weight:bold">from&lt;/span> &lt;span style="color:#555">fabric&lt;/span> &lt;span style="color:#000;font-weight:bold">import&lt;/span> api
+&lt;span style="color:#000;font-weight:bold">from&lt;/span> &lt;span style="color:#555">fabric.tasks&lt;/span> &lt;span style="color:#000;font-weight:bold">import&lt;/span> Task
+&lt;span style="color:#000;font-weight:bold">class&lt;/span> &lt;span style="color:#458;font-weight:bold">Zabbix&lt;/span>(Task):
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">run&lt;/span>(&lt;span style="color:#999">self&lt;/span>, kwargs):
+&lt;span style="color:#000;font-weight:bold">with&lt;/span> api&lt;span style="color:#000;font-weight:bold">.&lt;/span>settings(host_string&lt;span style="color:#000;font-weight:bold">=&lt;/span>&lt;span style="color:#d14">&amp;#39;192.168.1.2&amp;#39;&lt;/span>, user&lt;span style="color:#000;font-weight:bold">=&lt;/span>&lt;span style="color:#d14">&amp;#39;root&amp;#39;&lt;/span>, password&lt;span style="color:#000;font-weight:bold">=&lt;/span>&lt;span style="color:#d14">&amp;#39;123456&amp;#39;&lt;/span>):
+api&lt;span style="color:#000;font-weight:bold">.&lt;/span>run(&lt;span style="color:#d14">&amp;#39;service zabbix_agentd start&amp;#39;&lt;/span>)
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>但是这样操作后虽然 Fabric 的 output 返回结果打印是启动成功，但是ssh登录目标主机，却不见 zabbix_agentd 进程，这说明没有真正启动起来。&lt;/p>
 &lt;p>我查询了 Fabric 文档，发现需要在api.run里添加参数&lt;code>pty=False&lt;/code>。&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python"> api&lt;span style="color:#f92672">.&lt;/span>run(&lt;span style="color:#e6db74">&amp;#39;service zabbix_agentd start&amp;#39;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">，&lt;/span> pty&lt;span style="color:#f92672">=&lt;/span>False)
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python"> api&lt;span style="color:#000;font-weight:bold">.&lt;/span>run(&lt;span style="color:#d14">&amp;#39;service zabbix_agentd start&amp;#39;&lt;/span>&lt;span style="color:#a61717;background-color:#e3d2d2">，&lt;/span> pty&lt;span style="color:#000;font-weight:bold">=&lt;/span>&lt;span style="color:#999">False&lt;/span>)
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>这样就成功启动了后台进程。&lt;/p>
 &lt;h2 id="原因">原因&lt;/h2>
 &lt;h3 id="什么是pty">什么是pty？&lt;/h3>
@@ -1888,36 +1888,36 @@ api&lt;span style="color:#f92672">.&lt;/span>run(&lt;span style="color:#e6db74">
 &lt;p>&lt;a href="https://github.com/fabric/fabric/issues/395">https://github.com/fabric/fabric/issues/395&lt;/a>
 &lt;a href="http://ytliu.info/blog/2013/09/28/ttyde-na-xie-shi-er/">http://ytliu.info/blog/2013/09/28/ttyde-na-xie-shi-er/&lt;/a>
 &lt;a href="http://7056824.blog.51cto.com/69854/276610">http://7056824.blog.51cto.com/69854/276610&lt;/a>&lt;/p></description></item><item><title>Python defaultdict结构作计数器的用法</title><link>https://sund.site/posts/2016/10/python-defaultdict%E7%BB%93%E6%9E%84%E4%BD%9C%E8%AE%A1%E6%95%B0%E5%99%A8%E7%9A%84%E7%94%A8%E6%B3%95/</link><pubDate>Tue, 11 Oct 2016 15:00:16 +0000</pubDate><guid>https://sund.site/posts/2016/10/python-defaultdict%E7%BB%93%E6%9E%84%E4%BD%9C%E8%AE%A1%E6%95%B0%E5%99%A8%E7%9A%84%E7%94%A8%E6%B3%95/</guid><description>&lt;p>在开发中经常需要用到计数器，当函数foo调用另一个函数bar时，为了确认调用bar之后处理的结果正确性，经常需要使用计数器来统计bar函数里处理成功了多少次。例如：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">foo&lt;/span>():
-success_num &lt;span style="color:#f92672">=&lt;/span> bar()
-&lt;span style="color:#66d9ef">print&lt;/span> success_num
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">bar&lt;/span>():
-n &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>
-&lt;span style="color:#75715e"># 假设这个任务要迭代100次.&lt;/span>
-count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">100&lt;/span>
-&lt;span style="color:#66d9ef">try&lt;/span>:
-&lt;span style="color:#66d9ef">for&lt;/span> i &lt;span style="color:#f92672">in&lt;/span> count:
-&lt;span style="color:#75715e"># Do something.&lt;/span>
-n &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
-&lt;span style="color:#66d9ef">except&lt;/span>:
-&lt;span style="color:#66d9ef">pass&lt;/span>
-&lt;span style="color:#66d9ef">finally&lt;/span>:
-&lt;span style="color:#66d9ef">return&lt;/span> n
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">foo&lt;/span>():
+success_num &lt;span style="color:#000;font-weight:bold">=&lt;/span> bar()
+&lt;span style="color:#000;font-weight:bold">print&lt;/span> success_num
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">bar&lt;/span>():
+n &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#099">0&lt;/span>
+&lt;span style="color:#998;font-style:italic"># 假设这个任务要迭代100次.&lt;/span>
+count &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#099">100&lt;/span>
+&lt;span style="color:#000;font-weight:bold">try&lt;/span>:
+&lt;span style="color:#000;font-weight:bold">for&lt;/span> i &lt;span style="color:#000;font-weight:bold">in&lt;/span> count:
+&lt;span style="color:#998;font-style:italic"># Do something.&lt;/span>
+n &lt;span style="color:#000;font-weight:bold">+=&lt;/span> &lt;span style="color:#099">1&lt;/span>
+&lt;span style="color:#000;font-weight:bold">except&lt;/span>:
+&lt;span style="color:#000;font-weight:bold">pass&lt;/span>
+&lt;span style="color:#000;font-weight:bold">finally&lt;/span>:
+&lt;span style="color:#000;font-weight:bold">return&lt;/span> n
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>但是，这里需要定义多个计数器变量来保存计数。每多一个bar函数就要多定义两次计数器。有没有类似C语言指针一样的方法，可以在foo中定义后直接传给bar，在bar里修改值呢。&lt;/p>
 &lt;p>众所周知，Python的参数传值实际传的是变量的拷贝，但是对于像字典、列表等非基本数据结构，实际传给参数的是这个数据结构的指针地址，修改指针地址指向的实际值就可以在函数内外实现传递数据的效果了。那么利用这个特性，可以结合python标准库collections里的defaultdict结构来实现一个更方便的计数器：&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> collections &lt;span style="color:#f92672">import&lt;/span> defaultdict
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">foo&lt;/span>():
-result &lt;span style="color:#f92672">=&lt;/span> defaultdict(int)
+&lt;div class="highlight">&lt;pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#000;font-weight:bold">from&lt;/span> &lt;span style="color:#555">collections&lt;/span> &lt;span style="color:#000;font-weight:bold">import&lt;/span> defaultdict
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">foo&lt;/span>():
+result &lt;span style="color:#000;font-weight:bold">=&lt;/span> defaultdict(&lt;span style="color:#0086b3">int&lt;/span>)
 bar(result)
-&lt;span style="color:#66d9ef">print&lt;/span> result
-&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">bar&lt;/span>(result):
-count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">100&lt;/span>
-&lt;span style="color:#66d9ef">for&lt;/span> i &lt;span style="color:#f92672">in&lt;/span> count:
-&lt;span style="color:#66d9ef">try&lt;/span>:
-&lt;span style="color:#75715e"># Do something.&lt;/span>
-result[&lt;span style="color:#e6db74">&amp;#39;success&amp;#39;&lt;/span>] &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
-&lt;span style="color:#66d9ef">except&lt;/span>:
-result[&lt;span style="color:#e6db74">&amp;#39;fail&amp;#39;&lt;/span>] &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;span style="color:#000;font-weight:bold">print&lt;/span> result
+&lt;span style="color:#000;font-weight:bold">def&lt;/span> &lt;span style="color:#900;font-weight:bold">bar&lt;/span>(result):
+count &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#099">100&lt;/span>
+&lt;span style="color:#000;font-weight:bold">for&lt;/span> i &lt;span style="color:#000;font-weight:bold">in&lt;/span> count:
+&lt;span style="color:#000;font-weight:bold">try&lt;/span>:
+&lt;span style="color:#998;font-style:italic"># Do something.&lt;/span>
+result[&lt;span style="color:#d14">&amp;#39;success&amp;#39;&lt;/span>] &lt;span style="color:#000;font-weight:bold">+=&lt;/span> &lt;span style="color:#099">1&lt;/span>
+&lt;span style="color:#000;font-weight:bold">except&lt;/span>:
+result[&lt;span style="color:#d14">&amp;#39;fail&amp;#39;&lt;/span>] &lt;span style="color:#000;font-weight:bold">+=&lt;/span> &lt;span style="color:#099">1&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>这样，变量&lt;code>result&lt;/code>就是存有正确计数和错误计数的字典。&lt;/p></description></item><item><title>怎样的建议才有价值</title><link>https://sund.site/posts/2016/08/%E6%80%8E%E6%A0%B7%E7%9A%84%E5%BB%BA%E8%AE%AE%E6%89%8D%E6%9C%89%E4%BB%B7%E5%80%BC/</link><pubDate>Thu, 25 Aug 2016 13:13:47 +0800</pubDate><guid>https://sund.site/posts/2016/08/%E6%80%8E%E6%A0%B7%E7%9A%84%E5%BB%BA%E8%AE%AE%E6%89%8D%E6%9C%89%E4%BB%B7%E5%80%BC/</guid><description>&lt;p>我想很多时候我们下决心做一件事，都要征求周围人的建议。这些建议有好有坏。坏的建议不但帮不了你，还会歪曲你对事实的认识。最近我在研究系统学习英文的方法，偶然在豆瓣小站里看到了开头那段话，对此深表认同。以我个人健身的经历，在报名私教课之前也寻求过很多人的建议。大部分会告诉你，健身(减肥)最重要的就是坚持。他们还会煞有介事的告诉你要「管住嘴，迈开腿」。在这一年里，我减掉了大概25KG体重，最大的感受——如果没有教练指导，我自己是断然不会坚持下来的。大部分的建议都像开头引用的那段话一样，是假大空的虚话，废话。&lt;/p>
 &lt;p>「任何一个通过自我磨练掌握了某一项具体技能或者在某领域内有一定造诣的人，都会对该领域有着起码的基本认知和独特的个人总结，如果你向其请教，得到的断然不会是“努力去做或者坚持最重要”之类的假大空的虚话」&lt;br>
 —— 豆瓣英语学习大神 恶魔奶爸Sam&lt;/p>
@@ -1964,7 +1964,7 @@ zookeeper不是设计成普通的数据库或大型对象存储的。它是用�
 &lt;p>&lt;strong>临时节点（Ephemeral Nodes）&lt;/strong>
 zookeeper还有临时节点的概念，这些节点的生命周期依赖于创建它们的session是否活跃。session结束时节点即被销毁。也由于这种特性，临时节点不允许有子节点。&lt;/p>
 &lt;p>&lt;strong>序列节点——命名不唯一&lt;/strong>
-当你创建节点的时候，你会需要zookeeper提供一组单调递增的计数来作为路径结尾。这个计数对父znode是唯一的。用&lt;code>%010d&lt;/code>的格式——用0来填充的10位数（计数如此命名是为了简单排序）。例如&amp;rdquo;&lt;!-- raw HTML omitted -->0000000001&amp;quot;，注意计数器是有符号整型，超过表示范围会溢出。&lt;/p>
+当你创建节点的时候，你会需要zookeeper提供一组单调递增的计数来作为路径结尾。这个计数对父znode是唯一的。用&lt;code>%010d&lt;/code>的格式——用0来填充的10位数（计数如此命名是为了简单排序）。例如&amp;rdquo;&lt;path>0000000001&amp;quot;，注意计数器是有符号整型，超过表示范围会溢出。&lt;/p>
 &lt;h4 id="zookeeper中的时间">ZooKeeper中的时间&lt;/h4>
 &lt;p>zookeeper有很多记录时间的方式：&lt;/p>
 &lt;ul>
@@ -1990,7 +1990,7 @@ zookeeper还有临时节点的概念，这些节点的生命周期依赖于创�
 &lt;h3 id="zookeeper-sessions">ZooKeeper Sessions&lt;/h3>
 &lt;p>客户端通过创建一个handle和服务端建立session连接。一旦创建完成，handle就进入了CONNECTING状态，客户端库尝试连接一台构成zookeeper的server，届时进入CONNECTED状态。通常情况下操作会介于这两种状态之间。
 一旦出现了不可恢复的错误：如session中止，鉴权失败或者应用直接结束handle，则handle会进入到CLOSED状态。下图是客户端的状态转换图：&lt;/p>
-&lt;p>&lt;!-- raw HTML omitted -->状态转换图&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;p>&lt;img>状态转换图&lt;/img>&lt;/p>
 &lt;p>应用在创建客户端session时必须提供一串逗号分隔的主机号:端口号，每对主机端口号对应一个ZooKeeper的server（如：&amp;ldquo;127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002&amp;rdquo;），客户端库会尝试连接任意一台服务器，如果连接失败或是客户端主动断开连接，客户端会自动继续与下一台服务器连接，直到连接成功。&lt;/p>
 &lt;p>&lt;strong>3.2.0版本新增内容&lt;/strong>: 一个新的操作“chroot”可以添加在连接字符串的尾部，用来指明客户端命令运行的根目录地址。类似unix的chroot命令，例如：
 &amp;ldquo;127.0.0.1:4545/app/a&amp;rdquo; or &amp;ldquo;127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002/app/a&amp;rdquo;，说明客户端会以&amp;quot;/app/a&amp;quot;为根目录，所有路径都相对于根目录来设置，如&amp;quot;/foo/bar&amp;quot;的操作会运行在&amp;quot;/app/a/foo/bar&amp;quot;。

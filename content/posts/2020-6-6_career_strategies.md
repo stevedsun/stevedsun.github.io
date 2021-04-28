@@ -3,7 +3,7 @@ title: "职业生涯说明书（一）"
 date: 2020-06-06T19:30:43+08:00
 description: "工作对于人的健康、幸福感都发挥着决定性作用"
 tags: [职业规划]
-images: [default.jpg]
+images: [images/default.jpg]
 aliases :  [/posts/2020-6-6_career_strategies/]
 ---
 

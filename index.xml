@@ -1,4 +1,107 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>電波障害</title><link>https://sund.site/</link><description>Recent content on 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 18 Mar 2021 15:32:57 +0800</lastBuildDate><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/distributed-cache/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/distributed-cache/</guid><description>&lt;p>很久不写技术文章了。这是一篇关于Redis构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>電波障害</title><link>https://sund.site/</link><description>Recent content on 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 08 May 2022 14:00:00 +0800</lastBuildDate><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>How to write a special format configuration file parser</title><link>https://sund.site/posts/2022-5-8_lexer_design/</link><pubDate>Sun, 08 May 2022 14:00:00 +0800</pubDate><guid>https://sund.site/posts/2022-5-8_lexer_design/</guid><description>&lt;p>Last week, I read this article - &lt;a href="https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go">How to Write a Lexer in Go&lt;/a>, I found that it is not so difficult to design a configuration file parser by this article&amp;rsquo;s mind-set. Then I try to write a fluent-bit configuration parser and got this &lt;a href="https://github.com/stevedsun/go-fluentbit-conf-parser">Fluent-Bit configuration parser for Golang&lt;/a>.&lt;/p>
+&lt;p>In this article, I want to introduce how to parse Fluent-bit configuration &lt;code>.conf&lt;/code> file, and the thinking behind it is suitable for any other format file.&lt;/p>
+&lt;h2 id="fluent-bit-configuration-format-and-schema">Fluent-bit configuration format and schema&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">[FIRST_SECTION]
+Key1 some value
+Key2 another value
+[SECOND_SECTION]
+KeyN 3.14
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here is a classic mode configuration of Fluent-bit, it includes two key parts:&lt;/p>
+&lt;ul>
+&lt;li>Section&lt;/li>
+&lt;li>Key/value pair&lt;/li>
+&lt;/ul>
+&lt;p>First of all, we need to define a struct which represents the Fluent-bit configuration file.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="kd">type&lt;/span> &lt;span class="nx">FluentBitConf&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">Sections&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="nx">Section&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">Section&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">Name&lt;/span> &lt;span class="kt">string&lt;/span>
+&lt;span class="nx">Entries&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="nx">Entry&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">type&lt;/span> &lt;span class="nx">Entry&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">Key&lt;/span> &lt;span class="kt">string&lt;/span>
+&lt;span class="nx">Value&lt;/span> &lt;span class="kd">interface&lt;/span>&lt;span class="p">{}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once we have a struct, the next step is to parse tokens from file and save their values into golang struct. We can copy the logic of lexer to develop our own fluentbit parser.&lt;/p>
+&lt;p>In a lexer program, the target charectors which we want to parse out are called &amp;ldquo;Token&amp;rdquo;, Token is also the keyword which our parser program are searching for. A parser program will read charactors in a file one by one, whenever it found a token, parser save the value between tokens into the final structure and go ahead.&lt;/p>
+&lt;h2 id="parse-a-single-token">Parse a single token&lt;/h2>
+&lt;p>If we want to parse Section, we have to make parser read charactors one by one and stop at &lt;code>[&lt;/code> charator, which means the beginning of a Section. Parser must save current state as &lt;code>t_section&lt;/code> and keep parser reading until &lt;code>]&lt;/code> charactor, the word between &lt;code>[&lt;/code> and &lt;code>]&lt;/code> is the Section value we need to persist into go struct.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">
+&lt;span class="c1">// define some tag to tell parser state
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">const&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;span class="nx">t_section&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">iota&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">parser&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">FluentBitConfParser&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">Parse&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">FluentBitConf&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nx">currSection&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">Section&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="c1">// read charector one by one
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">r&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">_&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">reader&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">ReadRune&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="c1">// stop at the end of file
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="nx">io&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">EOF&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">currSection&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Conf&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Sections&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nb">append&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Conf&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Sections&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">currSection&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Conf&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Conf&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">switch&lt;/span> &lt;span class="nx">r&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="sc">&amp;#39;\n&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;span class="k">continue&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="sc">&amp;#39;[&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;span class="c1">// save last config item
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="nx">currSection&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Conf&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Sections&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nb">append&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Conf&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Sections&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">currSection&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">// create new config item
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">currSection&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">Section&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;span class="nx">Name&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">Entries&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="nx">Entry&lt;/span>&lt;span class="p">{},&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">token&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">t_section&lt;/span>
+&lt;span class="k">default&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">unicode&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">IsSpace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">r&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">continue&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">// here is important function, read the charectors after token-chareactor and save them into struct
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="nx">strValue&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">_&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">parseString&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="k">switch&lt;/span> &lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">token&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="nx">t_section&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;span class="nx">currSection&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Name&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">strValue&lt;/span>
+&lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">token&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">t_entry_key&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>In function &lt;code>parser.parseString()&lt;/code>, we have to read unitl the end of a value (for section, it&amp;rsquo;s &lt;code>]&lt;/code>), then return the value.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="kd">func&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">parser&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">FluentBitConfParser&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">parseString&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nx">val&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;&amp;#34;&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">reader&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">UnreadRune&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="s">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">err&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">r&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">_&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">reader&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">ReadRune&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">err&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="nx">io&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">EOF&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nx">val&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="s">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">err&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="nx">parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">token&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="nx">t_section&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nx">r&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="sc">&amp;#39;]&amp;#39;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="nx">val&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="nx">val&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">val&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="nb">string&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">r&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>That&amp;rsquo;s all logic for parsing a section. To parse key/value pair is the same process, just note to make parser know which state it is and save values between whitespace or &lt;code>\n&lt;/code>, you can see the code at &lt;a href="https://github.com/stevedsun/go-fluentbit-conf-parser/blob/master/parser.go">the github repo&lt;/a>.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>To parse a configuration file, we have to&lt;/p>
+&lt;ul>
+&lt;li>Defining token (key charectors)&lt;/li>
+&lt;li>Reading charectors and looking for token&lt;/li>
+&lt;li>Saving current state to tell parser which struct the following charectors belong&lt;/li>
+&lt;/ul></description></item><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/distributed-cache/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/distributed-cache/</guid><description>&lt;p>很久不写技术文章了。这是一篇关于Redis构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。&lt;/p>
 &lt;p>下面就以我做过的商品预约平台项目作为引子，引出分布式缓存设计的一些要点。&lt;/p>
 &lt;p>该商品预约平台的背景如下：&lt;/p>
 &lt;ul>

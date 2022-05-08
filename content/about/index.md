@@ -2,18 +2,20 @@
 title: "Hi"
 ---
 
-你好，我是 [Steve Sun](https://github.com/stevedsun)。
+Hello, I'm Steve Sun.
+你好，我是 Steve Sun。
 
-我的本职工作是 Java & Python 后台开发，现在做些数据工程相关的工作，
+I'm a full-stack developer working in Chengdu China.
+我是一名全栈开发工程师，目前效力于一家在成都的 500 强企业。
 
-我还是一名剑道菜鸟，
+I love coding and reading, at my leisure time, I write some articles about efficiency tools at [少数派](https://sspai.com).
+我热爱编程和阅读。 业余时间喜欢研究效率工具的用法, 会在[少数派](https://sspai.com)写些教程。
 
-业余时间喜欢研究点效率工具的用法, 会在[少数派](https://sspai.com)写些教程。
-
+You can contact me by the following ways:
 你可以通过下面方式找到我：
 
-- [少数派的个人页面 >](https://sspai.com/u/radiowave/overview)
-
-- [微信公众号：电波障害 >](https://mp.weixin.qq.com/s/zSNl-n4B9l9wyZYGVcnVJw)
-
-- [Twitter >](https://twitter.com/way2steve)
+- [Github](https://github.com/stevedsun)
+- [Twitter](https://twitter.com/way2steve)
+- [Telegram Channel](https://t.me/poorRideoReception)
+- [少数派](https://sspai.com/u/radiowave/overview)
+- [微信公众号“电波障害”](https://mp.weixin.qq.com/s/zSNl-n4B9l9wyZYGVcnVJw)

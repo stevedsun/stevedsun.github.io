@@ -5,3 +5,9 @@
 ```
 git submodule update --init --recursive
 ```
+
+update theme
+
+```
+git submodule update --remote
+```

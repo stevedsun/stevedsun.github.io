@@ -1,5 +1,5 @@
 ---
-title: "Configuration file parser"
+title: "Building a file parser"
 date: 2022-05-08T14:00:00+08:00
 tags: [golang, fluentbit]
 description: "Thinking in lexer for any format configuration file."

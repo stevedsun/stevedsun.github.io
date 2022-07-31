@@ -1,12 +1,12 @@
 # Blog
 
-## Download theme
+Download theme:
 
 ```
 git submodule update --init --recursive
 ```
 
-update theme
+update theme:
 
 ```
 git submodule update --remote

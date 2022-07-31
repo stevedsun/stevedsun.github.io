@@ -1,13 +1,13 @@
 ---
-title: "How to write a special format configuration file parser"
+title: "Configuration file parser"
 date: 2022-05-08T14:00:00+08:00
 tags: [golang, fluentbit]
 description: "Thinking in lexer for any format configuration file."
 ---
 
-Last week, I read this article - [How to Write a Lexer in Go](https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go), I found that it is not so difficult to design a configuration file parser by this article's mind-set. Then I try to write a fluent-bit configuration parser and got this [Fluent-Bit configuration parser for Golang](https://github.com/stevedsun/go-fluentbit-conf-parser).
+Last week, after reading this article - [How to Write a Lexer in Go](https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go), I found that it is not so difficult to design a configuration file parser by this article's mind-set. Then I tried to write a fluent-bit configuration parser, finally got this [Fluent-Bit configuration parser for Golang](https://github.com/stevedsun/go-fluentbit-conf-parser).
 
-In this article, I want to introduce how to parse Fluent-bit configuration `.conf` file, and the thinking behind it is suitable for any other format file.
+In this article, I want to introduce how to parse Fluent-bit configuration `.conf` file, and the thinking behind it.
 
 ## Fluent-bit configuration format and schema
 
@@ -20,7 +20,7 @@ In this article, I want to introduce how to parse Fluent-bit configuration `.con
     KeyN  3.14
 ```
 
-Here is a classic mode configuration of Fluent-bit, it includes two key parts:
+Here is a classic mode configuration of Fluent-bit, it includes two parts:
 
 - Section
 - Key/value pair

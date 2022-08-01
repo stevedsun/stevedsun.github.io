@@ -4,8 +4,8 @@ defaultContentLanguage = "en"
 title = "電波障害"                         # site title  # 网站标题
 theme = "zozo"
 hasCJKLanguage = true                  # has chinese/japanese/korean ?  # 自动检测是否包含 中文\日文\韩文
-summaryLength = 100
-paginate = 4                           # shows the number of articles  # 首页显示文章数量
+summaryLength = 40
+paginate = 5                           # shows the number of articles  # 首页显示文章数量
 enableEmoji = true
 googleAnalytics = "UA-64688885-1"                   # your google analytics id
 disqusShortname = "v2steve"                   # your discuss shortname
@@ -44,10 +44,10 @@ pygmentscodefencesguesssyntax = true
 [params]
   subTitle = "Steve Sun, full-stack developer"                                       # site's subTitle  # 网站二级标题
   footerSlogan = ""                                   # site's footer slogan  # 网站页脚标语
-  keywords = ["Steve Sun","Notion","双拼"]                                  # site's keywords  # 网站关键字
+  keywords = ["Steve Sun","Notion","Develop", "Programm", "Coding", "Note-taking", "Book"]                                  # site's keywords  # 网站关键字
   description = "Steve Sun's blog"                        # site's description  # 网站描述
   enableMathJax = true                                                 # enable mathjax  # 是否使用mathjax（数学公式）
-  enableSummary = true                                                 # display the article summary  # 是否显示文章摘要
+  enableSummary = false                                                 # display the article summary  # 是否显示文章摘要
   mainSections = ["posts","post"]
   
 # Valine.

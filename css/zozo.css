@@ -23,7 +23,7 @@ html::-webkit-scrollbar-thumb {
 
 body {
   color: #333333;
-  font-family: "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "-apple-system, 'Noto Sans', 'Helvetica Neue', Helvetica, 'Nimbus Sans L', Arial, 'Liberation Sans', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Source Han Sans CN', 'Microsoft YaHei', 'Wenquanyi Micro Hei', 'WenQuanYi Zen Hei', 'ST Heiti', SimHei, 'WenQuanYi Zen Hei Sharp', sans-serif";
   font-size: 16px;
   width: 100%;
   background-color: #f7f7f7;
@@ -203,7 +203,7 @@ hr {
 
 .post {
   background-color: #ffffff;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .post .post_title h2 {

@@ -209,7 +209,7 @@ hr {
 .post .post_title h2 {
   font-size: 1.4rem;
   line-height: 1;
-  font-weight: 600;
+  font-weight: 400;
   color: #1f1f1f;
   margin: 0 0 6px 0;
 }
@@ -217,8 +217,7 @@ hr {
 .post .post_title a {
   text-decoration: none;
   color: #1f1f1f;
-  font-size: 1.5rem;
-  line-height: 28px;
+  font-size: 1.4rem;
 }
 
 .post .post_title span {

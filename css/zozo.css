@@ -207,7 +207,6 @@ hr {
 }
 
 .post .post_title h2 {
-  letter-spacing: 1px;
   font-size: 1.4rem;
   line-height: 1;
   font-weight: 600;
@@ -217,7 +216,6 @@ hr {
 
 .post .post_title a {
   text-decoration: none;
-  letter-spacing: 1px;
   color: #1f1f1f;
   font-size: 1.5rem;
   line-height: 28px;
@@ -263,7 +261,7 @@ hr {
 }
 
 .post .post_footer {
-  padding: 20px 0;
+  padding: 10px 0;
   border-bottom: 1px solid #f3f3f3;
 }
 

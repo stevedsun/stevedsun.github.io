@@ -1,12 +1,26 @@
-# Blog
+[sund.site](https://sund.site)
 
-Download theme:
+This project is auto deployed by Github Action.
+
+## Build
+
+```
+brew install hugo
+```
+
+## Preview
+
+```
+hugo serve
+```
+
+## Download theme
 
 ```
 git submodule update --init --recursive
 ```
 
-update theme:
+## Update theme
 
 ```
 git submodule update --remote

@@ -43,13 +43,13 @@ type Entry struct {
 }
 ```
 
-Once we have a struct, the next step is to parse tokens from file and save their values into golang struct. We can copy the logic of lexer to develop our own fluentbit parser.
+Once we have a struct, the next step is to parse tokens from the file and save their values into golang struct. We can copy the logic of the lexer to develop our fluentbit parser.
 
-In a lexer program, the target charectors which we want to parse out are called "Token", Token is also the keyword which our parser program are searching for. A parser program will read charactors in a file one by one, whenever it found a token, parser save the value between tokens into the final structure and go ahead.
+In a lexer program, the target characters which we want to parse out are called "Token", Token is also the keyword that our parser program is searching for. A parser program will read characters in a file one by one, whenever it found a token, the parser saves the value between tokens into the final structure and go ahead.
 
 ## Parse a single token
 
-If we want to parse Section, we have to make parser read charactors one by one and stop at `[` charator, which means the beginning of a Section. Parser must save current state as `t_section` and keep parser reading until `]` charactor, the word between `[` and `]` is the Section value we need to persist into go struct.
+If we want to parse Section, we have to make the parser read characters one by one and stop at `[` character, which means the beginning of a Section. The parser must save the current state as `t_section` and keep parser reading until `]` character, the word between `[` and `]` is the Section value we need to persist into go struct.
 
 ```go
 
@@ -105,7 +105,7 @@ func (parser *FluentBitConfParser) Parse() *FluentBitConf {
 }
 ```
 
-In function `parser.parseString()`, we have to read unitl the end of a value (for section, it's `]`), then return the value.
+In function `parser.parseString()`, we have to read until the end of a value (for section, it's `]`), then return the value.
 
 ```go
 func (parser *FluentBitConfParser) parseString() (string, error) {
@@ -138,6 +138,6 @@ That's all logic for parsing a section. To parse key/value pair is the same proc
 
 To parse a configuration file, we have to
 
-- Defining token (key charectors)
-- Reading charectors and looking for token
-- Saving current state to tell parser which struct the following charectors belong
+- Defining token (key characters)
+- Reading characters and looking for a token
+- Saving current state to tell parser which struct the following characters belong

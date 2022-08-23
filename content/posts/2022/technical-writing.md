@@ -2,7 +2,7 @@
 title: "技术文档写作指南"
 date: 2022-08-21T15:29:00+08:00
 description: "谷歌技术文档写作指南"
-tags: [写作]
+tags: [写作, 技术文档]
 ---
 
 本文内容摘录自 [Technical Writing](https://developers.google.com/tech-writing/overview) （谷歌技术文档写作指南）的第一部分。

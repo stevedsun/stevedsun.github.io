@@ -52,7 +52,7 @@ tags: [写作]
 - 选择准确、有力、具体的动词。减少不精确的、软弱的或通用的动词。
   不好的例子： is，are，occur，happen
 
-![](https://cdn.jsdelivr.net/gh/stevedsun/stevedsun.github.io/master/static/images/Untitled.png)
+![](https://cdn.jsdelivr.net/gh/stevedsun/stevedsun.github.io/static/images/Untitled.png)
 
 - Be 动词和通用动词可以用，但它们通常是一些不良写作习惯的信号，如
   - 句子中缺少行为主体
@@ -67,7 +67,7 @@ tags: [写作]
   - 每一个句子只表达一个观点。
   - 长句尽量转换成列表。
   - 用简洁表达，去掉多余的词汇，如
-    ![](https://cdn.jsdelivr.net/gh/stevedsun/stevedsun.github.io/master/static/images/Untitled%201.png)
+    ![](https://cdn.jsdelivr.net/gh/stevedsun/stevedsun.github.io/static/images/Untitled%201.png)
   - 减少从句。
   - 正确区分 that 和 which 从句。
 

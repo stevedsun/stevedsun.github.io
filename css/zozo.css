@@ -539,32 +539,17 @@ hr {
 .markdown blockquote {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  margin: 2.5em 0;
-  padding: 0 0 0 50px;
-  font-style: italic;
+  margin: 1em 0;
+  padding: 5px 5px 0px 15px;
   color: #555555;
-  border-left: none;
-}
-
-.markdown blockquote:before {
-  content: '“';
-  display: block;
-  font-family: times, sans-serif;
-  font-style: normal;
-  font-size: 48px;
-  color: #444444;
-  font-weight: bold;
-  line-height: 30px;
-  margin-left: -50px;
-  position: absolute;
+  border-left: 5px solid #ccc;
+  background-color: #f8fafc;
 }
 
 .markdown strong,
 .markdown b,
 .markdown em {
   padding: 1px 2px;
-  background-color: #fcfcf0;
-  font-weight: normal;
 }
 
 .markdown .fancybox {
@@ -574,6 +559,7 @@ hr {
 .markdown img {
   max-width: 90%;
   height: auto;
+  padding: 0 0 0 15px;
 }
 
 table {

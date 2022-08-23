@@ -9,7 +9,11 @@
 &lt;ul>
 &lt;li>错误不应该被掩盖 (Don&amp;rsquo;t fail silently)&lt;/li>
 &lt;li>遵循语言的规范 (Follow the programming language guides)&lt;/li>
-&lt;li>实现完整的错误模型 (Implement the full error model)&lt;/li>
+&lt;li>实现完整的错误模型 (Implement the full error model)
+&lt;blockquote>
+&lt;p>包含错误码、错误内容、错误原因、处理方法&lt;/p>
+&lt;/blockquote>
+&lt;/li>
 &lt;li>避免吞掉问题根源 (Avoid swallowing the root cause)&lt;/li>
 &lt;li>输出错误代码 (Log the error codes)&lt;/li>
 &lt;li>快速抛出错误 (Raise errors immediately)&lt;/li>
@@ -55,7 +59,10 @@
 &lt;ul>
 &lt;li>错误要有错误码&lt;/li>
 &lt;li>可以在错误信息结构里提供一个指向错误解释的 ID，如：
-&lt;code>{ &amp;quot;error&amp;quot; : &amp;quot;Bad Request - Request is missing a required parameter: -collection_name. Update parameter and resubmit. Issue Reference Number BR0x0071&amp;quot; }&lt;/code>&lt;/li>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;error&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Bad Request - Request is missing a required parameter: -collection_name. Update parameter and resubmit. Issue Reference Number BR0x0071&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul></description></item><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><guid>https://sund.site/posts/2022/technical-writing/</guid><description>&lt;p>本文内容摘录自 &lt;a href="https://developers.google.com/tech-writing/overview">Technical Writing&lt;/a> （谷歌技术文档写作指南）的第一部分。&lt;/p>
 &lt;p>本文适用于想要提高技术文档写作、技术领域日常沟通能力的读者，对于一些商务的、非文学性质的英语办公场景沟通，也能起一定帮助作用。&lt;/p>
 &lt;p>阅读过本文的读者可以：&lt;/p>

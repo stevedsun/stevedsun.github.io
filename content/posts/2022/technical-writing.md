@@ -23,8 +23,8 @@ tags: [写作, 技术文档]
 
   > This document is for engineers who are new to the **Telekinetic Tactile Network** (**TTN**) or need to understand how to order TTN replacement parts through finger motions.
 
-  - 如果一个术语出现频率不高，请不要使用缩写。
-  - 使用缩写的情况有：1. 缩写明显更简短；2. 该术语出现频率很高。
+- 如果一个术语出现频率不高，请不要使用缩写。
+- 使用缩写的情况有：1. 缩写明显更简短；2. 该术语出现频率很高。
 
 - 谨慎使用代名词（It，they，that 等）。
   - 代名词一定要出现在它所指代的名词之后。
@@ -52,7 +52,7 @@ tags: [写作, 技术文档]
 - 选择准确、有力、具体的动词。减少不精确的、软弱的或通用的动词。
   不好的例子： is，are，occur，happen
 
-![](https://raw.staticdn.net/stevedsun/stevedsun.github.io/master/static/images/Untitled.png)
+  ![](https://raw.staticdn.net/stevedsun/stevedsun.github.io/master/static/images/Untitled.png)
 
 - Be 动词和通用动词可以用，但它们通常是一些不良写作习惯的信号，如
   - 句子中缺少行为主体
@@ -78,7 +78,6 @@ tags: [写作, 技术文档]
 
   > The llamacatcher API enables callers to create and query llamas, analyze alpacas, delete vicugnas, and track dromedaries.
   > 换成：
-  >
   > The llamacatcher API enables callers to do the following:
   >
   > - Create and query llamas.
@@ -150,12 +149,13 @@ tags: [写作, 技术文档]
 
 ## 标点符号（Punctuation）
 
-这部分原文涉及英文标点符号的用法，大部分和汉语规则近似，略过不译。以下是我在排版方面的经验：
-
+> Note:
+> 这部分原文涉及英文标点符号的用法，大部分和汉语规则近似，略过不译。以下是我在排版方面的经验：
 > 大多数中国人对英文排版易错的地方是空格的滥用。可以参考这篇文章： [英文标点要如何排版？](https://zhuanlan.zhihu.com/p/110266694)。概括起来：
-> `, ; : . ? !` 这些符号后加空格
-> `() '' ""` 这些成对的符号左右加空格，内部不加空格
-> `/ - _`不加空格
+
+- `, ; : . ? !` 这些符号后加空格
+- `() '' ""` 这些成对的符号左右加空格，内部不加空格
+- `/ - _`不加空格
 
 ## 总结
 

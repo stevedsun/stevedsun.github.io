@@ -11,7 +11,7 @@ I have built a Chrome extension [无用主意](https://chrome.google.com/webstor
 
 ## Notion API
 
-If you want your service to connect to Notion, you have to create a Notion integration on [this page](https://www.notion.so/my-integrations)](https://www.notion.so/my-integrations). Afterward, you have to share a specific Notion page to the integration you just created.
+If you want your service to connect to Notion, you have to create a Notion integration on [this page](https://www.notion.so/my-integrations). Afterward, you have to share a specific Notion page to the integration you just created.
 
 ![](https://cdn.jsdelivr.net/gh/stevedsun/stevedsun.github.io/static/images/20220731213331.png)
 

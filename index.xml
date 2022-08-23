@@ -10,7 +10,8 @@
 &lt;li>错误不应该被掩盖 (Don&amp;rsquo;t fail silently)&lt;/li>
 &lt;li>遵循语言的规范 (Follow the programming language guides)&lt;/li>
 &lt;li>实现完整的错误模型 (Implement the full error model)
-&lt;code>包含错误码、错误内容、错误原因、处理方法&lt;/code>&lt;/li>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-fallback" data-lang="fallback">包含错误码、错误内容、错误原因、处理方法
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;li>避免吞掉问题根源 (Avoid swallowing the root cause)&lt;/li>
 &lt;li>输出错误代码 (Log the error codes)&lt;/li>
 &lt;li>快速抛出错误 (Raise errors immediately)&lt;/li>

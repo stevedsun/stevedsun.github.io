@@ -1,4 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>電波障害</title><link>https://sund.site/</link><description>Recent content on 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 23 Aug 2022 22:18:00 +0800</lastBuildDate><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>规范的错误信息</title><link>https://sund.site/posts/2022/write-error-message/</link><pubDate>Tue, 23 Aug 2022 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2022/write-error-message/</guid><description>&lt;p>本文整理了 Google 官方文档中关于错误信息的编写规范。适用于有一定编程经验，尤其从事业务开发的程序员。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>電波障害</title><link>https://sund.site/</link><description>Recent content on 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 14 Sep 2022 08:46:21 +0800</lastBuildDate><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>边缘计算模式——任务队列</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-lock/</link><pubDate>Wed, 14 Sep 2022 08:46:21 +0800</pubDate><guid>https://sund.site/posts/2022/pattern-of-edge-computing-lock/</guid><description>&lt;h2 id="概述">概述&lt;/h2>
+&lt;p>在边缘计算中，边缘节点通常介于终端节点和云端节点之间，它的扩展性也介于两者之间。对于高并发或是高资源占用的业务场景，应该如何设计边缘节点的策略。&lt;/p>
+&lt;h2 id="问题">问题&lt;/h2>
+&lt;p>在边缘计算中，对于那些占用 CPU 和内存资源较大的请求，什么时候应该加锁？&lt;/p>
+&lt;h2 id="解决方案">解决方案&lt;/h2>
+&lt;p>边缘计算中有三类节点：终端节点（device），边缘节点（edge）,云端节点（cloud）。&lt;/p>
+&lt;ul>
+&lt;li>终端节点：通常应该加锁限制高资源占用。因为终端设备往往资源紧张，不可扩展。&lt;/li>
+&lt;li>云端节点：通常不需要加锁，而是扩展副本。&lt;/li>
+&lt;/ul>
+&lt;p>对于情况比较复杂的边缘节点，通常要综合考虑当前系统资源分配策略和用户使用场景。&lt;/p>
+&lt;h3 id="一般情况">一般情况&lt;/h3>
+&lt;p>对于工业物联网环境，边缘节点的操作员通常较少，同一时间进行的操作不多，在这种情况下可以采用加锁的方式来限制资源占用。&lt;/p>
+&lt;h3 id="最佳实践全局任务队列">最佳实践——全局任务队列&lt;/h3>
+&lt;p>对于多用户或者并发稍高的情况，边缘节点可以实现全局的任务队列来缓解高资源占用的任务给系统造成的负担。在应用的架构设计上，应该将高资源占用的请求以事件形式发送到全局任务队列，由边缘节点系统统一调度这些任务，按顺序或特定的优先级依次执行。&lt;/p>
+&lt;p>对于任务队列已满的情况，再考虑扩展应用服务副本数量。&lt;/p></description></item><item><title>规范的错误信息</title><link>https://sund.site/posts/2022/write-error-message/</link><pubDate>Tue, 23 Aug 2022 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2022/write-error-message/</guid><description>&lt;p>本文整理了 Google 官方文档中关于错误信息的编写规范。适用于有一定编程经验，尤其从事业务开发的程序员。&lt;/p>
 &lt;p>通过本文你可以：&lt;/p>
 &lt;ul>
 &lt;li>写出风格统一、用户友好的错误信息&lt;/li>

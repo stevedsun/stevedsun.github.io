@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>電波障害</title><link>https://sund.site/</link><description>Recent content on 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 18 Sep 2022 17:01:29 +0800</lastBuildDate><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>边缘计算模式——数据管道</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</link><pubDate>Sun, 18 Sep 2022 17:01:29 +0800</pubDate><guid>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</guid><description>&lt;p>本文根据工业边缘计算的场景提炼出数据管道的设计模式。&lt;/p>
-&lt;h2 id="架构设计">架构设计&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>電波障害</title><link>https://sund.site/</link><description>Recent content on 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 18 Sep 2022 17:01:29 +0800</lastBuildDate><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>边缘计算模式——数据管道</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</link><pubDate>Sun, 18 Sep 2022 17:01:29 +0800</pubDate><guid>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</guid><description>&lt;h2 id="问题">问题&lt;/h2>
+&lt;p>在物联网多层架构设计的中，数据从终端设备流向云端，应该在哪一层做数据处理，哪一层做数据展示？分层的依据是什么？&lt;/p>
+&lt;h2 id="解决方案">解决方案&lt;/h2>
+&lt;h3 id="架构设计">架构设计&lt;/h3>
 &lt;p>边缘计算的三层数据管道。&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>数据源&lt;/strong>是由若干终端设备组成的，内置在设备中的 agent 负责采集设备的基础数据如 cpu，内存使用量，应用统计数据等。&lt;/li>

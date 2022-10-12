@@ -643,7 +643,7 @@ a.back_to_top:hover span {
 
 @media screen and (min-width: 1600px) {
   .main {
-    width: 800px;
+    width: 900px;
   }
   .nav_container {
     width: 740px;

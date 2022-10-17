@@ -2,6 +2,7 @@
 title: "3 ways to access host system in Docker container"
 date: 2022-08-08T20:04:00+08:00
 tags: [docker]
+aliases: [/posts/3_ways_to_access_host_system_in_container/]
 ---
 
 When we are using Docker, we always access the host system by mounting the host folders as a volume. But sometimes we can not do that due to deployment reasons or security limits.

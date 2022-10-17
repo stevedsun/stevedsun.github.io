@@ -3,6 +3,7 @@ title: "《分手的决心》细节分析"
 date: 2022-08-14T17:01:56+08:00
 description: "超多剧透"
 tags: [电影]
+aliases: [/posts/decision_to_leave/]
 ---
 
 > 把那部手机丢进海里，让它陷入深处，没人能寻到。

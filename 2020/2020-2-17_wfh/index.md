@@ -1,0 +1,58 @@
+# 番茄工作法和Keep是绝配
+
+
+## 要有路线图
+
+平时在办公室里，大家可以面对面沟通，有问题、回复都可以迅速得到反馈，好像一个走正步的方队，每个人的节奏都可以从余光中确认。但是在家办公，这种节奏就乱掉了。
+
+我最近正好转到数据团队做一些数据工程的工作，急需恶补很多知识。我在网上搜到几张数据工程师知识图谱和一些[认证课程](https://www.coursera.org/specializations/gcp-data-machine-learning)。按照自己的能力，我规划了学习路线，并且用Notion记录下来。这份路线图里包含了一些书籍和网络课程，能够帮我快速上手实践，以备在复工后快速进入状态。
+
+![https://tva1.sinaimg.cn/large/4a41845fly1gbzm5fb4wrj21go1327oi.jpg](https://tva1.sinaimg.cn/large/4a41845fly1gbzm5fb4wrj21go1327oi.jpg)
+
+## 寻找免费的学习资源
+
+有了路线，就要去找学习资源，付费的电子书和网络教程很多，我想重点说说那些免费资源（抛开盗版不谈），比如著名的动物书出版商 O’Reilly 就有一大堆[免费的正版技术类电子书](https://www.oreilly.com/free/)可供下载。
+
+![https://tva1.sinaimg.cn/large/4a41845fly1gbzlq4t8fuj21is1681kx.jpg](https://tva1.sinaimg.cn/large/4a41845fly1gbzlq4t8fuj21is1681kx.jpg)
+
+另外，**Youtube上的教学视频质量也非常高**，对于快速上手一种工具或是搭建开发环境非常有帮助。（随便一搜就有很多成套的教学视频，不乏官方教学视频，比如 Google Cloud Platform 提供了很多教学短片）
+
+![https://tva1.sinaimg.cn/large/4a41845fly1gbzlumpbuxj21de14m7mr.jpg](https://tva1.sinaimg.cn/large/4a41845fly1gbzlumpbuxj21de14m7mr.jpg)
+
+我在Youtube还意外发现一些 [健身Youtuber](https://www.youtube.com/channel/UCFd-9jAfbuUjwDZjisOwv1w) 们分享的健身教学视频，也非常适合闲暇时间提高姿势水平。
+
+## 任务要和时间绑定
+
+完成一个长计划的第一步，是拆解任务。工作中同事们总强调 Tasking （拆解任务）的重要性。要保证完成计划的质量，必须把计划按步骤拆解成可执行和回顾的小任务。相信喜欢折腾GTD之类效率工具的人很清楚其中的意义。但是**在没有约束的家庭环境里，光拆解任务可能还不够，更重要的是把任务和时间绑定，给自己一个记录时间的习惯**。
+
+### 不局限于工具的番茄工作法
+
+番茄工作法固然好，但是市面上很少真正提高效率的工具。手机上的番茄工作法App唯一给我的教训就是增加了我拿起手机的次数。所以我最后矬子里拔大个，选了Toggl 的 Mac桌面版，它自带番茄时钟可以很好的兼顾时间记录和定时提醒功能。我还尝试用NFC贴纸提高我记录时间的效率（主要记录做饭之类碎片的时间）。至于如何使用NFC贴纸，参考这篇《[5 个实用生活场景，iPhone 上的 NFC 还能这么用》](https://sspai.com/post/57394)
+
+![https://tva1.sinaimg.cn/large/4a41845fly1gbzmdw563kj20u01400uv.jpg](https://tva1.sinaimg.cn/large/4a41845fly1gbzmdw563kj20u01400uv.jpg)
+
+## 利用番茄工作法的间歇时间做4分钟锻炼
+
+番茄工作法每隔25分钟会有5分钟的休息时间，我通常利用这个间隙来做一组俯卧撑、平板支撑或者深蹲，Keep上有很多4分钟的燃脂训练，拿来配合番茄工作法使用效果更佳。
+
+![https://tva1.sinaimg.cn/large/4a41845fly1gbzmkewpd0j20n01ds77x.jpg](https://tva1.sinaimg.cn/large/4a41845fly1gbzmkewpd0j20n01ds77x.jpg)
+
+### 把平时忽略的碎片时间统计出来
+
+发呆拖延的时间、做饭的时间，这些工作忙时不太关心的碎片时间，我利用这个大长假把他们统计了一下，我在去年年底制定了一个「2020年告别外卖」的计划。因为平时工作忙，想脱离外卖自己做饭，就要格外注意挑选制作时间短，食材储存容易的饮食方案。我也在Notion里新建了一个项目，来记录做饭的时间、各种食物的优缺点（有点强迫症）。待完成这个计划时我也会整理出来。
+
+![https://tva1.sinaimg.cn/large/4a41845fly1gbzmwbctjjj20n00wu3zj.jpg](https://tva1.sinaimg.cn/large/4a41845fly1gbzmwbctjjj20n00wu3zj.jpg)
+
+### 给娱乐时间限量
+
+我平时很少看电视，最近又把吃灰半年的《歧路旅人》拿出来玩，我给自己规定的是每天必须天黑才能打开游戏机，而且玩到20%电量之前必须关机休息。这样每天娱乐时间就不会超过2个小时。
+
+最近奥斯卡颁奖后，一批电影片单也出来了，不如趁这段时间把2019年错过的好电影也补一补。
+
+## 用音乐和灯光隔离出个人空间
+
+我在几个月前发的一篇文章[《用一个模型理解什么是注意力的边缘》](https://mp.weixin.qq.com/s/OuZigL_Y8Ep3rLl38Hxc0A)里已经分析过怎么用「聚光灯效应」和背景音乐来创造专注的环境，对这部分感兴趣的同学可以去阅读一下。
+
+## 小结
+
+综上，充分利用假期的时间去充电吧，要给自己指定任务、要有追踪任务的工具，多利用闲暇时间锻炼、多关注平时上班时没空去关注的生活细节，给2019年错过的好东西一个补救的机会。

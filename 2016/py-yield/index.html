@@ -1,0 +1,129 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title>Python yield关键字的底层实现 - 電波障害</title><meta name=Description content="总结一下yield关键字在C层面是如何实现的"><meta property="og:title" content="Python yield关键字的底层实现"><meta property="og:description" content="总结一下yield关键字在C层面是如何实现的"><meta property="og:type" content="article"><meta property="og:url" content="https://sund.site/2016/py-yield/"><meta property="og:image" content="https://sund.site/images/favicon-32.png"><meta property="article:published_time" content="2016-12-28T18:00:00+00:00"><meta property="article:modified_time" content="2016-12-28T18:00:00+00:00"><meta property="og:site_name" content="電波障害"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://sund.site/images/favicon-32.png"><meta name=twitter:title content="Python yield关键字的底层实现"><meta name=twitter:description content="总结一下yield关键字在C层面是如何实现的"><meta name=application-name content="電波障害"><meta name=apple-mobile-web-app-title content="電波障害"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://sund.site/2016/py-yield/><link rel=prev href=https://sund.site/2016/py-pythonic/><link rel=next href=https://sund.site/2017/py-str/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Python yield关键字的底层实现","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/sund.site\/2016\/py-yield\/"},"image":["https:\/\/sund.site\/images\/favicon-32.png"],"genre":"posts","keywords":"python","wordcount":1148,"url":"https:\/\/sund.site\/2016\/py-yield\/","datePublished":"2016-12-28T18:00:00+00:00","dateModified":"2016-12-28T18:00:00+00:00","license":"This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher":{"@type":"Organization","name":"xxxx","logo":"https:\/\/sund.site\/images\/avatar.png"},"author":{"@type":"Person","name":"Steve Sun"},"description":"总结一下yield关键字在C层面是如何实现的"}</script></head><body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':('auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark'))&&document.body.setAttribute('theme','dark');</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=電波障害><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/favicon-32.png data-srcset="/images/favicon-32.png, /images/favicon-32.png 1.5x, /images/favicon-32.png 2x" data-sizes=auto alt=/images/favicon-32.png title=/images/favicon-32.png>電波障害</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Posts </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/about/>About </a><a class=menu-item href=https://github.com/stevedsun title=GitHub rel="noopener noreffer" target=_blank><i class="fab fa-github fa-fw" aria-hidden=true></i></a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme"><i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=電波障害><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/favicon-32.png data-srcset="/images/favicon-32.png, /images/favicon-32.png 1.5x, /images/favicon-32.png 2x" data-sizes=auto alt=/images/favicon-32.png title=/images/favicon-32.png>電波障害</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/>Posts</a><a class=menu-item href=/tags/>Tags</a><a class=menu-item href=/about/>About</a><a class=menu-item href=https://github.com/stevedsun title=GitHub rel="noopener noreffer" target=_blank><i class="fab fa-github fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></header><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Python yield关键字的底层实现</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://twitter.com/way2steve title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>Steve Sun</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2016-12-28>2016-12-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;1148 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;3 minutes&nbsp;</div></div><div class="details toc" id=toc-static data-kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#举个栗子>举个栗子</a></li><li><a href=#生成器是如何记录代码返回位置的>生成器是如何记录代码返回位置的</a></li></ul></nav></div></div><div class=content id=content><p>这几天面试被问到类似的问题，顺便看了看Python的源码，参考网上的教程，总结一下yield关键字在C层面是如何实现的。</p><h2 id=举个栗子>举个栗子</h2><p>我们先看一个python生成器函数的例子：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-python data-lang=python><span class=kn>from</span> <span class=nn>dis</span> <span class=kn>import</span> <span class=n>dis</span>
+
+<span class=k>def</span> <span class=nf>func</span><span class=p>():</span>
+    <span class=n>i</span> <span class=o>=</span> <span class=mi>4</span>
+    <span class=k>yield</span> <span class=n>i</span>
+    <span class=k>print</span> <span class=n>i</span>
+    
+<span class=n>dis</span><span class=p>(</span><span class=n>func</span><span class=p>)</span>
+<span class=n>a</span> <span class=o>=</span><span class=n>func</span><span class=p>()</span>
+<span class=n>a</span><span class=o>.</span><span class=n>next</span><span class=p>()</span>
+<span class=n>a</span><span class=o>.</span><span class=n>next</span><span class=p>()</span>
+</code></pre></td></tr></table></div></div><p>使用python的库dis可以直接查看python虚拟机运行的字节码。<code>dis(func)</code>的打印如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>  6           0 LOAD_CONST               1 (4)
+              3 STORE_FAST               0 (i)
+
+  7           6 LOAD_FAST                0 (i)
+              9 YIELD_VALUE         
+             10 POP_TOP             
+
+  8          11 LOAD_FAST                0 (i)
+             14 PRINT_ITEM          
+             15 PRINT_NEWLINE       
+             16 LOAD_CONST               0 (None)
+             19 RETURN_VALUE      
+</code></pre></td></tr></table></div></div><p>我们猜测其中第二列(代表字节码偏移量)为9的指令<code>YIELD_VALUE</code>就是yield关键字的执行代码，进入Python2.7.12源码目录，在解释器执行字节码的主函数<code>PyEval_EvalFrameEx</code>中找到了下面一段：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c>          <span class=n>TARGET_NOARG</span><span class=p>(</span><span class=n>YIELD_VALUE</span><span class=p>)</span>
+          <span class=p>{</span>
+              <span class=n>retval</span> <span class=o>=</span> <span class=n>POP</span><span class=p>();</span>
+              <span class=n>f</span><span class=o>-&gt;</span><span class=n>f_stacktop</span> <span class=o>=</span> <span class=n>stack_pointer</span><span class=p>;</span>
+              <span class=n>why</span> <span class=o>=</span> <span class=n>WHY_YIELD</span><span class=p>;</span>
+              <span class=c1>// 跳转到fast_yield处。fast_yield里处理了一下状态位然后返回结果
+</span><span class=c1></span>              <span class=k>goto</span> <span class=n>fast_yield</span><span class=p>;</span>
+          <span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>其中<code>TARGET_NOARG</code>为封装了<code>case</code>语句的宏，这句话的意思是，如果字节码是<code>YIELD_VALUE</code>，就把栈顶元素赋值给<code>retval</code>，然后跳转到<code>fast_yield</code>处，<code>fast_yield</code>处代码进行了一些状态判断后直接返回了<code>retval</code>。</p><h2 id=生成器是如何记录代码返回位置的>生成器是如何记录代码返回位置的</h2><p>显然，如果这时候调用代码<code>a.next()</code>就会直接返回yield后边的表达式结果。这对应了上面C代码的<code>fast_yield</code>部分，那生成器怎么记录上次执行的位置并在下一次调用<code>a.next()</code>的时候从上次的位置继续执行的呢？</p><p>Python在解释代码时，是将代码块加载为一个叫PyFrameObject的对象，这个对象代表了当前运行的栈帧。PyFrameObject里有个<code>f_lasti</code>变量用于保存代码当前执行到了字节码的哪个位置。在第二次执行<code>a.next()</code>时，生成器对象把之前携带了<code>f_lasti</code>的PyFrameObject当参数传给<code>PyEval_EvalFrameEx</code>，在<code>PyEval_EvalFrameEx</code>里的执行一个JUMPTO就直接跳转到了上一次结束生成器时的字节码位置：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=n>PyObject</span> <span class=o>*</span>
+<span class=nf>PyEval_EvalFrameEx</span><span class=p>(</span><span class=n>PyFrameObject</span> <span class=o>*</span><span class=n>f</span><span class=p>,</span> <span class=kt>int</span> <span class=n>throwflag</span><span class=p>)</span>
+<span class=p>{</span>
+<span class=p>...</span>
+<span class=cp>#define FAST_DISPATCH() \
+</span><span class=cp>          { \
+</span><span class=cp>      if (!lltrace &amp;&amp; !_Py_TracingPossible) { \
+</span><span class=cp>          f-&gt;f_lasti = INSTR_OFFSET(); \
+</span><span class=cp>          goto *opcode_targets[*next_instr++]; \
+</span><span class=cp>      } \
+</span><span class=cp>      </span><span class=c1>// 跳转到fast_next_opcode处
+</span><span class=c1></span>      <span class=k>goto</span> <span class=n>fast_next_opcode</span><span class=p>;</span> \
+          <span class=p>}</span>
+<span class=p>...</span>
+<span class=nl>fast_next_opcode</span><span class=p>:</span>
+          <span class=n>f</span><span class=o>-&gt;</span><span class=n>f_lasti</span> <span class=o>=</span> <span class=n>INSTR_OFFSET</span><span class=p>();</span>
+  
+          <span class=cm>/* line-by-line tracing support */</span>
+  
+          <span class=k>if</span> <span class=p>(</span><span class=n>_Py_TracingPossible</span> <span class=o>&amp;&amp;</span>
+              <span class=n>tstate</span><span class=o>-&gt;</span><span class=n>c_tracefunc</span> <span class=o>!=</span> <span class=nb>NULL</span> <span class=o>&amp;&amp;</span> <span class=o>!</span><span class=n>tstate</span><span class=o>-&gt;</span><span class=n>tracing</span><span class=p>)</span> <span class=p>{</span>
+              <span class=p>...</span>
+              <span class=cm>/* Reload possibly changed frame fields */</span>
+              <span class=c1>// 按照f-&gt;f_lasti中的偏移量跳转字节码
+</span><span class=c1></span>              <span class=n>JUMPTO</span><span class=p>(</span><span class=n>f</span><span class=o>-&gt;</span><span class=n>f_lasti</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>其中<code>INSTR_OFFSET</code>宏正是字节码的偏移量。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=cp>#define INSTR_OFFSET()  ((int)(next_instr - first_instr))
+</span><span class=cp></span>
+<span class=c1>// co-&gt;co_code里保存的是字节码
+</span><span class=c1></span><span class=n>first_instr</span> <span class=o>=</span> <span class=p>(</span><span class=kt>unsigned</span> <span class=kt>char</span><span class=o>*</span><span class=p>)</span> <span class=n>PyString_AS_STRING</span><span class=p>(</span><span class=n>co</span><span class=o>-&gt;</span><span class=n>co_code</span><span class=p>);</span>
+<span class=n>next_instr</span> <span class=o>=</span> <span class=n>first_instr</span> <span class=o>+</span> <span class=n>f</span><span class=o>-&gt;</span><span class=n>f_lasti</span> <span class=o>+</span> <span class=mi>1</span><span class=p>;</span>
+</code></pre></td></tr></table></div></div><p>所以生成器对象每次执行结束都把字节码的偏移量记录下来，并把运行状态保存在PyFrameObject里，下一次运行时生成器时，python解释器直接按照偏移量寻找下一个字节码指令。</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2016-12-28</span></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/2016/py-yield/index.md target=_blank>Read Markdown</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://sund.site/2016/py-yield/ data-title="Python yield关键字的底层实现" data-via=https://twitter.com/way2steve data-hashtags=python><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw" aria-hidden=true></i>&nbsp;<a href=/tags/python/>python</a></section><section><span><a href=javascript:void(0); onclick=window.history.back();>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/2016/py-pythonic/ class=prev rel=prev title="Python 巧妙地将rpc接口封装成pythonic的链式调用"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>Python 巧妙地将rpc接口封装成pythonic的链式调用</a>
+<a href=/2017/py-str/ class=next rel=next title="Python2 中字符类型的一些坑">Python2 中字符类型的一些坑<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div id=comments><div id=disqus_thread class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.79.1">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden=true></i>LoveIt</a></div><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2016 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://twitter.com/way2steve target=_blank>Steve Sun</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw" aria-hidden=true></i></a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw" aria-hidden=true></i></a></div><script type=text/javascript src=https://v2steve.disqus.com/embed.js defer></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript>window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','UA-64688885-1',{'anonymize_ip':true});</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-64688885-1" async></script></body></html>

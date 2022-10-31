@@ -1,5 +1,5 @@
 ---
-title: "Notion as a dashboard"
+title: "Notion As A Dashboard"
 date: 2022-07-31T21:01:56+08:00
 description: "Using Notion as the backend service's dashboard."
 tags: [Notion]

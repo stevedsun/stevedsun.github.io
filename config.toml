@@ -23,7 +23,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 [author]
   name = "Steve Sun"
   email = ""
-  link = "https://twitter.com/way2steve"
+  link = "https://sund.site/about/"
 
 # Menu config
 # 菜单配置

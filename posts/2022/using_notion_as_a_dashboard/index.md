@@ -1,4 +1,4 @@
-# Notion as a dashboard
+# Notion As A Dashboard
 
 
 I have built a Chrome extension [无用主意](https://chrome.google.com/webstore/detail/%E6%97%A0%E7%94%A8%E4%B8%BB%E6%84%8F%E6%A0%87%E7%AD%BE%E9%A1%B5/lieiofhdejclfpflofeooilpeaphlcgd?hl=zh-CN) during the last month. The backend service implemented by Flask is using Notion as a dashboard.

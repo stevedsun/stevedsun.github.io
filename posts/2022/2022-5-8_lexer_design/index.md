@@ -1,4 +1,4 @@
-# Building a file parser
+# Building A File Parser
 
 
 Last week, after reading this article - [How to Write a Lexer in Go](https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go), I found that it is not so difficult to design a configuration file parser by this article's mind-set. Then I tried to write a fluent-bit configuration parser, finally got this [Fluent-Bit configuration parser for Golang](https://github.com/stevedsun/go-fluentbit-conf-parser).

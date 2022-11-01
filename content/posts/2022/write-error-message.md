@@ -4,7 +4,7 @@ date: 2022-08-23T22:18:00+08:00
 tags: [错误日志, 技术文档]
 ---
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/20221031083917.png)
+![](images/20221031083917.png)
 
 本文整理了 Google 官方文档中关于错误信息的编写规范。适用于有一定编程经验，尤其从事业务开发的程序员。
 

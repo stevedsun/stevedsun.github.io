@@ -18,13 +18,13 @@ tags: [边缘计算, edge-computing]
 - **Edge（边缘）节点**主要负责数据的处理，如 InfluxDB 通常设置在中间这一层。
 - **Cloud（云端）节点**是地理位置无关的，有容灾和扩展能力的云端服务层，因为边缘节点的硬件限制，扩展性不如云端，因此通常经过加工的数据从边缘节点发送到云端做持久化和数据展示。云端节点也负责一部分复杂数据的加工和聚合。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/13c5369a09c98c9d3bc40694052db3e.jpg)
+![](images/13c5369a09c98c9d3bc40694052db3e.jpg)
 
 ## Edge 层
 
 Edge 层的通常由一个 **gateway（网关）**，数据处理服务，存储服务和若干的应用服务组成。因为硬件和维护的限制，Edge 层通常安装的服务数量和分配的资源有限。它主要负责数据的轻量级加工和聚合，减少从 Edge 层到 Cloud 层之间数据传输的带宽，同时快速地监控、反馈问题给终端设备。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/edge-computing--edge-node.png)
+![](images/edge-computing--edge-node.png)
 
 ### Gateway
 

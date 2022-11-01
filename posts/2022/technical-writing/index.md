@@ -195,3 +195,9 @@
 - [Software Engineering at Google](https://www.oreilly.com/library/view/software-engineering-at/9781492082781/)
 - [Gitlab Technical Writing Fundamentals courese](https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/)
 
+---
+
+**Buy me a coffee on wechat, 请我喝一杯咖啡**
+
+<img height="200" width="200" src="/images/buy-me-a-coffee.png">
+

@@ -25,5 +25,5 @@
 
 最后奉上一张 Twitter 上的梗图。
 
-![](https://raw.staticdn.net/stevedsun/stevedsun.github.io/master/static/images/529f94b3bfab914f272c3a51adcd83e.jpg)
+![](images/529f94b3bfab914f272c3a51adcd83e.jpg)
 

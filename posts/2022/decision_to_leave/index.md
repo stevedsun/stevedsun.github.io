@@ -11,7 +11,7 @@
 
 让我们回顾一下知九洞案：凶手洪山五曾经和女友吴佳人非常相爱，后来吴与小凡（后来的死者）偷情，得知被绿后的洪山五愤而刺死情敌。在刑警男主一番抓捕之后，洪山五被逼到天台边缘跳楼自杀。他在自杀前，特别希望转告女友吴佳人：「虽然我为了你受苦，但如果不是你，我的人生将是一场空」。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814134440634.png)
+![](images/image-20220814134440634.png)
 
 这里印证了前面情节中，知九洞案另一位嫌疑犯，洪山五的朋友（李智久）的口供。
 
@@ -27,7 +27,7 @@
 
 下面是我画的一张主要人物关系图。如果忘了剧情可以参考一下。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/%E5%88%86%E6%89%8B%E7%9A%84%E5%86%B3%E5%BF%83%E5%85%B3%E7%B3%BB%E5%9B%BE.png)
+![](images/%E5%88%86%E6%89%8B%E7%9A%84%E5%86%B3%E5%BF%83%E5%85%B3%E7%B3%BB%E5%9B%BE.png)
 
 ### 山与海的隐喻
 
@@ -35,15 +35,15 @@
 
 从女主宋瑞莱的角度看，片中反复出现她在「山」和「海」两种状态的摇摆。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814140654675.png)
+![](images/image-20220814140654675.png)
 
 第一次是在警局问话时，她提到「智者乐水，仁者乐山，我不是智者，所以我喜欢水」。这明显是撒谎，是为了解释她和丈夫吵架的借口。因为在后面情节中，她反复提到她的母亲在临死前跟她说「去找你姥爷在韩国老家的山吧」。这里出现的山，并不仅仅是现实中的锄头山，也是女主心里追寻的山。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814140952601.png)
+![](images/image-20220814140952601.png)
 
 而后半段中，女主和男主两人在雪中爬上锄头山之后，女主说，「母亲告诉我，去韩国吧，去那里就有这座山」。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814141046727.png)
+![](images/image-20220814141046727.png)
 
 可见，女主身世坎坷，来到韩国后心中一直追寻稳定的依靠，母亲的话冥冥中指引她「去那里吧，那里有你的山」。可是到韩国后第一任丈夫的长期虐待，让宋瑞莱仇恨眼前的山，而把男主张海俊视作是可以真正依靠的山。
 
@@ -55,9 +55,9 @@
 
 > 夫人：什么大海的男子汉，明明内陆才是故乡。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814142506839.png)
+![](images/image-20220814142506839.png)
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814142535311.png)
+![](images/image-20220814142535311.png)
 
 男主想要逃避的是眼前的山，在他和女主相遇的一瞬间，他就清晰地知道，他们是同一类人。
 
@@ -91,33 +91,33 @@
 
 影片里，男主与夫人羞羞之后，导演给了婚戒一个特写，男主有一个把婚戒握起来的小动作，暗示了男主和夫人之间看似恩爱的表面下，是双方都不愿意说破的冷漠。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814150620934.png)
+![](images/image-20220814150620934.png)
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814150634759.png)
+![](images/image-20220814150634759.png)
 
 而在发生丈夫坠山事件之后，宋瑞莱在警察局审问中途去了一趟洗手间，她发现手上的婚戒没有戴，然后悄悄戴上了。也说明她似乎在掩饰着什么。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814150735689.png)
+![](images/image-20220814150735689.png)
 
 在女主的第二任丈夫死后，男主押送女主的汽车上，男主的手上仍然有婚戒。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814150841261.png)
+![](images/image-20220814150841261.png)
 
 但是片尾，两个人第二次同坐一辆车时，男主的婚戒已经消失了，而宋瑞莱的手紧紧握住了张海俊：
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814150918432.png)
+![](images/image-20220814150918432.png)
 
 ### 乌鸦的羽毛
 
 另一个多次出现的暗示，是黑色羽毛。女主喂养的小猫为了报答主人，弄死了一只乌鸦叼到女主身边。这正是后半段女主杀夫护男主的伏笔。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814151043041.png)
+![](images/image-20220814151043041.png)
 
 片中第二次和第三次出现乌鸦羽毛，分别在男主调查两任丈夫死亡线索时一闪而过。其实男主早就把两任丈夫的死亡，同女主紧紧绑定在一起了。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814151325447.png)
+![](images/image-20220814151325447.png)
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814151335869.png)
+![](images/image-20220814151335869.png)
 
 ## 尾声
 
@@ -125,11 +125,11 @@
 
 最后送上汤唯的一段表情，宋瑞莱开车前往海边时，张海俊在电话里问她「我什么时候说过爱你？」，宋瑞莱在短短几秒钟内的四个眼神。
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814151745062.png)
+![](images/image-20220814151745062.png)
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814151854912-16604615388562.png)
+![](images/image-20220814151854912-16604615388562.png)
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814151913303.png)
+![](images/image-20220814151913303.png)
 
-![](https://raw.githubusercontent.com/stevedsun/stevedsun.github.io/master/static/images/image-20220814151924590.png)
+![](images/image-20220814151924590.png)
 

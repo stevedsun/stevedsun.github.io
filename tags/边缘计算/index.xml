@@ -1,1 +1,45 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>边缘计算 - Tag - 電波障害</title><link>https://sund.site/tags/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97/</link><description>边缘计算 - Tag - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 18 Sep 2022 17:01:29 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97/" rel="self" type="application/rss+xml"/><item><title>边缘计算模式——数据管道</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</link><pubDate>Sun, 18 Sep 2022 17:01:29 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</guid><description>问题 在物联网多层架构设计中，数据从终端设备流向云端，应该在哪一层做数据处理，哪一层做数据展示？分层的依据是什么？ 解决方案 架构设计 边缘计算的三</description></item><item><title>边缘计算模式——任务队列</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-lock/</link><pubDate>Wed, 14 Sep 2022 08:46:21 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/pattern-of-edge-computing-lock/</guid><description>概述 在边缘计算中，边缘节点通常介于终端节点和云端节点之间，它的扩展性也介于两者之间。对于高并发或是高资源占用的业务场景，应该如何设计边缘节点</description></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>边缘计算 - Tag - 電波障害</title><link>https://sund.site/tags/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97/</link><description>边缘计算 - Tag - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 18 Sep 2022 17:01:29 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97/" rel="self" type="application/rss+xml"/><item><title>边缘计算模式——数据管道</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</link><pubDate>Sun, 18 Sep 2022 17:01:29 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</guid><description><![CDATA[<h2 id="问题">问题</h2>
+<p>在物联网多层架构设计中，数据从终端设备流向云端，应该在哪一层做数据处理，哪一层做数据展示？分层的依据是什么？</p>
+<h2 id="解决方案">解决方案</h2>
+<h3 id="架构设计">架构设计</h3>
+<p>边缘计算的三层数据管道。</p>
+<ul>
+<li><strong>数据源</strong>是由若干终端设备组成的，内置在设备中的 agent 负责采集设备的基础数据如 cpu，内存使用量，应用统计数据等。</li>
+<li><strong>Edge（边缘）节点</strong>主要负责数据的处理，如 InfluxDB 通常设置在中间这一层。</li>
+<li><strong>Cloud（云端）节点</strong>是地理位置无关的，有容灾和扩展能力的云端服务层，因为边缘节点的硬件限制，扩展性不如云端，因此通常经过加工的数据从边缘节点发送到云端做持久化和数据展示。云端节点也负责一部分复杂数据的加工和聚合。</li>
+</ul>
+<p></p>
+<h2 id="edge-层">Edge 层</h2>
+<p>Edge 层的通常由一个 <strong>gateway（网关）</strong>，数据处理服务，存储服务和若干的应用服务组成。因为硬件和维护的限制，Edge 层通常安装的服务数量和分配的资源有限。它主要负责数据的轻量级加工和聚合，减少从 Edge 层到 Cloud 层之间数据传输的带宽，同时快速地监控、反馈问题给终端设备。</p>
+<p></p>
+<h3 id="gateway">Gateway</h3>
+<p>Gateway 通常要求能够根据终端设备数据自适应扩展。通常 gateway 还有设备 ID 识别，权限认证等功能。对于数据量较大的场景，gateway 需要缓存认证服务的状态，防止并发过大导致认证服务崩溃。</p>
+<h3 id="data-processors">Data processors</h3>
+<p>数据处理服务负责对终端发来的数据根据各种指标计算出复合指标存储到数据库或者数据仓库中。通常这一层会设置一个消息队列 MQ，如 Kafka，但是仍然因为 Edge 层设备资源的限制，消息队列最好是系统级别共享的并且能够缓存一段时期的数据，之后数据消费者（应用服务）可以根据自身需要订阅数据流。</p>
+<p>常用的时序数据库，如 InfluxDB，内置了 Task 功能，将数据处理和存储合二为一。大大简化了这一层的开发工作。</p>
+<h3 id="system-services--storage">System Services &amp; Storage</h3>
+<p>这一层由数据库和若干系统服务组成。向上层提供系统级别的 API 和数据。值得注意的是，数据库通常不会存储长期数据，因为 Edge 层存储容量的限制和不易扩展的特性，会给数据库设置 <strong>retention period</strong> 参数，令过期数据自动销毁或通过定时任务<strong>Downloadsampling（降采样）</strong>。</p>
+<p>系统服务一般由认证服务、数据 API、设备管理 API 等服务组成，这一层需要完成对设备的注册发现和管理。</p>
+<h2 id="小结">小结</h2>
+<p>以上就是对边缘计算的三层架构的概述和 Edge 层的设计。根据工作中的实际情况，应该重点关注几方面的问题：</p>
+<ul>
+<li>Edge 层的扩展性，当设备数据急速增长时是否有能力应对。</li>
+<li>Edge 层的服务拆分和数据持久化策略。因为部署环境和性能的限制，开发人员并不能像 Cloud 端开发一样快速响应 Edge 节点的情况，因此 Edge 层最考验开发者根据实际用户场景调参，自动化扩展、恢复的能力。</li>
+</ul>
+]]></description></item><item><title>边缘计算模式——任务队列</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-lock/</link><pubDate>Wed, 14 Sep 2022 08:46:21 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/pattern-of-edge-computing-lock/</guid><description><![CDATA[<h2 id="概述">概述</h2>
+<p>在边缘计算中，边缘节点通常介于终端节点和云端节点之间，它的扩展性也介于两者之间。对于高并发或是高资源占用的业务场景，应该如何设计边缘节点的策略。</p>
+<h2 id="问题">问题</h2>
+<p>在边缘计算中，对于那些占用 CPU 和内存资源较大的请求，什么时候应该加锁？</p>
+<h2 id="解决方案">解决方案</h2>
+<p>边缘计算中有三类节点：终端节点（device），边缘节点（edge）,云端节点（cloud）。</p>
+<ul>
+<li>终端节点：通常应该加锁限制高资源占用。因为终端设备往往资源紧张，不可扩展。</li>
+<li>云端节点：通常不需要加锁，而是扩展副本。</li>
+</ul>
+<p>对于情况比较复杂的边缘节点，通常要综合考虑当前系统资源分配策略和用户使用场景。</p>
+<h3 id="一般情况">一般情况</h3>
+<p>对于工业物联网环境，边缘节点的操作员通常较少，同一时间进行的操作不多，在这种情况下可以采用加锁的方式来限制资源占用。</p>
+<h3 id="最佳实践全局任务队列">最佳实践——全局任务队列</h3>
+<p>对于多用户或者并发稍高的情况，边缘节点可以实现全局的任务队列来缓解高资源占用的任务给系统造成的负担。在应用的架构设计上，应该将高资源占用的请求以事件形式发送到全局任务队列，由边缘节点系统统一调度这些任务，按顺序或特定的优先级依次执行。</p>
+<p>对于任务队列已满的情况，再考虑扩展应用服务副本数量。</p>
+]]></description></item></channel></rss>

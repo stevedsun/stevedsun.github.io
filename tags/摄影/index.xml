@@ -1,1 +1,71 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>摄影 - Tag - 電波障害</title><link>https://sund.site/tags/%E6%91%84%E5%BD%B1/</link><description>摄影 - Tag - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 14 Nov 2019 14:46:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%91%84%E5%BD%B1/" rel="self" type="application/rss+xml"/><item><title>Ricoh GR2 参数设置心得</title><link>https://sund.site/posts/2019/ricoh-gr2-settings/</link><pubDate>Thu, 14 Nov 2019 14:46:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2019/ricoh-gr2-settings/</guid><description>常用相机术语 包围曝光：同时使用不同曝光参数或滤镜拍摄三张照片或是合成一张。 NR：即降噪功能，如感光度 ISO NR，低速快门 NR。 ND 滤镜：即减光镜，</description></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>摄影 - Tag - 電波障害</title><link>https://sund.site/tags/%E6%91%84%E5%BD%B1/</link><description>摄影 - Tag - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 14 Nov 2019 14:46:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%91%84%E5%BD%B1/" rel="self" type="application/rss+xml"/><item><title>Ricoh GR2 参数设置心得</title><link>https://sund.site/posts/2019/ricoh-gr2-settings/</link><pubDate>Thu, 14 Nov 2019 14:46:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2019/ricoh-gr2-settings/</guid><description><![CDATA[<h2 id="常用相机术语">常用相机术语</h2>
+<p><strong>包围曝光</strong>：同时使用不同曝光参数或滤镜拍摄三张照片或是合成一张。</p>
+<p><strong>NR</strong>：即降噪功能，如感光度 ISO NR，低速快门 NR。</p>
+<p><strong>ND 滤镜</strong>：即减光镜，减少进光量，延长曝光时间，用于拍摄云彩，溪流等长曝光场景。</p>
+<p><strong>AF</strong>：自动对焦（Auto Focus）。</p>
+<p><strong>AE</strong>：自动曝光（Auto Exposure）。</p>
+<h2 id="半按快门警告图标">半按快门警告图标</h2>
+<p><strong>抖动警告（!((📷))）</strong>：快门速度过慢，照片质量会因为微微抖动而模糊。可以改善周围环境亮度或是手动提高快门速度。</p>
+<p></p>
+<p><strong>自动曝光警告（!AE）</strong>：快门速度太快，可能照片会发暗。可以调低快门速度或是增大光圈等。</p>
+<p></p>
+<h2 id="各项参数的对抖动曝光噪点的影响">各项参数的对抖动、曝光、噪点的影响</h2>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>增加参数值对进光量的影响</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>光圈（F）</td>
+<td>提高</td>
+<td>手动对焦模式或者快拍模式下，光圈越小，【超焦距】带来的取景深度越大</td>
+</tr>
+<tr>
+<td>快门速度越快</td>
+<td>降低</td>
+<td>快门速度 1/250 适合抓拍，1/60 为通常的安全快门</td>
+</tr>
+<tr>
+<td>ISO</td>
+<td>提高</td>
+<td>800 以内画质较好，超过 800 噪点明显变强</td>
+</tr>
+<tr>
+<td>曝光补偿（EV）</td>
+<td>提高</td>
+<td>影响亮度，非自动档可用，本质是增减相机控制光圈、快门、ISO 的比例时的权重，通常拍摄雪景和较黑的物体时候需要调节</td>
+</tr>
+<tr>
+<td>白平衡（WB）</td>
+<td>无影响</td>
+<td>影响色彩</td>
+</tr>
+<tr>
+<td>白平衡补偿（B：G）</td>
+<td>无影响</td>
+<td>手动增减白平衡权值，可以做出胶片等效果</td>
+</tr>
+<tr>
+<td>效果（D:C:S）</td>
+<td>无影响</td>
+<td>影响滤镜效果，可以拍出风格强烈的作品</td>
+</tr>
+<tr>
+<td>ND 滤镜（开）</td>
+<td>降低</td>
+<td>在强光状态下打开 ND 滤镜可以降低 3 档进光量，即使在白天也能用慢门或者大光圈</td>
+</tr>
+<tr>
+<td>闪光灯（开）</td>
+<td>提高</td>
+<td>在白天背光和夜晚都可以提高近景中被摄体的亮度</td>
+</tr>
+</tbody>
+</table>
+<h2 id="景深标尺nd-滤镜曝光补偿的技巧">景深标尺、ND 滤镜、曝光补偿的技巧</h2>
+<p></p>
+]]></description></item></channel></rss>

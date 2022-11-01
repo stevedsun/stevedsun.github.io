@@ -1,1 +1,142 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>思维 - Tag - 電波障害</title><link>https://sund.site/tags/%E6%80%9D%E7%BB%B4/</link><description>思维 - Tag - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 14 Nov 2019 15:29:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%80%9D%E7%BB%B4/" rel="self" type="application/rss+xml"/><item><title>注意力的边缘</title><link>https://sund.site/posts/2019/attention-model/</link><pubDate>Thu, 14 Nov 2019 15:29:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2019/attention-model/</guid><description>阅读几分钟就忍不住打开微信； 计划在家办公却浏览了一上午购物网站； 周末去咖啡馆学习，被来回走动到人打扰到无法专心。 这些问题我们经常会遇到，好的</description></item><item><title>怎样的建议才有价值</title><link>https://sund.site/posts/2016/talk-is-cheap/</link><pubDate>Thu, 25 Aug 2016 13:13:47 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2016/talk-is-cheap/</guid><description>我想很多时候我们下决心做一件事，都要征求周围人的建议。这些建议有好有坏。坏的建议不但帮不了你，还会歪曲你对事实的认识。最近我在研究系统学习英</description></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>思维 - Tag - 電波障害</title><link>https://sund.site/tags/%E6%80%9D%E7%BB%B4/</link><description>思维 - Tag - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 14 Nov 2019 15:29:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%80%9D%E7%BB%B4/" rel="self" type="application/rss+xml"/><item><title>注意力的边缘</title><link>https://sund.site/posts/2019/attention-model/</link><pubDate>Thu, 14 Nov 2019 15:29:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2019/attention-model/</guid><description><![CDATA[<p>阅读几分钟就忍不住打开微信；</p>
+<p>计划在家办公却浏览了一上午购物网站；</p>
+<p>周末去咖啡馆学习，被来回走动到人打扰到无法专心。</p>
+<p>这些问题我们经常会遇到，好的外部环境可以让人长时间保持精神的专注，大大提高我们工作、学习的效率。反之各种外界干扰会时不时跳出来打断你的注意力。那么你要怎么应对这些干扰呢？</p>
+<p>接下来我会分享一种认知模型——<strong>注意力模型</strong>，它帮助你分析你的注意力被谁「偷」走了。</p>
+<h2 id="注意力有边缘">注意力有边缘</h2>
+<p>我在最近阅读《<a href="https://book.douban.com/subject/27133266/" target="_blank" rel="noopener noreffer ">交互的未来</a>》这本书时，了解到了注意力模型。书的作者认为，人的注意力有<strong>边缘</strong>。我们不可能将全部注意力放在多件事上，<strong>处于我们注意力中心的事物最容易被我们感知，而处于注意力边缘的事物，往往被我们的视线边缘、听觉、嗅觉等知觉感受到</strong>。因此，位于注意力中心的事物感知最清晰，所以反馈也更迅速。</p>
+<p>以此为基础，作者把注意力划分为三个等级，下面以常见的汽车驾驶室为例，看看司机的注意力是怎样分配的：</p>
+<ul>
+<li>前方路况占据了驾驶员视觉中心，是主要注意力</li>
+<li>在视觉边缘的反光镜和仪表盘，以及触觉反馈的方向盘和脚踏板，是次级注意力</li>
+<li>双闪、应急灯、收音机等设备，周围的环境音共同构成了第三级注意力</li>
+</ul>
+<p></p>
+<p>由此，注意力的三个等级可以归纳为：</p>
+<ul>
+<li>主要注意力与视觉相关，且是直接的，例如司机对路面所给予的注意，或者台式计算机用户对计算机所给予的注意。</li>
+<li>次要注意力的对象则较远，例如，人们对无需直接关注就能感觉到的声音或振动信号所给予的注意。</li>
+<li>第三级注意力的对象则是注意范围边缘的声音、光线或环境振动等。</li>
+</ul>
+<p>当一个司机在驾驶时，如果有人跟他不断交谈，那么司机的注意力模型就变成了：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">主要注意力</th>
+<th style="text-align:center">次要注意力</th>
+<th style="text-align:center">第三级注意力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">前窗的视觉，路况和车辆位置的意识</td>
+<td style="text-align:center">后视镜、仪表盘、脚踏板等</td>
+<td style="text-align:center">和乘客的谈话内容</td>
+</tr>
+</tbody>
+</table>
+<p>司机的第三级注意力被乘客的谈话内容占据，所以周围的环境音就被阻断了。那假设这辆车使用了屏幕触摸式导航系统，那么司机在使用导航系统时，主要注意力就被阻断了。所以在非自动驾驶的汽车里使用触摸操控在交互上是糟糕的设计。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">主要注意力</th>
+<th style="text-align:center">次要注意力</th>
+<th style="text-align:center">第三级注意力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">触摸屏操作</td>
+<td style="text-align:center">后视镜、仪表盘、脚踏板等</td>
+<td style="text-align:center">和乘客的谈话内容</td>
+</tr>
+</tbody>
+</table>
+<h2 id="使用电子设备的注意力模型">使用电子设备的注意力模型</h2>
+<p>接下来，我们一起回到日常生活中。在一般情况下，我们在工作和学习时，注意力的状态是这样：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">主要注意力</th>
+<th style="text-align:center">次要注意力</th>
+<th style="text-align:center">第三级注意力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">电子屏幕、书本上的内容</td>
+<td style="text-align:center">屏幕边缘的时间和菜单，不时弹出的通知栏，视线边缘来回走动的人</td>
+<td style="text-align:center">环境光和声音，提示音，久坐后座椅、桌子的不适感</td>
+</tr>
+</tbody>
+</table>
+<p>看到这里，你头脑中理想的学习环境是不是下面这样呢？</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">主要注意力</th>
+<th style="text-align:center">次要注意力</th>
+<th style="text-align:center">第三级注意力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">电子屏幕、书本上的内容</td>
+<td style="text-align:center">未被占用</td>
+<td style="text-align:center">未被占用</td>
+</tr>
+</tbody>
+</table>
+<p>次级注意力未被占用并不一定是件好事。我们大脑里偶尔冒出来的思绪经常把注意力牵扯到其他事情上。对平时专注力差的人，更会时不时主动寻找手机，看看微信，突然想起某款口红型号，马上登录淘宝……</p>
+<p>所以，<strong>专注的重点在于合理分配注意力的中心和边缘，让它们既不互相阻断，又不给思绪留出太多遐想空间。</strong></p>
+<h2 id="用平静的方式占领注意力的边缘">用平静的方式，占领注意力的边缘</h2>
+<p>想象现在你坐在周末的咖啡馆里准备阅读一本书，但是嘈杂的环境无法让你沉下心来：飞奔的小朋友发出持续的笑声，不时从你身边划过；隔壁桌相亲的一男一女举止暧昧，任谁都不能不关心他们接下来的进展；为了防止顾客久坐而专门设计的座椅让你的臀部和背部永远处于找不到理想接触面积的状态；这时，手机锁屏界面显示「你收到了一条通知」……</p>
+<p>下面，你应该做什么呢？</p>
+<p>或许是扔掉手机换一家咖啡馆，亦或者在夺门而出前亲吻隔壁桌的女生，在男生惊慌的眼神里转身跑向门口，并在出门前绊倒跑过来的小朋友……</p>
+<p>这肯定是不行的。</p>
+<p>首先，你要关掉自己手机的一切通知，或者直接打开<a href="https://support.apple.com/zh-cn/HT204321" target="_blank" rel="noopener noreffer ">勿扰模式</a>。大多手机 App 都想尽办法留住更多用户的时间，所以<strong>真正变成手机的主人，是你提升一切行动力和专注力的先决条件。</strong></p>
+<p>第二步，你要屏蔽掉视觉污染，让视线边缘不会有吸引你注意力的物体。我会在下一小节中告诉你<strong>聚光灯</strong>的妙用。</p>
+<p>最后，你要屏蔽掉声音的干扰，戴上耳机，播放点柔和的音乐。除此之外，舒适的座椅和柔软的靠垫都会安抚你的触觉神经。</p>
+<p>你的注意力应该像下面这样：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">主要注意力</th>
+<th style="text-align:center">次要注意力</th>
+<th style="text-align:center">第三级注意力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">电子屏幕、书本上的内容</td>
+<td style="text-align:center">不容易吸引注意力的物体，较暗的周围环境</td>
+<td style="text-align:center">轻柔的旋律，舒适的倚靠感</td>
+</tr>
+</tbody>
+</table>
+<h2 id="用聚光灯营造舞台感">用聚光灯营造舞台感</h2>
+<p>次级注意力会时不时把视觉中心夺走。许岑在自己的新书<a href="https://book.douban.com/subject/34464459/" target="_blank" rel="noopener noreffer ">《上手》</a>中，提出使用聚光灯来营造极大提升专注力的舞台感办公环境。从注意力模型的角度说，次级注意力被较暗的环境包围时，更不容易阻断视觉注意力。</p>
+<p></p>
+<p>市面上很多光线柔的台灯或是显示器灯，兼顾了保护视力和聚光灯的作用。比较知名的有少数派曾经发过的<a href="https://sspai.com/post/43034" target="_blank" rel="noopener noreffer ">《这是我今年买得最值的硬件 — WiT Genie》</a>和《<a href="https://sspai.com/post/45870" target="_blank" rel="noopener noreffer ">夹在显示器上的台灯，美观实用的完美照明解决方案：明基 ScreenBar Plus 屏幕挂灯》</a>，前者还详细讲解了照明亮度、频闪对视力的影响。</p>
+<h2 id="容易被忽视的第三级注意力">容易被忽视的第三级注意力</h2>
+<p>很多人喜欢使用降噪耳机来屏蔽环境音，我认为实际效果因人而异，像我这种脑中经常会冒出异想的人，大脑很难在安静的环境里不自我放飞。即便是躺在床上装睡时……这也是为什么我提倡占领注意力的边缘而不是留出真空，思想是长翅膀的鸟，空间太大就很容易飞到莫名的地方去。</p>
+<p>我占领注意力边缘的方式是听音乐。有人会觉得听音乐干扰注意力，无法专心工作。有的人则相反，觉得听音乐是必要的「陪伴」。是干扰还是陪伴，这取决于音乐是激昂还是舒缓，歌词是陌生还是熟悉，音量是小还是大。熟悉的旋律和歌声需要你更少的注意力去理解，音乐也就不会轻易越迁到高一级注意力阻断你的工作，较小的音量可以保证它只存在于你的第三级注意力中。</p>
+<p></p>
+<p>网易云音乐有很多歌单适合工作学习时听，比如我曾经整理过一个<a href="http://music.163.com/playlist/133513964/131429/?userid=131429" target="_blank" rel="noopener noreffer ">《看书就好好看书》</a>，里面有94首小提琴曲和日系轻音乐。</p>
+<p>可是常听还是会腻，所以<a href="https://www.pandora.com" target="_blank" rel="noopener noreffer ">潘多拉电台</a>弥补了我想时不时换换口味的需要，它的推荐歌曲和自主学习能力是我试用过的 App 里体验最好的。你也可以使用网页版的潘多拉电台打造一套属于自己的工作学习 BGM。</p>
+<h3 id="适宜阅读的舒适触感">适宜阅读的舒适触感</h3>
+<p>对于一个喜欢阅读的人，我坚信最适合人类阅读的姿势是半躺着。一个舒适的躺椅或是床头靠垫使你在阅读时不至于频繁更换姿势，配合舒适的暖色灯光，睡前阅读会成为你的习惯。</p>
+<p></p>
+<p>相信读到这里你已经知道了自己有哪些外部环境需要改善。</p>
+<h2 id="小结">小结</h2>
+<p>本文首先介绍注意力模型，注意力分三个等级：中心是主要注意力、边缘分别是次级注意力和第三级注意力。接下来我建议你使用聚光灯、背景音乐和舒适的倚靠感来平静地占领注意力的各个「阵地」，让你的内心沉浸工作和学习中。</p>
+<p>文中对注意力的控制局限于外部环境，实际上，人的内因往往起着更关键的作用，有很多调节注意力的方法，如建立大纲模型、思维导图法。也有很多逐步提高注意力的工具，比如<a href="https://zh.wikipedia.org/zh-hans/%E7%95%AA%E8%8C%84%E5%B7%A5%E4%BD%9C%E6%B3%95" target="_blank" rel="noopener noreffer ">番茄工作法</a>和最近很流行的<a href="https://sspai.com/post/56866" target="_blank" rel="noopener noreffer ">用 NFC 贴纸自动化记录时间</a>。在此不详细展开，读者可以根据链接自行寻找适合自己的方法。</p>
+<p>希望本文对你有所帮助。你可以在我的微信公众号「电波障害」看到更多文章。</p>
+]]></description></item><item><title>怎样的建议才有价值</title><link>https://sund.site/posts/2016/talk-is-cheap/</link><pubDate>Thu, 25 Aug 2016 13:13:47 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2016/talk-is-cheap/</guid><description><![CDATA[<p>我想很多时候我们下决心做一件事，都要征求周围人的建议。这些建议有好有坏。坏的建议不但帮不了你，还会歪曲你对事实的认识。最近我在研究系统学习英文的方法，偶然在豆瓣小站里看到了开头那段话，对此深表认同。以我个人健身的经历，在报名私教课之前也寻求过很多人的建议。大部分会告诉你，健身(减肥)最重要的就是坚持。他们还会煞有介事的告诉你要「管住嘴，迈开腿」。在这一年里，我减掉了大概25KG体重，最大的感受——如果没有教练指导，我自己是断然不会坚持下来的。大部分的建议都像开头引用的那段话一样，是假大空的虚话，废话。</p>
+<p>「任何一个通过自我磨练掌握了某一项具体技能或者在某领域内有一定造诣的人，都会对该领域有着起码的基本认知和独特的个人总结，如果你向其请教，得到的断然不会是“努力去做或者坚持最重要”之类的假大空的虚话」<br>
+—— 豆瓣英语学习大神 恶魔奶爸Sam</p>
+<p>怎样征求有用的建议？结合我这些年减肥失败的教训，笼统的概括为：如果你要做一件长期投入的事儿，那么请咨询跟你情况类似，且做成了这件事的人。</p>
+<p>首先「情况类似」很重要。因为很多人是科班出身，比如健身教练，他们大部分从上学起就被动养成了科学饮食、运动的好习惯。这些习惯并不是主动思考之后产生的，所以这些人在传授你知识时往往模糊不清的告诉你应该如何做，却说不出所以然。再比如英语系的学生就很难告诉你行之有效的英语学习方法，他们会告诉你大量看美剧英剧，背单词。但是你根本没有他们的学习环境，几乎不可能坚持下来。在语言学习中有「可理解输入」的概念，简单解释就是——你必须接受那些「你能够理解」的知识，否则你就吸收不了(记不住)。同理，知识在灌输给我们时候，如果不解释清楚来由，我们就很难有深刻认识。所以征求建议的对象如果跟你情况类似，你往往能听到更加切实可行的建议，比如在某个阶段应该注意什么，可能片面，但是有效。比如我在健身初期，咨询同学大伟很多健身的入门知识，关于人体代谢率，关于自重训练。这些东西，科班出身的教练通常不会细致地讲解给我。</p>
+<p>其次「要征求做成了这件事的人」，这就是开头那段话的意义，那些没做成这件事儿的人，大都输在了「坚持」这两个字上。在把这一信息转告别人时，这些人就会主观放大坚持的重要性。你去征求这些自己都没成事儿的人建议，得到的都是些「管住嘴，迈开腿」，「坚持不懈」之类的屁话。我这一年锻炼和饮食的心得就是不断学习，反复修订计划和总结经验。另外还有一种傻逼理论「每个人都有各自的特点，要针对性制定计划，没有一种通用的解决办法」。倘若真是这样，还上学干什么？搞科研做什么？管理学、经济学都要歇菜了。别用个体差异给自己找借口了。</p>
+<p>我猜很多有主见，独立思考的人都会认同一句话。这句话是罗永浩在一次鲁豫有约采访时候说的——「我们周围大部分人都是笨蛋」。虽然老罗最近在做手机上栽了大跟头，但是大多数人一辈子连栽这样跟头的机会都没有就入土了。可是骂他的成千上万人里有多少是经历过这过程的呢？传播那些人云亦云的虚话，不过是懒于思考，不求上进的人找好的借口。他们自己做不到的，就理所当然认为你也做不到。抱着「周围大部分人都是笨蛋」的理念，积极地去跟「对的人」征求「有价值」的建议，我相信一定能有所收获。</p>
+]]></description></item></channel></rss>

@@ -57,7 +57,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
   dateFormat = "2006-01-02"
   title = "電波障害"
   description = "電波障害 - Steve Sun's Blog"
-  images = ["/images/favicon-32.png"]
+  images = ["android-chrome-192x192.png"]
 
   # Header config
   # 页面头部导航栏配置
@@ -73,7 +73,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     [params.header.title]
       # URL of the LOGO
       # LOGO 的 URL
-      logo = "/images/favicon-32.png"
+      logo = "android-chrome-192x192.png"
       # title name
       # 标题名称
       name = "電波障害"
@@ -207,7 +207,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
       gravatarEmail = ""
       # URL of avatar shown in home page
       # 主页显示头像的 URL
-      avatarURL = "/images/favicon-32.png"
+      avatarURL = "android-chrome-192x192.png"
       # title shown in home page (HTML format is supported)
       # 主页显示的网站标题 (支持 HTML 格式)
       title = "電波障害"
@@ -554,7 +554,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
       # 出版者信息
       [params.page.seo.publisher]
         name = "Steve Sun"
-        logoUrl = "/images/favicon-32.png"
+        logoUrl = "android-chrome-192x192.png"
 
   # TypeIt config
   # TypeIt 配置
@@ -586,10 +586,10 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
   [params.seo]
     # image URL
     # 图片 URL
-    image = "/images/favicon-32.png"
+    image = "android-chrome-192x192.png"
     # thumbnail URL
     # 缩略图 URL
-    thumbnailUrl = "/images/favicon-16x16.png"
+    thumbnailUrl = "favicon-32x32.png"
 
   # Analytics config
   # 网站分析配置
@@ -778,7 +778,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
         [languages.en.params.home.profile]
           enable = true
           gravatarEmail = ""
-          avatarURL = "/images/favicon-32.png"
+          avatarURL = "android-chrome-192x192.png"
           title = ""
           subtitle = "Steve Sun's Blog"
           typeit = true

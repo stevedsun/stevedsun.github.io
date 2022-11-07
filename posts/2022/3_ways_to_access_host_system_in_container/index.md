@@ -29,7 +29,3 @@ Docker has a startup parameter `--pid=host` to change the PID namespace to its h
 
 It is the last way you can access the host system, but it is not recommended for most cases.
 
----
-
-<img src="/images/qrcode/like.png" style="width: 20%; z-index: 100; position: fixed; right: 25px; bottom: 100px">
-

@@ -20,6 +20,4 @@
 </blockquote>
 <h2 id="3-by-docker---privileged">3. By <code>docker --privileged</code></h2>
 <p>It is the last way you can access the host system, but it is not recommended for most cases.</p>
-<hr>
-
 ]]></description></item></channel></rss>

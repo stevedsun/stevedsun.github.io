@@ -94,7 +94,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     enable = true
     # Custom content (HTML format is supported)
     # 自定义内容 (支持 HTML 格式)
-    custom = "<img src=\"/images/qrcode/like.png\" style=\"width: 15rem; z-index: 50; position: fixed; right: 1.5rem; bottom: 150px\">"
+    custom = "<img src=\"/images/qrcode/like.png\" style=\"width: 150px; z-index: 50;\">"
     # whether to show Hugo and theme info
     # 是否显示 Hugo 和主题信息
     hugo = false

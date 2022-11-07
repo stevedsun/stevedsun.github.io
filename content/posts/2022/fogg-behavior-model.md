@@ -104,4 +104,4 @@ aliases: [/posts/fogg-behavior-model/]
 
 ---
 
-<img src="/images/qrcode/like.png" style="width: 20%; z-index: 100; position: fixed; right: 25px; bottom: 100px">
+<img src="/images/qrcode/like.png" style="width: 240px; z-index: 100; position: fixed; right: 1.5rem; bottom: 100px">

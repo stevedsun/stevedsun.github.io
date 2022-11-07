@@ -199,7 +199,3 @@ aliases: [/posts/technical-writing/]
 - [Docs for Developers](https://docsfordevelopers.com/)
 - [Software Engineering at Google](https://www.oreilly.com/library/view/software-engineering-at/9781492082781/)
 - [Gitlab Technical Writing Fundamentals courese](https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/)
-
----
-
-<img src="/images/qrcode/like.png" style="width: 240px; z-index: 100; position: fixed; right: 1.5rem; bottom: 100px">

@@ -195,3 +195,7 @@
 - [Software Engineering at Google](https://www.oreilly.com/library/view/software-engineering-at/9781492082781/)
 - [Gitlab Technical Writing Fundamentals courese](https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/)
 
+---
+
+<img src="/images/qrcode/like.png" style="width: 20%; z-index: 100; position: fixed; right: 25px; bottom: 100px">
+

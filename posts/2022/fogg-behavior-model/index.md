@@ -98,3 +98,7 @@
 - 制定习惯养成计划时，先从习惯拆解出具体的，可执行的行为。再按行为的优先级选择最容易、影响最大的执行。
 - 某些行为依赖其他习惯，逐级拆解，同时养成三个微小的习惯，渐进式地改变生活状态吧。
 
+---
+
+<img src="/images/qrcode/like.png" style="width: 20%; z-index: 100; position: fixed; right: 25px; bottom: 100px">
+

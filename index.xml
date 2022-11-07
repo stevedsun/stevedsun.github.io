@@ -64,6 +64,8 @@
 <li>制定习惯养成计划时，先从习惯拆解出具体的，可执行的行为。再按行为的优先级选择最容易、影响最大的执行。</li>
 <li>某些行为依赖其他习惯，逐级拆解，同时养成三个微小的习惯，渐进式地改变生活状态吧。</li>
 </ul>
+<hr>
+
 ]]></description></item><item><title>边缘计算模式——数据管道</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</link><pubDate>Sun, 18 Sep 2022 17:01:29 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</guid><description><![CDATA[<h2 id="问题">问题</h2>
 <p>在物联网多层架构设计中，数据从终端设备流向云端，应该在哪一层做数据处理，哪一层做数据展示？分层的依据是什么？</p>
 <h2 id="解决方案">解决方案</h2>
@@ -188,6 +190,8 @@
 </div>
 </div></li>
 </ul>
+<hr>
+
 ]]></description></item><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/technical-writing/</guid><description><![CDATA[<p>本文内容摘录自 <a href="https://developers.google.com/tech-writing/overview" target="_blank" rel="noopener noreffer ">Technical Writing</a> （谷歌技术文档写作指南）的第一部分。</p>
 <p>本文适用于想要提高技术文档写作、技术领域日常沟通能力的读者，对于一些商务的、非文学性质的英语办公场景沟通，也能起一定帮助作用。</p>
 <p>阅读过本文的读者可以：</p>
@@ -480,6 +484,8 @@
 <li><a href="https://www.oreilly.com/library/view/software-engineering-at/9781492082781/" target="_blank" rel="noopener noreffer ">Software Engineering at Google</a></li>
 <li><a href="https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/" target="_blank" rel="noopener noreffer ">Gitlab Technical Writing Fundamentals courese</a></li>
 </ul>
+<hr>
+
 ]]></description></item><item><title>《分手的决心》细节分析</title><link>https://sund.site/posts/2022/decision_to_leave/</link><pubDate>Sun, 14 Aug 2022 17:01:56 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/decision_to_leave/</guid><description><![CDATA[<blockquote>
 <p>把那部手机丢进海里，让它陷入深处，没人能寻到。</p>
 </blockquote>
@@ -580,6 +586,8 @@
 </blockquote>
 <h2 id="3-by-docker---privileged">3. By <code>docker --privileged</code></h2>
 <p>It is the last way you can access the host system, but it is not recommended for most cases.</p>
+<hr>
+
 ]]></description></item><item><title>品味和效率</title><link>https://sund.site/posts/2022/2022-08-04/</link><pubDate>Thu, 04 Aug 2022 07:59:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/2022-08-04/</guid><description><![CDATA[<p>早起又随性写点东西。</p>
 <p>最近朋友圈被转载很多的一篇文章，来自 GQ 实验室对重轻老师的采访。里面有一段关于品味的叙述：</p>
 <blockquote>

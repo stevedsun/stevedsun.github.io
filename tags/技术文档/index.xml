@@ -78,6 +78,8 @@
 </div>
 </div></li>
 </ul>
+<hr>
+
 ]]></description></item><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/technical-writing/</guid><description><![CDATA[<p>本文内容摘录自 <a href="https://developers.google.com/tech-writing/overview" target="_blank" rel="noopener noreffer ">Technical Writing</a> （谷歌技术文档写作指南）的第一部分。</p>
 <p>本文适用于想要提高技术文档写作、技术领域日常沟通能力的读者，对于一些商务的、非文学性质的英语办公场景沟通，也能起一定帮助作用。</p>
 <p>阅读过本文的读者可以：</p>
@@ -370,4 +372,6 @@
 <li><a href="https://www.oreilly.com/library/view/software-engineering-at/9781492082781/" target="_blank" rel="noopener noreffer ">Software Engineering at Google</a></li>
 <li><a href="https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/" target="_blank" rel="noopener noreffer ">Gitlab Technical Writing Fundamentals courese</a></li>
 </ul>
+<hr>
+
 ]]></description></item></channel></rss>

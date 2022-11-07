@@ -68,3 +68,7 @@ Google 文档原文：[Error Messages](https://developers.google.com/tech-writin
     "error": "Bad Request - Request is missing a required parameter: -collection_name. Update parameter and resubmit. Issue Reference Number BR0x0071"
   }
   ```
+
+---
+
+<img src="/images/qrcode/like.png" style="width: 20%; z-index: 100; position: fixed; right: 25px; bottom: 100px">

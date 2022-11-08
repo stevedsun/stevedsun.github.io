@@ -431,7 +431,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     # Comment config
     # 评论系统设置
     [params.page.comment]
-      enable = true
+      enable = false
       # Disqus comment config (https://disqus.com/)
       # Disqus 评论系统设置 (https://disqus.com/)
       [params.page.comment.disqus]

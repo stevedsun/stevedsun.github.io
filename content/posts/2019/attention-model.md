@@ -2,11 +2,9 @@
 title: "注意力的边缘"
 date: 2019-11-14T15:29:00+08:00
 description: "处于我们注意力中心的事物最容易被我们感知，而处于注意力边缘的事物，往往被我们的视线边缘、听觉、嗅觉等知觉感受到。"
-tags: [思维]
-aliases :  [/posts/attention-model/]
+categories: [随笔]
+aliases: [/posts/attention-model/]
 ---
-
-
 
 阅读几分钟就忍不住打开微信；
 
@@ -104,7 +102,7 @@ aliases :  [/posts/attention-model/]
 
 ![Untitled-ccf52f38-3854-4adc-bc45-a8a4b29b0942](https://tva1.sinaimg.cn/large/006y8mN6gy1g8cow0ac1uj319f0u0txh.jpg)
 
-网易云音乐有很多歌单适合工作学习时听，比如我曾经整理过一个[《看书就好好看书》](http://music.163.com/playlist/133513964/131429/?userid=131429)，里面有94首小提琴曲和日系轻音乐。
+网易云音乐有很多歌单适合工作学习时听，比如我曾经整理过一个[《看书就好好看书》](http://music.163.com/playlist/133513964/131429/?userid=131429)，里面有 94 首小提琴曲和日系轻音乐。
 
 可是常听还是会腻，所以[潘多拉电台](https://www.pandora.com)弥补了我想时不时换换口味的需要，它的推荐歌曲和自主学习能力是我试用过的 App 里体验最好的。你也可以使用网页版的潘多拉电台打造一套属于自己的工作学习 BGM。
 

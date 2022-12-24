@@ -44,11 +44,11 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     title = ""
   [[menu.main]]
     weight = 2
-    identifier = "tags"
+    identifier = "categories"
     pre = ""
     post = ""
-    name = "Tags"
-    url = "/tags/"
+    name = "Categories"
+    url = "/categories/"
     title = ""
 
 [params]
@@ -751,11 +751,11 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
         title = ""
       [[languages.en.menu.main]]
         weight = 2
-        identifier = "tags"
+        identifier = "categories"
         pre = ""
         post = ""
-        name = "Tags"
-        url = "/tags/"
+        name = "Categories"
+        url = "/Categories/"
         title = ""
       [[languages.en.menu.main]]
         weight = 5

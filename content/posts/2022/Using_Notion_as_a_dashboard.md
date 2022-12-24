@@ -2,7 +2,7 @@
 title: "Notion As A Dashboard"
 date: 2022-07-31T21:01:56+08:00
 description: "Using Notion as the backend service's dashboard."
-tags: [Notion]
+tags: [notion]
 ---
 
 I have built a Chrome extension [无用主意](https://chrome.google.com/webstore/detail/%E6%97%A0%E7%94%A8%E4%B8%BB%E6%84%8F%E6%A0%87%E7%AD%BE%E9%A1%B5/lieiofhdejclfpflofeooilpeaphlcgd?hl=zh-CN) during the last month. The backend service implemented by Flask is using Notion as a dashboard.

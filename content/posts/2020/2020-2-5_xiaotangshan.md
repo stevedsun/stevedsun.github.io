@@ -2,11 +2,8 @@
 title: "如何用七天重建小汤山医院"
 date: 2020-02-05T22:41:23+08:00
 description: "如何在 7 日内竣工一座医院？"
-tags: [日常记录]
-aliases :  [/posts/2020-2-5_xiaotangshan/]
+aliases: [/posts/2020-2-5_xiaotangshan/]
 ---
-
-
 
 ## 苛刻的选址条件
 
@@ -77,7 +74,7 @@ aliases :  [/posts/2020-2-5_xiaotangshan/]
 
 > 这如同金字塔一般，从上到下的公共卫生模式，原本是为了统一调配资源，抵御各类传染性流行疾病，然而，2003 年的那个春天，它完全失灵了。
 
-纪录片的结尾处，一位医生感叹道「再也不可能（出现）像SARS那样的情况了」。
+纪录片的结尾处，一位医生感叹道「再也不可能（出现）像 SARS 那样的情况了」。
 
 ![](https://tva1.sinaimg.cn/large/006tNbRwly1gblvluvuu2j30u00wujuh.jpg)
 

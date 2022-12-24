@@ -1,7 +1,7 @@
 ---
 title: "边缘计算模式——数据管道"
 date: 2022-09-18T17:01:29+08:00
-tags: [边缘计算, edge-computing]
+categories: [边缘计算 Edge-Computing & IoT]
 ---
 
 ## 问题

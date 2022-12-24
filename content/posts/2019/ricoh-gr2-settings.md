@@ -1,6 +1,7 @@
 ---
 title: "Ricoh GR2 参数设置心得"
 date: 2019-11-14T14:46:00+08:00
+categories: [随笔]
 tags: [摄影]
 description: "最后更新于2022年8月20日"
 ---

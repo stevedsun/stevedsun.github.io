@@ -2,7 +2,7 @@
 title: "《分手的决心》细节分析"
 date: 2022-08-14T17:01:56+08:00
 description: "超多剧透"
-tags: [电影]
+categories: [随笔]
 aliases: [/posts/decision_to_leave/]
 ---
 

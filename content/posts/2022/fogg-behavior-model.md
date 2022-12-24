@@ -1,7 +1,7 @@
 ---
 title: "渐进式地改变生活习惯——我对福格行为模型的理解"
 date: 2022-11-01T20:23:55+08:00
-tags: [读书, 思维]
+categories: [随笔]
 aliases: [/posts/fogg-behavior-model/]
 ---
 

@@ -1,0 +1,588 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>边缘计算 Edge-Computing &amp; IoT - Category - 電波障害</title><link>https://sund.site/categories/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97-edge-computing-iot/</link><description>边缘计算 Edge-Computing &amp; IoT - Category - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 24 Nov 2022 12:26:23 +0800</lastBuildDate><atom:link href="https://sund.site/categories/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97-edge-computing-iot/" rel="self" type="application/rss+xml"/><item><title>Implementing Prometheus Exporter for Fluentbit</title><link>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</link><pubDate>Thu, 24 Nov 2022 12:26:23 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</guid><description><![CDATA[<h2 id="background">Background</h2>
+<p>Fluent-bit is a great tool for logging and monitoring, many teams are using it to collect metrics and logs. Prometheus is also a popular tool for metrics analysis, but if you want to output Fluent-bit data to Prometheus, the only way is to use the node-exporter input plugin, which has fixed metrics and data format.</p>
+<p>In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.</p>
+<p>Today I want to share the final solution for this case. The complete demo code can be found on this Github repo: <a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo">https://github.com/stevedsun/fluent-bit-output-prometheus-demo</a></p>
+<h2 id="fluent-bit-output-plugin">Fluent-bit Output Plugin</h2>
+<p>Fluent-bit provides a way to implement your own golang plugin. (See <a href="https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins" target="_blank" rel="noopener noreffer ">Fluent-bit Go Output Plugin</a>)</p>
+<p>We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushing a record to output plugin.</p>
+<p>To implement a Fluent-bit output plugin, there are four call-back functions we need to over write.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//export FLBPluginRegister
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">FLBPluginRegister</span><span class="p">(</span><span class="nx">def</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="c1">// Here we define the plugin name and description.
+</span><span class="c1"></span>	<span class="k">return</span> <span class="nx">output</span><span class="p">.</span><span class="nf">FLBPluginRegister</span><span class="p">(</span><span class="nx">def</span><span class="p">,</span> <span class="s">&#34;promexporter&#34;</span><span class="p">,</span> <span class="s">&#34;Prometheus Exporter&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">//export FLBPluginInit
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">FLBPluginInit</span><span class="p">(</span><span class="nx">plugin</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="c1">// We can extract output plugin parameters from `FLBPlguinConfigKey`.
+</span><span class="c1"></span>	<span class="nx">user</span> <span class="o">:=</span> <span class="nx">output</span><span class="p">.</span><span class="nf">FLBPluginConfigKey</span><span class="p">(</span><span class="nx">plugin</span><span class="p">,</span> <span class="s">&#34;username&#34;</span><span class="p">)</span>
+	<span class="nx">passwd</span> <span class="o">:=</span> <span class="nx">output</span><span class="p">.</span><span class="nf">FLBPluginConfigKey</span><span class="p">(</span><span class="nx">plugin</span><span class="p">,</span> <span class="s">&#34;password&#34;</span><span class="p">)</span>
+    <span class="c1">// Here we can run a new Prometheus exporter server.
+</span><span class="c1"></span>	<span class="nf">NewExporter</span><span class="p">()</span>
+	<span class="k">return</span> <span class="nx">output</span><span class="p">.</span><span class="nx">FLB_OK</span>
+<span class="p">}</span>
+
+<span class="c1">//export FLBPluginFlushCtx
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">FLBPluginFlushCtx</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">data</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span><span class="p">,</span> <span class="nx">length</span> <span class="nx">C</span><span class="p">.</span><span class="kt">int</span><span class="p">,</span> <span class="nx">tag</span> <span class="o">*</span><span class="nx">C</span><span class="p">.</span><span class="nx">char</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="c1">// Here we process every record, extract it and ship to exporter
+</span><span class="c1"></span>	<span class="nx">dec</span> <span class="o">:=</span> <span class="nx">output</span><span class="p">.</span><span class="nf">NewDecoder</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nx">length</span><span class="p">))</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="c1">// Extract Record
+</span><span class="c1"></span>		<span class="nx">ret</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">record</span> <span class="o">:=</span> <span class="nx">output</span><span class="p">.</span><span class="nf">GetRecord</span><span class="p">(</span><span class="nx">dec</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">ret</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+
+		<span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">record</span> <span class="p">{</span>
+			<span class="c1">// You have to extract record here, ship them to exporter.
+</span><span class="c1"></span>		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nx">output</span><span class="p">.</span><span class="nx">FLB_OK</span>
+<span class="p">}</span>
+
+<span class="c1">//export FLBPluginExit
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">FLBPluginExit</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">server</span><span class="p">.</span><span class="nx">srv</span><span class="p">.</span><span class="nf">Shutdown</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">TODO</span><span class="p">());</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+
+    <span class="c1">// Here we have to close go channel and daemon exporter server.
+</span><span class="c1"></span>	<span class="nb">close</span><span class="p">(</span><span class="nx">collector</span><span class="p">.</span><span class="nx">buff</span><span class="p">)</span>
+	<span class="nx">server</span><span class="p">.</span><span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+
+	<span class="k">return</span> <span class="nx">output</span><span class="p">.</span><span class="nx">FLB_OK</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition tip open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Note<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>You should not remove the comment lines above function, they are important for building *.so file.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">//export FLBPluginExit
+</code></pre></td></tr></table>
+</div>
+</div></div>
+        </div>
+    </div>
+<h2 id="the-exporter-http-server">The Exporter HTTP Server</h2>
+<p>The next step is to implement the HTTP server, make it running on daemon.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">
+<span class="c1">// Here we start a background server on port 8989, the server will handle `/metrics` path, prometheus exporter will implement the handler.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">startHttpServer</span><span class="p">(</span><span class="nx">wg</span> <span class="o">*</span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">,</span> <span class="nx">reg</span> <span class="o">*</span><span class="nx">prometheus</span><span class="p">.</span><span class="nx">Registry</span><span class="p">)</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span> <span class="p">{</span>
+	<span class="nx">srv</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">{</span><span class="nx">Addr</span><span class="p">:</span> <span class="s">&#34;:8989&#34;</span><span class="p">}</span>
+
+	<span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/metrics&#34;</span><span class="p">,</span> <span class="nx">promhttp</span><span class="p">.</span><span class="nf">HandlerFor</span><span class="p">(</span>
+		<span class="nx">reg</span><span class="p">,</span>
+		<span class="nx">promhttp</span><span class="p">.</span><span class="nx">HandlerOpts</span><span class="p">{</span>
+			<span class="nx">EnableOpenMetrics</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+			<span class="nx">Registry</span><span class="p">:</span>          <span class="nx">reg</span><span class="p">,</span>
+		<span class="p">},</span>
+	<span class="p">))</span>
+
+	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">srv</span><span class="p">.</span><span class="nf">ListenAndServe</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ErrServerClosed</span> <span class="p">{</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;ListenAndServe():&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}()</span>
+
+	<span class="k">return</span> <span class="nx">srv</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">NewExporter</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">reg</span> <span class="o">:=</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nf">NewRegistry</span><span class="p">()</span>
+	<span class="nx">reg</span><span class="p">.</span><span class="nf">MustRegister</span><span class="p">(</span><span class="nx">collector</span><span class="p">)</span>
+
+    <span class="c1">// Here, we start a new HTTP server and save the instance object into a golang sync.WaitGroup, so that we can watch its status in `FLBPluginExit`
+</span><span class="c1"></span>	<span class="nx">server</span><span class="p">.</span><span class="nx">wg</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">{}</span>
+	<span class="nx">server</span><span class="p">.</span><span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="nx">server</span><span class="p">.</span><span class="nx">srv</span> <span class="p">=</span> <span class="nf">startHttpServer</span><span class="p">(</span><span class="nx">server</span><span class="p">.</span><span class="nx">wg</span><span class="p">,</span> <span class="nx">reg</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="the-exporter-collector">The Exporter Collector</h2>
+<p>Now we have an HTTP server, but if we want to make it as an exporter, we have to define the <strong>collector</strong>. The collector is a Prometheus concept which implements two call-back function:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">
+<span class="c1">// Here for instance, we define metrics to collect cpu info, which reuses the default Fluent-bit CPU metrics input data
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewMyCollector</span><span class="p">()</span> <span class="o">*</span><span class="nx">myCollector</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">myCollector</span><span class="p">{</span>
+		<span class="nx">metrics</span><span class="p">:</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">prometheus</span><span class="p">.</span><span class="nx">Desc</span><span class="p">{</span>
+			<span class="s">&#34;cpu&#34;</span><span class="p">:</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nf">NewDesc</span><span class="p">(</span>
+				<span class="s">&#34;cpu&#34;</span><span class="p">,</span>
+				<span class="s">&#34;Collect CPU usage&#34;</span><span class="p">,</span>
+				<span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;cpu&#34;</span><span class="p">,</span> <span class="s">&#34;mode&#34;</span><span class="p">},</span> <span class="kc">nil</span><span class="p">,</span>
+			<span class="p">),</span>
+		<span class="p">},</span>
+		<span class="c1">// this buff is a golang channel object, which receive data sending from `FLBPluginFlushCtx` function
+</span><span class="c1"></span>		<span class="nx">buff</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">cpuMetrics</span><span class="p">),</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// `Describe` send our metrics name and defination to Prometheus exporter
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">collector</span> <span class="o">*</span><span class="nx">myCollector</span><span class="p">)</span> <span class="nf">Describe</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="o">*</span><span class="nx">prometheus</span><span class="p">.</span><span class="nx">Desc</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">desc</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">collector</span><span class="p">.</span><span class="nx">metrics</span> <span class="p">{</span>
+		<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">desc</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// `Collect` will read data from golang channel `buff` and send data to HTTP server handler
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">collector</span> <span class="o">*</span><span class="nx">myCollector</span><span class="p">)</span> <span class="nf">Collect</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Metric</span><span class="p">)</span> <span class="p">{</span>
+
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">desc</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">collector</span><span class="p">.</span><span class="nx">metrics</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">metric</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">collector</span><span class="p">.</span><span class="nx">buff</span><span class="p">:</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">metric</span><span class="p">.</span><span class="nx">cpu</span><span class="p">,</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">mode</span><span class="p">,</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span>
+			<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nf">MustNewConstMetric</span><span class="p">(</span><span class="nx">desc</span><span class="p">,</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">GaugeValue</span><span class="p">,</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">cpu</span><span class="p">,</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">mode</span><span class="p">)</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">collector</span> <span class="p">=</span> <span class="nf">NewMyCollector</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="building-so-file-and-running-in-fluent-bit">Building so file and running in Fluent-bit</h2>
+<p>The last but not least, building golang plugin into so file.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">go build -buildmode<span class="o">=</span>c-shared -o out_prom_exporter.so prom_exporter.go
+</code></pre></td></tr></table>
+</div>
+</div><p>Run Fluent-bit with CLI flags:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">fluent-bit -v -e ./out_prom_exporter.so -i cpu -o promexporter
+</code></pre></td></tr></table>
+</div>
+</div><p>That&rsquo;s all steps to implement a customized Fluent-bit Prometheus exporter plugin. See more details, please go to Github repo <a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo">https://github.com/stevedsun/fluent-bit-output-prometheus-demo</a>.</p>
+]]></description></item><item><title>边缘计算模式——数据管道</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</link><pubDate>Sun, 18 Sep 2022 17:01:29 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</guid><description><![CDATA[<h2 id="问题">问题</h2>
+<p>在物联网多层架构设计中，数据从终端设备流向云端，应该在哪一层做数据处理，哪一层做数据展示？分层的依据是什么？</p>
+<h2 id="解决方案">解决方案</h2>
+<h3 id="架构设计">架构设计</h3>
+<p>边缘计算的三层数据管道。</p>
+<ul>
+<li><strong>数据源</strong>是由若干终端设备组成的，内置在设备中的 agent 负责采集设备的基础数据如 cpu，内存使用量，应用统计数据等。</li>
+<li><strong>Edge（边缘）节点</strong>主要负责数据的处理，如 InfluxDB 通常设置在中间这一层。</li>
+<li><strong>Cloud（云端）节点</strong>是地理位置无关的，有容灾和扩展能力的云端服务层，因为边缘节点的硬件限制，扩展性不如云端，因此通常经过加工的数据从边缘节点发送到云端做持久化和数据展示。云端节点也负责一部分复杂数据的加工和聚合。</li>
+</ul>
+<p></p>
+<h2 id="edge-层">Edge 层</h2>
+<p>Edge 层的通常由一个 <strong>gateway（网关）</strong>，数据处理服务，存储服务和若干的应用服务组成。因为硬件和维护的限制，Edge 层通常安装的服务数量和分配的资源有限。它主要负责数据的轻量级加工和聚合，减少从 Edge 层到 Cloud 层之间数据传输的带宽，同时快速地监控、反馈问题给终端设备。</p>
+<p></p>
+<h3 id="gateway">Gateway</h3>
+<p>Gateway 通常要求能够根据终端设备数据自适应扩展。通常 gateway 还有设备 ID 识别，权限认证等功能。对于数据量较大的场景，gateway 需要缓存认证服务的状态，防止并发过大导致认证服务崩溃。</p>
+<h3 id="data-processors">Data processors</h3>
+<p>数据处理服务负责对终端发来的数据根据各种指标计算出复合指标存储到数据库或者数据仓库中。通常这一层会设置一个消息队列 MQ，如 Kafka，但是仍然因为 Edge 层设备资源的限制，消息队列最好是系统级别共享的并且能够缓存一段时期的数据，之后数据消费者（应用服务）可以根据自身需要订阅数据流。</p>
+<p>常用的时序数据库，如 InfluxDB，内置了 Task 功能，将数据处理和存储合二为一。大大简化了这一层的开发工作。</p>
+<h3 id="system-services--storage">System Services &amp; Storage</h3>
+<p>这一层由数据库和若干系统服务组成。向上层提供系统级别的 API 和数据。值得注意的是，数据库通常不会存储长期数据，因为 Edge 层存储容量的限制和不易扩展的特性，会给数据库设置 <strong>retention period</strong> 参数，令过期数据自动销毁或通过定时任务<strong>Downloadsampling（降采样）</strong>。</p>
+<p>系统服务一般由认证服务、数据 API、设备管理 API 等服务组成，这一层需要完成对设备的注册发现和管理。</p>
+<h2 id="小结">小结</h2>
+<p>以上就是对边缘计算的三层架构的概述和 Edge 层的设计。根据工作中的实际情况，应该重点关注几方面的问题：</p>
+<ul>
+<li>Edge 层的扩展性，当设备数据急速增长时是否有能力应对。</li>
+<li>Edge 层的服务拆分和数据持久化策略。因为部署环境和性能的限制，开发人员并不能像 Cloud 端开发一样快速响应 Edge 节点的情况，因此 Edge 层最考验开发者根据实际用户场景调参，自动化扩展、恢复的能力。</li>
+</ul>
+]]></description></item><item><title>边缘计算模式——任务队列</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-lock/</link><pubDate>Wed, 14 Sep 2022 08:46:21 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/pattern-of-edge-computing-lock/</guid><description><![CDATA[<h2 id="概述">概述</h2>
+<p>在边缘计算中，边缘节点通常介于终端节点和云端节点之间，它的扩展性也介于两者之间。对于高并发或是高资源占用的业务场景，应该如何设计边缘节点的策略。</p>
+<h2 id="问题">问题</h2>
+<p>在边缘计算中，对于那些占用 CPU 和内存资源较大的请求，什么时候应该加锁？</p>
+<h2 id="解决方案">解决方案</h2>
+<p>边缘计算中有三类节点：终端节点（device），边缘节点（edge）,云端节点（cloud）。</p>
+<ul>
+<li>终端节点：通常应该加锁限制高资源占用。因为终端设备往往资源紧张，不可扩展。</li>
+<li>云端节点：通常不需要加锁，而是扩展副本。</li>
+</ul>
+<p>对于情况比较复杂的边缘节点，通常要综合考虑当前系统资源分配策略和用户使用场景。</p>
+<h3 id="一般情况">一般情况</h3>
+<p>对于工业物联网环境，边缘节点的操作员通常较少，同一时间进行的操作不多，在这种情况下可以采用加锁的方式来限制资源占用。</p>
+<h3 id="最佳实践全局任务队列">最佳实践——全局任务队列</h3>
+<p>对于多用户或者并发稍高的情况，边缘节点可以实现全局的任务队列来缓解高资源占用的任务给系统造成的负担。在应用的架构设计上，应该将高资源占用的请求以事件形式发送到全局任务队列，由边缘节点系统统一调度这些任务，按顺序或特定的优先级依次执行。</p>
+<p>对于任务队列已满的情况，再考虑扩展应用服务副本数量。</p>
+]]></description></item><item><title>Building A File Parser</title><link>https://sund.site/posts/2022/2022-5-8_lexer_design/</link><pubDate>Sun, 08 May 2022 14:00:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/2022-5-8_lexer_design/</guid><description><![CDATA[<p>Last week, after reading this article - <a href="https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go" target="_blank" rel="noopener noreffer ">How to Write a Lexer in Go</a>, I found that it is not so difficult to design a configuration file parser by this article&rsquo;s mind-set. Then I tried to write a fluent-bit configuration parser, finally got this <a href="https://github.com/stevedsun/go-fluentbit-conf-parser" target="_blank" rel="noopener noreffer ">Fluent-Bit configuration parser for Golang</a>.</p>
+<p>In this article, I want to introduce how to parse Fluent-bit configuration <code>.conf</code> file, and the thinking behind it.</p>
+<h2 id="fluent-bit-configuration-format-and-schema">Fluent-bit configuration format and schema</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">[FIRST_SECTION]
+    Key1  some value
+    Key2  another value
+
+[SECOND_SECTION]
+    KeyN  3.14
+</code></pre></td></tr></table>
+</div>
+</div><p>Here is a classic mode configuration of Fluent-bit, it includes two parts:</p>
+<ul>
+<li>Section</li>
+<li>Key/value pair</li>
+</ul>
+<p>First of all, we need to define a struct which represents the Fluent-bit configuration file.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">FluentBitConf</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Sections</span> <span class="p">[]</span><span class="nx">Section</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Section</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span>    <span class="kt">string</span>
+	<span class="nx">Entries</span> <span class="p">[]</span><span class="nx">Entry</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Entry</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Key</span>   <span class="kt">string</span>
+	<span class="nx">Value</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Once we have a struct, the next step is to parse tokens from the file and save their values into golang struct. We can copy the logic of the lexer to develop our fluentbit parser.</p>
+<p>In a lexer program, the target characters which we want to parse out are called &ldquo;Token&rdquo;, Token is also the keyword that our parser program is searching for. A parser program will read characters in a file one by one, whenever it found a token, the parser saves the value between tokens into the final structure and go ahead.</p>
+<h2 id="parse-a-single-token">Parse a single token</h2>
+<p>If we want to parse Section, we have to make the parser read characters one by one and stop at <code>[</code> character, which means the beginning of a Section. The parser must save the current state as <code>t_section</code> and keep parser reading until <code>]</code> character, the word between <code>[</code> and <code>]</code> is the Section value we need to persist into go struct.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">
+<span class="c1">// define some tag to tell parser state
+</span><span class="c1"></span><span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">t_section</span> <span class="p">=</span> <span class="kc">iota</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">parser</span> <span class="o">*</span><span class="nx">FluentBitConfParser</span><span class="p">)</span> <span class="nf">Parse</span><span class="p">()</span> <span class="o">*</span><span class="nx">FluentBitConf</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">currSection</span> <span class="o">*</span><span class="nx">Section</span> <span class="p">=</span> <span class="kc">nil</span>
+
+	<span class="k">for</span> <span class="p">{</span>
+        <span class="c1">// read charector one by one
+</span><span class="c1"></span>		<span class="nx">r</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">reader</span><span class="p">.</span><span class="nf">ReadRune</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="c1">// stop at the end of file
+</span><span class="c1"></span>			<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">io</span><span class="p">.</span><span class="nx">EOF</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="nx">currSection</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+					<span class="nx">parser</span><span class="p">.</span><span class="nx">Conf</span><span class="p">.</span><span class="nx">Sections</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">parser</span><span class="p">.</span><span class="nx">Conf</span><span class="p">.</span><span class="nx">Sections</span><span class="p">,</span> <span class="o">*</span><span class="nx">currSection</span><span class="p">)</span>
+				<span class="p">}</span>
+				<span class="k">return</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">Conf</span>
+			<span class="p">}</span>
+			<span class="k">return</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">Conf</span>
+		<span class="p">}</span>
+		<span class="k">switch</span> <span class="nx">r</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="sc">&#39;\n&#39;</span><span class="p">:</span>
+			<span class="k">continue</span>
+		<span class="k">case</span> <span class="sc">&#39;[&#39;</span><span class="p">:</span>
+			<span class="c1">// save last config item
+</span><span class="c1"></span>			<span class="k">if</span> <span class="nx">currSection</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="nx">parser</span><span class="p">.</span><span class="nx">Conf</span><span class="p">.</span><span class="nx">Sections</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">parser</span><span class="p">.</span><span class="nx">Conf</span><span class="p">.</span><span class="nx">Sections</span><span class="p">,</span> <span class="o">*</span><span class="nx">currSection</span><span class="p">)</span>
+			<span class="p">}</span>
+			<span class="c1">// create new config item
+</span><span class="c1"></span>			<span class="nx">currSection</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">Section</span><span class="p">{</span>
+				<span class="nx">Name</span><span class="p">:</span>    <span class="s">&#34;&#34;</span><span class="p">,</span>
+				<span class="nx">Entries</span><span class="p">:</span> <span class="p">[]</span><span class="nx">Entry</span><span class="p">{},</span>
+			<span class="p">}</span>
+			<span class="nx">parser</span><span class="p">.</span><span class="nx">token</span> <span class="p">=</span> <span class="nx">t_section</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nx">unicode</span><span class="p">.</span><span class="nf">IsSpace</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">continue</span>
+			<span class="p">}</span>
+
+            <span class="c1">// here is important function, read the charectors after token-chareactor and save them into struct
+</span><span class="c1"></span>			<span class="nx">strValue</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">parser</span><span class="p">.</span><span class="nf">parseString</span><span class="p">()</span>
+			<span class="k">switch</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">token</span> <span class="p">{</span>
+			<span class="k">case</span> <span class="nx">t_section</span><span class="p">:</span>
+				<span class="nx">currSection</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nx">strValue</span>
+				<span class="nx">parser</span><span class="p">.</span><span class="nx">token</span> <span class="p">=</span> <span class="nx">t_entry_key</span>
+		<span class="p">}</span>
+
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>In function <code>parser.parseString()</code>, we have to read until the end of a value (for section, it&rsquo;s <code>]</code>), then return the value.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">parser</span> <span class="o">*</span><span class="nx">FluentBitConfParser</span><span class="p">)</span> <span class="nf">parseString</span><span class="p">()</span> <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">val</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&#34;&#34;</span>
+
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">reader</span><span class="p">.</span><span class="nf">UnreadRune</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="s">&#34;&#34;</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="nx">r</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">reader</span><span class="p">.</span><span class="nf">ReadRune</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">io</span><span class="p">.</span><span class="nx">EOF</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">val</span><span class="p">,</span> <span class="kc">nil</span>
+			<span class="p">}</span>
+			<span class="k">return</span> <span class="s">&#34;&#34;</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+
+		<span class="k">if</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">token</span> <span class="o">==</span> <span class="nx">t_section</span> <span class="o">&amp;&amp;</span> <span class="nx">r</span> <span class="o">==</span> <span class="sc">&#39;]&#39;</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">val</span><span class="p">,</span> <span class="kc">nil</span>
+		<span class="p">}</span>
+
+		<span class="nx">val</span> <span class="p">=</span> <span class="nx">val</span> <span class="o">+</span> <span class="nb">string</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>That&rsquo;s all logic for parsing a section. To parse key/value pair is the same process, just note to make parser know which state it is and save values between whitespace or <code>\n</code>, you can see the code at <a href="https://github.com/stevedsun/go-fluentbit-conf-parser/blob/master/parser.go" target="_blank" rel="noopener noreffer ">the github repo</a>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>To parse a configuration file, we have to</p>
+<ul>
+<li>Defining token (key characters)</li>
+<li>Reading characters and looking for a token</li>
+<li>Saving current state to tell parser which struct the following characters belong</li>
+</ul>
+]]></description></item></channel></rss>

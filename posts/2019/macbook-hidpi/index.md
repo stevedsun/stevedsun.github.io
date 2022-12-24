@@ -1,9 +1,7 @@
 # 为 Mac OS 10.15 开启 HiDPI，让 2K 显示器更舒适
 
 
-以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户[ZeRo° Xu](https://github.com/xzhih) 在 [一键开启HiDPI脚本](https://github.com/xzhih/one-key-hidpi) 里的 [Github Issue](https://github.com/syscl/Enable-HiDPI-OSX/issues/49) 和一篇博文 [《为 mac 连接的 2k 显示器开启 HiDPI》](https://www.smslit.top/2019/01/02/mac_hidpi/)。
-
-
+以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户[ZeRo° Xu](https://github.com/xzhih) 在 [一键开启 HiDPI 脚本](https://github.com/xzhih/one-key-hidpi) 里的 [Github Issue](https://github.com/syscl/Enable-HiDPI-OSX/issues/49) 和一篇博文 [《为 mac 连接的 2k 显示器开启 HiDPI》](https://www.smslit.top/2019/01/02/mac_hidpi/)。
 
 ## 什么是 HiDPI
 
@@ -33,13 +31,13 @@
 
 ### 0. 安装 RDM
 
-相信很多人已经装过这个工具了，它是用来修改显示分辨率的，如果没装，请在[RDM下载页面](https://avi.alkalay.net/software/RDM/)安装它。
+相信很多人已经装过这个工具了，它是用来修改显示分辨率的，如果没装，请在[RDM 下载页面](https://avi.alkalay.net/software/RDM/)安装它。
 
 ### 1. 关闭 Mac 的 SIP
 
 SIP 是苹果公司为防止你胡乱篡改系统文件用的保护机制，请先按照下面步骤把它关闭，以便后续操作：
 
-1. 关机（最好先手机拍个照把这4步记录下来）
+1. 关机（最好先手机拍个照把这 4 步记录下来）
 2. 按`command（⌘）+ R`+电源键开机，自动进入恢复模式
 3. 选择上边菜单栏的`实用工具`中的`终端`
 4. 输入命令`csrutil disable`
@@ -77,7 +75,7 @@ ioreg -l | grep "DisplayProductID"
 
 ### 4. 为你的显示器生成 plist 文件
 
-到 [这个网站](https://comsysto.github.io/Display-Override-PropertyList-File-Parser-and-Generator-with-HiDPI-Support-For-Scaled-Resolutions/) ，在左侧的空里分别输入显示器型号，DisplayProductID 和 DisplayVendorID，注意填16进制的数字，并且检查下后边10进制的数字是不是和你刚才命令查到的一致。如果需要添加自己额外的分辨率，直接在下边新建一条分辨率配置就行。最后，复制右边生成 XML 格式文本，粘贴到刚才新建的文件里。（也可以直接从网站下载文件，去掉文件名后缀 `.plist` ）
+到 [这个网站](https://comsysto.github.io/Display-Override-PropertyList-File-Parser-and-Generator-with-HiDPI-Support-For-Scaled-Resolutions/) ，在左侧的空里分别输入显示器型号，DisplayProductID 和 DisplayVendorID，注意填 16 进制的数字，并且检查下后边 10 进制的数字是不是和你刚才命令查到的一致。如果需要添加自己额外的分辨率，直接在下边新建一条分辨率配置就行。最后，复制右边生成 XML 格式文本，粘贴到刚才新建的文件里。（也可以直接从网站下载文件，去掉文件名后缀 `.plist` ）
 
 <img src="https://tva1.sinaimg.cn/large/006y8mN6ly1g9bg60hippj30nm0rqwha.jpg" alt="显示器配置" style="zoom:50%;" />
 
@@ -133,3 +131,4 @@ Main Display 和 Display 2 就分别是你的外接显示器和 macbook 的显�
 本文教你强行开启 macbook 的 HiDPI 设置，并针对 2K 显示器新增了配置文件到系统配置目录里，最后用 RDM 自由设置适合你显示器的分辨率。至于 HiDPI 的原理，请自行搜索，此处不再赘述。
 
 希望本文对你有帮助，也欢迎你留言反馈。
+

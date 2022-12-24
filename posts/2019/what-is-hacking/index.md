@@ -3,7 +3,7 @@
 
 [凯文凯利](https://kk.org/)在《失控》中有一句话：
 
-> The nature of life is to delight in all possible loopholes. Every  creature is in some way hacking a living by reinterpreting the rules.
+> The nature of life is to delight in all possible loopholes. Every creature is in some way hacking a living by reinterpreting the rules.
 
 生命的本性就是喜爱一切可利用的「漏洞」，每个造物都在通过重新诠释规则来谋求生存。
 
@@ -14,5 +14,4 @@
 > 吾闻天有时，地有利。吾盗天地之时利……夫禾稼、土木、禽兽、鱼鳖，皆天之所生，岂吾之所有？然吾盗天而亡殃。
 
 原来国氏所谓「盗」，并不是盗窃财物，而是盗天地之时利。这里的盗字，正好对应了英语里的 "Hacking"。凯文凯利的 "hacking a living by reinterpreting the rules"，正是列子所谓「万物自天成，盗者本无心」。
-
 

@@ -1,0 +1,23 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Kubernates - Category - 電波障害</title><link>https://sund.site/categories/kubernates/</link><description>Kubernates - Category - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 08 Aug 2022 20:04:00 +0800</lastBuildDate><atom:link href="https://sund.site/categories/kubernates/" rel="self" type="application/rss+xml"/><item><title>3 Ways To Access Host System In Docker Container</title><link>https://sund.site/posts/2022/3_ways_to_access_host_system_in_container/</link><pubDate>Mon, 08 Aug 2022 20:04:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/3_ways_to_access_host_system_in_container/</guid><description><![CDATA[<p>When we are using Docker, we always access the host system by mounting the host folders as a volume. But sometimes we can not do that due to deployment reasons or security limits.</p>
+<p>There are three workaround ways to access the host system.</p>
+<h2 id="1-mount-dockersocks-into-container">1. Mount <code>docker.socks</code> into container</h2>
+<p><code>docker.socks</code> is a Unix socket that Docker Engine API listens on. You can mount <code>/var/run/docker.socks</code> file to your container and call Docker Engine API through this socket.</p>
+<p>For instance, If I want to get docker information by calling that API:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">curl -s --unix-socket /var/run/docker.sock http://localhost/info
+</code></pre></td></tr></table>
+</div>
+</div><p>You can refer to <a href="https://docs.docker.com/engine/api/v1.41/" target="_blank" rel="noopener noreffer ">Docker Engine API</a> to find more useful details.</p>
+<h2 id="2-using-pid-mode-host">2. Using PID mode <code>host</code></h2>
+<p>By default, Docker uses the Linux PID namespace to isolate containers' filesystem view. It means if two processes have the same PID, they will share the filesystem permission.</p>
+<p>Docker has a startup parameter <code>--pid=host</code> to change the PID namespace to its host process&rsquo;s namespace. You can use this parameter to make your docker container have the same privilege as the host process.</p>
+<blockquote>
+<p>When using <code>--pid=host</code>, you can list host system&rsquo;s processes by <code>ps -ef</code>.</p>
+</blockquote>
+<h2 id="3-by-docker---privileged">3. By <code>docker --privileged</code></h2>
+<p>It is the last way you can access the host system, but it is not recommended for most cases.</p>
+]]></description></item></channel></rss>

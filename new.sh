@@ -1,2 +1,2 @@
 #!/bin/bash
-hugo new posts/2022/$1.md
+hugo new posts/2023/$1.md

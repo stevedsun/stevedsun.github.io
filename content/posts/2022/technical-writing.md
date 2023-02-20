@@ -2,7 +2,7 @@
 title: "技术文档写作指南"
 date: 2022-08-21T15:29:00+08:00
 description: "谷歌技术文档写作指南"
-tags: [技术规范 Technical-Specs]
+categories: [技术规范 Technical-Specs]
 tags: [写作, 技术文档]
 aliases: [/posts/technical-writing/]
 ---

@@ -1,6 +1,7 @@
 ---
 title: "Python 依赖管理工具的研究"
 date: 2023-01-19T08:05:27+08:00
+categories: [Python]
 tags: [python]
 aliases: [/posts/python-packaging/]
 ---

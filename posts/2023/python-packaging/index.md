@@ -3,7 +3,7 @@
 
 ## 太长不读
 
-请使用 [PDM](https://pdm.fming.dev/latest/).
+如果你从事工程项目，[poetry](https://python-poetry.org/) 是目前最好的方案，但是如果你不喜欢 Python 的 virtualenv，可以试试 [pdm](https://pdm.fming.dev/latest/)。
 
 ## 混乱的 Python
 

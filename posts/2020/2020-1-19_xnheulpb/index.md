@@ -7,7 +7,7 @@
 
 让我们先来复习一下小学的知识 😂，任何一个汉字都有对应的拼音，拼音由声母和韵母组成。
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k5f4cidj30zw0lkq3h.jpg)
+![](/images/shuangpin/1.png)
 
 声母除了`zh`，`sh`，`ch`之外，都是由单个字母表示。例如「拼」字的声母`p`。
 
@@ -19,11 +19,11 @@
 
 例如，我把`ing`映射到键盘的字母`K`上，把`ang`映射到字母`H`上。输入「乒乓」时就是下面的效果。
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k63svyhj30ye0nqmyb.jpg)
+![](/images/shuangpin/2.png)
 
 现在比较流行的双拼方案有很多，我选择了比较受大家青睐的小鹤双拼方案。它的键盘布局是下面这样的（初次看你可能会觉得不适……别急，读完这篇文章学起来就会很轻松）。
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k6aaz1wj30zu0gomym.jpg)
+![](/images/shuangpin/3.png)
 
 ## 双拼输入法能提高打字效率吗？
 
@@ -31,11 +31,11 @@
 
 我带着这个疑问，找到了一个测试汉字打字速度的[网站](https://dz.wubidz.cn/)，我通过一个月的使用，对比了前后的输入速度，得出的答案让我确信写这篇文章能够帮助你通过双拼提高打字效率。（不要吐槽我每分钟字数太少，测速网站采用了古诗词作为输入，一定程度上屏蔽输入法智能联想的效果。你可以亲自去尝试一下 😛）
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k6h6c7fj311m076q3u.jpg)
+![](/images/shuangpin/4.png)
 
 （KPM=每分钟按键次数，BPM=每分钟退格次数）
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k6ldcpmj31780ni762.jpg)
+![](/images/shuangpin/5.png)
 
 ## 开始学习小鹤双拼
 
@@ -51,7 +51,7 @@
 
 前面提到，汉语拼音声母大多数是单个字母，除了三个特别的`zh`，`sh`，`ch`。小鹤双拼和全拼一样，直接按字母键就可以输入对应的声母，那三个特别的声母映射到键盘的`V`，`U`，`I`上。
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k6qxjc2j30z40hqt9m.jpg)
+![](/images/shuangpin/6.png)
 
 之所以映射成`zh=V，sh=U，ch=I`，是考虑到两个因素：
 
@@ -68,11 +68,11 @@
 
 符合这种规律的韵母一共有 7 对，小鹤双拼的按键分布是下面这样的。
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k7d1dl4j30ww0fat9w.jpg)
+![](/images/shuangpin/7.png)
 
 **为了方便记忆，小鹤双拼让每个按键对应的声母和其中一个韵母能组合成有意义的汉字发音。所以你只需按口诀或文末提到的练习工具针对练习即可，其中需特殊训练的只有上面的 7 个按键。**
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k7iqinjj30vm07qt9p.jpg)
+![](/images/shuangpin/8.png)
 
 有一些汉字没有声母（零声母），这种情况只要会全拼输入法就可以一秒解决：
 
@@ -90,7 +90,7 @@
 - 第二层是韵母，其中特殊的（黄色高亮）是`T`，`O`，`S`，`K`，`L`，`X`，`V`
 - 第三层是易忘按键（蓝色高亮），它们分别是`Q`，`P`，`Z`
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k7s2bcdj30wk0fmaba.jpg)
+![](/images/shuangpin/9.png)
 
 你可以把这张图保存起来，放在桌面壁纸里或是打印出来放在键盘前边，练习时用来对照。
 
@@ -98,11 +98,11 @@
 
 小鹤双拼[官网](https://www.flypy.com/index.html)提供了多种练习工具。你可以微信扫一扫这个小程序，随时用手机练习。
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k7zwgpej307g07gq3l.jpg)
+![](/images/shuangpin/10.png)
 
 桌面端推荐一个在线的[网页双拼练习工具](https://api.ihint.me/shuang/)，地址是 [https://api.ihint.me/shuang/](https://api.ihint.me/shuang/)。
 
-![](https://tva1.sinaimg.cn/large/006tNbRwgy1gb0k86lfwlj31op0u0n4p.jpg)
+![](/images/shuangpin/11.png)
 
 ## 测试工具
 

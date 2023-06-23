@@ -1,7 +1,7 @@
 ---
 title: "规范的错误信息"
 date: 2022-08-23T22:18:00+08:00
-categories: [技术规范 Technical-Specs]
+categories: [技术规范]
 tags: [错误日志, 技术文档]
 ---
 

@@ -1,0 +1,51 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>kong - Tag - 電波障害</title><link>https://sund.site/tags/kong/</link><description>kong - Tag - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 23 Jun 2023 10:36:36 +0800</lastBuildDate><atom:link href="https://sund.site/tags/kong/" rel="self" type="application/rss+xml"/><item><title>Kong网关极简入门</title><link>https://sund.site/posts/2023/kong-gateway/</link><pubDate>Fri, 23 Jun 2023 10:36:36 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2023/kong-gateway/</guid><description><![CDATA[<h2 id="基本概念">基本概念</h2>
+<blockquote>
+<p>Kong Gateway is a Lua application running in Nginx. Kong Gateway is distributed along with OpenResty, which is a bundle of modules that extend the lua-nginx-module.</p>
+</blockquote>
+<p>Kong 是一个基于 Nginx 上运行的 Lua 程序。它改善了 Nginx 基于静态配置的缺点，可以动态添加插件和热部署。</p>
+<p></p>
+<h2 id="kong-的基础模块">Kong 的基础模块</h2>
+<p><strong>Service</strong>是后端服务的抽象。</p>
+<p><strong>Routes</strong>是 client 到后端服务的路由规则的抽象。如，为不同的 client 设置不同的认证规则。</p>
+<p>Kong 的 routes 有两种模式 <code>traditional_compat</code> 和 <code>expressions</code> 。</p>
+<ul>
+<li><code>traditional_compat</code> ：旧的基于通配符等匹配优先级的模式。</li>
+<li><code>expressions</code> ：新的基于表达式的匹配模式。</li>
+</ul>
+<p><strong>Upstreams</strong>是一个运维对象，在 Services 和真正的后台 API 服务之间，用来负载均衡。</p>
+<p><strong>Plugins</strong>是用 lua 或 go 编写的插件，分为 Kong 官方提供的插件和第三方插件。</p>
+<h2 id="kong-的工作原理">Kong 的工作原理</h2>
+<p>Kong 支持三类协议：HTTP/HTTPS，TCL/TLS 和 GRPC/GRPCS。每种协议由不同的参数组成：</p>
+<ul>
+<li><code>http</code>: <code>methods</code>, <code>hosts</code>, <code>headers</code>, <code>paths</code> (and <code>snis</code>, if <code>https</code>)</li>
+<li><code>tcp</code>: <code>sources</code>, <code>destinations</code> (and <code>snis</code>, if <code>tls</code>)</li>
+<li><code>grpc</code>: <code>hosts</code>, <code>headers</code>, <code>paths</code> (and <code>snis</code>, if <code>grpcs</code>)</li>
+</ul>
+<p>Kong 支持按 HTTP header、URL、method、源地址、目标地址、<a href="https://en.wikipedia.org/wiki/Server_Name_Indication" target="_blank" rel="noopener noreffer ">Server Name Indication</a> 来路由请求。</p>
+<p>Kong 默认以<a href="https://tools.ietf.org/html/rfc3986" target="_blank" rel="noopener noreffer ">RFC 3986</a>协议对请求的路径处理。</p>
+<h3 id="kong-匹配规则的优先级">Kong 匹配规则的优先级</h3>
+<p>按最多匹配的规则来路由。</p>
+<blockquote>
+<p>The rule is: <strong>when evaluating a request, Kong Gateway first tries to match the
+routes with the most rules</strong>.</p>
+</blockquote>
+<p>当所有匹配规则检查完，Kong 会通过下层的 Nginx 模块发送请求。Response 返回之后，Kong 再经过<code>header_filter</code>和<code>body_filter</code>两个 hook 来修改 response header 和 body。</p>
+<h3 id="对-websocket-的支持">对 WebSocket 的支持</h3>
+<p>有两种配置方式来路由 wss 请求：</p>
+<ul>
+<li>HTTP(S) services and routes：把 wss 流量当作不透明的字节流。</li>
+<li>WS(S) services and routes (<strong>企业版功能</strong>)：可以更好的用 websocket 插件控制流量。</li>
+</ul>
+<h3 id="负载均衡">负载均衡</h3>
+<p>Kong 支持两类负载均衡方式</p>
+<ul>
+<li>基于 DNS （服务注册和发现是静态的）</li>
+<li>基于哈希环的动态负载均衡（服务注册发现由 Kong 管理，可以动态增删）</li>
+</ul>
+<p>这部分跟 Nginx 类似。</p>
+<h3 id="健康检查">健康检查</h3>
+<ul>
+<li><strong>active checks</strong>（心跳检查）</li>
+<li><strong>passive checks</strong>（被动检查，即断路器，根据流量检查）</li>
+</ul>
+]]></description></item></channel></rss>

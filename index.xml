@@ -1,4 +1,54 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>電波障害</title><link>https://sund.site/</link><description>電波障害 - Steve Sun's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 07 Apr 2023 06:37:53 +0800</lastBuildDate><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>用户故事地图</title><link>https://sund.site/posts/2023/user-story-mapping/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2023/user-story-mapping/</guid><description><![CDATA[<blockquote>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>電波障害</title><link>https://sund.site/</link><description>電波障害 - Steve Sun's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 23 Jun 2023 10:36:36 +0800</lastBuildDate><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>Kong网关极简入门</title><link>https://sund.site/posts/2023/kong-gateway/</link><pubDate>Fri, 23 Jun 2023 10:36:36 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2023/kong-gateway/</guid><description><![CDATA[<h2 id="基本概念">基本概念</h2>
+<blockquote>
+<p>Kong Gateway is a Lua application running in Nginx. Kong Gateway is distributed along with OpenResty, which is a bundle of modules that extend the lua-nginx-module.</p>
+</blockquote>
+<p>Kong 是一个基于 Nginx 上运行的 Lua 程序。它改善了 Nginx 基于静态配置的缺点，可以动态添加插件和热部署。</p>
+<p></p>
+<h2 id="kong-的基础模块">Kong 的基础模块</h2>
+<p><strong>Service</strong>是后端服务的抽象。</p>
+<p><strong>Routes</strong>是 client 到后端服务的路由规则的抽象。如，为不同的 client 设置不同的认证规则。</p>
+<p>Kong 的 routes 有两种模式 <code>traditional_compat</code> 和 <code>expressions</code> 。</p>
+<ul>
+<li><code>traditional_compat</code> ：旧的基于通配符等匹配优先级的模式。</li>
+<li><code>expressions</code> ：新的基于表达式的匹配模式。</li>
+</ul>
+<p><strong>Upstreams</strong>是一个运维对象，在 Services 和真正的后台 API 服务之间，用来负载均衡。</p>
+<p><strong>Plugins</strong>是用 lua 或 go 编写的插件，分为 Kong 官方提供的插件和第三方插件。</p>
+<h2 id="kong-的工作原理">Kong 的工作原理</h2>
+<p>Kong 支持三类协议：HTTP/HTTPS，TCL/TLS 和 GRPC/GRPCS。每种协议由不同的参数组成：</p>
+<ul>
+<li><code>http</code>: <code>methods</code>, <code>hosts</code>, <code>headers</code>, <code>paths</code> (and <code>snis</code>, if <code>https</code>)</li>
+<li><code>tcp</code>: <code>sources</code>, <code>destinations</code> (and <code>snis</code>, if <code>tls</code>)</li>
+<li><code>grpc</code>: <code>hosts</code>, <code>headers</code>, <code>paths</code> (and <code>snis</code>, if <code>grpcs</code>)</li>
+</ul>
+<p>Kong 支持按 HTTP header、URL、method、源地址、目标地址、<a href="https://en.wikipedia.org/wiki/Server_Name_Indication" target="_blank" rel="noopener noreffer ">Server Name Indication</a> 来路由请求。</p>
+<p>Kong 默认以<a href="https://tools.ietf.org/html/rfc3986" target="_blank" rel="noopener noreffer ">RFC 3986</a>协议对请求的路径处理。</p>
+<h3 id="kong-匹配规则的优先级">Kong 匹配规则的优先级</h3>
+<p>按最多匹配的规则来路由。</p>
+<blockquote>
+<p>The rule is: <strong>when evaluating a request, Kong Gateway first tries to match the
+routes with the most rules</strong>.</p>
+</blockquote>
+<p>当所有匹配规则检查完，Kong 会通过下层的 Nginx 模块发送请求。Response 返回之后，Kong 再经过<code>header_filter</code>和<code>body_filter</code>两个 hook 来修改 response header 和 body。</p>
+<h3 id="对-websocket-的支持">对 WebSocket 的支持</h3>
+<p>有两种配置方式来路由 wss 请求：</p>
+<ul>
+<li>HTTP(S) services and routes：把 wss 流量当作不透明的字节流。</li>
+<li>WS(S) services and routes (<strong>企业版功能</strong>)：可以更好的用 websocket 插件控制流量。</li>
+</ul>
+<h3 id="负载均衡">负载均衡</h3>
+<p>Kong 支持两类负载均衡方式</p>
+<ul>
+<li>基于 DNS （服务注册和发现是静态的）</li>
+<li>基于哈希环的动态负载均衡（服务注册发现由 Kong 管理，可以动态增删）</li>
+</ul>
+<p>这部分跟 Nginx 类似。</p>
+<h3 id="健康检查">健康检查</h3>
+<ul>
+<li><strong>active checks</strong>（心跳检查）</li>
+<li><strong>passive checks</strong>（被动检查，即断路器，根据流量检查）</li>
+</ul>
+]]></description></item><item><title>用户故事地图</title><link>https://sund.site/posts/2023/user-story-mapping/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2023/user-story-mapping/</guid><description><![CDATA[<blockquote>
 <p>用户故事是软件开发和项目管理中的常用术语。主旨是以日常语言或商务用语撰写句子，是一段简单的功能表述。以客户或使用者的观点撰写下有价值的功能、引导、框架来与使用者进行互动，进而推动工作进程。可以被认为是一种规格文件，但更精确而言，它代表客户的需求与方向。</p>
 </blockquote>
 <p>在敏捷开发需求分析阶段，要使用一些流程工具，如<strong>用户故事地图</strong>，来把那些抽象、模糊的用户需求，转化为具体的、分优先级的、模块化的用户故事。</p>
@@ -565,50 +615,6 @@ pdm publish
 <li>制定习惯养成计划时，先从习惯拆解出具体的，可执行的行为。再按行为的优先级选择最容易、影响最大的执行。</li>
 <li>某些行为依赖其他习惯，逐级拆解，同时养成三个微小的习惯，渐进式地改变生活状态吧。</li>
 </ul>
-]]></description></item><item><title>边缘计算模式——数据管道</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</link><pubDate>Sun, 18 Sep 2022 17:01:29 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/pattern-of-edge-computing-data-pipeline/</guid><description><![CDATA[<h2 id="问题">问题</h2>
-<p>在物联网多层架构设计中，数据从终端设备流向云端，应该在哪一层做数据处理，哪一层做数据展示？分层的依据是什么？</p>
-<h2 id="解决方案">解决方案</h2>
-<h3 id="架构设计">架构设计</h3>
-<p>边缘计算的三层数据管道。</p>
-<ul>
-<li><strong>数据源</strong>是由若干终端设备组成的，内置在设备中的 agent 负责采集设备的基础数据如 cpu，内存使用量，应用统计数据等。</li>
-<li><strong>Edge（边缘）节点</strong>主要负责数据的处理，如 InfluxDB 通常设置在中间这一层。</li>
-<li><strong>Cloud（云端）节点</strong>是地理位置无关的，有容灾和扩展能力的云端服务层，因为边缘节点的硬件限制，扩展性不如云端，因此通常经过加工的数据从边缘节点发送到云端做持久化和数据展示。云端节点也负责一部分复杂数据的加工和聚合。</li>
-</ul>
-<p></p>
-<h2 id="edge-层">Edge 层</h2>
-<p>Edge 层的通常由一个 <strong>gateway（网关）</strong>，数据处理服务，存储服务和若干的应用服务组成。因为硬件和维护的限制，Edge 层通常安装的服务数量和分配的资源有限。它主要负责数据的轻量级加工和聚合，减少从 Edge 层到 Cloud 层之间数据传输的带宽，同时快速地监控、反馈问题给终端设备。</p>
-<p></p>
-<h3 id="gateway">Gateway</h3>
-<p>Gateway 通常要求能够根据终端设备数据自适应扩展。通常 gateway 还有设备 ID 识别，权限认证等功能。对于数据量较大的场景，gateway 需要缓存认证服务的状态，防止并发过大导致认证服务崩溃。</p>
-<h3 id="data-processors">Data processors</h3>
-<p>数据处理服务负责对终端发来的数据根据各种指标计算出复合指标存储到数据库或者数据仓库中。通常这一层会设置一个消息队列 MQ，如 Kafka，但是仍然因为 Edge 层设备资源的限制，消息队列最好是系统级别共享的并且能够缓存一段时期的数据，之后数据消费者（应用服务）可以根据自身需要订阅数据流。</p>
-<p>常用的时序数据库，如 InfluxDB，内置了 Task 功能，将数据处理和存储合二为一。大大简化了这一层的开发工作。</p>
-<h3 id="system-services--storage">System Services &amp; Storage</h3>
-<p>这一层由数据库和若干系统服务组成。向上层提供系统级别的 API 和数据。值得注意的是，数据库通常不会存储长期数据，因为 Edge 层存储容量的限制和不易扩展的特性，会给数据库设置 <strong>retention period</strong> 参数，令过期数据自动销毁或通过定时任务<strong>Downloadsampling（降采样）</strong>。</p>
-<p>系统服务一般由认证服务、数据 API、设备管理 API 等服务组成，这一层需要完成对设备的注册发现和管理。</p>
-<h2 id="小结">小结</h2>
-<p>以上就是对边缘计算的三层架构的概述和 Edge 层的设计。根据工作中的实际情况，应该重点关注几方面的问题：</p>
-<ul>
-<li>Edge 层的扩展性，当设备数据急速增长时是否有能力应对。</li>
-<li>Edge 层的服务拆分和数据持久化策略。因为部署环境和性能的限制，开发人员并不能像 Cloud 端开发一样快速响应 Edge 节点的情况，因此 Edge 层最考验开发者根据实际用户场景调参，自动化扩展、恢复的能力。</li>
-</ul>
-]]></description></item><item><title>边缘计算模式——任务队列</title><link>https://sund.site/posts/2022/pattern-of-edge-computing-lock/</link><pubDate>Wed, 14 Sep 2022 08:46:21 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/pattern-of-edge-computing-lock/</guid><description><![CDATA[<h2 id="概述">概述</h2>
-<p>在边缘计算中，边缘节点通常介于终端节点和云端节点之间，它的扩展性也介于两者之间。对于高并发或是高资源占用的业务场景，应该如何设计边缘节点的策略。</p>
-<h2 id="问题">问题</h2>
-<p>在边缘计算中，对于那些占用 CPU 和内存资源较大的请求，什么时候应该加锁？</p>
-<h2 id="解决方案">解决方案</h2>
-<p>边缘计算中有三类节点：终端节点（device），边缘节点（edge）,云端节点（cloud）。</p>
-<ul>
-<li>终端节点：通常应该加锁限制高资源占用。因为终端设备往往资源紧张，不可扩展。</li>
-<li>云端节点：通常不需要加锁，而是扩展副本。</li>
-</ul>
-<p>对于情况比较复杂的边缘节点，通常要综合考虑当前系统资源分配策略和用户使用场景。</p>
-<h3 id="一般情况">一般情况</h3>
-<p>对于工业物联网环境，边缘节点的操作员通常较少，同一时间进行的操作不多，在这种情况下可以采用加锁的方式来限制资源占用。</p>
-<h3 id="最佳实践全局任务队列">最佳实践——全局任务队列</h3>
-<p>对于多用户或者并发稍高的情况，边缘节点可以实现全局的任务队列来缓解高资源占用的任务给系统造成的负担。在应用的架构设计上，应该将高资源占用的请求以事件形式发送到全局任务队列，由边缘节点系统统一调度这些任务，按顺序或特定的优先级依次执行。</p>
-<p>对于任务队列已满的情况，再考虑扩展应用服务副本数量。</p>
 ]]></description></item><item><title>规范的错误信息</title><link>https://sund.site/posts/2022/write-error-message/</link><pubDate>Tue, 23 Aug 2022 22:18:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/write-error-message/</guid><description><![CDATA[<p></p>
 <p>本文整理了 Google 官方文档中关于错误信息的编写规范。适用于有一定编程经验，尤其从事业务开发的程序员。</p>
 <p>通过本文你可以：</p>
@@ -1059,4 +1065,26 @@ pdm publish
 <p></p>
 <p></p>
 <p></p>
+]]></description></item><item><title>3 Ways To Access Host System In Docker Container</title><link>https://sund.site/posts/2022/3_ways_to_access_host_system_in_container/</link><pubDate>Mon, 08 Aug 2022 20:04:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/3_ways_to_access_host_system_in_container/</guid><description><![CDATA[<p>When we are using Docker, we always access the host system by mounting the host folders as a volume. But sometimes we can not do that due to deployment reasons or security limits.</p>
+<p>There are three workaround ways to access the host system.</p>
+<h2 id="1-mount-dockersocks-into-container">1. Mount <code>docker.socks</code> into container</h2>
+<p><code>docker.socks</code> is a Unix socket that Docker Engine API listens on. You can mount <code>/var/run/docker.socks</code> file to your container and call Docker Engine API through this socket.</p>
+<p>For instance, If I want to get docker information by calling that API:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">curl -s --unix-socket /var/run/docker.sock http://localhost/info
+</code></pre></td></tr></table>
+</div>
+</div><p>You can refer to <a href="https://docs.docker.com/engine/api/v1.41/" target="_blank" rel="noopener noreffer ">Docker Engine API</a> to find more useful details.</p>
+<h2 id="2-using-pid-mode-host">2. Using PID mode <code>host</code></h2>
+<p>By default, Docker uses the Linux PID namespace to isolate containers' filesystem view. It means if two processes have the same PID, they will share the filesystem permission.</p>
+<p>Docker has a startup parameter <code>--pid=host</code> to change the PID namespace to its host process&rsquo;s namespace. You can use this parameter to make your docker container have the same privilege as the host process.</p>
+<blockquote>
+<p>When using <code>--pid=host</code>, you can list host system&rsquo;s processes by <code>ps -ef</code>.</p>
+</blockquote>
+<h2 id="3-by-docker---privileged">3. By <code>docker --privileged</code></h2>
+<p>It is the last way you can access the host system, but it is not recommended for most cases.</p>
 ]]></description></item></channel></rss>

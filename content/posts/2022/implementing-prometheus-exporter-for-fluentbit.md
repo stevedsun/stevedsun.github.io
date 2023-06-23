@@ -1,7 +1,7 @@
 ---
 title: "Implementing Prometheus Exporter for Fluentbit"
 date: 2022-11-24T12:26:23+08:00
-categories: [IoT Edge-Computing]
+categories: [IoT Edge Computing]
 tags: [golang, fluentbit, prometheus]
 aliases: [/posts/implementing-prometheus-exporter-for-fluentbit/]
 description: "We want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin."

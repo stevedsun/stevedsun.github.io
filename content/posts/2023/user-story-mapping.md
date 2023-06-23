@@ -1,7 +1,7 @@
 ---
 title: "用户故事地图"
 date: 2023-04-07T06:37:53+08:00
-categories: [敏捷开发 Agile]
+categories: [Agile]
 tags: [agile，user-story]
 aliases: [/posts/user-story-mapping/]
 description: ""

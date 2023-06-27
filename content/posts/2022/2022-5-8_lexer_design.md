@@ -1,8 +1,8 @@
 ---
 title: "Building A File Parser"
 date: 2022-05-08T14:00:00+08:00
-categories: [IoT Edge Computing]
-tags: [golang, fluentbit]
+categories: [Go]
+tags: [go, fluentbit]
 description: "Thinking in lexer for any format configuration file."
 ---
 

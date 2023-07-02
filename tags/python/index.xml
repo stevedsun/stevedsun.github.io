@@ -32,6 +32,9 @@
 <p>This PEP proposes to add to Python a mechanism to automatically recognize a <code>__pypackages__</code> directory and prefer importing packages installed in this location over user or global site-packages. This will avoid the steps to create, activate or deactivate “virtual environments”. Python will use the <code>__pypackages__</code> from the base directory of the script when present.</p>
 </blockquote>
 <p>这个 PEP 的目的就是基于一个文件夹 <code>__pypackages__ </code>来管理 Python 的依赖，类似 nodejs 的<code>node_modules</code>，用户不需要再创建虚拟环境来隔离依赖包。Python 会自动识别和安装依赖。</p>
+<blockquote>
+<p>更新于 2023 年 7 月 2 日：PEP 582 提案已经被拒绝，PDM 暂时仍然支持，但是不建议开发者使用这一特性。</p>
+</blockquote>
 <h3 id="pdm">PDM</h3>
 <p>PDM 实现了 PEP 582！这让我们在解决 Python 依赖问题时不用再考虑虚拟环境。</p>
 <h4 id="初始化项目">初始化项目</h4>

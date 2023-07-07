@@ -37,7 +37,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     # you can add extra information after the name (HTML format is supported), such as icons
     # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
     post = ""
-    name = "Posts"
+    name = "POSTS"
     url = "/posts/"
     # title will be shown when you hover on this menu link
     # 当您将鼠标悬停在此菜单链接上时, 将显示标题
@@ -47,7 +47,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     identifier = "categories"
     pre = ""
     post = ""
-    name = "Categories"
+    name = "CATEGORIES"
     url = "/categories/"
     title = ""
 
@@ -56,7 +56,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
   fingerprint = ""
   dateFormat = "2006-01-02"
   title = "電波障害"
-  description = "電波障害 - Steve Sun's Blog"
+  description = "Steve Sun's Blog"
   images = ["/android-chrome-192x192.png"]
 
   # Header config
@@ -86,7 +86,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
       post = ""
       # whether to use typeit animation for title name
       # 是否为标题显示打字机动画
-      typeit = false
+      typeit = true
 
   # Footer config
   # 页面底部信息配置
@@ -148,7 +148,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     title = "電波障害"
     # whether to omit favicon resource links
     # 是否隐藏网站图标资源链接
-    noFavicon = false
+    noFavicon = true
     # modern SVG favicon to use in place of older style .png and .ico files
     # 更现代的 SVG 网站图标, 可替代旧的 .png 和 .ico 文件
     svgFavicon = ""
@@ -349,7 +349,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
       keepStatic = false
       # whether to make the table of the contents in the sidebar automatically collapsed
       # 是否使侧边目录自动折叠展开
-      auto = true
+      auto = false
     # Code config
     # 代码配置
     [params.page.code]
@@ -431,7 +431,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     # Comment config
     # 评论系统设置
     [params.page.comment]
-      enable = false
+      enable = true
       # Disqus comment config (https://disqus.com/)
       # Disqus 评论系统设置 (https://disqus.com/)
       [params.page.comment.disqus]
@@ -451,8 +451,8 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
       # Valine 评论系统设置 (https://github.com/xCss/Valine)
       [params.page.comment.valine]
         enable = false
-        appId = "QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI"
-        appKey = "WBmoGyJtbqUswvfLh6L8iEBr"
+        appId = ""
+        appKey = ""
         placeholder = ""
         avatar = "mp"
         meta= ""
@@ -746,7 +746,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
         identifier = "posts"
         pre = ""
         post = ""
-        name = "Posts"
+        name = "POSTS"
         url = "/posts/"
         title = ""
       [[languages.en.menu.main]]
@@ -754,7 +754,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
         identifier = "categories"
         pre = ""
         post = ""
-        name = "Categories"
+        name = "CATEGORIES"
         url = "/Categories/"
         title = ""
       [[languages.en.menu.main]]
@@ -762,7 +762,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
         identifier = "about"
         pre = ""
         post = ""
-        name = "About"
+        name = "ABOUT ME"
         url = "/about/"
         title = ""
       [[languages.en.menu.main]]
@@ -779,9 +779,9 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
           enable = true
           gravatarEmail = ""
           avatarURL = "/android-chrome-192x192.png"
-          title = ""
-          subtitle = "Hello, this is Steve. Welcome to my blog!"
-          typeit = true
+          title = "Steve Sun's Blog"
+          subtitle = "Sharing knowledge and perspectives."
+          typeit = false
           social = true
           disclaimer = ""
       [languages.en.params.social]

@@ -1,14 +1,14 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>notion - Tag - 電波障害</title><link>https://sund.site/tags/notion/</link><description>notion - Tag - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 31 Jul 2022 21:01:56 +0800</lastBuildDate><atom:link href="https://sund.site/tags/notion/" rel="self" type="application/rss+xml"/><item><title>Notion As A Dashboard</title><link>https://sund.site/posts/2022/using_notion_as_a_dashboard/</link><pubDate>Sun, 31 Jul 2022 21:01:56 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/using_notion_as_a_dashboard/</guid><description><![CDATA[<p>I have built a Chrome extension <a href="https://chrome.google.com/webstore/detail/%E6%97%A0%E7%94%A8%E4%B8%BB%E6%84%8F%E6%A0%87%E7%AD%BE%E9%A1%B5/lieiofhdejclfpflofeooilpeaphlcgd?hl=zh-CN" target="_blank" rel="noopener noreffer ">无用主意</a> during the last month. The backend service implemented by Flask is using Notion as a dashboard.</p>
 <p></p>
 <h2 id="notion-api">Notion API</h2>
-<p>If you want your service to connect to Notion, you have to create a Notion integration on <a href="https://www.notion.so/my-integrations" target="_blank" rel="noopener noreffer ">this page</a>. Afterward, you have to share a specific Notion page to the integration you just created.</p>
+<p>If you want your service to connect to Notion, you have to create a Notion integration on <a href="https://www.notion.so/my-integrations" target="_blank" rel="noopener noreffer ">this page</a>. Afterward, you have to share a specific Notion page with the integration you just created.</p>
 <p></p>
 <p>Now, you can call <a href="https://developers.notion.com/reference/intro" target="_blank" rel="noopener noreffer ">Notion API</a> to visit your page.</p>
 <p>Once the service has permission to write and read data to Notion, we can sync data between them.</p>
-<p>I&rsquo;m using a <code>status</code> column to let me know which row has been updated into the service&rsquo;s SQLite database.</p>
+<p>I&rsquo;m using a <code>status</code> column to let me know which row has been updated in the service&rsquo;s SQLite database.</p>
 <p></p>
-<p>And also, I can update this row&rsquo;s content, then mark <code>status</code> as &ldquo;To Update&rdquo; to tell Flask service to sync this line later. At every night, Flask service sync data from Notion page to SQLite and marks <code>status</code> as &ldquo;Done&rdquo;.</p>
-<p>In this way, I am making Notion as my backend service dashboard.</p>
+<p>And also, I can update this row&rsquo;s content, then mark the <code>status</code> as &ldquo;To Update&rdquo; to tell Flask service to sync this line later. Every night, the Flask service sync data from the Notion page to SQLite and marks the <code>status</code> as &ldquo;Done&rdquo;.</p>
+<p>In this way, I am making Notion my backend service dashboard.</p>
 ]]></description></item><item><title>用 Notion 实践卡片盒笔记法</title><link>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</link><pubDate>Sat, 12 Dec 2020 22:42:53 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</guid><description><![CDATA[<p>今天给大家介绍一种整理和回顾碎片知识的方法——卡片盒笔记法。</p>
 <p>应该不少人都读过少数派作者玉树芝兰老师写的<a href="https://sspai.com/post/59109" target="_blank" rel="noopener noreffer ">关于卡片盒笔记法的文章</a>。<a href="https://pmthinking.com/" target="_blank" rel="noopener noreffer ">产品沉思录</a>的主理人少楠也写过很多相关的内容，最近他们还出了一个工具（Flomo - 浮墨笔记）也是基于这套方法论的。</p>
 <p>在这篇文章中，我会结合自己用 Notion 的经验，分享一下我如何用 Notion 做卡片笔记。</p>

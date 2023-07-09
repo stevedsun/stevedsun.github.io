@@ -3,9 +3,9 @@
 <p>In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.</p>
 <p>Today I want to share the final solution for this case. The complete demo code can be found on this Github repo: <a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo">https://github.com/stevedsun/fluent-bit-output-prometheus-demo</a></p>
 <h2 id="fluent-bit-output-plugin">Fluent-bit Output Plugin</h2>
-<p>Fluent-bit provides a way to implement your own golang plugin. (See <a href="https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins" target="_blank" rel="noopener noreffer ">Fluent-bit Go Output Plugin</a>)</p>
-<p>We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushing a record to output plugin.</p>
-<p>To implement a Fluent-bit output plugin, there are four call-back functions we need to over write.</p>
+<p>Fluent-bit provides a way to implement your Golang plugin. (See <a href="https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins" target="_blank" rel="noopener noreffer ">Fluent-bit Go Output Plugin</a>)</p>
+<p>We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushes a record to the output plugin.</p>
+<p>To implement a Fluent-bit output plugin, there are four call-back functions we need to overwrite.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -119,7 +119,7 @@
             <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Note<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
         </div>
         <div class="details-content">
-            <div class="admonition-content"><p>You should not remove the comment lines above function, they are important for building *.so file.</p>
+            <div class="admonition-content"><p>You should not remove the comment lines above the function, they are important for building .so files.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -132,7 +132,7 @@
         </div>
     </div>
 <h2 id="the-exporter-http-server">The Exporter HTTP Server</h2>
-<p>The next step is to implement the HTTP server, make it running on daemon.</p>
+<p>The next step is to implement the HTTP server and make it run on a daemon.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -206,7 +206,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="the-exporter-collector">The Exporter Collector</h2>
-<p>Now we have an HTTP server, but if we want to make it as an exporter, we have to define the <strong>collector</strong>. The collector is a Prometheus concept which implements two call-back function:</p>
+<p>Now we have an HTTP server, but if we want to make it an exporter, we have to define the <strong>collector</strong>. The collector is a Prometheus concept that implements two call-back functions:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -292,7 +292,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="building-so-file-and-running-in-fluent-bit">Building so file and running in Fluent-bit</h2>
-<p>The last but not least, building golang plugin into so file.</p>
+<p>Last but not least, building Golang plugin into so file.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -310,8 +310,8 @@
 <pre class="chroma"><code class="language-bash" data-lang="bash">fluent-bit -v -e ./out_prom_exporter.so -i cpu -o promexporter
 </code></pre></td></tr></table>
 </div>
-</div><p>That&rsquo;s all steps to implement a customized Fluent-bit Prometheus exporter plugin. See more details, please go to Github repo <a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo">https://github.com/stevedsun/fluent-bit-output-prometheus-demo</a>.</p>
-]]></description></item><item><title>Building A File Parser</title><link>https://sund.site/posts/2022/2022-5-8_lexer_design/</link><pubDate>Sun, 08 May 2022 14:00:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/2022-5-8_lexer_design/</guid><description><![CDATA[<p>Last week, after reading this article - <a href="https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go" target="_blank" rel="noopener noreffer ">How to Write a Lexer in Go</a>, I found that it is not so difficult to design a configuration file parser by this article&rsquo;s mind-set. Then I tried to write a fluent-bit configuration parser, finally got this <a href="https://github.com/stevedsun/go-fluentbit-conf-parser" target="_blank" rel="noopener noreffer ">Fluent-Bit configuration parser for Golang</a>.</p>
+</div><p>That&rsquo;s all steps to implement a customized Fluent-bit Prometheus exporter plugin. To see more details, please go to the Github repo <a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo%3E">https://github.com/stevedsun/fluent-bit-output-prometheus-demo&gt;</a>.</p>
+]]></description></item><item><title>Building A File Parser</title><link>https://sund.site/posts/2022/2022-5-8_lexer_design/</link><pubDate>Sun, 08 May 2022 14:00:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/2022-5-8_lexer_design/</guid><description><![CDATA[<p>Last week, after reading this article - <a href="https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go" target="_blank" rel="noopener noreffer ">How to Write a Lexer in Go</a>, I found that it is not so difficult to design a configuration file parser by this article&rsquo;s mindset. Then I tried to write a fluent-bit configuration parser and finally got this <a href="https://github.com/stevedsun/go-fluentbit-conf-parser" target="_blank" rel="noopener noreffer ">Fluent-Bit configuration parser for Golang</a>.</p>
 <p>In this article, I want to introduce how to parse Fluent-bit configuration <code>.conf</code> file, and the thinking behind it.</p>
 <h2 id="fluent-bit-configuration-format-and-schema">Fluent-bit configuration format and schema</h2>
 <div class="highlight"><div class="chroma">
@@ -337,7 +337,7 @@
 <li>Section</li>
 <li>Key/value pair</li>
 </ul>
-<p>First of all, we need to define a struct which represents the Fluent-bit configuration file.</p>
+<p>First of all, we need to define a struct that represents the Fluent-bit configuration file.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -370,10 +370,10 @@
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Once we have a struct, the next step is to parse tokens from the file and save their values into golang struct. We can copy the logic of the lexer to develop our fluentbit parser.</p>
+</div><p>Once we have a struct, the next step is to parse tokens from the file and save their values into golang struct. We can copy the logic of the lexer to develop our fluent bit parser.</p>
 <p>In a lexer program, the target characters which we want to parse out are called &ldquo;Token&rdquo;, Token is also the keyword that our parser program is searching for. A parser program will read characters in a file one by one, whenever it found a token, the parser saves the value between tokens into the final structure and go ahead.</p>
 <h2 id="parse-a-single-token">Parse a single token</h2>
-<p>If we want to parse Section, we have to make the parser read characters one by one and stop at <code>[</code> character, which means the beginning of a Section. The parser must save the current state as <code>t_section</code> and keep parser reading until <code>]</code> character, the word between <code>[</code> and <code>]</code> is the Section value we need to persist into go struct.</p>
+<p>If we want to parse a Section, we have to make the parser read characters one by one and stop at <code>[</code> character, which means the beginning of a Section. The parser must save the current state as <code>t_section</code> and keep the parser reading until <code>]</code> character, the word between <code>[</code> and <code>]</code> is the Section value we need to persist into go struct.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -533,7 +533,7 @@
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>That&rsquo;s all logic for parsing a section. To parse key/value pair is the same process, just note to make parser know which state it is and save values between whitespace or <code>\n</code>, you can see the code at <a href="https://github.com/stevedsun/go-fluentbit-conf-parser/blob/master/parser.go" target="_blank" rel="noopener noreffer ">the github repo</a>.</p>
+</div><p>That&rsquo;s all logic for parsing a section. Parse key/value pair is the same process, just note to make the parser know which state it is and save values between whitespace or <code>\n</code>, you can see the code in <a href="https://github.com/stevedsun/go-fluentbit-conf-parser/blob/master/parser.go" target="_blank" rel="noopener noreffer ">the Github repo</a>.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>To parse a configuration file, we have to</p>
 <ul>

@@ -3,9 +3,9 @@
 <p>In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.</p>
 <p>Today I want to share the final solution for this case. The complete demo code can be found on this Github repo: <a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo">https://github.com/stevedsun/fluent-bit-output-prometheus-demo</a></p>
 <h2 id="fluent-bit-output-plugin">Fluent-bit Output Plugin</h2>
-<p>Fluent-bit provides a way to implement your own golang plugin. (See <a href="https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins" target="_blank" rel="noopener noreffer ">Fluent-bit Go Output Plugin</a>)</p>
-<p>We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushing a record to output plugin.</p>
-<p>To implement a Fluent-bit output plugin, there are four call-back functions we need to over write.</p>
+<p>Fluent-bit provides a way to implement your Golang plugin. (See <a href="https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins" target="_blank" rel="noopener noreffer ">Fluent-bit Go Output Plugin</a>)</p>
+<p>We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushes a record to the output plugin.</p>
+<p>To implement a Fluent-bit output plugin, there are four call-back functions we need to overwrite.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -119,7 +119,7 @@
             <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Note<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
         </div>
         <div class="details-content">
-            <div class="admonition-content"><p>You should not remove the comment lines above function, they are important for building *.so file.</p>
+            <div class="admonition-content"><p>You should not remove the comment lines above the function, they are important for building .so files.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -132,7 +132,7 @@
         </div>
     </div>
 <h2 id="the-exporter-http-server">The Exporter HTTP Server</h2>
-<p>The next step is to implement the HTTP server, make it running on daemon.</p>
+<p>The next step is to implement the HTTP server and make it run on a daemon.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -206,7 +206,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="the-exporter-collector">The Exporter Collector</h2>
-<p>Now we have an HTTP server, but if we want to make it as an exporter, we have to define the <strong>collector</strong>. The collector is a Prometheus concept which implements two call-back function:</p>
+<p>Now we have an HTTP server, but if we want to make it an exporter, we have to define the <strong>collector</strong>. The collector is a Prometheus concept that implements two call-back functions:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -292,7 +292,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="building-so-file-and-running-in-fluent-bit">Building so file and running in Fluent-bit</h2>
-<p>The last but not least, building golang plugin into so file.</p>
+<p>Last but not least, building Golang plugin into so file.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -310,5 +310,5 @@
 <pre class="chroma"><code class="language-bash" data-lang="bash">fluent-bit -v -e ./out_prom_exporter.so -i cpu -o promexporter
 </code></pre></td></tr></table>
 </div>
-</div><p>That&rsquo;s all steps to implement a customized Fluent-bit Prometheus exporter plugin. See more details, please go to Github repo <a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo">https://github.com/stevedsun/fluent-bit-output-prometheus-demo</a>.</p>
+</div><p>That&rsquo;s all steps to implement a customized Fluent-bit Prometheus exporter plugin. To see more details, please go to the Github repo <a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo%3E">https://github.com/stevedsun/fluent-bit-output-prometheus-demo&gt;</a>.</p>
 ]]></description></item></channel></rss>

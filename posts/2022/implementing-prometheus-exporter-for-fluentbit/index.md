@@ -11,11 +11,11 @@ Today I want to share the final solution for this case. The complete demo code c
 
 ## Fluent-bit Output Plugin
 
-Fluent-bit provides a way to implement your own golang plugin. (See [Fluent-bit Go Output Plugin](https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins))
+Fluent-bit provides a way to implement your Golang plugin. (See [Fluent-bit Go Output Plugin](https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins))
 
-We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushing a record to output plugin.
+We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushes a record to the output plugin.
 
-To implement a Fluent-bit output plugin, there are four call-back functions we need to over write.
+To implement a Fluent-bit output plugin, there are four call-back functions we need to overwrite.
 
 ```go
 //export FLBPluginRegister
@@ -72,7 +72,7 @@ func main() {
 ```
 
 {{< admonition tip "Note" >}}
-You should not remove the comment lines above function, they are important for building \*.so file.
+You should not remove the comment lines above the function, they are important for building .so files.
 
 ```
 //export FLBPluginExit
@@ -82,7 +82,7 @@ You should not remove the comment lines above function, they are important for b
 
 ## The Exporter HTTP Server
 
-The next step is to implement the HTTP server, make it running on daemon.
+The next step is to implement the HTTP server and make it run on a daemon.
 
 ```go
 
@@ -122,7 +122,7 @@ func NewExporter() {
 
 ## The Exporter Collector
 
-Now we have an HTTP server, but if we want to make it as an exporter, we have to define the **collector**. The collector is a Prometheus concept which implements two call-back function:
+Now we have an HTTP server, but if we want to make it an exporter, we have to define the **collector**. The collector is a Prometheus concept that implements two call-back functions:
 
 ```go
 
@@ -168,7 +168,7 @@ var collector = NewMyCollector()
 
 ## Building so file and running in Fluent-bit
 
-The last but not least, building golang plugin into so file.
+Last but not least, building Golang plugin into so file.
 
 ```bash
 go build -buildmode=c-shared -o out_prom_exporter.so prom_exporter.go
@@ -180,5 +180,5 @@ Run Fluent-bit with CLI flags:
 fluent-bit -v -e ./out_prom_exporter.so -i cpu -o promexporter
 ```
 
-That's all steps to implement a customized Fluent-bit Prometheus exporter plugin. See more details, please go to Github repo <https://github.com/stevedsun/fluent-bit-output-prometheus-demo>.
+That's all steps to implement a customized Fluent-bit Prometheus exporter plugin. To see more details, please go to the Github repo https://github.com/stevedsun/fluent-bit-output-prometheus-demo>.
 

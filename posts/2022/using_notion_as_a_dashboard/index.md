@@ -7,7 +7,7 @@ I have built a Chrome extension [无用主意](https://chrome.google.com/webstor
 
 ## Notion API
 
-If you want your service to connect to Notion, you have to create a Notion integration on [this page](https://www.notion.so/my-integrations). Afterward, you have to share a specific Notion page to the integration you just created.
+If you want your service to connect to Notion, you have to create a Notion integration on [this page](https://www.notion.so/my-integrations). Afterward, you have to share a specific Notion page with the integration you just created.
 
 ![](/images/20220731213331.png)
 
@@ -15,11 +15,11 @@ Now, you can call [Notion API](https://developers.notion.com/reference/intro) to
 
 Once the service has permission to write and read data to Notion, we can sync data between them.
 
-I'm using a `status` column to let me know which row has been updated into the service's SQLite database.
+I'm using a `status` column to let me know which row has been updated in the service's SQLite database.
 
 ![](/images/20220731212654.png)
 
-And also, I can update this row's content, then mark `status` as "To Update" to tell Flask service to sync this line later. At every night, Flask service sync data from Notion page to SQLite and marks `status` as "Done".
+And also, I can update this row's content, then mark the `status` as "To Update" to tell Flask service to sync this line later. Every night, the Flask service sync data from the Notion page to SQLite and marks the `status` as "Done".
 
-In this way, I am making Notion as my backend service dashboard.
+In this way, I am making Notion my backend service dashboard.
 

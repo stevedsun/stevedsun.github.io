@@ -6,7 +6,7 @@ tags: [go, fluentbit]
 description: "Thinking in lexer for any format configuration file."
 ---
 
-Last week, after reading this article - [How to Write a Lexer in Go](https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go), I found that it is not so difficult to design a configuration file parser by this article's mind-set. Then I tried to write a fluent-bit configuration parser, finally got this [Fluent-Bit configuration parser for Golang](https://github.com/stevedsun/go-fluentbit-conf-parser).
+Last week, after reading this article - [How to Write a Lexer in Go](https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go), I found that it is not so difficult to design a configuration file parser by this article's mindset. Then I tried to write a fluent-bit configuration parser and finally got this [Fluent-Bit configuration parser for Golang](https://github.com/stevedsun/go-fluentbit-conf-parser).
 
 In this article, I want to introduce how to parse Fluent-bit configuration `.conf` file, and the thinking behind it.
 
@@ -26,7 +26,7 @@ Here is a classic mode configuration of Fluent-bit, it includes two parts:
 - Section
 - Key/value pair
 
-First of all, we need to define a struct which represents the Fluent-bit configuration file.
+First of all, we need to define a struct that represents the Fluent-bit configuration file.
 
 ```go
 type FluentBitConf struct {
@@ -44,13 +44,13 @@ type Entry struct {
 }
 ```
 
-Once we have a struct, the next step is to parse tokens from the file and save their values into golang struct. We can copy the logic of the lexer to develop our fluentbit parser.
+Once we have a struct, the next step is to parse tokens from the file and save their values into golang struct. We can copy the logic of the lexer to develop our fluent bit parser.
 
 In a lexer program, the target characters which we want to parse out are called "Token", Token is also the keyword that our parser program is searching for. A parser program will read characters in a file one by one, whenever it found a token, the parser saves the value between tokens into the final structure and go ahead.
 
 ## Parse a single token
 
-If we want to parse Section, we have to make the parser read characters one by one and stop at `[` character, which means the beginning of a Section. The parser must save the current state as `t_section` and keep parser reading until `]` character, the word between `[` and `]` is the Section value we need to persist into go struct.
+If we want to parse a Section, we have to make the parser read characters one by one and stop at `[` character, which means the beginning of a Section. The parser must save the current state as `t_section` and keep the parser reading until `]` character, the word between `[` and `]` is the Section value we need to persist into go struct.
 
 ```go
 
@@ -133,7 +133,7 @@ func (parser *FluentBitConfParser) parseString() (string, error) {
 }
 ```
 
-That's all logic for parsing a section. To parse key/value pair is the same process, just note to make parser know which state it is and save values between whitespace or `\n`, you can see the code at [the github repo](https://github.com/stevedsun/go-fluentbit-conf-parser/blob/master/parser.go).
+That's all logic for parsing a section. Parse key/value pair is the same process, just note to make the parser know which state it is and save values between whitespace or `\n`, you can see the code in [the Github repo](https://github.com/stevedsun/go-fluentbit-conf-parser/blob/master/parser.go).
 
 ## Conclusion
 

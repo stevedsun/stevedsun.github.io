@@ -540,7 +540,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
         # Or 或者
         # someCSS = "https://cdn.example.com/some.css"
       [params.page.library.js]
-        someJavascript = "ads.js"
+        # someJavascript = "ads.js"
         # located in "assets/" 位于 "assets/"
         # Or 或者
         # someJavascript = "https://cdn.example.com/some.js"

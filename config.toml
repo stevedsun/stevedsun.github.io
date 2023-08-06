@@ -746,7 +746,7 @@ weight = 1
 identifier = "posts"
 pre = ""
 post = ""
-name = "POSTS"
+name = "Posts"
 url = "/posts/"
 title = ""
 [[languages.en.menu.main]]
@@ -754,7 +754,7 @@ weight = 2
 identifier = "categories"
 pre = ""
 post = ""
-name = "CATEGORIES"
+name = "Categories"
 url = "/Categories/"
 title = ""
 [[languages.en.menu.main]]
@@ -762,15 +762,15 @@ weight = 5
 identifier = "notes"
 pre = ""
 post = ""
-name = "NOTES"
-url = "/stevesun-notebook/"
+name = "2nd-Brain"
+url = "/notebook/"
 title = ""
 [[languages.en.menu.main]]
 weight = 5
 identifier = "about"
 pre = ""
 post = ""
-name = "ABOUT"
+name = "About"
 url = "/about/"
 title = ""
 [[languages.en.menu.main]]

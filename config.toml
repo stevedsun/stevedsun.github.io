@@ -759,14 +759,6 @@ url = "/Categories/"
 title = ""
 [[languages.en.menu.main]]
 weight = 5
-identifier = "notes"
-pre = ""
-post = ""
-name = "2nd-Brain"
-url = "/notebook/"
-title = ""
-[[languages.en.menu.main]]
-weight = 5
 identifier = "about"
 pre = ""
 post = ""

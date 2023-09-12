@@ -17,9 +17,9 @@ github = 'stevedsun'  # github.com/YOUR_GITHUB_ID
 rss = true # show rss icon
 
 # home page profile
-avatar = '/android-chrome-192x192.png' # gravatar email or image url
-name = 'Steve Sun'
-bio = 'A garden of mindset.'
+# avatar = '/android-chrome-192x192.png' # gravatar email or image url
+# name = 'Steve Sun'
+# bio = 'A garden of mindset.'
 
 
 # misc

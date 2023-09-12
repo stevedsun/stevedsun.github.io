@@ -77,14 +77,9 @@ func main() {
 
 ```
 
-{{< admonition tip "Note" >}}
-You should not remove the comment lines above the function, they are important for building .so files.
+**Note**! You should not remove the comment lines above the function, they are important for building .so files.
 
-```
-//export FLBPluginExit
-```
-
-{{< /admonition >}}
+     //export FLBPluginExit
 
 ## The Exporter HTTP Server
 

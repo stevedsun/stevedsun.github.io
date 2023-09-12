@@ -1,1283 +1,631 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>All Posts - 電波障害</title><link>https://sund.site/posts/</link><description>All Posts | 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 27 Jun 2023 14:46:59 +0800</lastBuildDate><atom:link href="https://sund.site/posts/" rel="self" type="application/rss+xml"/><item><title>Go 内存泄漏常见模式</title><link>https://sund.site/posts/2023/goroutine-leak/</link><pubDate>Tue, 27 Jun 2023 14:46:59 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2023/goroutine-leak/</guid><description><![CDATA[<p>最近在工作中排查 Go 语言内存泄漏问题时，发现<a href="https://www.uber.com/blog/leakprof-featherlight-in-production-goroutine-leak-detection/" target="_blank" rel="noopener noreffer ">这篇 Uber 写的博客</a>，其中分享了几种常见的 goroutine 内存泄漏模式，于是把整理了 goroutine 的相关问题，希望更多人搜索到到这篇文章，帮助大家快速定位内存泄漏问题。</p>
-<h2 id="goroutine-内存泄漏的原因">Goroutine 内存泄漏的原因</h2>
-<p>Go 语言的内存泄漏通常因为错误地使用 goroutine 和 channel。例如以下几种情况：</p>
-<ol>
-<li>在 goroutine 里打开一个连接（如 gRPC）但是忘记 close</li>
-<li>在 goroutine 里的全局变量对象没有释放</li>
-<li>在 goroutine 里读 channel， 但是没有写入端，而被阻塞</li>
-<li>在 goroutine 里写入无缓冲的 channel，但是由于 channel 的读端被其他协程关闭而阻塞</li>
-<li>在 goroutine 里写入有缓冲的 channel，但是 channel 缓冲已满</li>
-</ol>
-<p>这几种情况，通常掺杂在复杂的代码里逻辑里，很难调试发现问题。因此衍生出以下几种日常工作中<strong>最容易出现问题的模式</strong>。</p>
-<h2 id="常见-goroutine-内存泄漏模式">常见 Goroutine 内存泄漏模式</h2>
-<h3 id="premature-function-return-功能过早返回">Premature Function Return /功能过早返回</h3>
-<p>一个 goroutine 要写入 channel，但是在另一个端意外退出导致 channel 读取的代码没有执行。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">Example</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">a</span> <span class="o">:=</span> <span class="mi">1</span>
-    <span class="nx">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">error</span><span class="p">)</span>
-    <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">c</span> <span class="o">&lt;-</span> <span class="nx">err</span>
-        <span class="k">return</span>
-    <span class="p">}()</span>
-
-    <span class="c1">// do something
-</span><span class="c1"></span>
-    <span class="k">if</span> <span class="nx">a</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
-        <span class="k">return</span>
-    <span class="p">}</span>
-
-    <span class="c1">// do something
-</span><span class="c1"></span>
-    <span class="nx">err</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">c</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>代码中主进程在<code>if a &gt; 0</code> 处 return，导致 channel 无法写入而被阻塞。</p>
-<p>解决这种问题的一个思路是把无缓冲 channel 转化为缓冲大小为 1 的 channel。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">error</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>有缓冲 channel 即使没有读取操作，也不会阻塞。</p>
-<h3 id="the-timeout-leak-超时泄漏">The Timeout Leak /超时泄漏</h3>
-<p>这是我们工作中遇到的问题，经常需要执行一个可能超时的异步操作时被使用。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">Example</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">timeoutOption</span> <span class="o">:=</span> <span class="nf">SomeTimeoutOption</span><span class="p">()</span>
-    <span class="nx">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">any</span><span class="p">)</span>
-    <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">done</span> <span class="o">&lt;-</span> <span class="nx">result</span>
-    <span class="p">}()</span>
-
-    <span class="k">select</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="o">&lt;-</span> <span class="nx">done</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="k">case</span> <span class="o">&lt;-</span> <span class="nx">timeoutOption</span><span class="p">.</span><span class="nf">Timeout</span><span class="p">():</span>
-            <span class="k">return</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-</code></pre></td></tr></table>
-</div>
-</div><p>在这段代码里，一旦 timeoutOption 操作超时，就会通知 select，接着程序退出，于是 goroutine 写入 done 的操作被阻塞而无法退出。</p>
-<p>解决思路同上一个模式，用有缓冲 channel 替代无缓冲 channel。</p>
-<h3 id="the-ncast-leak-多端读写泄漏">The NCast Leak /多端读写泄漏</h3>
-<p>如果 channel 的读端只有一个，但是写端有多个，就会发生这种情况。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">Example</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">any</span><span class="p">)</span>
-    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">items</span> <span class="p">{</span>
-        <span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">c</span> <span class="kd">chan</span> <span class="nx">any</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">c</span> <span class="o">&lt;-</span> <span class="nx">result</span>
-        <span class="p">}(</span><span class="nx">c</span><span class="p">)</span>
-    <span class="p">}</span>
-    <span class="nx">data</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">c</span>
-    <span class="k">return</span>
-<span class="p">}</span>
-
-</code></pre></td></tr></table>
-</div>
-</div><p>这种情况也适用于“多个写端一个读端”的情况，解决方法是把 channel 设置成和写或读数量一致的缓冲数。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">any</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">items</span><span class="p">))</span>
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="channel-iteration-misuse-通道迭代误用">Channel Iteration Misuse /通道迭代误用</h3>
-<p>Go 支持一种特性 <a href="https://gobyexample.com/range-over-channels" target="_blank" rel="noopener noreffer ">&ldquo;Range over channels&rdquo;</a>, 可以用 range 来循环读取 channel 的内容。</p>
-<p>但是一旦读取不到内容，range 就会等待 channel 的写入，而 range 如果正好在 goroutine 内部，这个 goroutine 就会被阻塞。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">Example</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">wg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">{}</span>
-    <span class="nx">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">any</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">i</span> <span class="o">:=</span> <span class="nx">items</span> <span class="p">{</span>
-        <span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nx">c</span> <span class="o">&lt;-</span> <span class="nx">data</span>
-        <span class="p">}()</span>
-    <span class="p">}</span>
-
-    <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">for</span> <span class="nx">data</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">c</span> <span class="p">{</span>
-            <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
-        <span class="p">}</span>
-    <span class="p">}()</span>
-
-    <span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>解决这个问题的方式手动定义关闭 channel。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">wg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">{}</span>
-<span class="nx">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">any</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="k">defer</span> <span class="nb">close</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
-<span class="c1">//...
-</span></code></pre></td></tr></table>
-</div>
-</div><p>这样在 WaitGroup 全部结束后，主程序会关闭 channel，从而让异步的 goroutine 内部的 range 退出循环等待。</p>
-<h2 id="小结">小结</h2>
-<p>Goroutine 内存泄漏是 Go 语言最容易发生的内存泄漏情况，它通常伴随着错误地使用 goroutine 和 channel。而 channel 的特殊用法如 select 和 range 又让 channel 阻塞变得更加隐蔽不易发现，进而增加排查内存泄漏的难度。</p>
-<p>在写 goroutine 和调试内存泄漏问题时，要重点关注 channel 相关的操作，尤其涉及到文中列举的四类模式：功能过早返回、超时泄漏、多端读写泄漏、通道迭代误用。</p>
-]]></description></item><item><title>Kong网关极简入门</title><link>https://sund.site/posts/2023/kong-gateway/</link><pubDate>Fri, 23 Jun 2023 10:36:36 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2023/kong-gateway/</guid><description><![CDATA[<h2 id="基本概念">基本概念</h2>
-<blockquote>
-<p>Kong Gateway is a Lua application running in Nginx. Kong Gateway is distributed along with OpenResty, which is a bundle of modules that extend the lua-nginx-module.</p>
-</blockquote>
-<p>Kong 是一个基于 Nginx 上运行的 Lua 程序。它改善了 Nginx 基于静态配置的缺点，可以动态添加插件和热部署。</p>
-<p></p>
-<h2 id="kong-的基础模块">Kong 的基础模块</h2>
-<p><strong>Service</strong>是后端服务的抽象。</p>
-<p><strong>Routes</strong>是 client 到后端服务的路由规则的抽象。如，为不同的 client 设置不同的认证规则。</p>
-<p>Kong 的 routes 有两种模式 <code>traditional_compat</code> 和 <code>expressions</code> 。</p>
-<ul>
-<li><code>traditional_compat</code> ：旧的基于通配符等匹配优先级的模式。</li>
-<li><code>expressions</code> ：新的基于表达式的匹配模式。</li>
-</ul>
-<p><strong>Upstreams</strong>是一个运维对象，在 Services 和真正的后台 API 服务之间，用来负载均衡。</p>
-<p><strong>Plugins</strong>是用 lua 或 go 编写的插件，分为 Kong 官方提供的插件和第三方插件。</p>
-<h2 id="kong-的工作原理">Kong 的工作原理</h2>
-<p>Kong 支持三类协议：HTTP/HTTPS，TCL/TLS 和 GRPC/GRPCS。每种协议由不同的参数组成：</p>
-<ul>
-<li><code>http</code>: <code>methods</code>, <code>hosts</code>, <code>headers</code>, <code>paths</code> (and <code>snis</code>, if <code>https</code>)</li>
-<li><code>tcp</code>: <code>sources</code>, <code>destinations</code> (and <code>snis</code>, if <code>tls</code>)</li>
-<li><code>grpc</code>: <code>hosts</code>, <code>headers</code>, <code>paths</code> (and <code>snis</code>, if <code>grpcs</code>)</li>
-</ul>
-<p>Kong 支持按 HTTP header、URL、method、源地址、目标地址、<a href="https://en.wikipedia.org/wiki/Server_Name_Indication" target="_blank" rel="noopener noreffer ">Server Name Indication</a> 来路由请求。</p>
-<p>Kong 默认以<a href="https://tools.ietf.org/html/rfc3986" target="_blank" rel="noopener noreffer ">RFC 3986</a>协议对请求的路径处理。</p>
-<h3 id="kong-匹配规则的优先级">Kong 匹配规则的优先级</h3>
-<p>按最多匹配的规则来路由。</p>
-<blockquote>
-<p>The rule is: <strong>when evaluating a request, Kong Gateway first tries to match the
-routes with the most rules</strong>.</p>
-</blockquote>
-<p>当所有匹配规则检查完，Kong 会通过下层的 Nginx 模块发送请求。Response 返回之后，Kong 再经过<code>header_filter</code>和<code>body_filter</code>两个 hook 来修改 response header 和 body。</p>
-<h3 id="对-websocket-的支持">对 WebSocket 的支持</h3>
-<p>有两种配置方式来路由 wss 请求：</p>
-<ul>
-<li>HTTP(S) services and routes：把 wss 流量当作不透明的字节流。</li>
-<li>WS(S) services and routes (<strong>企业版功能</strong>)：可以更好的用 websocket 插件控制流量。</li>
-</ul>
-<h3 id="负载均衡">负载均衡</h3>
-<p>Kong 支持两类负载均衡方式</p>
-<ul>
-<li>基于 DNS （服务注册和发现是静态的）</li>
-<li>基于哈希环的动态负载均衡（服务注册发现由 Kong 管理，可以动态增删）</li>
-</ul>
-<p>这部分跟 Nginx 类似。</p>
-<h3 id="健康检查">健康检查</h3>
-<ul>
-<li><strong>active checks</strong>（心跳检查）</li>
-<li><strong>passive checks</strong>（被动检查，即断路器，根据流量检查）</li>
-</ul>
-]]></description></item><item><title>用户故事地图</title><link>https://sund.site/posts/2023/user-story-mapping/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2023/user-story-mapping/</guid><description><![CDATA[<blockquote>
-<p>用户故事是软件开发和项目管理中的常用术语。主旨是以日常语言或商务用语撰写句子，是一段简单的功能表述。以客户或使用者的观点撰写下有价值的功能、引导、框架来与使用者进行互动，进而推动工作进程。可以被认为是一种规格文件，但更精确而言，它代表客户的需求与方向。</p>
-</blockquote>
-<p>在敏捷开发需求分析阶段，要使用一些流程工具，如<strong>用户故事地图</strong>，来把那些抽象、模糊的用户需求，转化为具体的、分优先级的、模块化的用户故事。</p>
-<p>一个用户地图看起来是这样的。</p>
-<p></p>
-<h2 id="绘制用户故事地图的过程">绘制用户故事地图的过程</h2>
-<p>绘制用户故事地图应遵循一些基本原则：</p>
-<ol>
-<li>边思考边记录，把所有过程可视化到便签纸上</li>
-<li>聚焦整体，不要过早陷入细节</li>
-<li>为<strong>成果</strong>排优先级，而不是功能</li>
-<li>验证产品要解决的问题是否真实存在</li>
-<li>使用具象化方案，比如高保真原型或手绘</li>
-<li>通过原型和用户测试来验证想法</li>
-<li>用户地图的目的是让团队能达成有效沟通，提出问题和评估工作量</li>
-<li>估算工作量时，度量越频繁，准确度越高</li>
-</ol>
-<h3 id="使用目标层级">使用目标层级</h3>
-<p>在拆分用户故事时，应遵循逐层拆分的原则，每一层级只聚焦这一层级的任务颗粒度，不要过早陷入细节。</p>
-<p>首先是设定宏观的<strong>活动</strong>，比如把用户需求分解为几个大的活动，如查看账户、存钱等。</p>
-<p>接下来是梳理<strong>主干故事</strong>。针对每一个活动，拆分成一个个步骤，这些步骤就是主干故事。每一个主干故事：</p>
-<ol>
-<li>是一个动词短语</li>
-<li>故事和故事之前应该保持同样的层级</li>
-<li>从左到右按时间顺序排列，过程中想到任何中间环节都可以随时插入改变顺序</li>
-</ol>
-<p>第三步是针对每一个主干故事，通过头脑风暴的形式补充更多小的用户故事，用便签纸贴在下边。</p>
-<p>最后按优先级，把重要的用户故事放在上面，不那么重要的放在下边。然后横向划分出不同的泳道，把故事按特定的<strong>目标成果</strong>划分为不同的阶段。</p>
-<p></p>
-<p>比如第一阶段完成基本的功能开发，那么横向的第一排所有用户故事就是第一个版本需要完成的工作。</p>
-<p>这样就完成了用户故事的设计。我们重新梳理一下过程：</p>
-<ol>
-<li>划分重要的活动</li>
-<li>梳理主干故事</li>
-<li>完善用户故事</li>
-<li>团队头脑风暴补充遗漏的用户故事</li>
-<li>从上到下排优先级</li>
-<li>横向切分用户故事，划分出每一个迭代的工作和关键成果</li>
-</ol>
-<h2 id="运用设计思维">运用设计思维</h2>
-<p>上面介绍了用户故事的绘制过程，但是其实找到真正的用户需求点才是最难的。为了从特定领域的客户或用户那里挖掘出有价值的需求，通常需要使用<strong>设计思维</strong>（Design Thinking）来帮助团队沟通、寻找焦点问题。</p>
-<p></p>
-<p>设计思维一共有五步。</p>
-<ul>
-<li><strong>共情</strong>：沟通，找到问题。</li>
-<li><strong>定义</strong>：聚焦若干重要问题，详细阐述。</li>
-<li><strong>想法</strong>：每一个问题构思出多个解决方案。</li>
-<li><strong>原型</strong>：制作具体的可视化的原型。</li>
-<li><strong>测试</strong>：于用户一起完成测试，收集反馈。</li>
-</ul>
-<h2 id="组成探索团队">组成探索团队</h2>
-<p>一个探索团队由三名重要角色组成：</p>
-<ul>
-<li>懂产品和需求的 Product Owner</li>
-<li>懂设计和交互的 UX Designer</li>
-<li>懂技术的 Senior Developer</li>
-</ul>
-<p>前期的需求探索阶段，应该由这支组成人数不超过 5 人的团队完成，要避免<strong>委员会设计</strong>（即团队多数成员参与到设计过程中，导致混乱和不一致）。</p>
-<p>前期排列任务优先级时也应遵循这样的优先级：</p>
-<blockquote>
-<p>业务目标 &gt; 客户/用户目标 &gt; 功能</p>
-</blockquote>
-]]></description></item><item><title>Python 依赖管理工具的研究</title><link>https://sund.site/posts/2023/python-packaging/</link><pubDate>Thu, 19 Jan 2023 08:05:27 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2023/python-packaging/</guid><description><![CDATA[<h2 id="太长不读">太长不读</h2>
-<p>如果你从事工程项目，<a href="https://python-poetry.org/" target="_blank" rel="noopener noreffer ">poetry</a> 是目前最好的方案，但是如果你不喜欢 Python 的 virtualenv，可以试试 <a href="https://pdm.fming.dev/latest/" target="_blank" rel="noopener noreffer ">pdm</a>。</p>
-<h2 id="混乱的-python">混乱的 Python</h2>
-<p>Python 的依赖管理工具 <code>pip</code> 一直被众多开发者吐槽。从我个人角度，<code>pip</code> 有三点致命缺陷：</p>
-<ul>
-<li>无法解决 Python 依赖环境的隔离问题</li>
-<li>依赖管理文件 <code>requirements.txt</code> 无法真正开箱即用</li>
-<li>打包部署非常麻烦，需要手动配置</li>
-</ul>
-<h3 id="环境隔离问题">环境隔离问题</h3>
-<p>Python 的依赖库可以安装到系统全局，也可以安装到用户目录（<code>/home/${USER}/.local</code>）。但如果你同时管理多个 Python 项目，就需要将不同项目的依赖拆分到不同的文件夹分开管理。</p>
-<p>传统方式是基于 virtualenv 创建隔离的 Python bin 文件和项目依赖的虚拟环境（所谓虚拟环境并不是虚拟机，只是个绑定 terminal session 的命令环境）。这种方式的缺点是：</p>
-<ul>
-<li>开发者需要经常关注“我现在处于哪个项目目录？我需要切换到当前虚拟环境里吗？”之类的问题。</li>
-<li>virtualenv 只解决环境隔离，但是无法同步更新依赖文件、打包发布。</li>
-</ul>
-<h3 id="依赖安装问题">依赖安装问题</h3>
-<p>Python 管理依赖的手段，最早是手动执行<code>pip install xxx</code>来安装依赖，最后 <code>pip freeze</code> 来导出依赖列表到一个 <code>requirements.txt</code> 文件里。但是这个 txt 文件非常令人困惑。</p>
-<ul>
-<li>不像 NodeJS 那么方便，想要升、降级某个依赖版本，无法自动同步到 txt 文件里。</li>
-<li>平铺式地列出了所有一级、二级依赖包（即依赖包的依赖包）。因为 Python 某些依赖又基于系统上安装的 C 库版本，这就导致不同系统环境上执行 <code>pip install -r requirements.txt</code> 得到的效果并不一致，经常报错。</li>
-</ul>
-<h3 id="打包部署问题">打包部署问题</h3>
-<p>Python 一般使用 <code>wheel</code> 打包二进制，它只解决打包问题，环境依赖是靠 pip 和 setuptools 完成，所以使用 wheel 你仍然要操心环境隔离和依赖管理问题。</p>
-<p>另外基于 Python 各版本之间兼容性问题和底层实现上的不可抗拒力量，wheel 也经常会莫名其妙失败。</p>
-<h2 id="现有的解决方案">现有的解决方案</h2>
-<p>一直以来，出现过 <code>pipx</code>，<code>pipenv</code>， <code>conda</code>，<code>poetry</code> 以及我最近接触的 <code>pdm</code>。他们都在某种程度上解决了 Python 的问题，这篇文章：</p>
-<p><a href="https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging" target="_blank" rel="noopener noreffer ">How to improve Python packaging, or why fourteen tools are at least twelve too many</a></p>
-<p>对比了各种工具的利弊。最后得出结论是 poetry 和 pdm 是目前最合适的工具。而 pdm 是目前唯一支持 <a href="https://peps.python.org/pep-0582/" target="_blank" rel="noopener noreffer ">PEP 582</a> 的依赖管理工具。</p>
-<h3 id="什么是-pep-582">什么是 PEP 582</h3>
-<blockquote>
-<p>This PEP proposes to add to Python a mechanism to automatically recognize a <code>__pypackages__</code> directory and prefer importing packages installed in this location over user or global site-packages. This will avoid the steps to create, activate or deactivate “virtual environments”. Python will use the <code>__pypackages__</code> from the base directory of the script when present.</p>
-</blockquote>
-<p>这个 PEP 的目的就是基于一个文件夹 <code>__pypackages__ </code>来管理 Python 的依赖，类似 nodejs 的<code>node_modules</code>，用户不需要再创建虚拟环境来隔离依赖包。Python 会自动识别和安装依赖。</p>
-<blockquote>
-<p>更新于 2023 年 7 月 2 日：PEP 582 提案已经被拒绝，PDM 暂时仍然支持，但是不建议开发者使用这一特性。</p>
-</blockquote>
-<h3 id="pdm">PDM</h3>
-<p>PDM 实现了 PEP 582！这让我们在解决 Python 依赖问题时不用再考虑虚拟环境。</p>
-<h4 id="初始化项目">初始化项目</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">pdm init
-</code></pre></td></tr></table>
-</div>
-</div><p>之后 PDM 会问几个问题，记得选择<strong>不使用虚拟机环境</strong>，这样 PDM 就会默认使用 PEP 582 的解决方案，在项目下生成一个类似 NodeJS 的 <code>__pypackages__</code>。</p>
-<p>剩下的操作就跟 NodeJS 的 npm 非常像了。</p>
-<p>添加一个依赖之后，PDM 会自动更新<code>pyproject.toml</code>文件。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">pdm add requests
-</code></pre></td></tr></table>
-</div>
-</div><h4 id="安装项目依赖">安装项目依赖</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">pdm install
-</code></pre></td></tr></table>
-</div>
-</div><h4 id="启动项目">启动项目</h4>
-<p>先在 <code>pyproject.toml</code>里添加</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>tool.pdm.scripts<span class="o">]</span>
-<span class="nv">start</span> <span class="o">=</span> <span class="s2">&#34;flask run -p 54321&#34;</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>然后执行</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">pdm run start
-</code></pre></td></tr></table>
-</div>
-</div><h4 id="打包部署">打包部署</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">pdm build
-pdm publish
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="总结">总结</h2>
-<p>如果你从事科研工作，用 <code>conda</code>。</p>
-<p>如果你从事工程项目，<code>poetry</code>是目前业内用的最多的方案，大多数情况下它是个不错的依赖管理工具。但是如果你不喜欢 Python 的 virtualenv，<code>pdm</code>是更好的选择。</p>
-]]></description></item><item><title>构建一幅图景，了解一个环境</title><link>https://sund.site/posts/2022/essay-2022-12-04/</link><pubDate>Sun, 04 Dec 2022 07:10:32 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/essay-2022-12-04/</guid><description><![CDATA[<p>项飙在《把自己作为方法》里谈到怎么做农村调查时说，他有个三舅舅，是个非常精通农村社会生态的人。三舅舅知道村里发生的大小事，知道这个体系如何运作，权力结构是什么。项飙把这种对周遭环境的认识能力概括为<strong>图景</strong>：</p>
-<blockquote>
-<p>画这个图不是机械地反应世界，而是要精确地反应世界。什么是真正的精确？真正的精确就是你把握住它内在的未来方向…… ”图景“有两重意思，一是现在的概括，再一个是未来可能的走向。</p>
-</blockquote>
-<p>同样，昨天看社交媒体有人说，大众对当下发生的事情经常过度反应。就像股票每天涨涨跌跌，好的投资者不会把短期的波动太放在心上。但是社交媒体会对热点事件产生集体共鸣，导致大家对短期变化敏感，对事情发生的本质原因失去兴趣。</p>
-<p>这让我想起最近读《禅与摩托车维修艺术》开头的一段话：</p>
-<blockquote>
-<p>有什么新鲜事？这是人们最感兴趣的问题，但是也最不着边际，可以没完没了问下去。如果真探讨它的答案，所得的只不过是一堆琐碎的跟风事物…我宁可问这样的问题，什么是最好的？</p>
-</blockquote>
-<p>这有点像软件架构，我们总说系统模型，模型是现状的反应吗？是，又不完全是，它是现状的抽象，是包含了未来走向的东西。</p>
-<p>想起我前公司的同事朱老师常把系统性思考挂在嘴边。比如有一次我打电话问他：怎么做高并发场景的压力测试呢？朱老师先反问我：你们的测试基于哪一种模型呢？是“手机打电话”还是“银行提款”？</p>
-<p>我问他这两种模型怎么讲？他说“手机打电话”就是客户端可以无限增加，流量和客户端增长成比例；“银行提款”是顾客无论怎么增加，接待窗口只有固定数量，多余的顾客只能排队。系统只开放有限的资源，无论流量怎么增长。</p>
-<p>你看，这么一解释，图景就出来了。这就是跟明白人聊天的乐趣，不用花心思解释 context。</p>
-<p>Alan Key 在一次技术演讲里说：</p>
-<blockquote>
-<p>You need to solve a context, not just a problem.</p>
-</blockquote>
-<p>我们生活中通常遇到两类问题，底下干活的人没有构建起工作内容的图景，上面管理的人没有构建起生态系统（企业发展方向、部门协作、社区运营）的图景。而大家着眼于问题本身，因为解决问题本身容易而快速。</p>
-<p>另一方面，这种观点在与人相处时也适用。情绪控制不好的人通常对当下反应过度，听到不爱听的话、和自己相反的意见就勃然大怒。其实只要保持一定的<strong>钝感</strong>，对他人以更高的视角观察，心态就会平和很多。</p>
-<p>还是回到项飙，他有一篇采访里讲到，中国低层社会的<strong>功能性过剩，而生态性不足</strong>。这句话怎么理解呢？你可以很方便地点外卖，外卖员不管多远都能快速送到你手里。但是楼下小区的保洁员是从哪来的你丝毫提不起兴趣，对身边发生的一切都漠不关心。</p>
-<p>这是中国年轻人在城市中存在感微弱的真正原因，我们没把自己融入 context 里，也就构建不出三舅舅那样的图景。</p>
-<p>回想我之前在 TW 工作时，同事关系是网状的，HR 会随时找我去面试，对于经常帮忙招聘的同事，HR 们也会回赠一些小礼物；每个人同时为不同的项目工作，既独立又联结。有时候会成为敏捷教练，有时会被临时拉去做咨询师。我翻看微信，200 多个好友里，有 104 个是 TW 的同事。
-这种关系是生态性的，每个人对工作环境都有一幅完整的图景。而另一些企业，总强调责任意识，但是工作中的功能性压倒性地占据了上风。同事之间是机械地组织起来，完成上级分配的任务。这种状态是无从谈起什么协作、效率的。</p>
-<p>沈奕斐在她自己的播客节目里和她老公谈到工作时说，同事关系是要高于朋友的，因为一天里大部分时间你要和同事度过，要完成高效的协作必须建立在深层的互相认同之上。</p>
-<p>所以，我们是不是要多去体察周围的人和事呢。完成工作和生活的目标固然重要，但正如徒步旅行，如果只是两点一线地直达目标，就只是一名过客，而主动探索小路和岔路，才能构建起一幅对周遭环境的完整图景。</p>
-]]></description></item><item><title>Implementing Prometheus Exporter for Fluentbit</title><link>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</link><pubDate>Thu, 24 Nov 2022 12:26:23 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</guid><description><![CDATA[<h2 id="background">Background</h2>
-<p>Fluent-bit is a great tool for logging and monitoring, many teams are using it to collect metrics and logs. Prometheus is also a popular tool for metrics analysis, but if you want to output Fluent-bit data to Prometheus, the only way is to use the node-exporter input plugin, which has fixed metrics and data format.</p>
-<p>In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.</p>
-<p>Today I want to share the final solution for this case. The complete demo code can be found on this Github repo: <a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo">https://github.com/stevedsun/fluent-bit-output-prometheus-demo</a></p>
-<h2 id="fluent-bit-output-plugin">Fluent-bit Output Plugin</h2>
-<p>Fluent-bit provides a way to implement your Golang plugin. (See <a href="https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins" target="_blank" rel="noopener noreffer ">Fluent-bit Go Output Plugin</a>)</p>
-<p>We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushes a record to the output plugin.</p>
-<p>To implement a Fluent-bit output plugin, there are four call-back functions we need to overwrite.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
-</span><span class="lnt">42
-</span><span class="lnt">43
-</span><span class="lnt">44
-</span><span class="lnt">45
-</span><span class="lnt">46
-</span><span class="lnt">47
-</span><span class="lnt">48
-</span><span class="lnt">49
-</span><span class="lnt">50
-</span><span class="lnt">51
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//export FLBPluginRegister
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">FLBPluginRegister</span><span class="p">(</span><span class="nx">def</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
-    <span class="c1">// Here we define the plugin name and description.
-</span><span class="c1"></span>	<span class="k">return</span> <span class="nx">output</span><span class="p">.</span><span class="nf">FLBPluginRegister</span><span class="p">(</span><span class="nx">def</span><span class="p">,</span> <span class="s">&#34;promexporter&#34;</span><span class="p">,</span> <span class="s">&#34;Prometheus Exporter&#34;</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="c1">//export FLBPluginInit
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">FLBPluginInit</span><span class="p">(</span><span class="nx">plugin</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
-    <span class="c1">// We can extract output plugin parameters from `FLBPlguinConfigKey`.
-</span><span class="c1"></span>	<span class="nx">user</span> <span class="o">:=</span> <span class="nx">output</span><span class="p">.</span><span class="nf">FLBPluginConfigKey</span><span class="p">(</span><span class="nx">plugin</span><span class="p">,</span> <span class="s">&#34;username&#34;</span><span class="p">)</span>
-	<span class="nx">passwd</span> <span class="o">:=</span> <span class="nx">output</span><span class="p">.</span><span class="nf">FLBPluginConfigKey</span><span class="p">(</span><span class="nx">plugin</span><span class="p">,</span> <span class="s">&#34;password&#34;</span><span class="p">)</span>
-    <span class="c1">// Here we can run a new Prometheus exporter server.
-</span><span class="c1"></span>	<span class="nf">NewExporter</span><span class="p">()</span>
-	<span class="k">return</span> <span class="nx">output</span><span class="p">.</span><span class="nx">FLB_OK</span>
-<span class="p">}</span>
-
-<span class="c1">//export FLBPluginFlushCtx
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">FLBPluginFlushCtx</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">data</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span><span class="p">,</span> <span class="nx">length</span> <span class="nx">C</span><span class="p">.</span><span class="kt">int</span><span class="p">,</span> <span class="nx">tag</span> <span class="o">*</span><span class="nx">C</span><span class="p">.</span><span class="nx">char</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
-    <span class="c1">// Here we process every record, extract it and ship to exporter
-</span><span class="c1"></span>	<span class="nx">dec</span> <span class="o">:=</span> <span class="nx">output</span><span class="p">.</span><span class="nf">NewDecoder</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nx">length</span><span class="p">))</span>
-	<span class="k">for</span> <span class="p">{</span>
-		<span class="c1">// Extract Record
-</span><span class="c1"></span>		<span class="nx">ret</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">record</span> <span class="o">:=</span> <span class="nx">output</span><span class="p">.</span><span class="nf">GetRecord</span><span class="p">(</span><span class="nx">dec</span><span class="p">)</span>
-		<span class="k">if</span> <span class="nx">ret</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
-			<span class="k">break</span>
-		<span class="p">}</span>
-
-		<span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">record</span> <span class="p">{</span>
-			<span class="c1">// You have to extract record here, ship them to exporter.
-</span><span class="c1"></span>		<span class="p">}</span>
-	<span class="p">}</span>
-
-	<span class="k">return</span> <span class="nx">output</span><span class="p">.</span><span class="nx">FLB_OK</span>
-<span class="p">}</span>
-
-<span class="c1">//export FLBPluginExit
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">FLBPluginExit</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">server</span><span class="p">.</span><span class="nx">srv</span><span class="p">.</span><span class="nf">Shutdown</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">TODO</span><span class="p">());</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
-	<span class="p">}</span>
-
-    <span class="c1">// Here we have to close go channel and daemon exporter server.
-</span><span class="c1"></span>	<span class="nb">close</span><span class="p">(</span><span class="nx">collector</span><span class="p">.</span><span class="nx">buff</span><span class="p">)</span>
-	<span class="nx">server</span><span class="p">.</span><span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
-
-	<span class="k">return</span> <span class="nx">output</span><span class="p">.</span><span class="nx">FLB_OK</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-<span class="p">}</span>
-
-</code></pre></td></tr></table>
-</div>
-</div><div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Note<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content"><p>You should not remove the comment lines above the function, they are important for building .so files.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">//export FLBPluginExit
-</code></pre></td></tr></table>
-</div>
-</div></div>
-        </div>
-    </div>
-<h2 id="the-exporter-http-server">The Exporter HTTP Server</h2>
-<p>The next step is to implement the HTTP server and make it run on a daemon.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go">
-<span class="c1">// Here we start a background server on port 8989, the server will handle `/metrics` path, prometheus exporter will implement the handler.
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">startHttpServer</span><span class="p">(</span><span class="nx">wg</span> <span class="o">*</span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">,</span> <span class="nx">reg</span> <span class="o">*</span><span class="nx">prometheus</span><span class="p">.</span><span class="nx">Registry</span><span class="p">)</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span> <span class="p">{</span>
-	<span class="nx">srv</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">{</span><span class="nx">Addr</span><span class="p">:</span> <span class="s">&#34;:8989&#34;</span><span class="p">}</span>
-
-	<span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/metrics&#34;</span><span class="p">,</span> <span class="nx">promhttp</span><span class="p">.</span><span class="nf">HandlerFor</span><span class="p">(</span>
-		<span class="nx">reg</span><span class="p">,</span>
-		<span class="nx">promhttp</span><span class="p">.</span><span class="nx">HandlerOpts</span><span class="p">{</span>
-			<span class="nx">EnableOpenMetrics</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-			<span class="nx">Registry</span><span class="p">:</span>          <span class="nx">reg</span><span class="p">,</span>
-		<span class="p">},</span>
-	<span class="p">))</span>
-
-	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-		<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">srv</span><span class="p">.</span><span class="nf">ListenAndServe</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ErrServerClosed</span> <span class="p">{</span>
-			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;ListenAndServe():&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
-		<span class="p">}</span>
-	<span class="p">}()</span>
-
-	<span class="k">return</span> <span class="nx">srv</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">NewExporter</span><span class="p">()</span> <span class="p">{</span>
-	<span class="nx">reg</span> <span class="o">:=</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nf">NewRegistry</span><span class="p">()</span>
-	<span class="nx">reg</span><span class="p">.</span><span class="nf">MustRegister</span><span class="p">(</span><span class="nx">collector</span><span class="p">)</span>
-
-    <span class="c1">// Here, we start a new HTTP server and save the instance object into a golang sync.WaitGroup, so that we can watch its status in `FLBPluginExit`
-</span><span class="c1"></span>	<span class="nx">server</span><span class="p">.</span><span class="nx">wg</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">{}</span>
-	<span class="nx">server</span><span class="p">.</span><span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-	<span class="nx">server</span><span class="p">.</span><span class="nx">srv</span> <span class="p">=</span> <span class="nf">startHttpServer</span><span class="p">(</span><span class="nx">server</span><span class="p">.</span><span class="nx">wg</span><span class="p">,</span> <span class="nx">reg</span><span class="p">)</span>
-<span class="p">}</span>
-
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="the-exporter-collector">The Exporter Collector</h2>
-<p>Now we have an HTTP server, but if we want to make it an exporter, we have to define the <strong>collector</strong>. The collector is a Prometheus concept that implements two call-back functions:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go">
-<span class="c1">// Here for instance, we define metrics to collect cpu info, which reuses the default Fluent-bit CPU metrics input data
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewMyCollector</span><span class="p">()</span> <span class="o">*</span><span class="nx">myCollector</span> <span class="p">{</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">myCollector</span><span class="p">{</span>
-		<span class="nx">metrics</span><span class="p">:</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">prometheus</span><span class="p">.</span><span class="nx">Desc</span><span class="p">{</span>
-			<span class="s">&#34;cpu&#34;</span><span class="p">:</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nf">NewDesc</span><span class="p">(</span>
-				<span class="s">&#34;cpu&#34;</span><span class="p">,</span>
-				<span class="s">&#34;Collect CPU usage&#34;</span><span class="p">,</span>
-				<span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;cpu&#34;</span><span class="p">,</span> <span class="s">&#34;mode&#34;</span><span class="p">},</span> <span class="kc">nil</span><span class="p">,</span>
-			<span class="p">),</span>
-		<span class="p">},</span>
-		<span class="c1">// this buff is a golang channel object, which receive data sending from `FLBPluginFlushCtx` function
-</span><span class="c1"></span>		<span class="nx">buff</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">cpuMetrics</span><span class="p">),</span>
-	<span class="p">}</span>
-<span class="p">}</span>
-
-<span class="c1">// `Describe` send our metrics name and defination to Prometheus exporter
-</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">collector</span> <span class="o">*</span><span class="nx">myCollector</span><span class="p">)</span> <span class="nf">Describe</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="o">*</span><span class="nx">prometheus</span><span class="p">.</span><span class="nx">Desc</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">desc</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">collector</span><span class="p">.</span><span class="nx">metrics</span> <span class="p">{</span>
-		<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">desc</span>
-	<span class="p">}</span>
-<span class="p">}</span>
-
-<span class="c1">// `Collect` will read data from golang channel `buff` and send data to HTTP server handler
-</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">collector</span> <span class="o">*</span><span class="nx">myCollector</span><span class="p">)</span> <span class="nf">Collect</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Metric</span><span class="p">)</span> <span class="p">{</span>
-
-	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">desc</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">collector</span><span class="p">.</span><span class="nx">metrics</span> <span class="p">{</span>
-		<span class="k">select</span> <span class="p">{</span>
-		<span class="k">case</span> <span class="nx">metric</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">collector</span><span class="p">.</span><span class="nx">buff</span><span class="p">:</span>
-			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">metric</span><span class="p">.</span><span class="nx">cpu</span><span class="p">,</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">mode</span><span class="p">,</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span>
-			<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nf">MustNewConstMetric</span><span class="p">(</span><span class="nx">desc</span><span class="p">,</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">GaugeValue</span><span class="p">,</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">cpu</span><span class="p">,</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">mode</span><span class="p">)</span>
-		<span class="k">default</span><span class="p">:</span>
-			<span class="k">return</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-
-<span class="p">}</span>
-
-<span class="kd">var</span> <span class="nx">collector</span> <span class="p">=</span> <span class="nf">NewMyCollector</span><span class="p">()</span>
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="building-so-file-and-running-in-fluent-bit">Building so file and running in Fluent-bit</h2>
-<p>Last but not least, building Golang plugin into so file.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">go build -buildmode<span class="o">=</span>c-shared -o out_prom_exporter.so prom_exporter.go
-</code></pre></td></tr></table>
-</div>
-</div><p>Run Fluent-bit with CLI flags:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">fluent-bit -v -e ./out_prom_exporter.so -i cpu -o promexporter
-</code></pre></td></tr></table>
-</div>
-</div><p>That&rsquo;s all steps to implement a customized Fluent-bit Prometheus exporter plugin. To see more details, please go to the Github repo <a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo%3E">https://github.com/stevedsun/fluent-bit-output-prometheus-demo&gt;</a>.</p>
-]]></description></item><item><title>渐进式地改变生活习惯——我对福格行为模型的理解</title><link>https://sund.site/posts/2022/fogg-behavior-model/</link><pubDate>Tue, 01 Nov 2022 20:23:55 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/fogg-behavior-model/</guid><description><![CDATA[<h2 id="我和失眠的斗争">我和失眠的斗争</h2>
-<p>我经常被失眠折磨。也尝试过各种办法：睡前洗热水澡、手机定时关闭、每天跑步……我发现这些方法都或多或少发挥了作用，但是最终不是难以坚持，就是效果越来越差。我最近读到一本书——《福格行为模型》，让我重新审视这几年和失眠的斗争，从另一个角度认清<strong>习惯</strong>，了解它是如何兴致勃勃地启动，又如何在挫折过后被放弃。我觉得《福格行为模型》是一本讲到了问题本质的书，它的道理非常凝练，甚至可以用一个公式概括。但是它却有非常强的指导性，按照书中的方法，我已经在最近一个月大大改善了睡眠质量。也希望读完这篇文章，你也有兴趣看一看这本书。</p>
-<p>下面为了方便理解，我把书的内容分为理论和实践两部分。</p>
-<h2 id="理论部分人的行为可以被设计">理论部分：人的行为可以被设计</h2>
-<p>在这个由商业主导的世界里，有一个道理显而易见：人的行为可以被设计。如何让顾客多在广告前停留从而提高销售业绩；游戏公司如何引导玩家沉迷游戏；抖音如何用短视频杀死人们的业余时间……这种种的商业行为，都经过精密的设计。这些使人无法自拔的行为设计，能不能反过来让我们养成好的习惯呢？答案是肯定的。</p>
-<p>福格教授给出了一个公式，它代表行为（<strong>B</strong>ehavior）产生的三要素：动机（<strong>M</strong>otivation）、能力（<strong>A</strong>bility）、提示（<strong>P</strong>rompt）。</p>
-<blockquote>
-<p>B = M A P</p>
-</blockquote>
-<p><strong>动机 M 越强，行为越有可能发生；人自身达成行为的能力 A 越强，行为也越可能发生</strong>。即行为由动机和能力共同作用产生。此外，行为满足前边两种条件也不一定发生，<strong>它需要一个触发开关，即提示 P</strong>。</p>
-<p></p>
-<p>这张图展示了一条曲线，当（动机-能力）的坐标落在曲线上方，此时如果给行为一个提示，行为就会立刻发生。</p>
-<p>比如，当一个母亲的孩子被熊攻击时，母亲会毅然去救孩子。此时，<strong>孩子被攻击</strong>是<strong>提示</strong>，母亲虽然<strong>能力</strong>很弱，但是保护孩子的<strong>动机</strong>极强，使得上图中母亲的坐标落在了曲线上方。这样<strong>救孩子</strong>的行为就自然而然产生了。</p>
-<blockquote>
-<p>黄金行为有三个标准：</p>
-<ol>
-<li>这个行为能让你实现愿望（影响）</li>
-<li>你想做这个行为（动机）</li>
-<li>你可以做到（能力）</li>
-</ol>
-</blockquote>
-<p>这也能解释习惯的产生和磨灭。当一个人意识到自己肥胖（提示），他决定开始减肥，他的动机很强，此时虽然他（减肥的）能力很弱，但是他减肥的行为却因强烈的动机而发生了。但是随着时间推移，动机变弱，使得他的坐标滑落到曲线下方。这时减肥的行为就可能终止。这就是大部分人从捡起习惯到放弃习惯的过程。这里引出了另一个重要理论。</p>
-<p><strong>人的动机是不稳定的，主观改变动机非常困难</strong>。</p>
-<blockquote>
-<p>你不能直接从动机入手去解决问题。——福格</p>
-</blockquote>
-<p>因为人心理状态这种不确定性，所以福格建议，最好按照提示 - 能力 - 动机的优先级，去打造（或是戒除）行为习惯。</p>
-<p>首先是通过时间、空间、心情等条件，触发行为。<strong>福格称其为锚点。锚点必须是明确、不含糊的最后行为</strong>。当这个锚点出现时，就自动提示你去完成你要做的事情。</p>
-<p>其次是降低能力门槛。<strong>如学习技能、购买工具、降低问题规模等，使能力满足行为触发的条件</strong>。其中降低问题规模的方法就是我们通常说的<strong>微习惯</strong>，如果想要每天锻炼身体，那么就应该从每天做一个俯卧撑开始，一点点提高运动量。这个行为必须是即便阴天下雨，你心情不好，工作疲惫，也能轻易做到的。</p>
-<p>另外，<strong>重复做</strong>也是会降低行为的难度，作者鼓励大家用<strong>高频率的小成功</strong>来养成习惯。</p>
-<p>最后也是最难的是正确的动机，<strong>动机必须出自你的真实意愿，你不能从网上或者成功人士那里获得动机</strong>。一个匹配我们行为的动机，必须能切实给我们带来好处。</p>
-<h2 id="实践部分绘制地图重新设计我们的日常">实践部分：绘制地图，重新设计我们的日常</h2>
-<p>讲完了理论，终于可以实操了。</p>
-<h3 id="第一步围绕习惯找出行为">第一步，围绕习惯找出行为</h3>
-<p>在一张白板或白纸中间写下你希望养成的习惯。以我自己为例，我希望保持固定节奏的健身习惯。</p>
-<p></p>
-<p>然后是头脑风暴。通过发散思维，把影响这个习惯的因素全部写下来。福格在原书中描述的是找出影响习惯的<strong>行为</strong>，但是直接写出行为很困难，所以我先把所有因素罗列出来，再一点点推导出行为。</p>
-<p>比如，影响我保持健身频率的因素之一是天气冷容易感冒。我从这点入手分析了原因：一方面健身房人多导致换衣、器械使用需要长时间等待。另一方面衣服保暖做的不够。所以最后我得到两个影响健身的行为：</p>
-<ol>
-<li>在人相对少的时间段去健身房</li>
-<li>购买轻薄但是保暖性较好的运动服（这是一次性任务）</li>
-</ol>
-<p>同理，上班疲惫也是影响因素，我得到了两个行为：</p>
-<ol>
-<li>拆分不同训练方式到一周里的不同工作日，以避免过度运动</li>
-<li>利用居家办公的那几天时间下班去健身</li>
-</ol>
-<p></p>
-<p>请你结合自己的特点，找出所有影响的因素并对应到多个行为上去。<strong>注意有些行为依赖于养成另外一些习惯</strong>， 比如要健身的前一天睡眠充足，就依赖好的睡眠习惯。作者建议最开始可以从三个最小的习惯开始培养，容易形成正反馈。我在训练这套方法的过程中发现，通常坏习惯都是由另外的坏习惯连锁产生的，所以从最小的习惯开始改变，慢慢会产生马太效应。</p>
-<h3 id="第二步建立影响-容易程度坐标轴">第二步，建立【影响-容易程度】坐标轴</h3>
-<p>把刚才拆分出来的行为，全部放在下图的坐标轴中。越容易做（执行的能力越强）、对你影响越大（动机越强）的行为，越靠近右上角。</p>
-<p></p>
-<p>通常一次性的行为最容易执行（比如采购运动服）；那些需要多个步骤（比如用手机记录健身状态）比较难执行。</p>
-<p>最后，我挑选了三件对我影响最大也最容易的行为来执行：采购健身装备、拆分不同训练到不同时间、居家办公时去健身。</p>
-<p></p>
-<p>用同样的方法，我还制定了睡眠习惯的养成策略。</p>
-<p></p>
-<p>经过最近一个多月的练习，我也渐入佳境。我在坚持了一段时间后还买了专门记录健身的手机 App 来跟踪训练效果（虽然我也没寄希望能保持长期记录，但是能给我非常好的正向激励）。</p>
-<p></p>
-<h2 id="小结">小结</h2>
-<ul>
-<li>《福格行为模型》指出了人类行为产生的公式，即 行为 = 动机 · 能力 · 提示。</li>
-<li>从三要素入手，养成最小的微习惯，从而快速得到正向激励，能够帮我们快速建立好习惯。</li>
-<li>制定习惯养成计划时，先从习惯拆解出具体的，可执行的行为。再按行为的优先级选择最容易、影响最大的执行。</li>
-<li>某些行为依赖其他习惯，逐级拆解，同时养成三个微小的习惯，渐进式地改变生活状态吧。</li>
-</ul>
-]]></description></item><item><title>规范的错误信息</title><link>https://sund.site/posts/2022/write-error-message/</link><pubDate>Tue, 23 Aug 2022 22:18:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/write-error-message/</guid><description><![CDATA[<p></p>
-<p>本文整理了 Google 官方文档中关于错误信息的编写规范。适用于有一定编程经验，尤其从事业务开发的程序员。</p>
-<p>通过本文你可以：</p>
-<ul>
-<li>写出风格统一、用户友好的错误信息</li>
-<li>提高代码的可维护性，降低沟通成本</li>
-</ul>
-<p>Google 文档原文：<a href="https://developers.google.com/tech-writing/error-messages" target="_blank" rel="noopener noreffer ">Error Messages</a></p>
-<h2 id="基本原则">基本原则</h2>
-<ul>
-<li>错误不应该被掩盖 (Don&rsquo;t fail silently)</li>
-<li>遵循语言的规范 (Follow the programming language guides)</li>
-<li>实现完整的错误模型 (Implement the full error model)
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Tips<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content">包含错误码、错误内容、错误原因、处理方法</div>
-        </div>
-    </div></li>
-<li>避免吞掉问题根源 (Avoid swallowing the root cause)</li>
-<li>输出错误代码 (Log the error codes)</li>
-<li>快速抛出错误 (Raise errors immediately)</li>
-</ul>
-<h2 id="解释错误原因">解释错误原因</h2>
-<p>使用错误信息给用户解释原因时，应该遵循：</p>
-<ul>
-<li>具体，准确，避免含糊。</li>
-<li>在错误信息中包含用户输入的错误内容。如果输入的内容特别长：
-<ul>
-<li>渐进地显示，提供一个可展开详情的省略号。</li>
-<li>截断内容，只保留必要部分。</li>
-</ul>
-</li>
-<li>明确告诉用户，系统的要求和限制</li>
-</ul>
-<h2 id="解释如何处理问题">解释如何处理问题</h2>
-<ul>
-<li>对用户来说，错误信息必须有可操作性。也就是说，在解释了问题的原因后，说明如何解决这个问题。</li>
-<li>最好给用户提供一个例子。</li>
-</ul>
-<h2 id="清晰的错误信息">清晰的错误信息</h2>
-<ul>
-<li>简明扼要，使用主动语态。（这方面内容可以参考<a href="https://sund.site/posts/2022/technical-writing/" target="_blank" rel="noopener noreffer ">技术文档写作指南</a>）</li>
-<li>避免出现双重否定句式。</li>
-<li>让目标用户能够理解，即根据用户掌握的知识，提供有帮助的内容。</li>
-<li>专业术语应前后一致。</li>
-</ul>
-<h2 id="错误信息的格式">错误信息的格式</h2>
-<ul>
-<li>使用链接提供更多信息。</li>
-<li>渐进式呈现错误信息（比如可以展开详情的省略号）。</li>
-<li>错误提示应该贴近错误发生的位置。</li>
-<li>避免错误信息滥用字体或颜色。</li>
-<li>使用正确的语气:
-<ul>
-<li>不要告诉用户错在哪，告诉用户应该做什么。</li>
-<li>避免责备、幽默、道歉的语气。</li>
-</ul>
-</li>
-</ul>
-<h2 id="对后端开发的建议">对后端开发的建议</h2>
-<ul>
-<li>错误要有错误码</li>
-<li>可以在错误信息结构里提供一个指向错误解释的 ID，如：
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
-  <span class="nt">&#34;error&#34;</span><span class="p">:</span> <span class="s2">&#34;Bad Request - Request is missing a required parameter: -collection_name. Update parameter and resubmit. Issue Reference Number BR0x0071&#34;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
-</div>
-</div></li>
-</ul>
-]]></description></item><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/technical-writing/</guid><description><![CDATA[<p>本文内容摘录自 <a href="https://developers.google.com/tech-writing/overview" target="_blank" rel="noopener noreffer ">Technical Writing</a> （谷歌技术文档写作指南）的第一部分。</p>
-<p>本文适用于想要提高技术文档写作、技术领域日常沟通能力的读者，对于一些商务的、非文学性质的英语办公场景沟通，也能起一定帮助作用。</p>
-<p>阅读过本文的读者可以：</p>
-<ul>
-<li>提高在日常办公中清晰、准确、客观地传达概念和逻辑的能力。</li>
-<li>掌握英文技术文档写作规范。</li>
-</ul>
-<h2 id="词汇words">词汇（Words）</h2>
-<ul>
-<li>
-<p>对于已有的术语，不要重复发明新的词汇，可以用一个链接指向解释它的页面。</p>
-</li>
-<li>
-<p>如果有必要，可以在文档中直接定义新的术语，但如果术语比较多，最好建立一个术语对照表。</p>
-</li>
-<li>
-<p>文档各处出现的术语应该保持一致的名称或缩写。</p>
-</li>
-<li>
-<p>关于缩写：第一次出现要用<strong>粗体</strong>写全称并用括号指明缩写，之后的文章中不要反复混用全称和缩写。</p>
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>举例<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content">This document is for engineers who are new to the <strong>Telekinetic Tactile Network</strong> (<strong>TTN</strong>) or need to understand how to order TTN replacement parts through finger motions.</div>
-        </div>
-    </div>
-</li>
-<li>
-<p>如果一个术语出现频率不高，请不要使用缩写。</p>
-</li>
-<li>
-<p>使用缩写的情况有：1. 缩写明显更简短；2. 该术语出现频率很高。</p>
-</li>
-<li>
-<p>谨慎使用代名词（It，they，that 等）。</p>
-<ul>
-<li>代名词一定要出现在它所指代的名词之后。</li>
-<li>如果代名词远离它指代的名词（超过 5 个单词），就不用代名词。</li>
-<li>在名词和代名词之间出现第二个名词，会产生歧义，应避免这种情况。</li>
-</ul>
-</li>
-</ul>
-<p>类比计算机编程语言：</p>
-<p>缩写 = 对术语的一层抽象。读者需要花费更多脑力去把它展开成对应的名词。</p>
-<p>代名词 = 指针。它容易引起歧义，所以要避免在读者大脑中引起「空指针」错误。</p>
-<h2 id="主动语态active-voice">主动语态（Active voice）</h2>
-<ul>
-<li>技术文档中应尽量使用主动语态。
-<ul>
-<li>被动语态在读者大脑中需要额外的加工转换才能被理解。</li>
-<li>被动语态用来间接地表达行为，容易引起混乱。</li>
-<li>有些被动语态省略了行为主体，会迫使读者猜测主语是谁。</li>
-</ul>
-</li>
-<li>如果使用被动语态，应正确使用过去分词的各种形式和介词（如 as，by）。</li>
-<li>祈使句的动词（命令式动词）应该使用主动语态。</li>
-<li>科技论文中经常出现被动语态（如 It has been suggested that&hellip;），这种写法并不能传递更多信息，很多科学期刊也开始鼓励使用主动语态。</li>
-</ul>
-<h2 id="炼句clear-sentencesshort-sentences">炼句（Clear sentences，Short sentences）</h2>
-<ul>
-<li>
-<p>选择准确、有力、具体的动词。减少不精确的、软弱的或通用的动词。
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>错误的例子<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content">is，are，occur，happen</div>
-        </div>
-    </div></p>
-</li>
-<li>
-<p>Be 动词和通用动词可以用，但它们通常是一些不良写作习惯的信号，如</p>
-<ul>
-<li>句子中缺少行为主体</li>
-<li>句子使用了被动语态</li>
-</ul>
-</li>
-<li>
-<p>减少 there be 句式，把 there be 句式中的主语和动词提炼出来
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>错误的例子<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content"><p>避免这样用：There is no guarantee that the updates will be received in sequential order.</p>
-<p>应改为：Clients might not receive the updates in sequential order.</p>
-</div>
-        </div>
-    </div></p>
-</li>
-<li>
-<p>尽量少用或不用形容词和副词，因为这些词汇过于主观。</p>
-</li>
-<li>
-<p>尽量使用短的句子。短句比长句更易读、易维护、不易犯错。</p>
-<ul>
-<li>每一个句子只表达一个观点。</li>
-<li>长句尽量转换成列表。</li>
-<li>用简洁表达，去掉多余的词汇</li>
-<li>减少从句。</li>
-<li>正确区分 that 和 which 从句。</li>
-</ul>
-</li>
-</ul>
-<h2 id="列表和表格lists-and-tables">列表和表格（Lists and tables）</h2>
-<ul>
-<li>
-<p>正确区分有序列表（数字列表，numbered lists）和无序列表（圆点列表，bulleted lists）。</p>
-</li>
-<li>
-<p>把句内列举的项（embedded list）转换成无序列表，如：</p>
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>举例<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content"><p>The llamacatcher API enables callers to create and query llamas, analyze alpacas, delete vicugnas, and track dromedaries.</p>
-<p>应换成：</p>
-<p>The llamacatcher API enables callers to do the following:</p>
-<ul>
-<li>Create and query llamas.</li>
-<li>Analyze alpacas.</li>
-<li>Delete vicugnas.</li>
-<li>Track dromedaries.</li>
-</ul>
-</div>
-        </div>
-    </div>
-</li>
-<li>
-<p>保持列表项之间的平行关系（避免把不同层级的东西混在一列）。</p>
-</li>
-<li>
-<p>在使用有序列表时，用一个命令式动词开头，如：</p>
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>举例<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content"><ol>
-<li>Download the Frambus app from Google Play or iTunes.</li>
-<li>Configure the Frambus app&rsquo;s settings.</li>
-<li>Start the Frambus app.</li>
-</ol>
-</div>
-        </div>
-    </div>
-</li>
-<li>
-<p>只有列表每一个项都是句子时，才使用首字母大写和句号，否则不需要。</p>
-</li>
-<li>
-<p>使用表格应遵循的原则：</p>
-<ul>
-<li>每列都有标题</li>
-<li>单元格字数尽量少</li>
-<li>尽量保证每一列的数据类型相同</li>
-</ul>
-</li>
-<li>
-<p>表格或列表的前面，用一句话来介绍上下文</p>
-</li>
-</ul>
-<h2 id="段落paragraphs">段落（Paragraphs）</h2>
-<ul>
-<li>以中心句开头。</li>
-<li>每段只围绕一个主题写作，不要包含其他段落中出现的主题内容。</li>
-<li>三到五句话一段，不要超过七句。</li>
-<li>段落能够解释清楚三件事： what，why，how。</li>
-</ul>
-<h2 id="读者audience">读者（Audience）</h2>
-<blockquote>
-<p>好的文档 = 读者要完成任务所需的知识和技能 - 读者已有的知识和技能</p>
-</blockquote>
-<ul>
-<li>
-<p>定义读者的身份（开发者、科学家、技术经理、未毕业的工程专业学生、毕业生、非技术人员……）。</p>
-</li>
-<li>
-<p>了解目标读者对不同知识的掌握程度。</p>
-</li>
-<li>
-<p>确定读者需要什么，读过文档能学到什么。比如在设计规范开头这样写：
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>举例<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content">After reading the design spec, the audience will learn the following: …</div>
-        </div>
-    </div></p>
-</li>
-<li>
-<p>满足读者：</p>
-<ul>
-<li>解释必要的词汇和概念。</li>
-<li>对新手友好。</li>
-<li>使用简单的英语词汇。</li>
-<li>对不同文化、语言环境的读者友好，避免使用成语或俗语。</li>
-</ul>
-</li>
-</ul>
-<h2 id="文档documents">文档（Documents）</h2>
-<ul>
-<li>声明文档的适用场景（scope）。
-<ul>
-<li>最好能声明哪些场景不适用（non-scope），不适合哪些读者阅读。这不仅对读者有用，对写作者也能限制其写作的范围。</li>
-</ul>
-</li>
-<li>声明目标读者。
-<ul>
-<li>最好能指出读者在阅读前应该具备的知识和经验。</li>
-</ul>
-</li>
-<li>在开头部分概括文档的关键点
-<ul>
-<li>可以通过比较、对比旧观点的手法，让读者明白你要表达的新观点。</li>
-</ul>
-</li>
-<li>按读者需要组织文档格式。
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>好的大纲举例<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content"><ol>
-<li>Overview of the algorithm
-<ul>
-<li>Compare and contrast with quicksort, including Big O comparisons
-<ul>
-<li>Link to Wikipedia article on quicksort</li>
-</ul>
-</li>
-<li>Optimal datasets for the algorithm</li>
-</ul>
-</li>
-<li>Implementing the algorithm
-<ul>
-<li>Implementation in pseudocode</li>
-<li>Implementation tips, including common mistakes</li>
-</ul>
-</li>
-<li>Deeper analysis of algorithm - Edge cases - Known unknowns</li>
-</ol>
-</div>
-        </div>
-    </div></li>
-</ul>
-<h2 id="标点符号punctuation">标点符号（Punctuation）</h2>
-<div class="details admonition note open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>Note<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content">这部分原文涉及英文标点符号的用法，大部分和汉语规则近似，略过不译。以下是我在排版方面的经验：
-大多数中国人对英文排版易错的地方是空格的滥用。可以参考这篇文章： <a href="https://zhuanlan.zhihu.com/p/110266694" target="_blank" rel="noopener noreffer ">英文标点要如何排版？</a>。</div>
-        </div>
-    </div>
-<p>概括起来：</p>
-<ul>
-<li><code>, ; : . ? !</code> 这些符号后加空格</li>
-<li><code>() '' &quot;&quot;</code> 这些成对的符号左右加空格，内部不加空格</li>
-<li><code>/ - _</code>不加空格</li>
-</ul>
-<h2 id="总结">总结</h2>
-<ul>
-<li>统一使用术语。</li>
-<li>避免模棱两可的代名词。</li>
-<li>主动语态优于被动语态。</li>
-<li>选择具体的动词而不是模糊的动词。</li>
-<li>每句话集中在一个想法上。</li>
-<li>将一些长句子转化为列表。</li>
-<li>消除不必要的词。</li>
-<li>有顺序时使用有序（数字）列表，无顺序时使用无序（圆点）列表。</li>
-<li>保持列表项目平行（概念层次相同）。</li>
-<li>用祈使（命令性）的词作为有序列表项的开头。</li>
-<li>适当地介绍列表和表格。</li>
-<li>开宗明义，明确段落的中心点。</li>
-<li>将每一段落集中在一个主题上。</li>
-<li>确定你的读者需要学习什么。</li>
-<li>使文档适应读者。</li>
-<li>在文档的开头指出关键信息。</li>
-</ul>
-<h2 id="延伸阅读资料">延伸阅读资料</h2>
-<ul>
-<li><a href="https://docsfordevelopers.com/" target="_blank" rel="noopener noreffer ">Docs for Developers</a></li>
-<li><a href="https://www.oreilly.com/library/view/software-engineering-at/9781492082781/" target="_blank" rel="noopener noreffer ">Software Engineering at Google</a></li>
-<li><a href="https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/" target="_blank" rel="noopener noreffer ">Gitlab Technical Writing Fundamentals courese</a></li>
-</ul>
-]]></description></item><item><title>《分手的决心》细节分析</title><link>https://sund.site/posts/2022/decision_to_leave/</link><pubDate>Sun, 14 Aug 2022 17:01:56 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/decision_to_leave/</guid><description><![CDATA[<blockquote>
-<p>把那部手机丢进海里，让它陷入深处，没人能寻到。</p>
-</blockquote>
-<p>看完《分手的决心》，我决心水一篇。今天跟大家一起分析分析电影里的细节。</p>
-<h2 id="影片开头的支线情节">影片开头的支线情节</h2>
-<p>电影的一开头，刑警张海俊在追查两起凶杀案。分别是知九洞杀人案和女主宋瑞莱（汤唯饰）丈夫坠山案。第一次看时令我不解的是，前一起案件看似和整个剧情毫无关系，为什么导演要花那么多时间讲一个支线故事呢。</p>
-<p>让我们回顾一下知九洞案：凶手洪山五曾经和女友吴佳人非常相爱，后来吴与小凡（后来的死者）偷情，得知被绿后的洪山五愤而刺死情敌。在刑警男主一番抓捕之后，洪山五被逼到天台边缘跳楼自杀。他在自杀前，特别希望转告女友吴佳人：「虽然我为了你受苦，但如果不是你，我的人生将是一场空」。</p>
-<p></p>
-<p>这里印证了前面情节中，知九洞案另一位嫌疑犯，洪山五的朋友（李智久）的口供。</p>
-<blockquote>
-<p>他那个人，宁可自杀也不会回监狱，因为回忆太过美好。</p>
-</blockquote>
-<p>这句话点出洪山五选择跳楼自杀的原因——当初和女友在一起时的美好回忆，令他陷在过去中，无法面对现实。</p>
-<p>这是整个故事的基调，也暗示了男女主人公的结局。</p>
-<p>而洪山五跳下的那栋楼，和女主丈夫奇都秀坠亡的那座山，在男主的俯视角镜头里形成了呼应。「山」在这里暗示了「稳固的关系」，洪山五为其而死，奇度秀被其所害。</p>
-<h2 id="正篇">正篇</h2>
-<p>下面是我画的一张主要人物关系图。如果忘了剧情可以参考一下。</p>
-<p></p>
-<h3 id="山与海的隐喻">山与海的隐喻</h3>
-<p>回到主线，女主宋瑞莱的名字里已经透露了重要的信息，「瑞」字里有「山」，男主张海俊的名字里有「海」。中文译者把线索藏在两位主角的名字里，其用心真是让我惊叹啊。另外故事里也反复出现「山海经」、水纹封面的笔记等元素。</p>
-<p>从女主宋瑞莱的角度看，片中反复出现她在「山」和「海」两种状态的摇摆。</p>
-<p></p>
-<p>第一次是在警局问话时，她提到「智者乐水，仁者乐山，我不是智者，所以我喜欢水」。这明显是撒谎，是为了解释她和丈夫吵架的借口。因为在后面情节中，她反复提到她的母亲在临死前跟她说「去找你姥爷在韩国老家的山吧」。这里出现的山，并不仅仅是现实中的锄头山，也是女主心里追寻的山。</p>
-<p></p>
-<p>而后半段中，女主和男主两人在雪中爬上锄头山之后，女主说，「母亲告诉我，去韩国吧，去那里就有这座山」。</p>
-<p></p>
-<p>可见，女主身世坎坷，来到韩国后心中一直追寻稳定的依靠，母亲的话冥冥中指引她「去那里吧，那里有你的山」。可是到韩国后第一任丈夫的长期虐待，让宋瑞莱仇恨眼前的山，而把男主张海俊视作是可以真正依靠的山。</p>
-<p>而站在男主的视角，他的山，是枷锁。</p>
-<p>山稳固有形，水流动无形。男主刑警张海俊，有个在核电站工作、周末同房的妻子。两人的关系是稳固的，同时也是空洞的。男主经常夜里一个人去看海。而他的妻子对此不屑一顾。</p>
-<blockquote>
-<p>男主：要我说，我是大海的男子汉！</p>
-</blockquote>
-<blockquote>
-<p>夫人：什么大海的男子汉，明明内陆才是故乡。</p>
-</blockquote>
-<p></p>
-<p></p>
-<p>男主想要逃避的是眼前的山，在他和女主相遇的一瞬间，他就清晰地知道，他们是同一类人。</p>
-<h3 id="两部手机">两部手机</h3>
-<p>故事的第一个高潮，男主发现女主作案的铁证之后，陷入因自己沉迷感情而丧失破案机会的「崩溃」中。男主戳穿宋瑞莱的作案过程之后，仍然选择抛弃自己的身份，和宋瑞莱成为共犯（可能已经是他人生剧本中早已经注定的安排），他对宋瑞莱说：</p>
-<blockquote>
-<p>把那部手机丢进海里，让它陷入深处，没人能寻到。</p>
-</blockquote>
-<p>对于宋瑞莱来说，这句话击中了她心里最柔软的地方。当男主在她面前放弃了自己最重视的东西时，她发现自己也已经没有办法从这段关系里挣脱，她在男主离去后，留下一滴眼泪。</p>
-<p>讲到这里，电影里最重要的线索就是手机。片中一共有两部手机，第一部女主的红色手机记录了宋瑞莱杀死丈夫的线索，另一部第二任丈夫的手机，记录了男主保护宋瑞莱，掩盖杀人线索的录音。</p>
-<p>这两部手机的归宿也很耐人寻味。</p>
-<p>第一部手机（记录女主罪证），男主希望丢掉，却被女主保留下来。</p>
-<p>另一部手机（记录男主罪证）是宋瑞莱主动丢到大海里，但是被男主捞上来的。</p>
-<p>这两部犯罪的证据，成为双方为了保护对方，丢不掉的羁绊。</p>
-<p>故事的结局，宋瑞莱没有选择丢弃手机，而是带着这段回忆，和手机一起消失在无人知道的大海里。她在临别时说：</p>
-<blockquote>
-<p>海里捞出来的手机，你重新丢了吧，丢到更深的海里。</p>
-</blockquote>
-<p>没有说出的话，大概是「忘了我吧，但是我会记得你」。</p>
-<h3 id="婚戒">婚戒</h3>
-<p>电影的另一个反复出现的线索是婚戒。</p>
-<p>影片里，男主与夫人羞羞之后，导演给了婚戒一个特写，男主有一个把婚戒握起来的小动作，暗示了男主和夫人之间看似恩爱的表面下，是双方都不愿意说破的冷漠。</p>
-<p></p>
-<p></p>
-<p>而在发生丈夫坠山事件之后，宋瑞莱在警察局审问中途去了一趟洗手间，她发现手上的婚戒没有戴，然后悄悄戴上了。也说明她似乎在掩饰着什么。</p>
-<p></p>
-<p>在女主的第二任丈夫死后，男主押送女主的汽车上，男主的手上仍然有婚戒。</p>
-<p></p>
-<p>但是片尾，两个人第二次同坐一辆车时，男主的婚戒已经消失了，而宋瑞莱的手紧紧握住了张海俊：</p>
-<p></p>
-<h3 id="乌鸦的羽毛">乌鸦的羽毛</h3>
-<p>另一个多次出现的暗示，是黑色羽毛。女主喂养的小猫为了报答主人，弄死了一只乌鸦叼到女主身边。这正是后半段女主杀夫护男主的伏笔。</p>
-<p></p>
-<p>片中第二次和第三次出现乌鸦羽毛，分别在男主调查两任丈夫死亡线索时一闪而过。其实男主早就把两任丈夫的死亡，同女主紧紧绑定在一起了。</p>
-<p></p>
-<p></p>
-<h2 id="尾声">尾声</h2>
-<p>其实电影里还有很多细节，比如女主的很多韩语对白都是从电视剧里学的；宋瑞莱两任丈夫分别死在山上和水里；影片里的城市以「雾」闻名，而雾是介于有形和无形之间的东西……等等。</p>
-<p>最后送上汤唯的一段表情，宋瑞莱开车前往海边时，张海俊在电话里问她「我什么时候说过爱你？」，宋瑞莱在短短几秒钟内的四个眼神。</p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-]]></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in Posts on Steve Sun</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Tue, 27 Jun 2023 14:46:59 +0800</lastBuildDate><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Go 内存泄漏常见模式</title><link>https://sund.site/posts/2023/goroutine-leak/</link><pubDate>Tue, 27 Jun 2023 14:46:59 +0800</pubDate><guid>https://sund.site/posts/2023/goroutine-leak/</guid><description>最近在工作中排查 Go 语言内存泄漏问题时，发现这篇 Uber 写的博客，其中分享了几种常见的 goroutine 内存泄漏模式，于是把整理了 goroutine 的相关问题，希望更多人搜索到到这篇文章，帮助大家快速定位内存泄漏问题。
+Goroutine 内存泄漏的原因 Go 语言的内存泄漏通常因为错误地使用 goroutine 和 channel。例如以下几种情况：
+在 goroutine 里打开一个连接（如 gRPC）但是忘记 close 在 goroutine 里的全局变量对象没有释放 在 goroutine 里读 channel， 但是没有写入端，而被阻塞 在 goroutine 里写入无缓冲的 channel，但是由于 channel 的读端被其他协程关闭而阻塞 在 goroutine 里写入有缓冲的 channel，但是 channel 缓冲已满 这几种情况，通常掺杂在复杂的代码里逻辑里，很难调试发现问题。因此衍生出以下几种日常工作中最容易出现问题的模式。
+常见 Goroutine 内存泄漏模式 Premature Function Return /功能过早返回 一个 goroutine 要写入 channel，但是在另一个端意外退出导致 channel 读取的代码没有执行。
+func Example() { a := 1 c := make(chan error) go func() { c &amp;lt;- err return }() // do something if a &amp;gt; 0 { return } // do something err := &amp;lt;-c } 代码中主进程在if a &amp;gt; 0 处 return，导致 channel 无法写入而被阻塞。</description></item><item><title>Kong网关极简入门</title><link>https://sund.site/posts/2023/kong-gateway/</link><pubDate>Fri, 23 Jun 2023 10:36:36 +0800</pubDate><guid>https://sund.site/posts/2023/kong-gateway/</guid><description>基本概念 Kong Gateway is a Lua application running in Nginx. Kong Gateway is distributed along with OpenResty, which is a bundle of modules that extend the lua-nginx-module.
+Kong 是一个基于 Nginx 上运行的 Lua 程序。它改善了 Nginx 基于静态配置的缺点，可以动态添加插件和热部署。
+Kong 的基础模块 Service是后端服务的抽象。
+Routes是 client 到后端服务的路由规则的抽象。如，为不同的 client 设置不同的认证规则。
+Kong 的 routes 有两种模式 traditional_compat 和 expressions 。
+traditional_compat ：旧的基于通配符等匹配优先级的模式。 expressions ：新的基于表达式的匹配模式。 Upstreams是一个运维对象，在 Services 和真正的后台 API 服务之间，用来负载均衡。
+Plugins是用 lua 或 go 编写的插件，分为 Kong 官方提供的插件和第三方插件。
+Kong 的工作原理 Kong 支持三类协议：HTTP/HTTPS，TCL/TLS 和 GRPC/GRPCS。每种协议由不同的参数组成：</description></item><item><title>用户故事地图</title><link>https://sund.site/posts/2023/user-story-mapping/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><guid>https://sund.site/posts/2023/user-story-mapping/</guid><description>用户故事是软件开发和项目管理中的常用术语。主旨是以日常语言或商务用语撰写句子，是一段简单的功能表述。以客户或使用者的观点撰写下有价值的功能、引导、框架来与使用者进行互动，进而推动工作进程。可以被认为是一种规格文件，但更精确而言，它代表客户的需求与方向。
+在敏捷开发需求分析阶段，要使用一些流程工具，如用户故事地图，来把那些抽象、模糊的用户需求，转化为具体的、分优先级的、模块化的用户故事。
+一个用户地图看起来是这样的。
+绘制用户故事地图的过程 绘制用户故事地图应遵循一些基本原则：
+边思考边记录，把所有过程可视化到便签纸上 聚焦整体，不要过早陷入细节 为成果排优先级，而不是功能 验证产品要解决的问题是否真实存在 使用具象化方案，比如高保真原型或手绘 通过原型和用户测试来验证想法 用户地图的目的是让团队能达成有效沟通，提出问题和评估工作量 估算工作量时，度量越频繁，准确度越高 使用目标层级 在拆分用户故事时，应遵循逐层拆分的原则，每一层级只聚焦这一层级的任务颗粒度，不要过早陷入细节。
+首先是设定宏观的活动，比如把用户需求分解为几个大的活动，如查看账户、存钱等。
+接下来是梳理主干故事。针对每一个活动，拆分成一个个步骤，这些步骤就是主干故事。每一个主干故事：
+是一个动词短语 故事和故事之前应该保持同样的层级 从左到右按时间顺序排列，过程中想到任何中间环节都可以随时插入改变顺序 第三步是针对每一个主干故事，通过头脑风暴的形式补充更多小的用户故事，用便签纸贴在下边。
+最后按优先级，把重要的用户故事放在上面，不那么重要的放在下边。然后横向划分出不同的泳道，把故事按特定的目标成果划分为不同的阶段。
+比如第一阶段完成基本的功能开发，那么横向的第一排所有用户故事就是第一个版本需要完成的工作。
+这样就完成了用户故事的设计。我们重新梳理一下过程：
+划分重要的活动 梳理主干故事 完善用户故事 团队头脑风暴补充遗漏的用户故事 从上到下排优先级 横向切分用户故事，划分出每一个迭代的工作和关键成果 运用设计思维 上面介绍了用户故事的绘制过程，但是其实找到真正的用户需求点才是最难的。为了从特定领域的客户或用户那里挖掘出有价值的需求，通常需要使用设计思维（Design Thinking）来帮助团队沟通、寻找焦点问题。
+设计思维一共有五步。
+共情：沟通，找到问题。 定义：聚焦若干重要问题，详细阐述。 想法：每一个问题构思出多个解决方案。 原型：制作具体的可视化的原型。 测试：于用户一起完成测试，收集反馈。 组成探索团队 一个探索团队由三名重要角色组成：
+懂产品和需求的 Product Owner 懂设计和交互的 UX Designer 懂技术的 Senior Developer 前期的需求探索阶段，应该由这支组成人数不超过 5 人的团队完成，要避免委员会设计（即团队多数成员参与到设计过程中，导致混乱和不一致）。
+前期排列任务优先级时也应遵循这样的优先级：
+业务目标 &amp;gt; 客户/用户目标 &amp;gt; 功能</description></item><item><title>Python 依赖管理工具的研究</title><link>https://sund.site/posts/2023/python-packaging/</link><pubDate>Thu, 19 Jan 2023 08:05:27 +0800</pubDate><guid>https://sund.site/posts/2023/python-packaging/</guid><description>太长不读 如果你从事工程项目，poetry 是目前最好的方案，但是如果你不喜欢 Python 的 virtualenv，可以试试 pdm。
+混乱的 Python Python 的依赖管理工具 pip 一直被众多开发者吐槽。从我个人角度，pip 有三点致命缺陷：
+无法解决 Python 依赖环境的隔离问题 依赖管理文件 requirements.txt 无法真正开箱即用 打包部署非常麻烦，需要手动配置 环境隔离问题 Python 的依赖库可以安装到系统全局，也可以安装到用户目录（/home/${USER}/.local）。但如果你同时管理多个 Python 项目，就需要将不同项目的依赖拆分到不同的文件夹分开管理。
+传统方式是基于 virtualenv 创建隔离的 Python bin 文件和项目依赖的虚拟环境（所谓虚拟环境并不是虚拟机，只是个绑定 terminal session 的命令环境）。这种方式的缺点是：
+开发者需要经常关注“我现在处于哪个项目目录？我需要切换到当前虚拟环境里吗？”之类的问题。 virtualenv 只解决环境隔离，但是无法同步更新依赖文件、打包发布。 依赖安装问题 Python 管理依赖的手段，最早是手动执行pip install xxx来安装依赖，最后 pip freeze 来导出依赖列表到一个 requirements.txt 文件里。但是这个 txt 文件非常令人困惑。
+不像 NodeJS 那么方便，想要升、降级某个依赖版本，无法自动同步到 txt 文件里。 平铺式地列出了所有一级、二级依赖包（即依赖包的依赖包）。因为 Python 某些依赖又基于系统上安装的 C 库版本，这就导致不同系统环境上执行 pip install -r requirements.txt 得到的效果并不一致，经常报错。 打包部署问题 Python 一般使用 wheel 打包二进制，它只解决打包问题，环境依赖是靠 pip 和 setuptools 完成，所以使用 wheel 你仍然要操心环境隔离和依赖管理问题。</description></item><item><title>构建一幅图景，了解一个环境</title><link>https://sund.site/posts/2022/essay-2022-12-04/</link><pubDate>Sun, 04 Dec 2022 07:10:32 +0800</pubDate><guid>https://sund.site/posts/2022/essay-2022-12-04/</guid><description>项飙在《把自己作为方法》里谈到怎么做农村调查时说，他有个三舅舅，是个非常精通农村社会生态的人。三舅舅知道村里发生的大小事，知道这个体系如何运作，权力结构是什么。项飙把这种对周遭环境的认识能力概括为图景：
+画这个图不是机械地反应世界，而是要精确地反应世界。什么是真正的精确？真正的精确就是你把握住它内在的未来方向…… ”图景“有两重意思，一是现在的概括，再一个是未来可能的走向。
+同样，昨天看社交媒体有人说，大众对当下发生的事情经常过度反应。就像股票每天涨涨跌跌，好的投资者不会把短期的波动太放在心上。但是社交媒体会对热点事件产生集体共鸣，导致大家对短期变化敏感，对事情发生的本质原因失去兴趣。
+这让我想起最近读《禅与摩托车维修艺术》开头的一段话：
+有什么新鲜事？这是人们最感兴趣的问题，但是也最不着边际，可以没完没了问下去。如果真探讨它的答案，所得的只不过是一堆琐碎的跟风事物…我宁可问这样的问题，什么是最好的？
+这有点像软件架构，我们总说系统模型，模型是现状的反应吗？是，又不完全是，它是现状的抽象，是包含了未来走向的东西。
+想起我前公司的同事朱老师常把系统性思考挂在嘴边。比如有一次我打电话问他：怎么做高并发场景的压力测试呢？朱老师先反问我：你们的测试基于哪一种模型呢？是“手机打电话”还是“银行提款”？
+我问他这两种模型怎么讲？他说“手机打电话”就是客户端可以无限增加，流量和客户端增长成比例；“银行提款”是顾客无论怎么增加，接待窗口只有固定数量，多余的顾客只能排队。系统只开放有限的资源，无论流量怎么增长。
+你看，这么一解释，图景就出来了。这就是跟明白人聊天的乐趣，不用花心思解释 context。
+Alan Key 在一次技术演讲里说：
+You need to solve a context, not just a problem.
+我们生活中通常遇到两类问题，底下干活的人没有构建起工作内容的图景，上面管理的人没有构建起生态系统（企业发展方向、部门协作、社区运营）的图景。而大家着眼于问题本身，因为解决问题本身容易而快速。
+另一方面，这种观点在与人相处时也适用。情绪控制不好的人通常对当下反应过度，听到不爱听的话、和自己相反的意见就勃然大怒。其实只要保持一定的钝感，对他人以更高的视角观察，心态就会平和很多。
+还是回到项飙，他有一篇采访里讲到，中国低层社会的功能性过剩，而生态性不足。这句话怎么理解呢？你可以很方便地点外卖，外卖员不管多远都能快速送到你手里。但是楼下小区的保洁员是从哪来的你丝毫提不起兴趣，对身边发生的一切都漠不关心。
+这是中国年轻人在城市中存在感微弱的真正原因，我们没把自己融入 context 里，也就构建不出三舅舅那样的图景。
+回想我之前在 TW 工作时，同事关系是网状的，HR 会随时找我去面试，对于经常帮忙招聘的同事，HR 们也会回赠一些小礼物；每个人同时为不同的项目工作，既独立又联结。有时候会成为敏捷教练，有时会被临时拉去做咨询师。我翻看微信，200 多个好友里，有 104 个是 TW 的同事。 这种关系是生态性的，每个人对工作环境都有一幅完整的图景。而另一些企业，总强调责任意识，但是工作中的功能性压倒性地占据了上风。同事之间是机械地组织起来，完成上级分配的任务。这种状态是无从谈起什么协作、效率的。
+沈奕斐在她自己的播客节目里和她老公谈到工作时说，同事关系是要高于朋友的，因为一天里大部分时间你要和同事度过，要完成高效的协作必须建立在深层的互相认同之上。
+所以，我们是不是要多去体察周围的人和事呢。完成工作和生活的目标固然重要，但正如徒步旅行，如果只是两点一线地直达目标，就只是一名过客，而主动探索小路和岔路，才能构建起一幅对周遭环境的完整图景。</description></item><item><title>Implementing Prometheus Exporter for Fluentbit</title><link>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</link><pubDate>Thu, 24 Nov 2022 12:26:23 +0800</pubDate><guid>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</guid><description>Background Fluent-bit is a great tool for logging and monitoring, many teams are using it to collect metrics and logs. Prometheus is also a popular tool for metrics analysis, but if you want to output Fluent-bit data to Prometheus, the only way is to use the node-exporter input plugin, which has fixed metrics and data format.
+In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.</description></item><item><title>渐进式地改变生活习惯——我对福格行为模型的理解</title><link>https://sund.site/posts/2022/fogg-behavior-model/</link><pubDate>Tue, 01 Nov 2022 20:23:55 +0800</pubDate><guid>https://sund.site/posts/2022/fogg-behavior-model/</guid><description>我和失眠的斗争 我经常被失眠折磨。也尝试过各种办法：睡前洗热水澡、手机定时关闭、每天跑步……我发现这些方法都或多或少发挥了作用，但是最终不是难以坚持，就是效果越来越差。我最近读到一本书——《福格行为模型》，让我重新审视这几年和失眠的斗争，从另一个角度认清习惯，了解它是如何兴致勃勃地启动，又如何在挫折过后被放弃。我觉得《福格行为模型》是一本讲到了问题本质的书，它的道理非常凝练，甚至可以用一个公式概括。但是它却有非常强的指导性，按照书中的方法，我已经在最近一个月大大改善了睡眠质量。也希望读完这篇文章，你也有兴趣看一看这本书。
+下面为了方便理解，我把书的内容分为理论和实践两部分。
+理论部分：人的行为可以被设计 在这个由商业主导的世界里，有一个道理显而易见：人的行为可以被设计。如何让顾客多在广告前停留从而提高销售业绩；游戏公司如何引导玩家沉迷游戏；抖音如何用短视频杀死人们的业余时间……这种种的商业行为，都经过精密的设计。这些使人无法自拔的行为设计，能不能反过来让我们养成好的习惯呢？答案是肯定的。
+福格教授给出了一个公式，它代表行为（Behavior）产生的三要素：动机（Motivation）、能力（Ability）、提示（Prompt）。
+B = M A P
+动机 M 越强，行为越有可能发生；人自身达成行为的能力 A 越强，行为也越可能发生。即行为由动机和能力共同作用产生。此外，行为满足前边两种条件也不一定发生，它需要一个触发开关，即提示 P。
+这张图展示了一条曲线，当（动机-能力）的坐标落在曲线上方，此时如果给行为一个提示，行为就会立刻发生。
+比如，当一个母亲的孩子被熊攻击时，母亲会毅然去救孩子。此时，孩子被攻击是提示，母亲虽然能力很弱，但是保护孩子的动机极强，使得上图中母亲的坐标落在了曲线上方。这样救孩子的行为就自然而然产生了。
+黄金行为有三个标准：
+这个行为能让你实现愿望（影响） 你想做这个行为（动机） 你可以做到（能力） 这也能解释习惯的产生和磨灭。当一个人意识到自己肥胖（提示），他决定开始减肥，他的动机很强，此时虽然他（减肥的）能力很弱，但是他减肥的行为却因强烈的动机而发生了。但是随着时间推移，动机变弱，使得他的坐标滑落到曲线下方。这时减肥的行为就可能终止。这就是大部分人从捡起习惯到放弃习惯的过程。这里引出了另一个重要理论。
+人的动机是不稳定的，主观改变动机非常困难。
+你不能直接从动机入手去解决问题。——福格
+因为人心理状态这种不确定性，所以福格建议，最好按照提示 - 能力 - 动机的优先级，去打造（或是戒除）行为习惯。
+首先是通过时间、空间、心情等条件，触发行为。福格称其为锚点。锚点必须是明确、不含糊的最后行为。当这个锚点出现时，就自动提示你去完成你要做的事情。
+其次是降低能力门槛。如学习技能、购买工具、降低问题规模等，使能力满足行为触发的条件。其中降低问题规模的方法就是我们通常说的微习惯，如果想要每天锻炼身体，那么就应该从每天做一个俯卧撑开始，一点点提高运动量。这个行为必须是即便阴天下雨，你心情不好，工作疲惫，也能轻易做到的。
+另外，重复做也是会降低行为的难度，作者鼓励大家用高频率的小成功来养成习惯。
+最后也是最难的是正确的动机，动机必须出自你的真实意愿，你不能从网上或者成功人士那里获得动机。一个匹配我们行为的动机，必须能切实给我们带来好处。
+实践部分：绘制地图，重新设计我们的日常 讲完了理论，终于可以实操了。
+第一步，围绕习惯找出行为 在一张白板或白纸中间写下你希望养成的习惯。以我自己为例，我希望保持固定节奏的健身习惯。
+然后是头脑风暴。通过发散思维，把影响这个习惯的因素全部写下来。福格在原书中描述的是找出影响习惯的行为，但是直接写出行为很困难，所以我先把所有因素罗列出来，再一点点推导出行为。
+比如，影响我保持健身频率的因素之一是天气冷容易感冒。我从这点入手分析了原因：一方面健身房人多导致换衣、器械使用需要长时间等待。另一方面衣服保暖做的不够。所以最后我得到两个影响健身的行为：
+在人相对少的时间段去健身房 购买轻薄但是保暖性较好的运动服（这是一次性任务） 同理，上班疲惫也是影响因素，我得到了两个行为：
+拆分不同训练方式到一周里的不同工作日，以避免过度运动 利用居家办公的那几天时间下班去健身 请你结合自己的特点，找出所有影响的因素并对应到多个行为上去。注意有些行为依赖于养成另外一些习惯， 比如要健身的前一天睡眠充足，就依赖好的睡眠习惯。作者建议最开始可以从三个最小的习惯开始培养，容易形成正反馈。我在训练这套方法的过程中发现，通常坏习惯都是由另外的坏习惯连锁产生的，所以从最小的习惯开始改变，慢慢会产生马太效应。
+第二步，建立【影响-容易程度】坐标轴 把刚才拆分出来的行为，全部放在下图的坐标轴中。越容易做（执行的能力越强）、对你影响越大（动机越强）的行为，越靠近右上角。
+通常一次性的行为最容易执行（比如采购运动服）；那些需要多个步骤（比如用手机记录健身状态）比较难执行。
+最后，我挑选了三件对我影响最大也最容易的行为来执行：采购健身装备、拆分不同训练到不同时间、居家办公时去健身。
+用同样的方法，我还制定了睡眠习惯的养成策略。
+经过最近一个多月的练习，我也渐入佳境。我在坚持了一段时间后还买了专门记录健身的手机 App 来跟踪训练效果（虽然我也没寄希望能保持长期记录，但是能给我非常好的正向激励）。
+小结 《福格行为模型》指出了人类行为产生的公式，即 行为 = 动机 · 能力 · 提示。 从三要素入手，养成最小的微习惯，从而快速得到正向激励，能够帮我们快速建立好习惯。 制定习惯养成计划时，先从习惯拆解出具体的，可执行的行为。再按行为的优先级选择最容易、影响最大的执行。 某些行为依赖其他习惯，逐级拆解，同时养成三个微小的习惯，渐进式地改变生活状态吧。</description></item><item><title>规范的错误信息</title><link>https://sund.site/posts/2022/write-error-message/</link><pubDate>Tue, 23 Aug 2022 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2022/write-error-message/</guid><description>本文整理了 Google 官方文档中关于错误信息的编写规范。适用于有一定编程经验，尤其从事业务开发的程序员。
+通过本文你可以：
+写出风格统一、用户友好的错误信息 提高代码的可维护性，降低沟通成本 Google 文档原文：Error Messages
+基本原则 错误不应该被掩盖 (Don&amp;rsquo;t fail silently) 遵循语言的规范 (Follow the programming language guides) 实现完整的错误模型 (Implement the full error model) 包含错误码、错误内容、错误原因、处理方法
+避免吞掉问题根源 (Avoid swallowing the root cause) 输出错误代码 (Log the error codes) 快速抛出错误 (Raise errors immediately) 解释错误原因 使用错误信息给用户解释原因时，应该遵循：
+具体，准确，避免含糊。 在错误信息中包含用户输入的错误内容。如果输入的内容特别长： 渐进地显示，提供一个可展开详情的省略号。 截断内容，只保留必要部分。 明确告诉用户，系统的要求和限制 解释如何处理问题 对用户来说，错误信息必须有可操作性。也就是说，在解释了问题的原因后，说明如何解决这个问题。 最好给用户提供一个例子。 清晰的错误信息 简明扼要，使用主动语态。（这方面内容可以参考技术文档写作指南） 避免出现双重否定句式。 让目标用户能够理解，即根据用户掌握的知识，提供有帮助的内容。 专业术语应前后一致。 错误信息的格式 使用链接提供更多信息。 渐进式呈现错误信息（比如可以展开详情的省略号）。 错误提示应该贴近错误发生的位置。 避免错误信息滥用字体或颜色。 使用正确的语气: 不要告诉用户错在哪，告诉用户应该做什么。 避免责备、幽默、道歉的语气。 对后端开发的建议 错误要有错误码 可以在错误信息结构里提供一个指向错误解释的 ID，如： { &amp;#34;error&amp;#34;: &amp;#34;Bad Request - Request is missing a required parameter: -collection_name.</description></item><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><guid>https://sund.site/posts/2022/technical-writing/</guid><description>本文内容摘录自 Technical Writing （谷歌技术文档写作指南）的第一部分。
+本文适用于想要提高技术文档写作、技术领域日常沟通能力的读者，对于一些商务的、非文学性质的英语办公场景沟通，也能起一定帮助作用。
+阅读过本文的读者可以：
+提高在日常办公中清晰、准确、客观地传达概念和逻辑的能力。 掌握英文技术文档写作规范。 词汇（Words） 对于已有的术语，不要重复发明新的词汇，可以用一个链接指向解释它的页面。
+如果有必要，可以在文档中直接定义新的术语，但如果术语比较多，最好建立一个术语对照表。
+文档各处出现的术语应该保持一致的名称或缩写。
+关于缩写：第一次出现要用粗体写全称并用括号指明缩写，之后的文章中不要反复混用全称和缩写。
+例如：
+This document is for engineers who are new to the Telekinetic Tactile Network (TTN) or need to understand how to order TTN replacement parts through finger motions.
+如果一个术语出现频率不高，请不要使用缩写。
+使用缩写的情况有：1. 缩写明显更简短；2. 该术语出现频率很高。
+谨慎使用代名词（It，they，that 等）。
+代名词一定要出现在它所指代的名词之后。 如果代名词远离它指代的名词（超过 5 个单词），就不用代名词。 在名词和代名词之间出现第二个名词，会产生歧义，应避免这种情况。 类比计算机编程语言：
+缩写 = 对术语的一层抽象。读者需要花费更多脑力去把它展开成对应的名词。
+代名词 = 指针。它容易引起歧义，所以要避免在读者大脑中引起「空指针」错误。
+主动语态（Active voice） 技术文档中应尽量使用主动语态。 被动语态在读者大脑中需要额外的加工转换才能被理解。 被动语态用来间接地表达行为，容易引起混乱。 有些被动语态省略了行为主体，会迫使读者猜测主语是谁。 如果使用被动语态，应正确使用过去分词的各种形式和介词（如 as，by）。 祈使句的动词（命令式动词）应该使用主动语态。 科技论文中经常出现被动语态（如 It has been suggested that&amp;hellip;），这种写法并不能传递更多信息，很多科学期刊也开始鼓励使用主动语态。 炼句（Clear sentences，Short sentences） 选择准确、有力、具体的动词。减少不精确的、软弱的或通用的动词。</description></item><item><title>《分手的决心》细节分析</title><link>https://sund.site/posts/2022/decision_to_leave/</link><pubDate>Sun, 14 Aug 2022 17:01:56 +0800</pubDate><guid>https://sund.site/posts/2022/decision_to_leave/</guid><description>把那部手机丢进海里，让它陷入深处，没人能寻到。
+看完《分手的决心》，我决心水一篇。今天跟大家一起分析分析电影里的细节。
+影片开头的支线情节 电影的一开头，刑警张海俊在追查两起凶杀案。分别是知九洞杀人案和女主宋瑞莱（汤唯饰）丈夫坠山案。第一次看时令我不解的是，前一起案件看似和整个剧情毫无关系，为什么导演要花那么多时间讲一个支线故事呢。
+让我们回顾一下知九洞案：凶手洪山五曾经和女友吴佳人非常相爱，后来吴与小凡（后来的死者）偷情，得知被绿后的洪山五愤而刺死情敌。在刑警男主一番抓捕之后，洪山五被逼到天台边缘跳楼自杀。他在自杀前，特别希望转告女友吴佳人：「虽然我为了你受苦，但如果不是你，我的人生将是一场空」。
+这里印证了前面情节中，知九洞案另一位嫌疑犯，洪山五的朋友（李智久）的口供。
+他那个人，宁可自杀也不会回监狱，因为回忆太过美好。
+这句话点出洪山五选择跳楼自杀的原因——当初和女友在一起时的美好回忆，令他陷在过去中，无法面对现实。
+这是整个故事的基调，也暗示了男女主人公的结局。
+而洪山五跳下的那栋楼，和女主丈夫奇都秀坠亡的那座山，在男主的俯视角镜头里形成了呼应。「山」在这里暗示了「稳固的关系」，洪山五为其而死，奇度秀被其所害。
+正篇 下面是我画的一张主要人物关系图。如果忘了剧情可以参考一下。
+山与海的隐喻 回到主线，女主宋瑞莱的名字里已经透露了重要的信息，「瑞」字里有「山」，男主张海俊的名字里有「海」。中文译者把线索藏在两位主角的名字里，其用心真是让我惊叹啊。另外故事里也反复出现「山海经」、水纹封面的笔记等元素。
+从女主宋瑞莱的角度看，片中反复出现她在「山」和「海」两种状态的摇摆。
+第一次是在警局问话时，她提到「智者乐水，仁者乐山，我不是智者，所以我喜欢水」。这明显是撒谎，是为了解释她和丈夫吵架的借口。因为在后面情节中，她反复提到她的母亲在临死前跟她说「去找你姥爷在韩国老家的山吧」。这里出现的山，并不仅仅是现实中的锄头山，也是女主心里追寻的山。
+而后半段中，女主和男主两人在雪中爬上锄头山之后，女主说，「母亲告诉我，去韩国吧，去那里就有这座山」。
+可见，女主身世坎坷，来到韩国后心中一直追寻稳定的依靠，母亲的话冥冥中指引她「去那里吧，那里有你的山」。可是到韩国后第一任丈夫的长期虐待，让宋瑞莱仇恨眼前的山，而把男主张海俊视作是可以真正依靠的山。
+而站在男主的视角，他的山，是枷锁。
+山稳固有形，水流动无形。男主刑警张海俊，有个在核电站工作、周末同房的妻子。两人的关系是稳固的，同时也是空洞的。男主经常夜里一个人去看海。而他的妻子对此不屑一顾。
+男主：要我说，我是大海的男子汉！
+夫人：什么大海的男子汉，明明内陆才是故乡。
+男主想要逃避的是眼前的山，在他和女主相遇的一瞬间，他就清晰地知道，他们是同一类人。
+两部手机 故事的第一个高潮，男主发现女主作案的铁证之后，陷入因自己沉迷感情而丧失破案机会的「崩溃」中。男主戳穿宋瑞莱的作案过程之后，仍然选择抛弃自己的身份，和宋瑞莱成为共犯（可能已经是他人生剧本中早已经注定的安排），他对宋瑞莱说：
+把那部手机丢进海里，让它陷入深处，没人能寻到。
+对于宋瑞莱来说，这句话击中了她心里最柔软的地方。当男主在她面前放弃了自己最重视的东西时，她发现自己也已经没有办法从这段关系里挣脱，她在男主离去后，留下一滴眼泪。
+讲到这里，电影里最重要的线索就是手机。片中一共有两部手机，第一部女主的红色手机记录了宋瑞莱杀死丈夫的线索，另一部第二任丈夫的手机，记录了男主保护宋瑞莱，掩盖杀人线索的录音。
+这两部手机的归宿也很耐人寻味。
+第一部手机（记录女主罪证），男主希望丢掉，却被女主保留下来。
+另一部手机（记录男主罪证）是宋瑞莱主动丢到大海里，但是被男主捞上来的。
+这两部犯罪的证据，成为双方为了保护对方，丢不掉的羁绊。
+故事的结局，宋瑞莱没有选择丢弃手机，而是带着这段回忆，和手机一起消失在无人知道的大海里。她在临别时说：
+海里捞出来的手机，你重新丢了吧，丢到更深的海里。
+没有说出的话，大概是「忘了我吧，但是我会记得你」。
+婚戒 电影的另一个反复出现的线索是婚戒。
+影片里，男主与夫人羞羞之后，导演给了婚戒一个特写，男主有一个把婚戒握起来的小动作，暗示了男主和夫人之间看似恩爱的表面下，是双方都不愿意说破的冷漠。
+而在发生丈夫坠山事件之后，宋瑞莱在警察局审问中途去了一趟洗手间，她发现手上的婚戒没有戴，然后悄悄戴上了。也说明她似乎在掩饰着什么。
+在女主的第二任丈夫死后，男主押送女主的汽车上，男主的手上仍然有婚戒。
+但是片尾，两个人第二次同坐一辆车时，男主的婚戒已经消失了，而宋瑞莱的手紧紧握住了张海俊：
+乌鸦的羽毛 另一个多次出现的暗示，是黑色羽毛。女主喂养的小猫为了报答主人，弄死了一只乌鸦叼到女主身边。这正是后半段女主杀夫护男主的伏笔。
+片中第二次和第三次出现乌鸦羽毛，分别在男主调查两任丈夫死亡线索时一闪而过。其实男主早就把两任丈夫的死亡，同女主紧紧绑定在一起了。
+尾声 其实电影里还有很多细节，比如女主的很多韩语对白都是从电视剧里学的；宋瑞莱两任丈夫分别死在山上和水里；影片里的城市以「雾」闻名，而雾是介于有形和无形之间的东西……等等。
+最后送上汤唯的一段表情，宋瑞莱开车前往海边时，张海俊在电话里问她「我什么时候说过爱你？」，宋瑞莱在短短几秒钟内的四个眼神。</description></item><item><title>3 Ways To Access Host System In Docker Container</title><link>https://sund.site/posts/2022/3_ways_to_access_host_system_in_container/</link><pubDate>Mon, 08 Aug 2022 20:04:00 +0800</pubDate><guid>https://sund.site/posts/2022/3_ways_to_access_host_system_in_container/</guid><description>When we are using Docker, we always access the host system by mounting the host folders as a volume. But sometimes we can not do that due to deployment reasons or security limits.
+There are three workaround ways to access the host system.
+1. Mount docker.socks into container docker.socks is a Unix socket that Docker Engine API listens on. You can mount /var/run/docker.socks file to your container and call Docker Engine API through this socket.</description></item><item><title>品味和效率</title><link>https://sund.site/posts/2022/2022-08-04/</link><pubDate>Thu, 04 Aug 2022 07:59:00 +0800</pubDate><guid>https://sund.site/posts/2022/2022-08-04/</guid><description>早起又随性写点东西。
+最近朋友圈被转载很多的一篇文章，来自 GQ 实验室对重轻老师的采访。里面有一段关于品味的叙述：
+……审美的底层逻辑是能感受到那些细微差别。这本身是非常非常幸福的，是一个“自我奖励”的事；另一方面它只能通过大量的自我训练来实现，没法让别人嚼好了喂给你，就是得自己重复喝很多咖啡、听很多唱片、看很多电影，然后试图去分辨。这个过程不会很舒服，甚至挺累的，是一个苦活，一种「爱的苦工」。
+我相信审美、品味是值得向往的：“有品位”作为自我装点的标签没啥意义，是我们花费很多时间、经历大量摸索、甚至是克服了很多困难的那个过程，它很值得向往。
+品味是需要心甘情愿付出劳动的。陈丹青有一次接受采访时说：
+年轻人装逼没什么不好的，我年轻时候就喜欢装逼……只是现在装成了。（笑）
+「装成了」是结果，自我愉悦是过程，付出辛苦是前提。缺少任一条件，都是字面上的装逼。
+延申地说，可能不仅是欣赏文化作品，每一件跟赚钱无关的事，都能达成「装成了」的境界。当你不把追求效率放在第一位时，「付出劳动」就和「自我愉悦」挂钩了。
+另一件生活里的小事是，我发现那些工作很忙碌的人，往往是不追求效率的。真正追求工作效率的人，是为了解放时间留给业余生活，但是很多人只是沉迷工作本身，他们热爱这件事，能从中获得愉悦（或者满足感）。
+「追求效率」不是为了享受，其实是为了更好的逃离某种状态。比如你刷了一小时抖音，这就是追求效率，而不是享受，你是想逃离工作状态，想逃离手机以外的烦心事。你如果真想享受生活，躺在沙发上刷短视频满足不了你。
+有时候折腾效率软件也跟喝咖啡一样，效率（提神）只是这件事的副作用，它个寻找快乐的过程。真追求效率的人不在乎软件是什么，黑猫白猫抓住耗子就是好猫，这才是效率。
+最后奉上一张 Twitter 上的梗图。</description></item><item><title>Notion As A Dashboard</title><link>https://sund.site/posts/2022/using_notion_as_a_dashboard/</link><pubDate>Sun, 31 Jul 2022 21:01:56 +0800</pubDate><guid>https://sund.site/posts/2022/using_notion_as_a_dashboard/</guid><description>I have built a Chrome extension 无用主意 during the last month. The backend service implemented by Flask is using Notion as a dashboard.
+Notion API If you want your service to connect to Notion, you have to create a Notion integration on this page. Afterward, you have to share a specific Notion page with the integration you just created.
+Now, you can call Notion API to visit your page.
+Once the service has permission to write and read data to Notion, we can sync data between them.</description></item><item><title>Building A File Parser</title><link>https://sund.site/posts/2022/2022-5-8_lexer_design/</link><pubDate>Sun, 08 May 2022 14:00:00 +0800</pubDate><guid>https://sund.site/posts/2022/2022-5-8_lexer_design/</guid><description>Last week, after reading this article - How to Write a Lexer in Go, I found that it is not so difficult to design a configuration file parser by this article&amp;rsquo;s mindset. Then I tried to write a fluent-bit configuration parser and finally got this Fluent-Bit configuration parser for Golang.
+In this article, I want to introduce how to parse Fluent-bit configuration .conf file, and the thinking behind it.
+Fluent-bit configuration format and schema [FIRST_SECTION]
+Key1 some value
+Key2 another value
+[SECOND_SECTION]
+KeyN 3.</description></item><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/2021/distributed-cache/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/2021/distributed-cache/</guid><description>很久不写技术文章了。这是一篇关于 Redis 构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。
+下面就以我做过的商品预约平台项目作为引子，引出分布式缓存设计的一些要点。
+该商品预约平台的背景如下：
+该系统由多个微服务组成 预约的过程：用户可以选择指定门店，指定日期到店提领商品，如果对应门店和日期没有库存，则不能预约 因为“预约”的是未来时刻的库存，所以门店的未来某个时间剩余库存是通过一系列公式计算得出的。这个公式比较复杂，考虑到了用户指定的日期是否在配货周期内等因素，这里省略掉细节 每年节日高峰时期，用户会集中预约商品，导致服务压力骤增。又因为未来日期的库存需要动态计算的特点（比如 A 预约了 1 月 1 日的最后一件商品，B 就会无法在该日预约），不同用户的预约操作会互相影响，严重时导致数据库死锁、数据不一致等问题 基于以上背景，这个预约系统的设计必须将性能作为主要优化目标，而缓存作为性能优化的不二选择，就承担了重要职责。
+识别热点数据 并不是所有数据都有必要被缓存，往往缓存的数据具有以下几个特点：
+读写比很高。如果写操作比读操作还多，缓存系统频繁更新会大大降低可用性 是热点数据。因为内存的价格昂贵，所以按照 2-8 原则，20%热点数据才值得被缓存 能够容忍短时间的不一致 结合项目需要，排除掉一些不适合缓存的数据：
+对于那些只读的、配置相关的数据，只需要做进程缓存（使用 Guava Cache），在服务启动时加载数据到内存就可以了 尽量用 CDN 和 Nginx 静态缓存来解决大部分不常更新的资源 对于该预约项目，用户最频繁查询的数据是不同门店在不同日期下的库存数量。这类数据是缓存设计的重点照顾对象：
+用户选择了指定城市、指定门店后，系统会返回最近 30 天的库存信息，用户只可能修改其中一条信息。所以读写比很高 库存信息是预约订单流程的必备步骤，而且是跨服务调用（预约服务 -&amp;gt; 库存服务）的数据，所以涉及到大量网络请求、数据库查询。 指定性能优化的指标 在即将完成业务系统开发时，我们就根据 Google SRE Books 提到的四个黄金指标，制定了监控系统性能的四个维度：
+请求率 错误数，非 200 返回结果数量 响应时间 资源利用率（CPU、内存） 我们使用 Prometheus + Grafana 的组合实现监控可视化，这样每次测试人员进行压力测试时，都可以通过这些指标对系统进行调整。缓存影响最大的指标是请求率（一般用 TPS 或者 QPS）和响应时间。所以在设计缓存系统时，要不断参照这两个指标进行优化。
+缓存的设计的实践 分级缓存 为了不让某一接口或者微服务的缓存失效导致其他接口或服务的并发量暴增，就要针对不同来源（数据库的表、接口等）的数据做分级缓存。比如用户在一次查询中涉及到“附近可预约门店”的查询、“活动期间不同日期剩余库存”的查询、“已预约数量“的查询，这三种查询逐层依赖后边的查询结果。
+假设如果只针对库存数量做缓存，一旦这部分缓存失效，那么“附近可预约门店”的查询就会直接访问数据库查询全部门店的剩余库存来确定哪个门店可以预约。这样就导致查询库存的接口并发量骤增。所以分级缓存一定程度上缓解了缓存雪崩的问题。
+自动化测试 API 参数合法性 我们的 QA 通常会写自动化脚本对后端 API 做定期的扫描，检查哪些接口的数据输入、输出有不合法的类型或是数值范围。除了巩固系统的健壮性，还能帮助缓存系统抵御缓存穿透的风险。</description></item><item><title>用 Notion 实践卡片盒笔记法</title><link>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</link><pubDate>Sat, 12 Dec 2020 22:42:53 +0800</pubDate><guid>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</guid><description>今天给大家介绍一种整理和回顾碎片知识的方法——卡片盒笔记法。
+应该不少人都读过少数派作者玉树芝兰老师写的关于卡片盒笔记法的文章。产品沉思录的主理人少楠也写过很多相关的内容，最近他们还出了一个工具（Flomo - 浮墨笔记）也是基于这套方法论的。
+在这篇文章中，我会结合自己用 Notion 的经验，分享一下我如何用 Notion 做卡片笔记。
+本文参考了 Youtube 频道 Mukul Khanna 关于 Notion 的一系列使用方法。
+什么是卡片盒笔记法 卡片盒笔记法（Zettelkasten）是一种将零散的想法、笔记和文献，通过编号、引用、索引等方式彼此关联起来，形成知识网络并提取有效信息的方法。其著名使用者——社会学家 Niklas Luhmann 一生创建了 9 万多张索引卡片，发布了 70 多本专著和 400 多篇学术论文。
+卡片盒笔记法可以类比为人类大脑记忆和归纳知识的回路。
+人类大脑有两种思维模式——专注和发散。
+我门通常学习某一学科知识时使用的是专注模式——从一个知识点引申到相关的知识点，像串糖葫芦一样把一系列知识点串联起来形成一套知识体系。
+在另一些情况下，如艺术创作、技术创新等，我们的大脑会切换为发散模式——大脑在在一些关联但不同领域的知识间来回跳跃，形成一种全新的思考路径。
+此时此刻，我为了将分散在不同笔记中零散的知识点关联起来形成这篇大家看到的文章，就需要同时借助两种模式，找到不同网站、文献间相关的内容，把他们组织起来。
+相对应的，卡片盒笔记法有两种关联笔记的方式，「顺序」和「引用」：
+当我们在专注模式下阅读一本书或一篇文献时，我们可以把瞬间的想法记录在笔记中，按顺序（比如按章节）把若干笔记关联起来。
+而当我们在记录笔记过程中想到相关的内容在另一篇文献中也出现过，那么我们可以在笔记中用引用的方式把另一篇笔记内容和这篇内容做关联。
+这样一篇笔记（卡片盒笔记法里的「卡片」），就有了两条途径来回顾它——顺序阅读和延伸阅读。例如，一段时间后，我们想把这段时间的学习心得梳理出来归纳成一篇文章，我们就可以先以某一篇笔记为起始点，顺序读下面的笔记卡片，读到感兴趣的内容再看看它关联的那些卡片是否可以作为素材。以此类推，从一片知识的网络中抽丝剥茧，抽象出一种独特的脉络。当然，这些卡片还可以和其他卡片组合，形成另一种视角。这一套卡片构成的卡片盒，就是一套不断碰撞出新想法的数据库。
+Notion 为什么适合做卡片盒笔记法 Notion 在前一段时间更新了 Backlinks （反向链接）功能，这一功能的推出，把 Notion 和新晋的几款网状知识管理工具（Roam Search、Obsidian）的差异大大缩小，成为了做卡片盒笔记法的合适工具。相对于专注做卡片笔记的软件来说，Notion 的优势是更加灵活的配置和用途广泛的页面元素。
+用 Notion 实践卡片盒笔记法 我们首先脱离 Notion 这个软件，看看通常情况下一张卡片由哪些部分组成。下图是来自 Introduction to the Zettelkasten 文章的配图，呈现了一张卡片的样子：
+标题。包含一个唯一编号的标题，编号的作用是在其他笔记中可以方便引用该笔记，而不用担心笔记的标题发生变化使引用失效 标签。方便回顾笔记时对某一类内容做整理归纳 正文。笔记正文是一个想法或是一个知识点的总结。一定是用自己的话来归纳。可以引用其他笔记的编号或是参考文献的地址来配合内容展现 参考文献。结尾部分是这篇笔记卡片是由哪些文献引申而来的 由此可见，卡片盒笔记法中的「卡片」是通过
+引用卡片编号，来关联其他卡片 引用参考文献，来关联外部文献 下面回到 Notion 这个工具，我们一步步来搭建卡片盒笔记法。
+搭建文献库 - 零散知识的数据库 所谓巧妇难为无米之炊，我们做笔记的第一步就是搭建文献资料库，这是一切笔记的源头，有点像数据工程里的「贴源数据层」，文献库是为了让互联网上经常失效的文章有个备份的好地方，同时你也可以在文献库里对文章进行划线、高亮和备注。</description></item><item><title>职业生涯说明书</title><link>https://sund.site/posts/2020/2020-6-6_career_strategies/</link><pubDate>Sat, 06 Jun 2020 19:30:43 +0800</pubDate><guid>https://sund.site/posts/2020/2020-6-6_career_strategies/</guid><description>对于大部分人来说，工作贯穿一生，工作对于人的健康、幸福感都发挥着决定性作用。
+今天的话题就是关于如何规划职业生涯。
+这次话题的起因是听了 Rio 和黄海主播的 Podcast《疯投圈》的一期节目，里面提到一本职业规划的书——《远见》。作者布赖恩·费瑟斯通豪是市场营销方面的大师，他主张对待职业生涯要看长远，普通人一生中绝大部分财富是在 40 岁之后积累的，所以年轻时对财富的忧虑往往是过度的，要对职业生涯做一个长达 45 年的分阶段职业规划，保持积累可持续的职场燃料。
+《远见》整本书都在围绕两个主题：
+寻找助推职业发展的「职场燃料」 在职业的不同阶段，如何给自己清晰的定位 积累职业生涯的三大职场燃料 所谓职场燃料，即
+可迁移的技能 有意义的经验 持久的关系 相比于即学即用的职业技能，这三大燃料往往是在漫长的工作经历中逐渐获取的。聪明的职业发展策略是，在整个职业生涯中持续积累、更新职场燃料，同时精明地消费它们。
+例如，当我们想要跳槽到下一家公司时，除了福利待遇，最看重的是什么呢？很多人会说「能不能学到东西」。其实这是非常模糊的概念，学到什么，通过什么学？这些问题决定了一份工作是否成为你职业生涯的助推器。
+可迁移技能。我应该从工作中学到什么 （它）不仅是帮助你完成眼前工作的技术知识和行业术语，而且是当你从一个工作换到另一个工作，从一家公司换到另一家公司，甚至是从一个行业换到另一个行业时都能依靠的能力和基础。
+可迁移技能不光是指那些领域知识或者技术壁垒，更是一些通用的社会技能，例如：
+解决问题能力 沟通能力 人才吸引力 寻求帮助和帮助他人的能力 理解和连接他人情绪状态的能力 这些能力往往不存在于特定的公司或是领域。可迁移技能中的**大部分真正重要的能力，并不需要反复跳槽来获取。**如何尽可能获得能力的提升呢？布赖恩认为，关键在于开放性的心态。如果你能多一些耐心，通常就能在一家公司里获得丰富的经验。
+你可以试着用一张纸，把自己的可迁移技能列出来，审视一下，哪些是随着行业发展逐渐消失的？哪些会在未来持续提供你帮助的？你是否在积累这些技能？
+有意义的经验。我的工作是否有价值 自信心必须建立在有市场竞争力的事情上面。
+社交网络上总看到类似这样的职场段子——「离职无非两个原因：嫌钱少；干得不高兴」。用钱和高兴程度来衡量工作的价值还远远不够。
+评估当前工作是否对我们有价值，可以通过 4 个黄金问题：
+1．我是否正在学习和成长？
+2．我是否正在对某些人、现在的公司，乃至整个社会拥有影响力
+3．我体验到乐趣了吗？
+4．我是否得到了适当的奖励，并创造了经济价值？
+这四个方面分别对应了学习、影响力、乐趣、奖励。
+学习决定了你是否在专业领域保持成长；影响力代表你对他人带来的益处，这会从多方面影响你的人际关系和发展机会；乐趣则是持续投入精力和从工作中获得幸福感的源动力；奖励则不光是薪水，还有各种福利、时间、补贴等因素。
+根据当下你的感受，给这四方面分别赋予一定权重（一个百分比），假如你更看重学习和乐趣，那么就给他们更高的权重，同时降低另外两项的权重。然后给当前工作的状态打出评分，10 分满分，最后用权重乘以评分得到每一项的职业价值分：
+根据作者布赖恩的经验，如果总分在 700 分以上，那么你的工作就算非常有价值了。
+表格中的权重可以每年根据自己的感受进行调整。最重要的是，不要单纯把金钱和干得高兴作为决定工作价值的因素。影响力往往是人们最容易忽略的价值，年轻阶段积累的影响力，往往会在职业生涯的后半段起到决定性作用。
+持久的关系 人脉关系网的构建者的心态是交易性的，他们在追求人际关系时只考虑其他人能为他们做什么。而人际关系的构建者会首先尝试帮助别人，他们不会有所保留。
+很多教你如何「积累人脉」的书，骨子里都是在教你「虚伪」。布赖恩认为，真正获得良好人际关系的诀窍在于不索取回报的付出。根据研究，付出者在利他性、责任心、社会正义和同情心方面表现的更加突出，往往跻身杰出和最幸福行列的机会也比别人大得多。
+我们总觉得社会关系要讲究「互利」，其实互利的本质就是「利他」。回报往往是非即时的，总要在一方面作出让步，才能在另一方面获得回报。
+「向他人提供帮助」的能力也是强大的可迁移技能，它的重要性甚至高于「向他人寻求帮助」的能力。
+然而，根据邓巴数理论，一个人能够同时保持密切关系的人数上限是 150 人。
+所以那些微信躺着上千好友的社交大咖，是把朋友当作交易性的「人脉」还是良好的「人际关系」？
+布赖恩把一个人的人际关系分为 5 层，数量上从多到少，依次是：
+通信录里的联系人 拥有特殊知识、权力的专家团 在公司里对你有决定性影响的 5 到 10 个关键同事 提建议、拥护你、激励你的支持者（导师、帮手） 你自己 他们构成了支撑你职业生涯的金字塔。</description></item><item><title>译文：重建世界2.0</title><link>https://sund.site/posts/2020/2020-5-10_build_world_2_0/</link><pubDate>Sun, 10 May 2020 20:22:53 +0800</pubDate><guid>https://sund.site/posts/2020/2020-5-10_build_world_2_0/</guid><description>这是一篇投资人Daniel Gross发表在自己博客的文章，讨论了新冠疫情后期的世界如何进入 2.0 新模式，以及有哪些机会和挑战。我把它翻译过来，希望大家也能从中获得启发。
+重建世界 2.0 未来几周，因疫情导致的封锁将逐步放开，当我们再一次打开房门，迎接我们的将是世界 2.0。在这个新版本的世界里，一切会看起来完全不同，这种「不同」会成为培育新一代开拓者们的土壤。
+开始话题之前，理解下面的原则可能会帮助我们思考：
+衰退不可避免。在用尽了所有维持经济运转的手段之后，洪水将会到来。在 30%的失业率下，我们无法保持同样的经济增长了。 疫苗何时到来还不确定。就像普通感冒一样，没有特效药。在科学家研制出可行的药物之前，我们将被迫改变生活习惯以适应这种状态。 大自然迫使我们进行一场规模空前的社会实验。很多企业在几周内就全部远程办公了，一些地区觉得远程办公是一种巨大的经济负担。但是很多人终会明白，远程工作虽然不是特别好，但在这个背景下，仍然是一个好办法。 如果世界 2.0 同样的保持平等、优越、法理……那一切行为都会产生永久性的改变。（译者：即永久性替代现有秩序） 如果你的想法足够超前，你一定能在这场游戏里获得有价值的东西：
+握手已死。疫情首先改变了家庭内部的习惯，然后，陌生人之间呢？ 电影院的消亡。电影会在网络上重生。影院已经无力承担更少的座位了，即便在病毒爆发之前很多影院也已经濒临破产。已经有太多可以替代电影院的选择了。 暂停音乐会，在网上开。再次举办这种大型活动遥遥无期，目前还没有可替代的方案。我敢打赌，这种情况将会反复发生：再一次爆发疫情，再一次停止活动。 城市的（暂时性）终结。疫苗出现之前，越来越多人会搬去郊区。一些房地产经纪人告诉我旧金山公寓的市场在降温，同时郊区的房子却渐渐在升值。 信任。突然之间，所有人都变成了潜在病毒携带者，当你在大街看到一个陌生人时，内心是什么感觉？病毒增大了人与人的距离，减少了彼此的信任。 商务旅行变成了 Zoom 会议。部分公司发觉，可以通过远程会议完成谈判。我想，在经济衰退的市场环境下，很多管理者为了降低成本，会退而求其次。旅行的开支将会被大幅降低。 个人旅行减少。原因可能是个人经济能力的下降，而不是恐慌。 数字企业活动。过去几周我已经见识到很多在网上进行的商业活动。其中，很多经理人发现在一些项目中使用 Zoom（远程会议软件）已经“足够好用”了，并开始着手削减此前在这方面的其他投入。如果这一次的网络商业活动实践产生了积极的作用，那么对于那些利润直接相关的企业部门未来采纳网上商业活动模式将至关重要。 「集体农场式」人事管理。如果未来在不同地区发生第二波第三波疫情，可以想象到，人们会共同参与社区管理，构筑起新的信任关系。类似室友和家庭之间的有机结合，这种结合越来越广泛。未来的公司甚至会鼓励同事之间共同隔离，以此提高返工管理流程的效率。 开放办公室会变得越来越不受欢迎。不但因为开放办公环境的人员密度不适合保持社交距离，而且人们经历了在家办公之后，会渐渐意识到一扇可以关上的门是多么重要。 公共交通被看作不安全。世界 2.0 不喜欢高密度的人口。还有什么比高峰时段的地铁更高密度呢？城市交通对一个城市的发展至关重要，要么我们会看到严厉的管控措施，要么就是像纽约那样大规模感染之后群体免疫。总之对 Uber（等共享出行）来说可能是一个福音。 餐馆和数字餐馆。酒馆文化存在了几千年，所以它不会消失。但问题是，如何低密度地运营这项业务，以适应新时代的社交距离。由于家庭餐馆的模式并不理想，所以这个领域是我认为会出现新产品和创造力的地方。 学校会加强网络教学。父母顺理成章地会要求年轻人回到学校。没有什么比大学校园更好的生活环境了：那里聚集着一群对病毒免疫的年轻人，并且远离了老年人。也许会有新的数字教育替代品出现，但是用 Zoom 远程上课肯定不是最好的办法。 在线体育 2.0。类似餐馆，在线体育也有很多上升空间。想象一下，在没有观众和球迷的体育场比赛，将会对运动员的生理水平造成什么影响。这很有趣。 这将是人类有史以来最不稳定的时代。一夜之间全世界的人们都改变了行为方式。这为创业营造了真正的机会，那些能够快速适应时代需要的人，将比其他人更好的发展。
+对于每一个新出现的行为模式，都会有一家新的创业公司出现填补空缺。假如人们想要音乐会，大自然不允许，那么替代方案是什么？如果酒吧餐馆因为社交距离的原因而无法维持，那么网络上酒吧餐馆是什么样呢？新的 Zoom 应该是什么样子，一个企业版的 Snapchat 如何引领销售业绩呢？正如 Nat Friedman 所言，“视频会议是一架不需要马的马车“。
+值得期待的是，在新冠疫情把我们从美梦中唤醒的同时，世界 1.0 正在衰退，大自然打破了常规，我们必须重新建立秩序。
+“IT&amp;rsquo;S TIME TO BUILD!”
+原文链接：https://dcgross.com/building-in-world-2-0/</description></item><item><title>一个购买数字商品的必备技能</title><link>https://sund.site/posts/2020/2020-3-30_us-paypal/</link><pubDate>Mon, 30 Mar 2020 23:39:33 +0800</pubDate><guid>https://sund.site/posts/2020/2020-3-30_us-paypal/</guid><description>《集合啦！动物森友会》最近占据了所有社交网络的时间线。这款游戏的快乐对于不了解它的人，恐怕只有亲身上岛，和动物朋友们一起捉虫钓鱼才能渐渐体会到。嗅觉灵敏的淘宝奸商（其实也是为了恰饭）一直在抬高售价，《动森》的价格被从 320 元一路炒到了 450 元，很多 Nintendo Switch 玩家无奈转战到 eshop 购买数字版。
+今天我会讲讲怎么以最便宜的价格购买数字版游戏，以及国内剁手党如何将全球便宜商品收入囊中。
+从这篇文章中你可以收获：
+购买 Nintendo Switch 亚区、美区、欧区的游戏都有哪些限制 如何使用国内的 VISA 卡绑定美国的 Paypal 来购买数字版游戏 除了买数字版游戏，美国 Paypal 还能做什么？ Nintendo eShop 各个区购买游戏有什么限制 任天堂的电子商店 eshop 把全球玩家大致划分为三个大区——亚区、美区、欧（非、澳）区。非、澳洲和欧区享受同样的待遇，所以我们下文统称欧区。亚洲区里中国玩家最熟悉的是港服、日服，很多日本出的 RPG 游戏只有这两个区有中文版；至于国行的 Nintendo Switch 主机，因为只能购买国行的游戏，所以我们不去聊它。
+注意，在各个地区 eshop 购买游戏，首先需要注册对应地区的账号，可以参考这篇攻略《简单几步，就可以完成看似复杂的任天堂账号注册| Jump 新手教程》。
+亚区的 eshop 支持用国内的（VISA，MasterCard）信用卡付款，港服还支持用支付宝。
+欧区支持用国内的（VISA，MasterCard）信用卡付款。（但是也有部分朋友反应澳大利亚最近也无法使用信用卡支付成功了）
+美区只能使用美区那些国家的信用卡支付，比如加拿大、美国、墨西哥。
+可见，国内玩家最难购买的就是美区的游戏了。众所周知，墨西哥是 eshop 购买游戏最划算的地区之一，同样的游戏，墨西哥总是比日本、美国等其他地区便宜将近一半！
+另外由于最近疫情影响，澳元贬值，澳大利亚区也成为了购买数字产品的圣地。
+所以接下来就围绕「如何跨区购买数字商品」展开攻略吧。
+如何用国内的双/多币信用卡购买数字游戏和其他产品 Nintendo eshop 除了信用卡直接绑定付款，还可以绑定 Paypal 账号支付。网上出现过很多注册美国 Paypal 来购买游戏的教程，比如这篇《购买 eShop 数字版游戏 | 完整版教程》。但是教程中最困难，也是阻碍最多人走向成功的一步，就是美区的 Paypal 风控极其严格，如果你使用的国内信用卡并且没绑定美国的电话号码，马上就会被 Paypal 发现并锁定你的账号，要求你验证身份。
+我就是经历这样一个「注册成功-&amp;gt;😊-&amp;gt;被锁定-&amp;gt;😖」的过程，才终于知道了原来一个美国的电话号码对网上购买虚拟商品是如此重要。
+要注册一个美国 Paypal，首先要能打得开美国 Paypal 的网站，然后在注册信息时填写美国的住址，你可以在这个神奇的网站随机生成美国身份和地址信息。一直填写到最后一步——验证手机号码，这就到了本文最重要的部分了。</description></item><item><title>看懂电影《爱尔兰人》</title><link>https://sund.site/posts/2020/2020-3-8_the_irishman/</link><pubDate>Sun, 08 Mar 2020 17:19:49 +0800</pubDate><guid>https://sund.site/posts/2020/2020-3-8_the_irishman/</guid><description>友情提示，本文有轻度剧透，请慎重阅读。
+说到美国，大家都知道它是个移民国家。美国的爱尔兰裔，占到了总人口的 10%以上（数据来源），仅次于德国裔，排在第二位（2000 年最新数据显示非洲裔已经超过爱尔兰裔成为美国第二大族群）。爱尔兰裔美国人总数甚至超过了爱尔兰本土的人口数。美国的爱尔兰后裔为何如此之多？这就要从 18 世纪的爱尔兰说起。
+18 世纪末期，英国彻底征服了爱尔兰，使之成为大英帝国的一部分。英国人剥夺了爱尔兰人世代赖以为生的土地，令其在自己的国家成为二等公民。
+爱尔兰人连同土地一起失去的，还有信仰。当时的英国以信仰新教为主，而爱尔兰人普遍信仰天主教。为了打击爱尔兰的天主教势力，同时也为了镇压爱尔兰叛乱，英国人不允许爱尔兰人组织天主教相关的活动，并且法律还规定爱尔兰人既无选举权，也不能充任公职、律师、教师等职业。
+如此严厉的律法，使得爱尔兰人只能从事低级的体力劳动，过着极其贫困的生活。
+政治家埃德蒙·伯克这样形容英国针对爱尔兰的法律（来源：《美国种族简史》）：
+自古以来，人类凭借着邪念所能制造出最巧妙的机器，用以使百姓堕落，并进而败坏人性本身。
+但上帝给爱尔兰人关闭一扇门的同时，也打开了一扇窗。为了生存和信仰，爱尔兰人在极端严酷的环境下，一边躲避迫害，一边在天主教的精神支撑下抱团取暖。久而久之竟然解锁了他们的种族天赋——强大的地下组织能力。
+19 世纪 40 年代，爱尔兰爆发了大饥荒，上百万爱尔兰人死于饥饿和瘟疫。英国议会对爱尔兰人的漠视，使得爱尔兰土地上成千上万的民众，挣扎着自求生路。
+当时的商船从北美出发到英国，需要运载大量的农产品，但是从英国返回美国，则以运输体积较小的工业品为主，这就造成了大量船舱空间没有被利用。于是越来越多的底层爱尔兰人，借助远在美洲的爱尔兰同胞们赞助的钱财，购买这种廉价商船的「蹲票」，挤在狭小的商船货仓里前往北美洲。
+3 个月的海上航行漫长而痛苦，无数爱尔兰人在船舱里因为缺水、疾病、饥饿而死去。活下来的少数人终于踏上了向往的新大陆。
+初到美国的爱尔兰人普遍身无分文，也只能从事低级的体力劳动维生，美国的矿工、铁路工人大都是这些人组成，比起南方种植园的黑人奴隶，爱尔兰人的生存境况更差，累死、饿死、工伤死亡的比比皆是。但是多亏了爱尔兰民族的种族天赋：强大的地下工作组织能力！很快，爱尔兰人主导的工人团体相继成立，1861 年的美国矿工协会，1903 年的国际妇女工会联盟，1905 年的世界产业工人联盟……一个个由爱尔兰裔主导，旨在团结底层劳工的工会组织成为了美国重要的政治势力。
+时代成就了爱尔兰人。电影中，吉米·霍法创建的美国卡车司机协会也是这样的一个工会组织。
+看过《美国往事》的同学应该记得，美国在 1920 年代颁布了著名的禁酒令，在禁运私酒的这段时间，以爱尔兰裔和意大利裔为主的美国黑帮在这一时期通过地下产业迅速壮大。
+黑帮控制的地下私酒产业链蓬勃发展，但是这些违法生产的私酒需要大量卡车司机来协助运输。于是，吉米·霍法领导的卡车司机协会就在那段时期和美国黑帮一起，把持着美国的利益链条。
+影片中的男主角弗兰克.希兰就是那个时期成为了一名卡车司机，并结识了黑帮大佬罗素和卡车司机协会的吉米，成为了两边势力的中间人。
+同一时期，违法私酒产业也让另一个对美国影响深远的家族默默崛起，那就是靠着贩卖私酒大赚特赚的肯尼迪家族。肯尼迪家族也是爱尔兰后裔。有赖于黑帮势力的支持，约翰·肯尼迪在 1961 年成功就任美国总统。但是肯尼迪一上任就跳反了，把矛头指向了黑帮和工会，联合司法部长的弟弟罗伯特·肯尼迪一起，打击有组织犯罪和地下产业。
+电影里，吉米每次提到肯尼迪，就恨得暴跳如雷，把对方家里女性长辈都问候一遍。
+最终，通过打击犯罪赢得了民众支持的肯尼迪，却深深得罪了爱尔兰人的两大势力。在一次车队游行时，一颗子弹击中了座驾上的肯尼迪头部，瞬间，他的脑浆以放射状飞溅到几十米内的扇形区域，在电视上目睹了这一刻的美国老百姓都惊掉了下巴。与此同时，阴影中的某些人却微微翘起了嘴角，举起了酒杯。
+随后的几年间，包括扣下板机的凶手和司法部长罗伯特·肯尼迪在内 100 多个证人，相继离奇死亡。这次总统遇刺案成了美国历史上最大的谜团和丑闻，也让调查这起案件的官员受到了强烈质疑。
+电影《爱尔兰人》中暗示，肯尼迪的死和吉米·霍法有着直接的关系。可惜吉米还没高兴多久，自己就因被指控行贿罪而逮捕入狱。
+4 年后，吉米出狱，黑帮和工会的格局已经发生了天翻地覆的变化。曾经呼风唤雨的工会已经沦为了黑帮的附庸，这让吉米相当郁闷。在跪舔黑帮大佬和重振工会雄风之间，吉米毅然选择了后者。
+此时工会已经不复当年的威风，此时的黑帮也已不把吉米放在眼里。吉米和黑帮闹掰之后，身兼工会和黑帮双重身份的男主角弗兰克感到无所适从，一边是自己最好的朋友吉米，一边是恩重如山的老大罗素。最终他会选择站在哪一边呢？
+结局我就不剧透了。感兴趣的朋友请自行去片中寻找答案。
+这部电影在讲述工会和黑帮的恩怨纠葛背后，另一层深意是什么呢？那就是影片的片名：爱尔兰人。
+那是一群在自己的土地被迫害的爱尔兰人，为了寻找新生活而相互扶持，辗转抵达大洋彼岸的新大陆；而又是这样一群爱尔兰族裔，最终为了自己的利益勾心斗角，互相杀伐。其中人性的摇摆，令故事充满了戏剧的张力，成就了这部电影。
+以上，就是我对这部电影的理解。</description></item><item><title>番茄工作法和Keep是绝配</title><link>https://sund.site/posts/2020/2020-2-17_wfh/</link><pubDate>Mon, 17 Feb 2020 20:43:43 +0800</pubDate><guid>https://sund.site/posts/2020/2020-2-17_wfh/</guid><description>要有路线图 平时在办公室里，大家可以面对面沟通，有问题、回复都可以迅速得到反馈，好像一个走正步的方队，每个人的节奏都可以从余光中确认。但是在家办公，这种节奏就乱掉了。
+我最近正好转到数据团队做一些数据工程的工作，急需恶补很多知识。我在网上搜到几张数据工程师知识图谱和一些认证课程。按照自己的能力，我规划了学习路线，并且用 Notion 记录下来。这份路线图里包含了一些书籍和网络课程，能够帮我快速上手实践，以备在复工后快速进入状态。
+寻找免费的学习资源 有了路线，就要去找学习资源，付费的电子书和网络教程很多，我想重点说说那些免费资源（抛开盗版不谈），比如著名的动物书出版商 O’Reilly 就有一大堆免费的正版技术类电子书可供下载。
+另外，Youtube 上的教学视频质量也非常高，对于快速上手一种工具或是搭建开发环境非常有帮助。（随便一搜就有很多成套的教学视频，不乏官方教学视频，比如 Google Cloud Platform 提供了很多教学短片）
+我在 Youtube 还意外发现一些 健身 Youtuber 们分享的健身教学视频，也非常适合闲暇时间提高姿势水平。
+任务要和时间绑定 完成一个长计划的第一步，是拆解任务。工作中同事们总强调 Tasking （拆解任务）的重要性。要保证完成计划的质量，必须把计划按步骤拆解成可执行和回顾的小任务。相信喜欢折腾 GTD 之类效率工具的人很清楚其中的意义。但是在没有约束的家庭环境里，光拆解任务可能还不够，更重要的是把任务和时间绑定，给自己一个记录时间的习惯。
+不局限于工具的番茄工作法 番茄工作法固然好，但是市面上很少真正提高效率的工具。手机上的番茄工作法 App 唯一给我的教训就是增加了我拿起手机的次数。所以我最后矬子里拔大个，选了 Toggl 的 Mac 桌面版，它自带番茄时钟可以很好的兼顾时间记录和定时提醒功能。我还尝试用 NFC 贴纸提高我记录时间的效率（主要记录做饭之类碎片的时间）。至于如何使用 NFC 贴纸，参考这篇《5 个实用生活场景，iPhone 上的 NFC 还能这么用》
+利用番茄工作法的间歇时间做 4 分钟锻炼 番茄工作法每隔 25 分钟会有 5 分钟的休息时间，我通常利用这个间隙来做一组俯卧撑、平板支撑或者深蹲，Keep 上有很多 4 分钟的燃脂训练，拿来配合番茄工作法使用效果更佳。
+把平时忽略的碎片时间统计出来 发呆拖延的时间、做饭的时间，这些工作忙时不太关心的碎片时间，我利用这个大长假把他们统计了一下，我在去年年底制定了一个「2020 年告别外卖」的计划。因为平时工作忙，想脱离外卖自己做饭，就要格外注意挑选制作时间短，食材储存容易的饮食方案。我也在 Notion 里新建了一个项目，来记录做饭的时间、各种食物的优缺点（有点强迫症）。待完成这个计划时我也会整理出来。
+给娱乐时间限量 我平时很少看电视，最近又把吃灰半年的《歧路旅人》拿出来玩，我给自己规定的是每天必须天黑才能打开游戏机，而且玩到 20%电量之前必须关机休息。这样每天娱乐时间就不会超过 2 个小时。
+最近奥斯卡颁奖后，一批电影片单也出来了，不如趁这段时间把 2019 年错过的好电影也补一补。
+用音乐和灯光隔离出个人空间 我在几个月前发的一篇文章《用一个模型理解什么是注意力的边缘》里已经分析过怎么用「聚光灯效应」和背景音乐来创造专注的环境，对这部分感兴趣的同学可以去阅读一下。
+小结 综上，充分利用假期的时间去充电吧，要给自己指定任务、要有追踪任务的工具，多利用闲暇时间锻炼、多关注平时上班时没空去关注的生活细节，给 2019 年错过的好东西一个补救的机会。</description></item><item><title>如何用七天重建小汤山医院</title><link>https://sund.site/posts/2020/2020-2-5_xiaotangshan/</link><pubDate>Wed, 05 Feb 2020 22:41:23 +0800</pubDate><guid>https://sund.site/posts/2020/2020-2-5_xiaotangshan/</guid><description>苛刻的选址条件 在危机到来时，如何快速建成医院又尽可能降低无畏的成本。首当其冲要考虑的就是选址。选址最重要的是找到具备三个条件的地点：
+市政系统成熟 交通便利 周边人口稀少 这三点中任何一点都有大批可选择的位置，但是要求三点同时具备就非常苛刻了。并且因为是传染病医院，还要关注供电保障、排水、排气安全和对周边居民的影响。
+历史回顾：2003 年，北京小汤山在历史中留下了重要一笔。它距离最近的居民点 500 米，原为小汤山疗养院所在地，附近是一大片预留的发展用地，四周环境空旷，便于机械化的施工。京密引水渠在小汤山疗养院北 4 公里，可以让污水经过专门处理，不影响到北京市水源。
+兼具「快速」与「实用」的模块化设计 医院的主要功能需求：医患分区分流，洁污分区分流。
+为了满足疫情的需要，医院还要考虑到：施工的标准化、模块化，根据需要可以不断延伸。
+最终方案定为中轴对称的鱼骨状布局。
+医院由多个「H」型模块排列而成。其中，沿中轴线布置办公区域和医护人员通道，每个中心模块负责 4 个护理单元，每个护理单元内安置两列病房（ICU 病房、隔离病房、康复病房等）。
+根据选址地形和现场已有设施，模块排列数量和每个护理单元的长度都可以进行调整。每个护理单元都是独立的标准模块，一方面有利于同时施工，各单位可以独立建好自己的模块后集中拼接，尽量减少交叉作业；另一方面也可以在发生疫情恶化或失火等紧急情况时，将该单元彻底封闭，保全医院其他单元。
+患者从病房外周进出病区，医护人员从中轴核心经层层更衣和卫生通过区进入病房进行检查、治疗和看护。这样的功能结构能够严格控制空气的洁净梯次，保障医护人员卫生安全。
+病房为污染区，医护工作区为半污染区，医护办公区为半清洁区，医护人员值班休息区域为清洁区。医护工作实行单向通过式流程：病房设有双层玻璃的送饭口，病人和医护人员的通道也各不相同，病人是通过病房门前半开放式的走廊通道进出病房，而医护人员则是从专用的工作通道进出。工作人员从清洁区到病房污染区，要经过几道的消毒，三次更衣。
+工程实施 基于模块化设计的好处，医院可以同时由 6 家施工单位同时施工。
+历史回顾：在 2003 年非典时期，设计团队采用了边画设计图边施工。受到场地和材料限制，每一段的设计图纸都有所不同，为了尽快出图，设计团队几乎是 24 小时接力画图。
+小汤山当时主要是用板材，各家施工队使用的材料都不相同。武汉火神山医院这次采购了大量集装箱房搭建病房，统一规格，速度更快。 不过，集装箱下部的钢框架有可能导致病房与外面走廊之间出现门槛。根据小汤山医院经验，虚弱病人轮椅推行、移动式检查设备推行几率较大，要尽可能满足无障碍推行的使用需求。
+武汉火神山医院还加装风扇来控制气流组织，使空气从中间的干净区域向两边污染区域单向流动。
+为保护医院周围的环境不受污染，医院专门新建了污水处理站。病人的衣服、床单出来了以后先通过环氧乙烷消毒，消毒以后才拿去清洗，清洗后的水再进入到污水站处理。此外还有专门的垃圾处理装置对废弃物进行焚烧处理。
+人员管理 小汤山医院当年出台了《院内预防感染工作规则》《出入流程》《防护守则》，共计 3 章 24 节，约 8000 字，印刷成 46 页的小册子，全院人手一册。包含了医护人员的防护穿戴、与病人的交谈距离、洗手要达到 3 分钟、会议要在室外、洗澡流程、清洁程序、垃圾处理条例、生活区行为守则等等。甚至包括交通规则：医护人员在各区之间的行走路线，在污染区面对面行走时如何避让等等。还规定：违反者将受到通报批评，严重者以军法惩处。
+纪念小汤山医院最好的方式是让它成为历史 当小汤山医院的设计师黄锡璆说出「没想到当年的设计图还能用上」时，心情一定很复杂。
+我在凤凰网 7 年前录制的纪录片《非典十年祭》中看到这样一段话：
+这如同金字塔一般，从上到下的公共卫生模式，原本是为了统一调配资源，抵御各类传染性流行疾病，然而，2003 年的那个春天，它完全失灵了。
+纪录片的结尾处，一位医生感叹道「再也不可能（出现）像 SARS 那样的情况了」。
+希望这用无数人命堆砌出来的经验，不要下一次面对危机时再次失灵。
+我们应该从历史中学会的，不能仅是如何重建一座医院。</description></item><item><title>谣言的利与弊</title><link>https://sund.site/posts/2020/2020-1-27_rumour/</link><pubDate>Mon, 27 Jan 2020 13:32:46 +0800</pubDate><guid>https://sund.site/posts/2020/2020-1-27_rumour/</guid><description>Ted Chiang（姜峯楠）的小说《双面真相》里有个主人公吉金基，他出生于部落，从小跟着欧洲殖民者学习写字，是部落里唯一识字的人。有一天欧洲殖民者要求多个部落必须按照血缘关系合并起来，以方便殖民管理。部落长老赛维认为自己的部落和临近的部落是同一个祖先，所以应该合并在一起，但是另一个部落却不同意这种说法。
+吉金基想到欧洲人最早来到这里时采访了当地许多老人，那些如今已故的部落老人想必知道自己的部落究竟是谁的后代吧。于是，吉金基跑去殖民者的营地找到了当年的记录，根据记载，长老赛维确实记错了自己的祖先。
+回到部落后，赛维却不同意吉金基的看法，他认为吉金基的头脑已经被欧洲人同化了。「欧洲人只相信纸面上的文字，而不重视此时此刻部落里人们的感受。至于部落的祖先究竟是谁并不重要，重要的是当下的部落里同族们的共同利益」。
+Ted Chiang 在后记里说，人们在「书面文化」出现之前一直延续的是「口头文化」，比起书面文化更重视文字记录的事实本身，口头文化更重视「此时此刻人们的感受」，真相可以随时修改变化，以适应人们的情感需要。
+谣言也是一种口头文化，他没有确凿依据，凭借人们口口相传。
+谣言承载了人们此时此刻的感受。把「不信谣，不传谣」当作一种正确的人，可能忽略了谣言的这一重作用：谣言是真相模糊环境的必要补充，是一群人，面对现实的头脑风暴。
+公众有权质疑、批驳任何报道乃至政府公告的真实性，公民发短信或者转发相关帖子，即使有不实之处，也应被视作自保或者行使监督权，政府部门只能用更加公开透明的信息来平息大家的忧虑，消除不实之言。 ——胡泳，《谣言，作为一种社会抗议》
+同样，知乎用户 @韦易笑 的评论：
+不传谣本身就是一个严重的传播学悖论，一条未经证实的信息，恰恰需要通过广泛传播、反复交叉比对，最终才能证实或者证伪，去伪存真，辨邪留正。所以未经证明的消息只能称为流言而不是谣言，除非有人故意造谣，这当然有罪，明知是谣言还传播当然也不该，但自己主官判断为真又无法证伪的话，传播无可厚非，因为大部分人只有能力证明自己专业领域内的流言是否是属实，对于专业领域外的流言，只有能力传播没有能力客观鉴别。如果严格要求所有人无法证明就不能传播的话，那么消息就无法通过充分交流比对而去伪存真，大家每天说话的内容也只是不断的重复 zf 通稿和砖家权威的发言，从而丧失任自我辨别的能力。
+你还为「不造谣，不传谣」背书，可能就要提防自己是否过度依赖权威，丧失了亲自辨别真相的能力。</description></item><item><title>如何练习双拼输入法</title><link>https://sund.site/posts/2020/2020-1-19_xnheulpb/</link><pubDate>Sun, 19 Jan 2020 07:21:17 +0800</pubDate><guid>https://sund.site/posts/2020/2020-1-19_xnheulpb/</guid><description>双拼输入法是什么？ 「双拼输入法」类似于我们大多人使用的全拼输入法，也是一种基于汉语拼音的汉字输入方案。
+让我们先来复习一下小学的知识 😂，任何一个汉字都有对应的拼音，拼音由声母和韵母组成。
+声母除了zh，sh，ch之外，都是由单个字母表示。例如「拼」字的声母p。
+韵母通常由 1 到 4 个字母组成，例如拼字的韵母就是in。
+通常大家用的全拼输入法，韵母部分要全部打出来（现代输入法通常可以智能联想，但是大多数情况下都需要你打出大部分字母），比如输入「拼」你需要打三个键p，i，n。
+双拼输入法就是为了解决全拼输入法在输入韵母时低效率的问题。双拼的开发者试图把汉语拼音的全部韵母映射到键盘的所有按键上，这样每次输入一个汉字，只需要输入两个按键（声母+韵母）。
+例如，我把ing映射到键盘的字母K上，把ang映射到字母H上。输入「乒乓」时就是下面的效果。
+现在比较流行的双拼方案有很多，我选择了比较受大家青睐的小鹤双拼方案。它的键盘布局是下面这样的（初次看你可能会觉得不适……别急，读完这篇文章学起来就会很轻松）。
+双拼输入法能提高打字效率吗？ 学习之前我们通常有个疑问：这玩意真能提高打字效率？
+我带着这个疑问，找到了一个测试汉字打字速度的网站，我通过一个月的使用，对比了前后的输入速度，得出的答案让我确信写这篇文章能够帮助你通过双拼提高打字效率。（不要吐槽我每分钟字数太少，测速网站采用了古诗词作为输入，一定程度上屏蔽输入法智能联想的效果。你可以亲自去尝试一下 😛）
+（KPM=每分钟按键次数，BPM=每分钟退格次数）
+开始学习小鹤双拼 学习知识之前，先了解它的原理会帮助我们更容易记忆它。理解原理看似是增加了额外的负担，但是死记硬背的知识往往难以形成结构化的记忆，很容易遗忘。
+学习小鹤双拼前，我们先要了解三件事：
+声母的按键规律 韵母的按键规律 键盘布局的规律 声母的规律 前面提到，汉语拼音声母大多数是单个字母，除了三个特别的zh，sh，ch。小鹤双拼和全拼一样，直接按字母键就可以输入对应的声母，那三个特别的声母映射到键盘的V，U，I上。
+之所以映射成zh=V，sh=U，ch=I，是考虑到两个因素：
+这三个字母（V，U，I）都没有对应声母 这三个字母距离食指和中指都比较近 那有人要问了，为什么不把zh放在Z上，ch放在C上，sh放在S上，这样更好记忆呀？这是因为会造成输入的不一致性。比如O对应的韵母是uo，你输入了ZO，那输入法就无法分辨你输入的是zhuo（捉），还是zuo（作）。如此一来就违背了双拼输入法一个汉字只要输入两个键的原则。
+所以，声母部分，你只要记住，zh，sh，ch，对应的是V，U，I就可以了。其他和全拼一毛一样。
+韵母的规律 汉语拼音的韵母有一些很特殊，例如ua 和ia前边的声母是互斥的。以jia（加）为例，你肯定没听过jua的组合（可能小岳岳除外 😂）。所以ua和ia前边的声母不可能是同一个字母，那么即使把这两个韵母放在同一个按键上，也不会出现输入汉字时的混淆。
+符合这种规律的韵母一共有 7 对，小鹤双拼的按键分布是下面这样的。
+为了方便记忆，小鹤双拼让每个按键对应的声母和其中一个韵母能组合成有意义的汉字发音。所以你只需按口诀或文末提到的练习工具针对练习即可，其中需特殊训练的只有上面的 7 个按键。
+有一些汉字没有声母（零声母），这种情况只要会全拼输入法就可以一秒解决：
+单字母韵母，如： 啊＝ aa 哦=oo 额=ee
+双字母韵母，如： 爱＝ ai 恩=en 欧=ou
+三字母韵母，零声母+韵母所在键，如： 昂＝ ah
+键盘布局的规律 一些不太常用的韵母，小鹤双拼的作者把它们放到了键盘的边边角角，例如iu，ie，ou，我起初很容易忘记，偶尔用到也想不起这些韵母的位置。所以这三个特殊按键，我在键盘上用蓝色高亮标记起来。结合上文提到的特殊按键，这个键盘看起来就是这样三层结构：
+第一层是声母，其中特殊的（红色高亮）是V，U，I 第二层是韵母，其中特殊的（黄色高亮）是T，O，S，K，L，X，V 第三层是易忘按键（蓝色高亮），它们分别是Q，P，Z 你可以把这张图保存起来，放在桌面壁纸里或是打印出来放在键盘前边，练习时用来对照。
+记忆工具 小鹤双拼官网提供了多种练习工具。你可以微信扫一扫这个小程序，随时用手机练习。
+桌面端推荐一个在线的网页双拼练习工具，地址是 https://api.ihint.me/shuang/。
+测试工具 为了测试打字速度，你可以使用上文提到的在线网页打字测速工具，地址是https://dz.wubidz.cn/。
+小结 本文以小鹤双拼为例，为你分析了汉语拼音组合原理和双拼输入法的映射规律。未来你在学习任何拼音输入法时都可以按照这种规律，以分层结构提高对键盘布局的认识。</description></item><item><title>宁波见闻</title><link>https://sund.site/posts/2020/2020-1-5_ningbo/</link><pubDate>Sun, 05 Jan 2020 20:49:47 +0800</pubDate><guid>https://sund.site/posts/2020/2020-1-5_ningbo/</guid><description>木匠的工具箱 偶然在宁波博物馆发现一个箱子。这是木匠的工具箱，有点像很多格子的单肩包。外侧可以放几把不同尺寸的刨子，内侧用来放锯子和一些长柄的工具。下层的抽屉还可以放些锉刀、凿子之类的小物件。
+有了它，木匠就可以拎包上门。过去很多行业的手艺人都有一套这样的工具箱。木匠比较不同的是，这个箱子本身也是木制的，这个箱子就是他展示给客户的第一印象，箱子本身代表了木匠的能力和喜好。
+现在搞技术的人，也是手艺人，但已经很少把自己的「工具箱」秀给别人看了。
+我前几天跟鲍勃聊天，他最近一直忙着装修自己家。他家全部是由他亲自设计的。虽然家具不是他做的，干活儿的也是请来的工人，但是那些方案的确是出自他的脑袋，所以说是他亲自装修也一点都没错。
+那是什么决定了哪些东西是你买来的，哪些是你自己设计的呢？重要的一定不是物品怎么被造出来，而是物品里有没有包含你的思考吧。当一堆零件通过你的智慧彼此关联在一起，产生了「整体大于局部之和」的效果，这个物品就具有了你的一部分主张。
+任何物品里都有设计者的主张，服务也不例外。
+我经常觉得宁波的地铁和餐厅的服务十分不友好：明明服务人员就在旁边站着，你向他求助，他却只会告诉你去扫一下二维码。强制你扫二维码的服务，它们背后的主张都是
+为了省点人力成本，就暂且给你添点麻烦吧。
+清淤船和 ASMR 经过宁波老外滩，看到清淤船在江上作业。围观的路人有几十人，都看得兴起。
+看着清淤船从江里把淤泥挖出来，再倾倒在旁边的船上，莫名有种视觉 ASMR 的感觉。好像人天生就对「疏通」这件事会有快感（比如挖鼻孔 🤣）。
+巧合的是我之前很喜欢听静电容键盘敲击的声音。好像两手紧握再松开时，空气从两手中间被挤压时发出的声音。我经过宁波博物馆附近的一处马路，突然听到汽车经过石头路面时发出的声音，竟然有些相似。
+点击收听</description></item><item><title>一篇心得，开始2020年写作之旅</title><link>https://sund.site/posts/2019/2019-12-28_learn-to-write/</link><pubDate>Sat, 28 Dec 2019 18:49:56 +0800</pubDate><guid>https://sund.site/posts/2019/2019-12-28_learn-to-write/</guid><description>养成写作的习惯，会使人生获益无穷。写作可以让我们避免浅显的认识，在搜索引擎几秒钟就能得到答案的时代，学会向自己提问是深度思考的第一步。我真的理清脉络了吗？是不是像我认为的那样？写作者分享思想，同时也帮助自己思考。
+写作让我们在和他人交流时懂得去理解，不是急着去回应。常写作的人会时刻收集素材，养成倾听的习惯。写作的人喜欢片刻的沉默，胜过表面的热闹。
+会说话的人就会写作。很多人拒绝写作，是觉得自己文笔不好，其实白话口语一样能写出好文章，精巧的构思，敏锐的嗅觉，缜密的思考，哪一种写作风格都有适合自己的路。
+三个月前，我开始刻意培养写作的习惯。这篇文章，我要与你分享这段时间的心得，这些话，有的来自我个人的体会，有的是来自记录的笔记，有的出自著名作家、编剧，我把它们整理出来，希望帮你启动写作之旅。
+写文章的关键是什么？ 诗人彼得·迈因克说，文学的表现力来自专注、巧妙和精细。
+每篇文章都要专注于一点，这一点就是主题，内容都在围绕这一点展开。想象一本书带给过你的感受，那就是它传达给你的主题，论文里它是论点，故事里它是基调，评论里它是观点。
+文章还要巧妙地搭建结构，像电影导演的运镜，把观众的视线引向你希望的方向，带领读者走向你预设的终点。
+好的文笔是精细的提炼，字斟句酌的金句，给读者的是惊喜，是寻常的陌生感。
+如何寻找主题？ 关注每个细节，每个引起你兴趣、兴奋、疑惑、恐惧、异物感的东西。读书是最简单的方法，除此之外，留心生活中有趣的短文、诗句、格言、广告、寓言、祈祷、标语、微博、短信……都是灵感的源泉。不把自己的生活局限在网络上，线下和朋友交流，参加有趣的活动、认识有趣的人、体验不一样的生活，都能让你产生写作的冲动。
+不断向自己提问，即便是再小的问题，也有无限挖掘下去的潜力。不断提出问题尝试去回答！搜索网络、求助他人、翻阅资料，总之在写出答案之前，你一定是深思熟虑过，不要给读者向你提问的机会，穷尽所有可能的路径、绞尽脑汁，这样的文章才是系统性思考过的、有价值的，对得起自己和读者的。
+一旦养成这样的习惯，不只是写作，生活的一切都从日复一日的重复中苏醒过来了。
+如何搭建文章的结构？ 有了主题，接下来的任务是布局，美感出自秩序。生活是个局，工作也是个局，你的文章更是让读者短暂逃离现实的局。
+首先，开头请一定要激发读者强烈的兴趣，可以设置一个谜题让读者自行去文中寻找答案；也可以是一个具体的场景，让读者身临其境后逐渐察觉异样。请看小说《追风筝的人》的开头：
+我成为今天的我，是在 1975 年某个阴云密布的寒冷冬日，那年我十二岁。
+是不是让人很好奇，想要读下去。即使你的文章是知识分享，也要注重故事性，从古至今流传下来的道理，都蕴含在故事里。
+其次，不要倾倒细节，要有一个看不见的线牵引着读者，可以是时间、空间、疑问。如果你要抛出一个观点，就全文都以这个观点为核心，让所有文字都通向那个观点；如果你要构思一个的故事，请把故事的结构隐藏起来，让读者自行去发现。
+例如在《白夜行》中，两位主角活在各自的世界里，东野圭吾用并行故事线构成了看不见的线索，让读者自行脑补两人关系，画出故事的来龙去脉。所以，请把发现真理的过程交给读者。
+最后，既要让文字满足读者期望，又不可预测。这要求乍看有点奢侈。人们不喜欢在故事里重复生活，也不喜欢完全脱离生活的故事。请不要平铺直叙，更不要太跳脱，要给读者制造舒适区，再打破它。读文章就像谈恋爱：「男人彻底地懂得了一个女人之后，是不会爱她的」。（出自张爱玲的短篇小说）
+如何锻炼文笔？ 文笔是锦上添花，开始写作前请不要纠结，尤其是知识分享、论述观点类文章，比文笔更重要的是逻辑。
+第二，一句自我介绍，一条微博，都是最小粒度的写作。每次发微博、Twitter、朋友圈，都请字斟句酌，变成语言的艺术家。
+有些词语的周围需要全然安静，给它们足够的空间，就好比照片，有些照片周围不需要陪衬。
+——阿摩司·奥兹
+每次写作，请有意识地删除多余的副词、形容词，如果写故事，把那些形容感受的词（如「沮丧」、「快乐」）替换成具体的动作和神态。原研哉在《设计中的设计》说，「我们通常所说的五感，是非常不准确的，用指尖轻轻触碰的触感，和用手用力按压的触感肯定是不一样的」。所以，请去描写感受，不要概括感受。
+最后，请熟练使用口语写作，避免官方用词。尤其练习使用俗语、方言、俚语或其他习语。在我们国家，经常看到：「只有……才能」、「坚决落实」、「时刻牢记」。请把这些短语从脑袋里清出去，除非你打算写反乌托邦题材……
+写在最后 上面这些技巧，都是写作的外功，要理解它的内功，还是要长期保持写作者的心态。写作是一种自我重建——这句话出自新京报的一篇文章《纪念王小波》，我非常喜欢下面这段话，最后分享给你：
+对一个人来说，过去那种统一式教育所打造的自我，是一种童稚状态，人只有通过自我的重建，才能走向成熟。这种重建是一种孤独的旅程，一旦开始，就注定没有终点，你将作为「一个人」而不是「我们」中的一员，来面对世界。</description></item><item><title>互联网曾经有另一种可能</title><link>https://sund.site/posts/2019/ted-nelson/</link><pubDate>Sun, 15 Dec 2019 16:42:22 +0800</pubDate><guid>https://sund.site/posts/2019/ted-nelson/</guid><description>1965 年，泰德·尼尔森（Ted Nelson）在提交给美国计算机协会的论文中提到一种将各种内容链接在一起的技术——超文本（Hypertext），如今超文本俨然已是互联网大厦的基石。但人们熟知的超文本和当初尼尔森预想的样子却有着天壤之别——在尼尔森的脑海中，一个失落的平行世界里，有着万维网的另一种可能。
+泰德·尼尔森 尼尔森从小就是个爱幻想的孩子。深受导演父亲的影响，尼尔森酷爱写作，但他厌恶线性、渐进式的叙事结构，他希望所有资料都以一种混乱的，流动的形式保存起来。这样，每当他需要这些资料时，他就可以随时重建它们。如今已经 80 岁的尼尔森仍保存着数千小时自己的录音和录像，以备后人理解他的想法。这些录音和录像，同样也是没有目录结构的……
+层级结构是邪恶的 尼尔森把对传统结构的抵制延续到了计算机时代。1960 年，尼尔森在哈佛读研究生期间试图自己编写一个拥有「并排比较」、「版本回溯」和「按大纲修改」功能的写作工具，但因为非科班出身和学业繁忙，最终放弃了开发。当时哈佛大学正在开发一套计算机辅助教学系统，尼尔森觉得那种线性的、机械的教学系统，是对计算机和教学的双重侮辱。思维应该沿着不同的路径探索，而不是以结构定义好的方式。
+尼尔森在 90 年代曾对苹果公司的 Macintosh 操作系统也持有同样的评价：
+在我看来，Macintosh 和 PC 没有差别。Macintosh 的交互做得更好，但是它和 PC 都是一样的概念结构，都是由 PARC 用户界面（PARC User Interface, PUI）与普通的层级架构目录（即如今所说的「文件夹」）组成。
+他们告诉你文件是分层级的；最基础的程序就是文字处理、数据库与电子表格；你必须使用「应用」；你必须费力地把自己真正想做的事处理成层级架构的文件，用「特定的应用」打开它们。实际上，这些陈述都夹杂着谎言。他们描述了计算机的现况，但没说它可以是什么样，又应该是什么样。
+——摘自《离线 OFFLINE》ISSUE 23，上都计划——失落的超文本，泰德·尼尔森语录
+尼尔森的超文本设想 时间回到 1965 年，尼尔森把自己的设想——一个由「超文本」和「压缩列表」技术构成的非顺序写作系统，发表在了全国计算机协会的论文中。起初这篇论文并没有引起太多人关注，但超文本这个词却意外被历史保留了下来。尼尔森在不久之后发起了名为「上都计划」的项目。上都（Xanadu）的名字来自诗人萨缪尔·柯勒律治（Samuel Taylor Coleridge）在他的诗中幻想的忽必烈在元上都修建的雄伟宫殿。
+忽必烈汗在上都造建，富丽堂皇的穹顶宫殿，伴有圣河阿尔佛，穿过深不可测的岩洞，一直流入无光之海
+——萨缪尔·柯勒律治
+在尼尔森的构想中，上都计划是一个拥有非线形结构的交叉索引系统——
+任何媒体内容双向链接，可以在平行文本之间自由跳转，一直追溯到内容的源头 拥有深度的版本管理，每次对文本的修改都以版本号记录下来，以便追溯变更历史 版权授权机制，由于历史可追溯，所以内容理论上都可以追溯到原作者 可视化的差异对比，不同版本的内容可以比较差异，基于原文的修改可以同步到引文 创作者可以基于已有内容进行增量出版，类似滚动更新机制 尼尔森认为，层级的目录结构是一种专制。创作者应该时刻与媒体内容保持联系，而不应该关心它保存在哪。在尼尔森的理想里，文件夹是罪恶的，基于文件夹的树形目录结构更是丑陋。它代表了人类根深蒂固的层级观念在虚拟世界的投影。建立于层级观念之上，思维只会被束缚，真正的计算机，应该给予人类自由。
+尼尔森更不喜欢别人用基于超文本概念创造出来的 HTML（HyperText Markup Language，超文本标记语言），尼尔森批评道：
+它（HTML）的链接容易失效且只能单向链出，它的引文无法追溯，没有版本控制，也没有版权管理系统。
+几经辗转，在资金等各方面条件都极其匮乏的情况下，上都计划在 2014 年终于发布了一个功能不完备的演示版本，我们可以在浏览器访问上都计划的官网查看它的最新状态。尼尔森还开通 Youtube 频道 TheTedNelson 给大众布道，可惜截止到我写下这些字的时候，订阅人数还不足 6000，在中文世界更是鲜有人报道。
+如今的万维网已技术沉淀多年，尼尔森的计划在不少专业人士看来，如柯勒律治的诗一般，只是天方夜谭。
+超文本不是技术，是文学。文学是指那些我们包装并存储的信息（一开始是书籍、报纸和杂志，现在还有电影、录音、CD-ROM 等）。未来的文学类型决定了人类将被如何记录和理解。这些还轮不到「技术专家」来操心。
+——《离线 OFFLINE》ISSUE 23，上都计划——失落的超文本，泰德·尼尔森语录
+对当今互联网的启发 在现在的互联网技术体系内，尼尔森的理想几乎不可能成为现实。但就像《人类简史》里的尼安德特人，种族虽然消亡，基因却融入了智人的血脉。上都计划以另一种形式融入了现在互联网的产品中。
+上都计划在当时提出的概念是相当超前的，我们可以在很多工具中找到它的影子。
+它给我的第一印象是一个文字处理的 IDE（集成开发环境），它具备了当代 IDE 的大部分特性，并且非常有前瞻性的提出了基于版本的授权机制，这和现在不少基于区块链-智能合约的版权管理项目有异曲同工之妙。</description></item><item><title>我们的隐私被谁拿走了</title><link>https://sund.site/posts/2019/permanent-record/</link><pubDate>Sun, 08 Dec 2019 02:41:29 +0800</pubDate><guid>https://sund.site/posts/2019/permanent-record/</guid><description>斯诺登的自传《永久记录》已经上架各大阅读平台。这本书让斯诺登的名字从棱镜门之后又一次出现在了公众视野里。书里按时间线叙述了他的童年和工程师父亲学习计算机，到他加入中情局，最后曝光棱镜计划出逃俄罗斯的全过程。这本书是一个青年成长为公民，并用自己的勇气揭露科技霸权的心路历程。我特别注意到这部书里提到了一个概念——个人信息的元数据，元数据是一个人在网络上留下的痕迹，不管是对情报机构，还是对商业公司，都是要极力获取的重要信息。
+元数据是我的聊天内容或个人资料吗？ 元数据不是你聊天的内容也不是你的资料，更不是你在网上发布了什么消息，元数据是更底层的数据，斯诺登在书里这样描述它：
+最直接理解（元数据）的方式是活动数据：你在设备上从事活动、手机自动运行的记录。举例来说，手机元数据可能包括：来电日期与时间、通话时长、来电号码，通话位置……
+通过分析你不同设备的元数据，监视者能得知你昨晚入睡与今早起床的时间、每天逛了哪些地方、在哪里待了多久，以及你接触过的对象有谁，谁又与你联系过。
+为什么你的元数据如此重要？ 事实上，元数据不仅仅赋予了数据监视者全面窥探你隐私的权利，在 2002 年斯皮尔伯格拍摄的电影《少数派报告》中有这样的桥段（有剧透）：未来的某一天，人类能够利用计算机预测可能的犯罪，并在「嫌疑犯」准备实施犯罪前进行抓捕，幕后黑手利用这一机制构陷男主角，使其成为系统认定的抓捕对象。
+科幻故事离我们太远，你可能觉得现实中没有这样的系统。那么请看一些事实吧：
+我国征信系统已为 9.7 亿自然人建信用档案 无偿献血、公租房申请、ETC 欠费、乱闯红灯、频繁跳槽等行为纳入个人征信系统 中国安装了 1.76 亿个监控摄像头，这市场还在增长 社交软件 Instagram 被怀疑窃听用户麦克风 Facebook 承认监听用户语音，将语音资料转录为文字 …… 斯诺登在《永久记录》中提到，美国中央情报局的监控系统，可以随时打开全球任何人的摄像头、麦克风和查看电脑上正在做的事、调查他的上网记录、孩子的入学申请……一些中情局同事甚至用截取到的女性裸照作为内部的「流通货币」彼此交换。
+机器并不像人一样学习，人工智能也没有真正的智能 下面我想站在另一个角度审视当年的棱镜门事件。现代信息技术发明了一些词汇方便我们理解技术的含义，比如人工智能、机器学习，其中最有迷惑性的是「预测」。王垠的文章《机器与人类视觉能力的差距》解释了机器所谓「识别」并不是真的「理解」。用斯诺登的话说：计算机的预测，仅仅是对数据的一种操弄。 就像《少数派报告》的故事一样，最终决定机器的预测结果是否正确的关键，还在于人——掌控着机器的那些人。技术名词在迷惑我们的同时，赋予了科技公司和大型机构更多权力，冠以科技发展之名。
+每个人都是潜在的罪犯：尽管我们自己没有察觉到，但多数人的生活绝不是黑白分明的，我们会任意穿越马路、未做好垃圾分类、在人行道骑自行车，甚至非法下载盗版等。换句话说，一旦法律贯彻到底，所有人都会变成罪犯。
+——爱德华·斯诺登，《永久记录》
+怎么保护我的元数据（个人隐私）？ 如果你也意识到了个人隐私的重要性，那么是时候做点什么保护自己了。在当下，个人想要完全隐藏自己的上网行为几乎是不可能的。这也是为什么美国爆出棱镜门之后，全世界各国都把保护个人信息提上了政府议程。但是我们仍然可以通过一些手段，提高监视者作恶的成本。我为你整理了一些工具和上网习惯，它们只是给你提供一种思路，希望你能不局限于这些手段，在便利和隐私之间寻求到属于自己的平衡。
+使用反追踪的浏览器插件 每当你点击一个网站页面，大部分网站会悄悄给百度、Google 等公司发送你的上网行为信息，隐私獾（Privacy Badger）这个浏览器插件能帮你屏蔽掉广告和用户行为追踪。
+确保所有通讯数据都有加密 从棱镜门之后，全世界大部分网站都提供了 Https 方式的数据加密访问，如果你访问的陌生网站没有支持 Https，请尽量不要把任何个人信息交给它。
+聊天软件是除了浏览器之外第二大上网工具，一天世界曾经整理了一个聊天软件安全性的表格，请参考选择适合自己的聊天工具（「人生最痛苦的是梦醒了无路可走」——鲁迅）
+尽量不填写真实的个人信息 很多网站都要你提供个人信息，请遵守「如非必要，一律虚构」的原则。
+最近微信更新了一个保护隐私的功能，你可以在微信第三方登录时选择随机生成的昵称和头像，不妨试试。
+去除照片 EXIF 信息 你拍摄的照片里隐含了你的位置和设备信息，有新闻报道犯罪分子利用照片 EXIF 信息追踪女性家庭住址。提供类似功能的工具很多，日常用微信传照片给陌生人，记得不要发送原图。
+尽量不用公共 WiFi 值得一提的是，自己家的 WiFi 也时不时换一下密码。现在随便下载个黑客软件进入你家 WiFi 截取你流量搞个中间人攻击根本没有技术含量。
+「盯紧」摄像头 以前某个国产社交软件后台启动摄像头，并把视频传到网络上。现在都能搜到当年泄露的部分女孩子只穿内衣，在不知情时拍摄的视频。请在非必要时，不给任何 App 摄像头、麦克风或任何读取你敏感信息的权限。
+DNS over HTTPS 虽然你访问网站的流量是被 HTTPS 加密了，但是你访问任何网站前，你的设备会请求 DNS 服务器解析网站域名（好比邮寄信件时，邮局把你的邮编解析成真实的地区），这些信息被不法分子（？）拦截篡改，会误导你访问到不相关的地址上去。所以最近 Firefox 和 Chrome 两家浏览器都内置了 DNS over HTTPS 功能，开启后加密所有 DNS 域名解析流量。但是前提是你的 DNS 服务器也支持，你可以尝试 Cloudflare 的服务，其 DNS 地址为 1.</description></item><item><title>Kevin Kelly's Hacking 和 《列子天瑞》的盗亦有道</title><link>https://sund.site/posts/2019/what-is-hacking/</link><pubDate>Thu, 05 Dec 2019 23:15:43 +0800</pubDate><guid>https://sund.site/posts/2019/what-is-hacking/</guid><description>凯文凯利在《失控》中有一句话：
+The nature of life is to delight in all possible loopholes. Every creature is in some way hacking a living by reinterpreting the rules.
+生命的本性就是喜爱一切可利用的「漏洞」，每个造物都在通过重新诠释规则来谋求生存。
+无独有偶，《列子·天瑞》里有一个故事。宋国的向氏问齐国的国氏，如何变得富裕。国氏就说：「吾善为盗。始吾为盗也，一年而给，二年而足，三年大穰」，向氏一听原来诀窍就是盗，就去学着入室偷窃，结果被抓住问罪，家里的财物都被没收了。
+向氏气冲冲地跑去质问国氏，国氏解释说了下面这段话。
+吾闻天有时，地有利。吾盗天地之时利……夫禾稼、土木、禽兽、鱼鳖，皆天之所生，岂吾之所有？然吾盗天而亡殃。
+原来国氏所谓「盗」，并不是盗窃财物，而是盗天地之时利。这里的盗字，正好对应了英语里的 &amp;ldquo;Hacking&amp;rdquo;。凯文凯利的 &amp;ldquo;hacking a living by reinterpreting the rules&amp;rdquo;，正是列子所谓「万物自天成，盗者本无心」。</description></item><item><title>为 Mac OS 10.15 开启 HiDPI，让 2K 显示器更舒适</title><link>https://sund.site/posts/2019/macbook-hidpi/</link><pubDate>Sun, 24 Nov 2019 16:11:00 +0800</pubDate><guid>https://sund.site/posts/2019/macbook-hidpi/</guid><description>以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户ZeRo° Xu 在 一键开启 HiDPI 脚本 里的 Github Issue 和一篇博文 《为 mac 连接的 2k 显示器开启 HiDPI》。
+什么是 HiDPI 引用自 Github 用户 ZeRo° Xu ：
+它使用横纵 2 个物理像素也就是 4 个物理像素来显示 1 个像素区域，结果就是图像的细节得到翻倍、更清晰、边缘更平滑。
+拿 13 寸的 MacBook Pro 举例，它的屏幕物理分辨率是 2560 x 1600，所以原生的 HIDPI 分辨率就是 1280x800。更高的一档 1440x900 hidpi 缩放分辨率，则是虚拟出一个 2880x1800 的分辨率，再进行软缩放输入。所以你能发现苹果的电脑总是有很高的分辨率。
+好了，既然你的屏幕是 1080p，本身就没有那么多像素去合成 HIDPI，如果以原生的显示计算，你这屏幕的 1080p 分辨率应该是 960x540，这么低的分辨率你是没法用的，所以就有了这个脚本。
+这个脚本的功能是虚拟出比你的屏幕物理分辨率更高的假分辨率，也就是你看到的 3360 x 1888，这样你就可以使用 1680 x 944 hidpi 这个缩放分辨率了。</description></item><item><title>抛弃笔记本，完全用标签管理笔记有什么需要注意的</title><link>https://sund.site/posts/2019/all-tag-in-evernote/</link><pubDate>Mon, 18 Nov 2019 13:49:00 +0800</pubDate><guid>https://sund.site/posts/2019/all-tag-in-evernote/</guid><description>日常工作中经常会出现这样的情况：
+小张怎么也想不起来上次收藏的一篇健身饮食相关的文章，到底是在印象笔记的「健身」分类下，还是在「健康」或者「饮食」分类下，跨分类的文章太多，小张感到头秃 小李用标签管理文档，但是每次查询标签时，总是犹豫到底应该搜索时间管理还是效率，亦或是工作流，标签实在太多，小李很恼火 这两种情况都属于整理方法不科学，给检索时造成了麻烦。
+检索分类的难题 在正式介绍整理方法前，不得不先声明一个事实：**完全无重叠的分类是不可能实现的。**以小张为例，小张是一个健身教练，他在「健身方法」分类下有教会员如何管理「睡眠」、「饮食」和「健身动作」，同时小张也热爱生活，他在「生活」分类下有「财务知识」，并在「睡眠」和「饮食」里记录自己的睡眠和饮食习惯。这就造成了「睡眠」和「饮食」同时存在于个人生活和健身方法两个分类里。
+像小张这样的情况几乎不可避免，分类作为一种整理方法，就免不了出现上图中重叠的部分。什么是分类？**分类就是预先设计好一堆插槽，再把不同的东西分门别类放进对应的插槽里。**小张在检索「饮食」相关的内容时，他的分类系统失效了，同一个东西可以属于不同插槽。小张此时必须用「个人生活 + 饮食」或是「健身 + 饮食」的扩展分类形式才能得到想要的结果。由此可见，分类失效最简单的解决办法是扩展分类，比如增加两个子分类「生活饮食」和「健身饮食」。但是由于文档日积月累，这种小分类越来越多，越来越难管理；而一些分类里只存了 1、2 篇文档，根本没必要单独开个分类。
+小张的头秃越来越严重了，为了帮助像小张这样的分类困难症，人们想出了两种不同的办法：
+用标签解决重叠部分，比如饮食就可以作为标签，在「健身」分类下的文章如果贴着饮食就代表它属于健身相关的饮食，同时这个标签也可以贴到「个人生活」下的文章里。 **通通用标签，**把个人生活变成标签，一篇文章如果同时贴有个人生活和饮食，那它就是生活方面的饮食，不是健身的饮食知识。具体的做法会在后面章节讲解。 遵守使用原则 不管哪种方式，即便有了标签和分类的双管齐下，也要有使用的原则，否则滥用的结果比不分类更麻烦。这回我们从原点出发，先思考一下人类检索信息的方式。
+通常检索信息有两种方式：
+通过树形的层级体系，自顶向下一层层检索 通过碎片的记忆，用关键词和关联性，自底向上检索 基于这两种常见的检索方式，我们约定一种分类和标签的使用原则：
+谨慎扩展新分类，分类之间尽量不重叠
+标签尽量不可拆分，标签之间组合使用
+分类的创建成本高，检索成本低，所以分类只有数量少，重叠部分少，才能提高自顶向下查找的命中率。
+标签创建成本低，但是检索成本高，所以标签可以是跨类别的，标签越具体，组合越丰富，关键词命中率越高。
+基于这两种原则去管理分类和标签，就可以保证你的检索体系不崩溃的同时，检索效率最高。比如我先搜索「健身」分类，发现文章太多，于是我加上饮食相关的标签，就可以轻松过滤掉大部分信息。标签越具体，组合越详细，过滤效果越好。
+另外，假设我只记得文章的模糊内容，也可以直接搜索标签或内容。
+完全标签化的思路 现在流行一种管理方式，抛弃分类，完全用标签管理。拿印象笔记为例，在这篇 《Using Evernote (the right way)》 的文章中，作者抛弃了常见的笔记本分类法，完全用标签来整理笔记。笔记本只保留「收件箱」、「收藏夹」和「废纸篓」。这种方式免去了整理笔记本的麻烦，但同时，造成了检索时必须依赖标签。作者为了解决这一难题，提出了一种被我称之为**「给标签分类」（ 原文是 Organize Tags）**的做法。
+其实给标签分类的做法非常常见，以 豆瓣 为例，你肯定见过下边的标签分类方式：
+**这种方式的好处就是：你既可以直接在搜索栏搜索具体的标签，也可以通过标签分类先筛选出标签，再点击标签明层缩小筛选范围。**这就解决了标签不好逐层检索的问题。
+仍然以印象笔记为例，我们该如何改造它，使之成为完全标签化的系统呢？
+首先，把现有笔记的标签归入对应的父类标签。比如新建一个信息管理，然后把项目管理、时间管理、思维导图、信息检索全部拖到信息管理标签下，使之成为父标签。
+之后，按照「我是谁，从哪来，到哪去」的原则补充所有遗失的标签。
+我是谁，笔记属于哪个知识点、具体的知识类型 从哪来，笔记的来源，如果是网页剪藏，印象笔记会自带来源信息 到哪去，笔记的用途，比如进行中的某个项目 这样，一篇笔记的标签看起来是这样：
+这里的来源我直接使用了印象笔记自带的信息。标签的用途如果不明确也可以忽略。知识点要遵循具体，尽量不可拆分的原则。父类别标签的存在，是为了避免开头中小李遇到的问题，标签太多时，检索无从下手。文章有了父类别标签，你就多了一种筛选笔记的方式：直接在标签管理界面点选父标签来缩小筛选范围。
+完成了这些，我们下次检索笔记，就可以用两种方式：
+通过父标签 &amp;gt; 子标签的方式逐层检索 通过搜索框输入标签名直接检索 如果你不是印象笔记用户，也可以采用一些迂回的手段，比如建立一张标签父子关系的笔记，来作为查找目录。
+看到这里你也许已经发现，这种完全标签化的方式其实只不过是把分类变成了标签，它同样存在父标签之间范围重叠的问题，所以一样要遵循前文的分类和标签的使用原则。
+小结 本文先分析了检索分类的难题——分类之间的重叠造成添加和检索时的不便。之后按照分类和标签两种归类方式的区别，提出了创建和使用分类、标签的原则，即谨慎分类，组合标签。之后介绍了一种完全标签化的管理信息方式。它的本质仍然是通过分类 + 标签的组合，提高检索效率。
+希望本文对你有所帮助，也欢迎在评论区留言发表你的观点。</description></item><item><title>注意力的边缘</title><link>https://sund.site/posts/2019/attention-model/</link><pubDate>Thu, 14 Nov 2019 15:29:00 +0800</pubDate><guid>https://sund.site/posts/2019/attention-model/</guid><description>阅读几分钟就忍不住打开微信；
+计划在家办公却浏览了一上午购物网站；
+周末去咖啡馆学习，被来回走动到人打扰到无法专心。
+这些问题我们经常会遇到，好的外部环境可以让人长时间保持精神的专注，大大提高我们工作、学习的效率。反之各种外界干扰会时不时跳出来打断你的注意力。那么你要怎么应对这些干扰呢？
+接下来我会分享一种认知模型——注意力模型，它帮助你分析你的注意力被谁「偷」走了。
+注意力有边缘 我在最近阅读《交互的未来》这本书时，了解到了注意力模型。书的作者认为，人的注意力有边缘。我们不可能将全部注意力放在多件事上，处于我们注意力中心的事物最容易被我们感知，而处于注意力边缘的事物，往往被我们的视线边缘、听觉、嗅觉等知觉感受到。因此，位于注意力中心的事物感知最清晰，所以反馈也更迅速。
+以此为基础，作者把注意力划分为三个等级，下面以常见的汽车驾驶室为例，看看司机的注意力是怎样分配的：
+前方路况占据了驾驶员视觉中心，是主要注意力 在视觉边缘的反光镜和仪表盘，以及触觉反馈的方向盘和脚踏板，是次级注意力 双闪、应急灯、收音机等设备，周围的环境音共同构成了第三级注意力 由此，注意力的三个等级可以归纳为：
+主要注意力与视觉相关，且是直接的，例如司机对路面所给予的注意，或者台式计算机用户对计算机所给予的注意。 次要注意力的对象则较远，例如，人们对无需直接关注就能感觉到的声音或振动信号所给予的注意。 第三级注意力的对象则是注意范围边缘的声音、光线或环境振动等。 当一个司机在驾驶时，如果有人跟他不断交谈，那么司机的注意力模型就变成了：
+主要注意力 次要注意力 第三级注意力 前窗的视觉，路况和车辆位置的意识 后视镜、仪表盘、脚踏板等 和乘客的谈话内容 司机的第三级注意力被乘客的谈话内容占据，所以周围的环境音就被阻断了。那假设这辆车使用了屏幕触摸式导航系统，那么司机在使用导航系统时，主要注意力就被阻断了。所以在非自动驾驶的汽车里使用触摸操控在交互上是糟糕的设计。
+主要注意力 次要注意力 第三级注意力 触摸屏操作 后视镜、仪表盘、脚踏板等 和乘客的谈话内容 使用电子设备的注意力模型 接下来，我们一起回到日常生活中。在一般情况下，我们在工作和学习时，注意力的状态是这样：
+主要注意力 次要注意力 第三级注意力 电子屏幕、书本上的内容 屏幕边缘的时间和菜单，不时弹出的通知栏，视线边缘来回走动的人 环境光和声音，提示音，久坐后座椅、桌子的不适感 看到这里，你头脑中理想的学习环境是不是下面这样呢？
+主要注意力 次要注意力 第三级注意力 电子屏幕、书本上的内容 未被占用 未被占用 次级注意力未被占用并不一定是件好事。我们大脑里偶尔冒出来的思绪经常把注意力牵扯到其他事情上。对平时专注力差的人，更会时不时主动寻找手机，看看微信，突然想起某款口红型号，马上登录淘宝……
+所以，专注的重点在于合理分配注意力的中心和边缘，让它们既不互相阻断，又不给思绪留出太多遐想空间。
+用平静的方式，占领注意力的边缘 想象现在你坐在周末的咖啡馆里准备阅读一本书，但是嘈杂的环境无法让你沉下心来：飞奔的小朋友发出持续的笑声，不时从你身边划过；隔壁桌相亲的一男一女举止暧昧，任谁都不能不关心他们接下来的进展；为了防止顾客久坐而专门设计的座椅让你的臀部和背部永远处于找不到理想接触面积的状态；这时，手机锁屏界面显示「你收到了一条通知」……
+下面，你应该做什么呢？
+或许是扔掉手机换一家咖啡馆，亦或者在夺门而出前亲吻隔壁桌的女生，在男生惊慌的眼神里转身跑向门口，并在出门前绊倒跑过来的小朋友……
+这肯定是不行的。
+首先，你要关掉自己手机的一切通知，或者直接打开勿扰模式。大多手机 App 都想尽办法留住更多用户的时间，所以真正变成手机的主人，是你提升一切行动力和专注力的先决条件。
+第二步，你要屏蔽掉视觉污染，让视线边缘不会有吸引你注意力的物体。我会在下一小节中告诉你聚光灯的妙用。
+最后，你要屏蔽掉声音的干扰，戴上耳机，播放点柔和的音乐。除此之外，舒适的座椅和柔软的靠垫都会安抚你的触觉神经。
+你的注意力应该像下面这样：
+主要注意力 次要注意力 第三级注意力 电子屏幕、书本上的内容 不容易吸引注意力的物体，较暗的周围环境 轻柔的旋律，舒适的倚靠感 用聚光灯营造舞台感 次级注意力会时不时把视觉中心夺走。许岑在自己的新书《上手》中，提出使用聚光灯来营造极大提升专注力的舞台感办公环境。从注意力模型的角度说，次级注意力被较暗的环境包围时，更不容易阻断视觉注意力。
+市面上很多光线柔的台灯或是显示器灯，兼顾了保护视力和聚光灯的作用。比较知名的有少数派曾经发过的《这是我今年买得最值的硬件 — WiT Genie》和《夹在显示器上的台灯，美观实用的完美照明解决方案：明基 ScreenBar Plus 屏幕挂灯》，前者还详细讲解了照明亮度、频闪对视力的影响。</description></item><item><title>Ricoh GR2 参数设置心得</title><link>https://sund.site/posts/2019/ricoh-gr2-settings/</link><pubDate>Thu, 14 Nov 2019 14:46:00 +0800</pubDate><guid>https://sund.site/posts/2019/ricoh-gr2-settings/</guid><description>常用相机术语 包围曝光：同时使用不同曝光参数或滤镜拍摄三张照片或是合成一张。
+NR：即降噪功能，如感光度 ISO NR，低速快门 NR。
+ND 滤镜：即减光镜，减少进光量，延长曝光时间，用于拍摄云彩，溪流等长曝光场景。
+AF：自动对焦（Auto Focus）。
+AE：自动曝光（Auto Exposure）。
+半按快门警告图标 抖动警告（!((📷))）：快门速度过慢，照片质量会因为微微抖动而模糊。可以改善周围环境亮度或是手动提高快门速度。
+自动曝光警告（!AE）：快门速度太快，可能照片会发暗。可以调低快门速度或是增大光圈等。
+各项参数的对抖动、曝光、噪点的影响 参数 增加参数值对进光量的影响 说明 光圈（F） 提高 手动对焦模式或者快拍模式下，光圈越小，【超焦距】带来的取景深度越大 快门速度越快 降低 快门速度 1/250 适合抓拍，1/60 为通常的安全快门 ISO 提高 800 以内画质较好，超过 800 噪点明显变强 曝光补偿（EV） 提高 影响亮度，非自动档可用，本质是增减相机控制光圈、快门、ISO 的比例时的权重，通常拍摄雪景和较黑的物体时候需要调节 白平衡（WB） 无影响 影响色彩 白平衡补偿（B：G） 无影响 手动增减白平衡权值，可以做出胶片等效果 效果（D:C:S） 无影响 影响滤镜效果，可以拍出风格强烈的作品 ND 滤镜（开） 降低 在强光状态下打开 ND 滤镜可以降低 3 档进光量，即使在白天也能用慢门或者大光圈 闪光灯（开） 提高 在白天背光和夜晚都可以提高近景中被摄体的亮度 景深标尺、ND 滤镜、曝光补偿的技巧</description></item><item><title>Nintendo Switch 联机优化策略</title><link>https://sund.site/posts/2019/nintendo-switch-network-opt/</link><pubDate>Mon, 07 Oct 2019 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2019/nintendo-switch-network-opt/</guid><description>简单方法 首先介绍下 Nintendo Switch 在哪里设置网络，如下图，设置界面=&amp;gt;互联网设置里，可以修改 IP，DNS 等常用网络配置。修改之后点击「链接测试」，可以测试你的 NAT 和下载、上传速度。
+首先：设置路由器的 WIFI 类型为 5G 因为 NS 对 2.4GHz 的 Wifi 优化非常差，所以一般玩家都选择设置 Wifi 类型为 5GHz，5G 的缺点是穿墙能力差，但是速度很快，所以建议把 NS 放在离路由器不太远的位置。
+最简单粗暴的方法：购买加速器 购买加速器是最省心省力的方案，以网易 UU 加速器为例，加速后可以把 NAT 从 D 上升到 B 或 A，完全可以满足大部分延迟要求较低游戏的需要。
+Mac 版 UU 加速器目前还处于免费测试阶段，可以随意使用。按照提示配置 NS 上的 IP 和 DNS 即可。但是如果想让联机速度突破 A，甚至小于 30ms 延迟，就要结合第二部分「进阶方法」中的内容了。
+最方便的方法：DNS 优化 这也是最多人的办法，以「Splatoon2」为例，四川电信在不使用任何加速器的情况下，单单设置了合适的 DNS，就可以流畅体验乌贼娘了。注意这种方法在晚上 8 ～ 10 点高峰期间有一定概率掉线。下面提供一些我常用的 DNS，不同地区效果不同，需要自己尝试。
+218.102.23.228 # 一般用作日本eshop下载游戏，速度提升明显 203.198.7.66 168.126.63.1 # 著名韩国DNS节点，Splatoon2 联机常用 168.126.63.2 # 同上 进阶方法 进阶方法可以最大限度的提升你的网络通信效率。</description></item><item><title>8月做了什么</title><link>https://sund.site/posts/2019/aug-routine/</link><pubDate>Mon, 02 Sep 2019 15:52:58 +0800</pubDate><guid>https://sund.site/posts/2019/aug-routine/</guid><description>准备新开一个话题，用每个月的总结替代年度总结。这是第一篇。
+最近国内国际上大事不断，在这个历史转折点当口，每个从互联网汲取信息的人都应该有点独立思考能力。「第一性原理」（first principles thinking）是伊隆·马斯克在 TED 演讲时回答「为什么能够在不同的领域都能够取得成功？」时给出的答案。第一性原则要求我们剔除用「比较」来权衡事物好坏的思维方式，转而选择一层层向下探求本质，再由本质反推出认识。这里有篇博客文章做了细致的讲解。
+有什么发现 七龙珠里的元气弹
+这是一群香港示威者把激光笔的光束汇聚到一张反光板上，以干扰警方行动。像七龙珠里孙悟空把大家的力量汇聚起来形成超大元气弹的画面。非常有想象力。
+Hacker News 和 开发者头条、掘金的差别
+国内两大技术新闻「开发者头条」和「掘金」的文章主要以技术理论和工程实践为主。这两者都在一定程序上模仿国外的 Hacker News，但是 Hacker News 除了技术和工程实践，更多的是对政治、经济、文化的深度思考。
+在某种程度上，中国的技术人被阉割了右脑。右脑有赋予行为合理化的能力。国内的技术「场」，就是一个你只需要关心技术本身而不需要关心社会、文化影响的环境。
+人生五十年，如梦又似幻
+前不久上一家公司的老板因为癌症去世了，年仅 51 岁。在 50 岁之前，他拥有纳斯达克上市的公司，在北京核心商圈有一栋办公楼。我想起《影武士》里织田信长唱的那首歌：
+人生五十年，与天地长久相较，如梦又似幻。一度得生者，岂有不灭者乎？
+白领快乐水
+元气森林苏打气泡水，0 热量、苏打、气泡。这几个元素加起来就是现在办公室一族的全部追求了。这是一种真正的「现代饮料」。
+马里奥创造家 2
+这是个创造快乐的游戏，拥有它的朋友可以玩玩我制作的地图：9PB-WGX-WVF
+任意听播客
+这个网站https://getpodcast.xyz可以把最受欢迎的中文博客添加到任意你常用的 podcast 客户端。
+看过的书 《非暴力沟通》
+一本讲沟通的书，越是亲近的人，越应该认真的对待「沟通」这件事。但是我们日常生活中往往会采取相反的做法。
+《交互的未来》
+原离线的主编 Bob 推荐的书，内容其实挺一般的。里面有一个很有趣的思考，自动扶梯在故障时会变成普通的扶梯。这种能够出故障时「自我降级」的设计原则，其实生活中很常见，比如电动牙刷，蓝牙音箱，WIFI 智能插座。你还能想到哪些身边的设备呢？
+言叶 Note that I do not claim that all of this makes me more productive, merely that it makes things more searchable.
+usesthis 网站对 Paul Ford 的采访。知识管理体系中，相比于高效性，「可搜索性」或许更加重要。</description></item><item><title>制定一个人的日本旅行计划</title><link>https://sund.site/posts/2019/jp-travel/</link><pubDate>Thu, 11 Apr 2019 13:19:04 +0800</pubDate><guid>https://sund.site/posts/2019/jp-travel/</guid><description>独自一个人出国旅行有很多不方便，但作为交换，那份无拘无束的自由和旅途中的不期而遇完全值得这种付出。为了进一步降低不便，提高旅行体验，我从三个方面制定旅行计划：
+前期准备。这部分没有技术含量，网上很多攻略，我列举出来供参考 路线规划。这部分使用了一些技巧和工具，是我自己总结的经验 学习基本礼貌用语，地名和礼仪。这部分内容会增强你的旅行体验 带图原文： https://mp.weixin.qq.com/s/rAZcFmW-96CrOkvQY4N04w
+旅行计划 &amp;gt; 前期准备 这部分都是固定套路，没有技巧。很多其他攻略都有，我整理出来供参考。
+护照
+日本不接受个人申请，所以只能去淘宝找最近的旅行社申请。我在成都，所以找了一家信誉比较高的重庆旅行社（送签重庆日本领馆）。把必备的材料邮寄过去。大概 10~20 天出签。
+机票和酒店都不需要你提供，旅行社会解决。你只要安静等待出签。
+使用工具：淘宝。
+机票
+公认体验最好的是全日空航空(官网：https://www.ana.co.jp/zh/cn/)。全日空的餐食和服务质量都非常高。建议提前两个月预订机票，在官网搜索计划旅行时间前后的日期，很大概率可以 3~5 折价格订到往返的机票。
+使用工具: 全日空官方网站
+酒店
+因为日本的民宿不被官方承认，所以 airbnb 之类的民宿出现纠纷是没有保障的。建议在 Booking 上预订酒店。和式酒店(日本传统风格的榻榻米地板的酒店)往往没有独立卫浴和床，所以价格会便宜很多，追求舒适的话建议订正常的酒店，想体验日本民风或者喜欢和很多外国人一起过集体生活的，可以考虑一些青年旅社和和式酒店，不建议考虑胶囊旅馆，体验非常差。
+另外，建议先读完本文&amp;quot;规划路线&amp;quot;部分，再预订酒店。
+使用工具：Booking App
+电话卡
+淘宝可以买到很便宜的日本 7 天 4G 流量卡。如果单人旅行的话，比随身 wifi 要方便不少。
+使用工具：淘宝
+地铁券
+西瓜卡(Suica)是关东地区的常用地铁卡。不但可以坐地铁还可以在便利店买东西，可以直接在日本机场购买。
+具体的购买方法见自动贩卖机。
+众所周知日本的交通比较贵。这里要好好说下技巧，日本很多针对外国游客的福利，比如东京地铁三日券，可以在 72 小时内任意乘坐地铁，非常划算。
+使用工具：东京地铁网站，包括购买地铁票的方法和详细地图：https://www.tokyometro.jp/tcn/ticket/travel/index.html。
+如果怕到日本后找不到购买的地方，也可以在淘宝提前购买好。
+景点票
+日本的大部分室外景点是不要钱的。很多观光路线有缆车、登山电车需要买票。建议提前上网查好目标城市的观光票是否有通票(比如我去箱根前，在东京新宿可以买到箱根 2 日周游券，可以乘坐所有缆车、电车等交通工具，参观所有景点免票)。这会省下很多钱，还能免去多次买票的麻烦。
+日本的城市都各自的宣传网站。可以登录上去查看旅行优惠和景点信息。
+使用工具：搜索引擎搜索城市的官网。
+货币
+建议在出发前至少兑换 3 万日元随身携带。注意日本商店找零大量使用硬币，所以有一个能装硬币的小钱袋是必须的（建议当地买一个）！另外日本兑换货币的地方主要是 7-11 便利店，而东京大阪这种大城市 7-11 便利店更是随处可见。所以不需要太担心。购物的话银联卡和 Visa 卡基本随处可用。
+使用工具：有些银行兑换外币需要提前申请。到营业厅时记得随身携带身份证。
+&amp;gt; 规划路线 我使用&amp;quot;看板&amp;quot;的方式来规划旅行路线。具体方法就是把想去的城市和旅行景点全部写在便签纸上（也可以用电子看板”Trello“），按照地区把同一个地区范围的景点贴在一起。一个人一天最多走 2~3 个地区，每个地区 1~2 个景点（不建议行程制定的太匆忙）。按照这个原则，我制定了 4 步路线规划方案：</description></item><item><title>跨过真实和虚无的河</title><link>https://sund.site/posts/2018/csqstz/</link><pubDate>Thu, 04 Oct 2018 13:25:55 +0800</pubDate><guid>https://sund.site/posts/2018/csqstz/</guid><description>两个月前在亚马逊买村上春树《刺杀骑士团长》的简体中文版电子书，译者是大名鼎鼎林少华先生。我对林少华的了解，源自高中时期看的《挪威的森林》，林先生那晦涩的翻译和故弄玄虚的修辞让年少无知的我看得头昏脑涨。读了几章《刺杀骑士团长》后，唤起了我不愉快的青少年回忆，真的还是无法接受这种「不忠实于原著」的翻译风格呀。在这种心态下，最终还是去淘宝买了两册赖明珠的台译版来看。所以下面要讲的内容，都是基于台湾繁中版本的翻译。
+主要人物 （剧透） 我 ：青年画家，和妻子离婚后住进了朋友雨田政彦父亲过去生活过的山中别墅里，意外发现了著名画家雨田具彦藏在阁楼的画作《刺杀骑士团长》。后来机缘巧合认识了附近别墅居住的富豪免色先生和山下的秋川麻里惠一家。
+雨田具彦 ：朋友雨田政彦的父亲，90 岁高龄的画家，已经失去神志住在疗养院里。年轻在维也纳留学期间和恋人组织刺杀纳粹军官的活动，恋人被纳粹迫害致死，自己则因家族关系而苟且偷生回到国内。其弟弟也因参军入伍，在南京大屠杀期间留下心理创伤，回国后自杀。雨田具彦独居在主人公后来居住的山中别墅里，直到神志不清被儿子送去疗养院。
+骑士团长 : 在我无意中打开了山后被石头封住的井后，突然出现在我的画室里的自称是「Idea」（简中翻译为理念）的灵体。长的和雨田具彦画作里的骑士团长一模一样，只是身高只有 60 公分。本作中只有三个人能看见骑士团长——我、羽田具彦、秋川麻里惠。
+秋川麻里惠 ： 青春期刚刚发育的少女，童年在山中长大，拥有敏锐的洞察力。其母亲曾经是免色先生的女友，在和免色分手前两人发生关系。在生下麻里惠之后因毒蜂蛰咬过敏而死。后麻里惠和姑姑秋川苼子一起住在山里。免色一直认为麻里惠有可能是他的亲生女儿。
+免色 ： 富豪，生活井井有条，是自控力非常强又有能力控制住周围一切的男人。独居在附近的白色别墅里，常年用望远镜窥探秋川麻里惠一家的生活。
+光即是影，影即是光 《刺杀骑士团长》的故事源自莫扎特版的歌剧《唐璜》。讲的是风流成性的唐璜（台译：唐·乔万尼）在勾引骑士团长的女儿被发现后，在和骑士团长决斗中杀死了骑士团长，最后遭报应堕入地狱的故事。
+正如书中所说，Idea 是一种类似观念的东西，比如爱本身不是 Idea，但是产生爱的东西就是 Idea。我把它理解为「本我」，林少华说，书中出现的洞穴——井，在日语里和英文的「本我」谐音。所以我认为，书中多次出现的「骑士团长」也许是各个人物的内心本我的写照。年轻的雨田具彦对恋人、弟弟的死去充满自责和愧疚，又因为政治、家庭的原因无法对人诉说自己的痛苦，便将自己化身故事里的唐璜，刺杀了骑士团长，希望自己替代爱人和弟弟堕入地狱。
+值得注意的是，书里反复出现的元素「窥探」和「封闭的空间」。书中几处「窥探」的描写：
+在名为《刺杀骑士团长》的画作里，有一个从地下打开盖子窥探的长脸男 用望远镜窥探麻里惠生活的免色 仿佛暗中窥探我，我假想中的「开斯巴鲁森林人汽车的男人」 最后躲在衣柜里窥探免色的秋川麻里惠 他们每个人都在好奇心的驱使下窥探别人（却在过程中窥探到了自己）。在漆黑的封闭空间里，意识和肉体剥离，仿佛灵魂出窍般看到了自己真实的内心。后山的洞穴之于我，曾经关押过的拘留所之于免色先生，衣柜之于秋川麻里惠，都是窥探到自己内心世界的封闭空间。
+如果按照我上面的理解，故事的脉络就是这样：主人公、免色、麻里惠、雨田具彦都是被自己内心折磨的、介于「真实和虚无之间」的人。主人公一方面觉得自己深爱妻子，另一方面怨恨妻子的背叛，自己却又与人妻发生关系，是介于背叛与被背叛的人。免色是能力超强控制一切的男人，却无法得知疑似女儿的麻里惠是否和自己有血缘关系，于是免色也是介于掌控和失控的男人。麻里惠不必说，对自己身世一无所知，介于「免色先生的女儿」和「不是免色先生女儿」两种身份之间。雨田具彦则纠结于年轻时的自己，在失去爱人和兄弟的痛苦中即是人人知晓的画家，又是一个无法告知任何人内心感受的孤独老人。
+每一个人都在真实和虚无之间徘徊。整个故事就是围绕村上春树构建起来的世界展开。光即是影，影即是光。真实和虚无互为存在的依据。
+中间的过程不再赘述，好奇的看官可以读到这里就打住，去买一本书，自己来细细品味。如果你不想读长篇小说或者已经读完只想看看我怎么理解，那么请继续往下看。
+故事给出了几种人的结局。
+为了拯救失踪的秋川麻里惠，主人公「我」按照「骑士团长」的提示，在雨田具彦的病床前重演了《刺杀骑士团长》中的一幕，目睹了我亲手杀死了「骑士团长」的雨田具彦内心终于释然，几天后安详辞世。几十年来萦绕在老人心头的痛苦、自责、愧疚被我一刀捅破，产生怨恨的种子不复存在。
+在杀死骑士团长过程中引出了地板下窥探的「长脸男」（也是画作中出现的人物），「我」搬开地上的盖板进入了隐喻的地下世界。在经过真实和虚无之河时，「我」把秋川麻里惠的护身符（企鹅挂饰）留给河中间的摆渡人当做船资后，「我」独自爬进漫长的洞穴（此处和主人公小时候与妹妹爬进富士山附近的风洞的回忆呼应），在战胜了「双重隐喻」后，在漆黑的封闭空间里，内心终于决定和妻子和解（也终于与自己和解）。
+至于什么是「双重隐喻」，书中提到是骑士团长提醒主人公要小心的一种危险的存在。会吞噬那些意志不坚定的人。在我理解，这是内心本我和现实互相影响时，不要让自以为的真实改变了本我的一种比喻（姑且这么解释吧）。
+回到秋川麻里惠的故事线，因为「我」把麻里惠的护身符留给了「真实与虚无之河」的摆渡人，所以麻里惠的身份永远介于真实和虚无之间，也就是说，麻里惠到底是不是免色的女儿永远成了谜。故事的最后章节，麻里惠躲在免色家衣橱里看到的「好像是免色却是不是免色」的人影，就是免色探求麻里惠真实身份的本我的隐喻。麻里惠紧紧抓住衣柜里的女人衣服（其实是她生母留在免色家，被免色珍藏起来的衣物），并且被「骑士团长」告知：「衣服会保护你」。这恰恰说明，免色在故事的最后，内心依然是爱着麻里惠的生母，所以最后放弃了探求麻里惠的真实血缘身份。不去打扰麻里惠平静的生活。这也是「我」在地下世界做出的决定和真实世界产生了某种联系，最后拯救了麻里惠平静的生活，让真相永远隐藏起来。
+免色先生最后和麻里惠的姑姑笙子热恋，似乎不再关心麻里惠的身世了……这是我唯一觉得村上春树有点草率的处理。
+题外话 在读完《刺杀骑士团长》上册后，我正好休年假去日本旅行，期间在箱根的山里住了一宿民宿。箱根距离书中主人公居住的小田原市不远，在山里吹着风听雨声时，真的有种置身小说里的感觉。我住的那间和屋非常简陋，风一吹四周的窗子和木板拉门都会吱吱嘎嘎作响。晚间寂静无人的乡村里还能隐约听到风铃的声音，像极了书里主人公在深夜听到后山摇铃声的场景。只有日本的作家才能写出这样的故事，用那种日本人细腻、敏感的神经，探索人心里不易察觉的感受。也希望林少华老师晚年幸福，不要再接手村上春树的作品翻译工作了。:)</description></item><item><title>《Python源码剖析》第三部分——Python虚拟机进阶</title><link>https://sund.site/posts/python-3/</link><pubDate>Fri, 14 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/posts/python-3/</guid><description>Python 环境初始化 进程启动后创建 PyInterpreterObject，PyInterpreterObject 里面维护了全局 module 映射表interp-&amp;gt;modules，该表默认初始化为buildin模块，
+Python 的 import 机制 Python 虚拟机在执行“import A”时，会为 package A 创建一个 module 对象，同时会在该 module 维护的 dict 中添加两个表示元信息的属性：name和path。而 Python 虚拟机从 A/init.py 中执行“import mod1”时，也会为 mod1 创建一个 module 对象，同时也会设置name属性，但是这时就不设置path属性了。
+package 是由 module 聚合而成。更清楚的表述是：module 属于一个 package。我们不能说，module1 属于 module2。我们前面已经看到，module 的路径实际上是一种树状结构，从图 14-11 中可以看到，在这个树状结构中，module 的父节点只能是 package，而不可能是另一个 module。
+GIL Python 虚拟机使用一个全局解释器锁（Global Interpreter Lock，GIL）来互斥线程对 python 虚拟机的使用。
+注意这里 GIL 是解释器一级的互斥锁，也就是同一时间只能有一个线程占用 python 解释器。所以GIL 是用来让操作系统中分配的多个线程互斥的使用 python 解释器的，是建立在系统线程调度基础之上的一套 C API 互斥机制，是比操作系统线程资源更大粒度的锁。
+Python 的线程是基于操作系统原生线程的，所以 python 的线程不是「虚拟出来的」。
+那么究竟 Python 会在众多的等待线程中选择哪一个幸运儿呢？答案是，不知道。没错，对于这个问题，Python 完全没有插手，而是交给了底层的操作系统来解决。也就是说，Python 借用了底层操作系统所提供的线程调度机制来决定下一个进入 Python 解释器的线程究竟是谁。</description></item><item><title>《Python源码剖析》第二部分——Python虚拟机基础</title><link>https://sund.site/posts/python-2/</link><pubDate>Thu, 13 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/posts/python-2/</guid><description>Python 执行环境 在编译过程中，这些包含在 Python 源代码中的静态信息都会被 Python 编译器收集起来，编译的结果中包含了字符串，常量值，字节码等在源代码中出现的一切有用的静态信息。在 Python 运行期间，这些源文件中提供的静态信息最终会被存储在一个运行时的对象中，当 Python 运行结束后，这个运行时对象中所包含的信息甚至还会被存储在一种文件中。这个对象和文件就是我们这章探索的重点：PyCodeObject 对象和 pyc 文件。
+在程序运行期间，编译结果存在于内存的 PyCodeObject 对象中；而 Python 结束运行后，编译结果又被保存到了 pyc 文件中。当下一次运行相同的程序时，Python 会根据 pyc 文件中记录的编译结果直接建立内存中的 PyCodeObject 对象，而不用再次对源文件进行编译了。
+从文章摘录可见，python 生成的不是编译后的文件，而是.py文件对应的静态信息——PyCodeObject，这里包括了字节码指令序列、字符串、常量。每个名字空间(类、模块、函数)都对应一个独立的 PyCodeObject。(python 连编译后的文件里存的都是个对象！)
+不被 import 的 py 文件不会生成 pyc。标准库里有 py_compile 等方法也可以生成 pyc。
+import 机制 导入某个模块时，先查找对应的 pyc，如果没有 pyc 就生成然后 import 这个 pyc。(所以实际导入的并不是 py 文件，而是 py 文件编译后的 PyCodeObject)。
+PyFrameObject Python 程序运行时的「执行环境」。参考操作系统执行可执行文件的过程。Python 也是将函数对应的执行环境封装成栈帧的形式加载进内存。
+typedef struct _frame { PyObject_VAR_HEAD struct _frame *f_back; //执行环境链上的前一个frame PyCodeObject *f_code; //PyCodeObject对象 PyObject *f_builtins; //builtin名字空间 PyObject *f_globals; //global名字空间 PyObject *f_locals; //local名字空间 PyObject **f_valuestack; //运行时栈的栈底位置 PyObject **f_stacktop; //运行时栈的栈顶位置 …… int f_lasti; //上一条字节码指令在f_code中的偏移位置 int f_lineno; //当前字节码对应的源代码行 …… //动态内存，维护（局部变量+cell对象集合+free对象集合+运行时栈）所需要的空间 PyObject *f_localsplus[1]; } PyFrameObject; Python 标准库的sys.</description></item><item><title>《Python源码剖析》第一部分——Python对象基础</title><link>https://sund.site/posts/python/</link><pubDate>Wed, 12 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/posts/python/</guid><description>Python 的对象初始化 在 Python 中，对象就是为 C 中的结构体在堆上申请的一块内存，一般来说，对象是不能被静态初始化的，并且也不能在栈空间上生存。唯一的例外就是类型对象，Python 中所有的内建的类型对象（如整数类型对象，字符串类型对象）都是被静态初始化的。
+python 的对象不像 C 是分配在栈、堆、data segment 等位置，而是全部分配在堆上！只有 python 内置类型在初始化时候才是被 C 语言层静态初始化。
+PyObject 内部就两样：引用计数器、类型对象指针。
+类型对象的定义：
+typedef struct _typeobject { PyObject_VAR_HEAD char *tp_name; /* For printing, in format &amp;#34;&amp;lt;module&amp;gt;.&amp;lt;name&amp;gt;&amp;#34; */ int tp_basicsize, tp_itemsize; /* For allocation */ /* Methods to implement standard operations */ destructor tp_dealloc; printfunc tp_print; …… /* More standard operations (here for binary compatibility) */ hashfunc tp_hash; ternaryfunc tp_call; …… } PyTypeObject; PyObject_VAR_HEAD是可变类型的头信息，其中除了PyObject_HEAD的内容外，额外添加了一个代表该对象元素数量的整型。从上边代码可见，python 的类型也是一个可变对象。</description></item><item><title>一些投资知识</title><link>https://sund.site/posts/investment/</link><pubDate>Thu, 19 Jan 2017 13:25:55 +0800</pubDate><guid>https://sund.site/posts/investment/</guid><description>资产配置 债、股、基金等综合配置。基金有的偏股，有的偏债，有的偏另类。看清楚哪些基金适合自己。
+每种理财产品、基金都是有一些底层资产构成。
+什么是底层资产 债类资产(固定收益资产) 这类资产风险取决于平台投资的内容，债务主体(国家、公司、个人)。风险最低。
+股类资产(高风险、高收益)
+另类资产(最高风险、最高收益)
+如房地产、农产品、黄金、原油、文玩收藏、比特币等。
+理财风险等级 银行理财的风险级别分成 1-5 级，在合同里会标识出来，比如 R1-R5，谨慎型产品(R1)、稳健型产品(R2)、平衡型产品(R3)、进取型产品(R4)、激进型产品(R5)。
+一般 R1-R2 是可以认为比较稳健、基本不会亏本的，R5 就比较危险了。
+固定收益类资产(低风险) 国债(3%左右) 银行定期存款(小城乡银行利息高，国家有 50 万以内存款的保险) 网络银行存款(微众银行，五年期定存年化 5%) 银行理财(保本类 3-5%，非保本类高一点点) 结构性理财比非结构性理财高些。(既然买银行理财就是图安全，所以要买保本或风险低的。 中国理财网可以查看风险和收益，是权威的半官方类网站。银行 T+0 产品随时可以到帐，适合大量临时性资金的理财)
+保险理财。虽然名字叫保险，但是本身没有保障功能，是保险公司包装出来的理财产品。 信托、券商资产管理计划 信托。信托的本质也是债券。信托产品底层就是债券。信托公司包装后卖给你。所以评估风险标准仍然是信托公司本身的实力。如中信信托、平安信托比较强大，本身风险较低。 券商的资产管理计划。100 万起，风险和收益都比信托高。本质上是企业债券。但是借款规模大，企业运营不景气时风险高。 P2P。现在买要比之前风险低，推荐资产是小资产(如个人消费、小买卖等)。P2P 在理财中占比不要超过 20%比较好。知名度比较高的平台：陆金所、人人贷、有利网、小赢、桔子理财、积木盒子等等。 财经信息来源：财联社，财新网 读研报推荐迈博汇金。又叫慧博投研资讯。网址是http://www.microbell.com/newweb/web/search?index=0
+浮动收益类资产 基金
+理财工具
+蚂蚁聚宝 基金评价报表 分类
+货币基金。风险最低，如余额宝就是。收益很低，流动性强。 债券基金。风险较低。 债基按风险分为：
+一级债基。风险低，纯买债券。 二级债基。80%买债券，20%买股票。(推荐定投，进可攻退可守) 混合偏债基金。 可转债基金。 买债基适合选择成立时间长，收益稳定的。 年底或资金紧张时，金融机构赎回债券，会导致债基市场低迷。从长期(10 年)看，债基仍然保持上升趋势。
+股票基金。 另类基金。挂钩房地产、黄金等。 封闭式基金平时不可以购买，会在特定时段开放购买，需要常查看基金公告。
+股票
+理财工具：雪球、华泰证券、巨潮咨询(看企业年报等)、迈博汇金
+Wind 金融数据。
+炒股的原则：花一段时间选定一些熟悉标的公司，特定去研究它。不要听消息或听股神建议炒股。
+房地产 投资房产的标准是看城市法制程度(办事是否需要找关系)，年轻人就业率。
+理财规划工具 好规划网、七分钟理财。
+资产盘点：财余管家</description></item><item><title>Python2 中字符类型的一些坑</title><link>https://sund.site/posts/py-str/</link><pubDate>Wed, 11 Jan 2017 11:09:00 +0000</pubDate><guid>https://sund.site/posts/py-str/</guid><description>问题 有一道面试题是这样的：
+a = u&amp;#39;China&amp;#39; b = &amp;#39;China&amp;#39; c = u&amp;#39;中国&amp;#39; d = &amp;#39;中国&amp;#39; # 1 print &amp;#39;%s %s&amp;#39; % (a, b) # 2 print &amp;#39;%s&amp;#39; % c # 3 print &amp;#39;%s&amp;#39; % d # 4 print &amp;#39;%s %s&amp;#39; % (c, d) 判断打印后的效果。
+先说正确答案，只有最后一行会报错。
+分析 在 Python2 里，默认的字符类型是str，这个str和 Python3 的str完全不同，Python2 的str类型是 8 位的 ascii 序列。Python2 在处理str类型转换时遵循这样的规则：如果被处理的str型变量值小于 7 位，就可以和unicode类型混用。可以做+连接，格式化等操作，同 unicode 享受同样的待遇。
+Python2 在格式化字符时，会把str格式化为str，如果字符串里混入了unicode，就会把其他字符都转化为unicode。所以这道题里 1 处的 a，b 两个值混合后的字符就是一个 unicode 字符串，c 和 d 单独格式化后仍保留了自己的格式。但是 Python2 在格式化代码位置 4 时，发现 c 是 unicode 而 d 不是，就会尝试按照上面的混用规则，格式化 d 为 unicode 类型，但是 d 的值'中国'显然是一个大于 7 位的str，因此 Python2 抛出 UnicodeDecodeError。</description></item><item><title>Python yield关键字的底层实现</title><link>https://sund.site/posts/py-yield/</link><pubDate>Wed, 28 Dec 2016 18:00:00 +0000</pubDate><guid>https://sund.site/posts/py-yield/</guid><description>这几天面试被问到类似的问题，顺便看了看 Python 的源码，参考网上的教程，总结一下 yield 关键字在 C 层面是如何实现的。
+举个栗子 我们先看一个 python 生成器函数的例子：
+from dis import dis def func(): i = 4 yield i print i dis(func) a =func() a.next() a.next() 使用 python 的库 dis 可以直接查看 python 虚拟机运行的字节码。dis(func)的打印如下：
+6 0 LOAD_CONST 1 (4) 3 STORE_FAST 0 (i) 7 6 LOAD_FAST 0 (i) 9 YIELD_VALUE 10 POP_TOP 8 11 LOAD_FAST 0 (i) 14 PRINT_ITEM 15 PRINT_NEWLINE 16 LOAD_CONST 0 (None) 19 RETURN_VALUE 我们猜测其中第二列(代表字节码偏移量)为 9 的指令YIELD_VALUE就是 yield 关键字的执行代码，进入 Python2.</description></item><item><title>Python 巧妙地将rpc接口封装成pythonic的链式调用</title><link>https://sund.site/posts/py-pythonic/</link><pubDate>Tue, 25 Oct 2016 15:40:43 +0000</pubDate><guid>https://sund.site/posts/py-pythonic/</guid><description>这是一个外国人实现的 Zabbix(一个开源监控工具)的 Python Client——pyzabbix 里的代码片段。
+RPC 调用 Rpc 调用的流程是向 rpc 服务端指定的 uri(如http://www.abc.com/jsonrpc.php) 发送 json(或其他双方约定格式)数据包，数据包里有 rpc 版本信息、方法名、参数等。下面Zabbix类里的do_request方法就完成了将方法名和方法参数打包 json 后发送请求的过程。
+class Zabbix(object): # ... skip other class methods def do_request(self, method, params=None): request_json = { &amp;#39;jsonrpc&amp;#39;: &amp;#39;2.0&amp;#39;, &amp;#39;method&amp;#39;: method, &amp;#39;params&amp;#39;: params or {}, &amp;#39;id&amp;#39;: self.id, } response = self.session.post( self.url, data=json.dumps(request_json), timeout=self.timeout ) 技巧 但是为了方便，我们在 python 里一般使用zabbixclient.host.get(args)这样的链式调用，而不用zabbixclient('host.get', args)这样的调用方式。pyzabbix 的作者巧妙的实现了这样的转换。
+class Zabbix(object): # ... skip other class methods def do_request(self, method, params=None): request_json = { &amp;#39;jsonrpc&amp;#39;: &amp;#39;2.</description></item><item><title>Python Fabric库无法启动后台进程的问题和解决办法</title><link>https://sund.site/posts/py-fabric/</link><pubDate>Wed, 19 Oct 2016 16:25:51 +0000</pubDate><guid>https://sund.site/posts/py-fabric/</guid><description>问题和处理方法 Python 的 Fabric 库能够方便的远程操作 Linux 主机执行命令或传输文件。其实现方式就是底层实现 ssh 协议，例如执行下面代码的 run 方法，在目标主机上启动一个 zabbix 后台服务：
+from fabric import api from fabric.tasks import Task class Zabbix(Task): def run(self, kwargs): with api.settings(host_string=&amp;#39;192.168.1.2&amp;#39;, user=&amp;#39;root&amp;#39;, password=&amp;#39;123456&amp;#39;): api.run(&amp;#39;service zabbix_agentd start&amp;#39;) 但是这样操作后虽然 Fabric 的 output 返回结果打印是启动成功，但是 ssh 登录目标主机，却不见 zabbix_agentd 进程，这说明没有真正启动起来。
+我查询了 Fabric 文档，发现需要在 api.run 里添加参数pty=False。
+api.run(&amp;#39;service zabbix_agentd start&amp;#39;， pty=False) 这样就成功启动了后台进程。
+原因 什么是 pty？ pty 是 pseudo-tty，众所周知 tty 是 Linux 支持输入与输出的终端设备，在 shell 下执行ps可以查看每个进程对应的 tty 设备号，如ttys0001。
+pty 是为了解决远程连接时一方不希望对方直接 ssh 连接到主机上而诞生的「虚拟设备」，即伪 tty，其原理是在远程主机和本地之间同时启动 pty 端口连接终端，可以类比进程间的通道，pty 两端同时执行输入输出操作，如同本地直接连接到远程主机。但是一旦断开本地与远程主机的连接，pty 就会结束所有刚才的进程。</description></item><item><title>Python defaultdict结构作计数器的用法</title><link>https://sund.site/posts/py-defaultdict/</link><pubDate>Tue, 11 Oct 2016 15:00:16 +0000</pubDate><guid>https://sund.site/posts/py-defaultdict/</guid><description>在开发中经常需要用到计数器，当函数 foo 调用另一个函数 bar 时，为了确认调用 bar 之后处理的结果正确性，经常需要使用计数器来统计 bar 函数里处理成功了多少次。例如：
+def foo(): success_num = bar() print success_num def bar(): n = 0 # 假设这个任务要迭代100次. count = 100 try: for i in count: # Do something. n += 1 except: pass finally: return n 但是，这里需要定义多个计数器变量来保存计数。每多一个 bar 函数就要多定义两次计数器。有没有类似 C 语言指针一样的方法，可以在 foo 中定义后直接传给 bar，在 bar 里修改值呢。
+众所周知，Python 的参数传值实际传的是变量的拷贝，但是对于像字典、列表等非基本数据结构，实际传给参数的是这个数据结构的指针地址，修改指针地址指向的实际值就可以在函数内外实现传递数据的效果了。那么利用这个特性，可以结合 python 标准库 collections 里的 defaultdict 结构来实现一个更方便的计数器：
+from collections import defaultdict def foo(): result = defaultdict(int) bar(result) print result def bar(result): count = 100 for i in count: try: # Do something.</description></item><item><title>怎样的建议才有价值</title><link>https://sund.site/posts/talk-is-cheap/</link><pubDate>Thu, 25 Aug 2016 13:13:47 +0800</pubDate><guid>https://sund.site/posts/talk-is-cheap/</guid><description>我想很多时候我们下决心做一件事，都要征求周围人的建议。这些建议有好有坏。坏的建议不但帮不了你，还会歪曲你对事实的认识。最近我在研究系统学习英文的方法，偶然在豆瓣小站里看到了开头那段话，对此深表认同。以我个人健身的经历，在报名私教课之前也寻求过很多人的建议。大部分会告诉你，健身(减肥)最重要的就是坚持。他们还会煞有介事的告诉你要「管住嘴，迈开腿」。在这一年里，我减掉了大概 25KG 体重，最大的感受——如果没有教练指导，我自己是断然不会坚持下来的。大部分的建议都像开头引用的那段话一样，是假大空的虚话，废话。
+「任何一个通过自我磨练掌握了某一项具体技能或者在某领域内有一定造诣的人，都会对该领域有着起码的基本认知和独特的个人总结，如果你向其请教，得到的断然不会是“努力去做或者坚持最重要”之类的假大空的虚话」
+—— 豆瓣英语学习大神 恶魔奶爸 Sam
+怎样征求有用的建议？结合我这些年减肥失败的教训，笼统的概括为：如果你要做一件长期投入的事儿，那么请咨询跟你情况类似，且做成了这件事的人。
+首先「情况类似」很重要。因为很多人是科班出身，比如健身教练，他们大部分从上学起就被动养成了科学饮食、运动的好习惯。这些习惯并不是主动思考之后产生的，所以这些人在传授你知识时往往模糊不清的告诉你应该如何做，却说不出所以然。再比如英语系的学生就很难告诉你行之有效的英语学习方法，他们会告诉你大量看美剧英剧，背单词。但是你根本没有他们的学习环境，几乎不可能坚持下来。在语言学习中有「可理解输入」的概念，简单解释就是——你必须接受那些「你能够理解」的知识，否则你就吸收不了(记不住)。同理，知识在灌输给我们时候，如果不解释清楚来由，我们就很难有深刻认识。所以征求建议的对象如果跟你情况类似，你往往能听到更加切实可行的建议，比如在某个阶段应该注意什么，可能片面，但是有效。比如我在健身初期，咨询同学大伟很多健身的入门知识，关于人体代谢率，关于自重训练。这些东西，科班出身的教练通常不会细致地讲解给我。
+其次「要征求做成了这件事的人」，这就是开头那段话的意义，那些没做成这件事儿的人，大都输在了「坚持」这两个字上。在把这一信息转告别人时，这些人就会主观放大坚持的重要性。你去征求这些自己都没成事儿的人建议，得到的都是些「管住嘴，迈开腿」，「坚持不懈」之类的屁话。我这一年锻炼和饮食的心得就是不断学习，反复修订计划和总结经验。另外还有一种傻逼理论「每个人都有各自的特点，要针对性制定计划，没有一种通用的解决办法」。倘若真是这样，还上学干什么？搞科研做什么？管理学、经济学都要歇菜了。别用个体差异给自己找借口了。
+我猜很多有主见，独立思考的人都会认同一句话。这句话是罗永浩在一次鲁豫有约采访时候说的——「我们周围大部分人都是笨蛋」。虽然老罗最近在做手机上栽了大跟头，但是大多数人一辈子连栽这样跟头的机会都没有就入土了。可是骂他的成千上万人里有多少是经历过这过程的呢？传播那些人云亦云的虚话，不过是懒于思考，不求上进的人找好的借口。他们自己做不到的，就理所当然认为你也做不到。抱着「周围大部分人都是笨蛋」的理念，积极地去跟「对的人」征求「有价值」的建议，我相信一定能有所收获。</description></item><item><title>ZooKeeper 帮助手册</title><link>https://sund.site/posts/zookeeper/</link><pubDate>Tue, 14 Oct 2014 00:00:00 +0000</pubDate><guid>https://sund.site/posts/zookeeper/</guid><description>原文地址： http://zookeeper.apache.org/doc/r3.4.6/zookeeperProgrammers.html
+本文假设你已经具有一定分布式计算的基础知识。你将在第一部分看到以下内容：
+ZooKeeper数据模型 ZooKeeper Sessions ZooKeeper Watches 一致性保证(Consistency Guarantees) 接下来的4小节讲述了程序开发的实际应用：
+创建模块——ZooKeeper操作指引 编程语言接口 简单示例演示程序的结构 常见问题和故障 本文的附录中包含和ZooKeeper相关的有用信息。
+ZooKeeper的数据模型 ZooKeeper有一个类似分布式文件系统的命名体系。区别在于Zookeeper每个一个节点或子节点都可以拥有数据。节点路径是一个由斜线分开的绝对路径，注意没有相对路径。只要满足下面要求的unicode字符都可以作为节点路径：
+空字符不能出现在路径名 不能出现以下字符: \u0001 - \u0019 and \u007F - \u009F 以下字符不允许使用: \ud800 -uF8FFF, \uFFF0-uFFFF, \uXFFFE - \uXFFFF (where X is a digit 1 - E), \uF0000 - \uFFFFF 字符&amp;quot;.&amp;ldquo;可以作为一个名字的一部分, 但是&amp;rdquo;.&amp;ldquo;和&amp;rdquo;..&amp;ldquo;不能单独作为相对路径使用, 以下用法都是无效的: &amp;ldquo;/a/b/./c&amp;quot;或者&amp;rdquo;/a/b/../c&amp;rdquo; &amp;ldquo;zookeeper&amp;quot;为保留字符 ZNodes ZooKeeper树结构中的节点被称为znode。各个znode维护着一组用来标记数据和访问权限发生变化的版本号。这些版本号组成的状态结构具有时间戳。Zookeeper使用版本号和时间戳来验证缓存状态，调整更新。 每次znode中的数据发生变化，znode的版本号增加。例如，每当一个客户端恢复数据时，它就接收这个版本的数据，而当一个客户端提交了更新或删除记录，它必须同时提供这个znode当前正在发生变化的数据的版本。如果这个版本和目前真实的版本不匹配，则提交无效。 __提示，在分布式程序中，一个字节点可以代表一个通用的主机，服务器，集群中的一员，客户端程序等。但是在Zookeeper中，znode代表数据节点，Servers代表组成了Zookeeper服务的机器; quorum peers refer to the servers that make up an ensemble; 客户端代表任何使用ZooKeeper服务的主机或程序。
+znode作为对程序开发来说最重要的信息，有几个特性需要特别关注下：
+Watches 客户端可以在znode上设置Watch。znode发生的变化会触发watch然后清除watch。当一个watch被触发，Zookeeper给客户端发送一个通知。更多关于watch的内容请查看ZooKeeper Watches一节。</description></item><item><title>macbook安装ubuntu</title><link>https://sund.site/posts/macbook_ubuntu/</link><pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate><guid>https://sund.site/posts/macbook_ubuntu/</guid><description>注意，ubuntu 和 xubuntu 安装上有一定差别，请严格按照你选择的系统版本流程安装
+ubuntu 准备工作 分区 这一步可以用命令行实现，也可以在 mac 下直接用磁盘工具分区，初学者建议后者。有经验的朋友可以在网上查询 diskutils 的用法，这是 mac 提供的分区工具
+使用磁盘工具，打开左侧最上边磁盘位置（不是 macosx，而是整个硬盘）的选项，右边会出现分区标签。选择分区，你可以用鼠标拖动轻松将 macos 的一部分划分给 ubuntu 使用。分区格式可以选择 mac 日志文件。其实选什么都一样，等会还要重新格式化。
+把 iso 镜像转化为苹果电脑识别的 img 镜像 hdiutil convert /path/to/ubuntu.iso -format UDRW -o /path/to/target.img 命令中path/to/ubuntu.iso是你下载的 iso 路径，path/to/target.img自然是你要保存成 img 的路径
+插入 U 盘，刻录镜像 先运行如下命令查询你 U 盘的设备名
+diskutil list 这里假设 U 盘是 disk1，执行
+diskutil unmountDisk /dev/disk1 接下来执行命令刻录，
+sudo dd if=/path/to/downloaded.img of=/dev/disk1 bs=1m ubuntu 官网针对上一条命令可能出现的两种错误提示给出了解决办法：
+If you see the error dd: Invalid number &amp;lsquo;1m&amp;rsquo;, you are using GNU dd.</description></item></channel></rss>

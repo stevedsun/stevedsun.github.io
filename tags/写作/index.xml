@@ -1,330 +1,41 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>写作 - Tag - 電波障害</title><link>https://sund.site/tags/%E5%86%99%E4%BD%9C/</link><description>写作 - Tag - 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 21 Aug 2022 15:29:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E5%86%99%E4%BD%9C/" rel="self" type="application/rss+xml"/><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2022/technical-writing/</guid><description><![CDATA[<p>本文内容摘录自 <a href="https://developers.google.com/tech-writing/overview" target="_blank" rel="noopener noreffer ">Technical Writing</a> （谷歌技术文档写作指南）的第一部分。</p>
-<p>本文适用于想要提高技术文档写作、技术领域日常沟通能力的读者，对于一些商务的、非文学性质的英语办公场景沟通，也能起一定帮助作用。</p>
-<p>阅读过本文的读者可以：</p>
-<ul>
-<li>提高在日常办公中清晰、准确、客观地传达概念和逻辑的能力。</li>
-<li>掌握英文技术文档写作规范。</li>
-</ul>
-<h2 id="词汇words">词汇（Words）</h2>
-<ul>
-<li>
-<p>对于已有的术语，不要重复发明新的词汇，可以用一个链接指向解释它的页面。</p>
-</li>
-<li>
-<p>如果有必要，可以在文档中直接定义新的术语，但如果术语比较多，最好建立一个术语对照表。</p>
-</li>
-<li>
-<p>文档各处出现的术语应该保持一致的名称或缩写。</p>
-</li>
-<li>
-<p>关于缩写：第一次出现要用<strong>粗体</strong>写全称并用括号指明缩写，之后的文章中不要反复混用全称和缩写。</p>
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>举例<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content">This document is for engineers who are new to the <strong>Telekinetic Tactile Network</strong> (<strong>TTN</strong>) or need to understand how to order TTN replacement parts through finger motions.</div>
-        </div>
-    </div>
-</li>
-<li>
-<p>如果一个术语出现频率不高，请不要使用缩写。</p>
-</li>
-<li>
-<p>使用缩写的情况有：1. 缩写明显更简短；2. 该术语出现频率很高。</p>
-</li>
-<li>
-<p>谨慎使用代名词（It，they，that 等）。</p>
-<ul>
-<li>代名词一定要出现在它所指代的名词之后。</li>
-<li>如果代名词远离它指代的名词（超过 5 个单词），就不用代名词。</li>
-<li>在名词和代名词之间出现第二个名词，会产生歧义，应避免这种情况。</li>
-</ul>
-</li>
-</ul>
-<p>类比计算机编程语言：</p>
-<p>缩写 = 对术语的一层抽象。读者需要花费更多脑力去把它展开成对应的名词。</p>
-<p>代名词 = 指针。它容易引起歧义，所以要避免在读者大脑中引起「空指针」错误。</p>
-<h2 id="主动语态active-voice">主动语态（Active voice）</h2>
-<ul>
-<li>技术文档中应尽量使用主动语态。
-<ul>
-<li>被动语态在读者大脑中需要额外的加工转换才能被理解。</li>
-<li>被动语态用来间接地表达行为，容易引起混乱。</li>
-<li>有些被动语态省略了行为主体，会迫使读者猜测主语是谁。</li>
-</ul>
-</li>
-<li>如果使用被动语态，应正确使用过去分词的各种形式和介词（如 as，by）。</li>
-<li>祈使句的动词（命令式动词）应该使用主动语态。</li>
-<li>科技论文中经常出现被动语态（如 It has been suggested that&hellip;），这种写法并不能传递更多信息，很多科学期刊也开始鼓励使用主动语态。</li>
-</ul>
-<h2 id="炼句clear-sentencesshort-sentences">炼句（Clear sentences，Short sentences）</h2>
-<ul>
-<li>
-<p>选择准确、有力、具体的动词。减少不精确的、软弱的或通用的动词。
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>错误的例子<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content">is，are，occur，happen</div>
-        </div>
-    </div></p>
-</li>
-<li>
-<p>Be 动词和通用动词可以用，但它们通常是一些不良写作习惯的信号，如</p>
-<ul>
-<li>句子中缺少行为主体</li>
-<li>句子使用了被动语态</li>
-</ul>
-</li>
-<li>
-<p>减少 there be 句式，把 there be 句式中的主语和动词提炼出来
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>错误的例子<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content"><p>避免这样用：There is no guarantee that the updates will be received in sequential order.</p>
-<p>应改为：Clients might not receive the updates in sequential order.</p>
-</div>
-        </div>
-    </div></p>
-</li>
-<li>
-<p>尽量少用或不用形容词和副词，因为这些词汇过于主观。</p>
-</li>
-<li>
-<p>尽量使用短的句子。短句比长句更易读、易维护、不易犯错。</p>
-<ul>
-<li>每一个句子只表达一个观点。</li>
-<li>长句尽量转换成列表。</li>
-<li>用简洁表达，去掉多余的词汇</li>
-<li>减少从句。</li>
-<li>正确区分 that 和 which 从句。</li>
-</ul>
-</li>
-</ul>
-<h2 id="列表和表格lists-and-tables">列表和表格（Lists and tables）</h2>
-<ul>
-<li>
-<p>正确区分有序列表（数字列表，numbered lists）和无序列表（圆点列表，bulleted lists）。</p>
-</li>
-<li>
-<p>把句内列举的项（embedded list）转换成无序列表，如：</p>
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>举例<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content"><p>The llamacatcher API enables callers to create and query llamas, analyze alpacas, delete vicugnas, and track dromedaries.</p>
-<p>应换成：</p>
-<p>The llamacatcher API enables callers to do the following:</p>
-<ul>
-<li>Create and query llamas.</li>
-<li>Analyze alpacas.</li>
-<li>Delete vicugnas.</li>
-<li>Track dromedaries.</li>
-</ul>
-</div>
-        </div>
-    </div>
-</li>
-<li>
-<p>保持列表项之间的平行关系（避免把不同层级的东西混在一列）。</p>
-</li>
-<li>
-<p>在使用有序列表时，用一个命令式动词开头，如：</p>
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>举例<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content"><ol>
-<li>Download the Frambus app from Google Play or iTunes.</li>
-<li>Configure the Frambus app&rsquo;s settings.</li>
-<li>Start the Frambus app.</li>
-</ol>
-</div>
-        </div>
-    </div>
-</li>
-<li>
-<p>只有列表每一个项都是句子时，才使用首字母大写和句号，否则不需要。</p>
-</li>
-<li>
-<p>使用表格应遵循的原则：</p>
-<ul>
-<li>每列都有标题</li>
-<li>单元格字数尽量少</li>
-<li>尽量保证每一列的数据类型相同</li>
-</ul>
-</li>
-<li>
-<p>表格或列表的前面，用一句话来介绍上下文</p>
-</li>
-</ul>
-<h2 id="段落paragraphs">段落（Paragraphs）</h2>
-<ul>
-<li>以中心句开头。</li>
-<li>每段只围绕一个主题写作，不要包含其他段落中出现的主题内容。</li>
-<li>三到五句话一段，不要超过七句。</li>
-<li>段落能够解释清楚三件事： what，why，how。</li>
-</ul>
-<h2 id="读者audience">读者（Audience）</h2>
-<blockquote>
-<p>好的文档 = 读者要完成任务所需的知识和技能 - 读者已有的知识和技能</p>
-</blockquote>
-<ul>
-<li>
-<p>定义读者的身份（开发者、科学家、技术经理、未毕业的工程专业学生、毕业生、非技术人员……）。</p>
-</li>
-<li>
-<p>了解目标读者对不同知识的掌握程度。</p>
-</li>
-<li>
-<p>确定读者需要什么，读过文档能学到什么。比如在设计规范开头这样写：
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>举例<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content">After reading the design spec, the audience will learn the following: …</div>
-        </div>
-    </div></p>
-</li>
-<li>
-<p>满足读者：</p>
-<ul>
-<li>解释必要的词汇和概念。</li>
-<li>对新手友好。</li>
-<li>使用简单的英语词汇。</li>
-<li>对不同文化、语言环境的读者友好，避免使用成语或俗语。</li>
-</ul>
-</li>
-</ul>
-<h2 id="文档documents">文档（Documents）</h2>
-<ul>
-<li>声明文档的适用场景（scope）。
-<ul>
-<li>最好能声明哪些场景不适用（non-scope），不适合哪些读者阅读。这不仅对读者有用，对写作者也能限制其写作的范围。</li>
-</ul>
-</li>
-<li>声明目标读者。
-<ul>
-<li>最好能指出读者在阅读前应该具备的知识和经验。</li>
-</ul>
-</li>
-<li>在开头部分概括文档的关键点
-<ul>
-<li>可以通过比较、对比旧观点的手法，让读者明白你要表达的新观点。</li>
-</ul>
-</li>
-<li>按读者需要组织文档格式。
-<div class="details admonition tip open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>好的大纲举例<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content"><ol>
-<li>Overview of the algorithm
-<ul>
-<li>Compare and contrast with quicksort, including Big O comparisons
-<ul>
-<li>Link to Wikipedia article on quicksort</li>
-</ul>
-</li>
-<li>Optimal datasets for the algorithm</li>
-</ul>
-</li>
-<li>Implementing the algorithm
-<ul>
-<li>Implementation in pseudocode</li>
-<li>Implementation tips, including common mistakes</li>
-</ul>
-</li>
-<li>Deeper analysis of algorithm - Edge cases - Known unknowns</li>
-</ol>
-</div>
-        </div>
-    </div></li>
-</ul>
-<h2 id="标点符号punctuation">标点符号（Punctuation）</h2>
-<div class="details admonition note open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>Note<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content">这部分原文涉及英文标点符号的用法，大部分和汉语规则近似，略过不译。以下是我在排版方面的经验：
-大多数中国人对英文排版易错的地方是空格的滥用。可以参考这篇文章： <a href="https://zhuanlan.zhihu.com/p/110266694" target="_blank" rel="noopener noreffer ">英文标点要如何排版？</a>。</div>
-        </div>
-    </div>
-<p>概括起来：</p>
-<ul>
-<li><code>, ; : . ? !</code> 这些符号后加空格</li>
-<li><code>() '' &quot;&quot;</code> 这些成对的符号左右加空格，内部不加空格</li>
-<li><code>/ - _</code>不加空格</li>
-</ul>
-<h2 id="总结">总结</h2>
-<ul>
-<li>统一使用术语。</li>
-<li>避免模棱两可的代名词。</li>
-<li>主动语态优于被动语态。</li>
-<li>选择具体的动词而不是模糊的动词。</li>
-<li>每句话集中在一个想法上。</li>
-<li>将一些长句子转化为列表。</li>
-<li>消除不必要的词。</li>
-<li>有顺序时使用有序（数字）列表，无顺序时使用无序（圆点）列表。</li>
-<li>保持列表项目平行（概念层次相同）。</li>
-<li>用祈使（命令性）的词作为有序列表项的开头。</li>
-<li>适当地介绍列表和表格。</li>
-<li>开宗明义，明确段落的中心点。</li>
-<li>将每一段落集中在一个主题上。</li>
-<li>确定你的读者需要学习什么。</li>
-<li>使文档适应读者。</li>
-<li>在文档的开头指出关键信息。</li>
-</ul>
-<h2 id="延伸阅读资料">延伸阅读资料</h2>
-<ul>
-<li><a href="https://docsfordevelopers.com/" target="_blank" rel="noopener noreffer ">Docs for Developers</a></li>
-<li><a href="https://www.oreilly.com/library/view/software-engineering-at/9781492082781/" target="_blank" rel="noopener noreffer ">Software Engineering at Google</a></li>
-<li><a href="https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/" target="_blank" rel="noopener noreffer ">Gitlab Technical Writing Fundamentals courese</a></li>
-</ul>
-]]></description></item><item><title>一篇心得，开始2020年写作之旅</title><link>https://sund.site/posts/2019/2019-12-28_learn-to-write/</link><pubDate>Sat, 28 Dec 2019 18:49:56 +0800</pubDate><author>Steve Sun</author><guid>https://sund.site/posts/2019/2019-12-28_learn-to-write/</guid><description><![CDATA[<p>养成写作的习惯，会使人生获益无穷。写作可以让我们避免浅显的认识，在搜索引擎几秒钟就能得到答案的时代，学会向自己提问是深度思考的第一步。我真的理清脉络了吗？是不是像我认为的那样？写作者分享思想，同时也帮助自己思考。</p>
-<p>写作让我们在和他人交流时懂得<strong>去理解</strong>，不是急着<strong>去回应</strong>。常写作的人会时刻收集素材，养成倾听的习惯。写作的人喜欢片刻的沉默，胜过表面的热闹。</p>
-<p><strong>会说话的人就会写作</strong>。很多人拒绝写作，是觉得自己文笔不好，其实白话口语一样能写出好文章，精巧的构思，敏锐的嗅觉，缜密的思考，哪一种写作风格都有适合自己的路。</p>
-<p>三个月前，我开始刻意培养写作的习惯。这篇文章，我要与你分享这段时间的心得，这些话，有的来自我个人的体会，有的是来自记录的笔记，有的出自著名作家、编剧，我把它们整理出来，希望帮你启动写作之旅。</p>
-<h2 id="写文章的关键是什么">写文章的关键是什么？</h2>
-<p>诗人彼得·迈因克说，文学的表现力来自<strong>专注、巧妙和精细</strong>。</p>
-<p>每篇文章都要<strong>专注于一点，这一点就是主题</strong>，内容都在围绕这一点展开。想象一本书带给过你的感受，那就是它传达给你的主题，论文里它是论点，故事里它是基调，评论里它是观点。</p>
-<p>文章还要<strong>巧妙地搭建结构</strong>，像电影导演的运镜，把观众的视线引向你希望的方向，带领读者走向你预设的终点。</p>
-<p>好的<strong>文笔是精细的提炼</strong>，字斟句酌的金句，给读者的是惊喜，是<strong>寻常的陌生感</strong>。</p>
-<h2 id="如何寻找主题">如何寻找主题？</h2>
-<p><strong>关注每个细节，每个引起你兴趣、兴奋、疑惑、恐惧、异物感的东西</strong>。读书是最简单的方法，除此之外，留心生活中有趣的短文、诗句、格言、广告、寓言、祈祷、标语、微博、短信……都是灵感的源泉。不把自己的生活局限在网络上，线下和朋友交流，参加有趣的活动、认识有趣的人、体验不一样的生活，都能让你产生写作的冲动。</p>
-<p><strong>不断向自己提问</strong>，即便是再小的问题，也有无限挖掘下去的潜力。不断提出问题尝试去回答！搜索网络、求助他人、翻阅资料，总之在写出答案之前，你一定是深思熟虑过，不要给读者向你提问的机会，穷尽所有可能的路径、绞尽脑汁，这样的文章才是系统性思考过的、有价值的，对得起自己和读者的。</p>
-<p>一旦养成这样的习惯，不只是写作，生活的一切都从日复一日的重复中苏醒过来了。</p>
-<h2 id="如何搭建文章的结构">如何搭建文章的结构？</h2>
-<p>有了主题，接下来的任务是布局，美感出自秩序。生活是个局，工作也是个局，你的文章更是让读者短暂逃离现实的局。</p>
-<p>首先，<strong>开头请一定要激发读者强烈的兴趣</strong>，可以设置一个谜题让读者自行去文中寻找答案；也可以是一个具体的场景，让读者身临其境后逐渐察觉异样。请看小说《追风筝的人》的开头：</p>
-<blockquote>
-<p>我成为今天的我，是在 1975 年某个阴云密布的寒冷冬日，那年我十二岁。</p>
-</blockquote>
-<p>是不是让人很好奇，想要读下去。即使你的文章是知识分享，也要注重故事性，从古至今流传下来的道理，都蕴含在故事里。</p>
-<p>其次，<strong>不要倾倒细节，要有一个看不见的线牵引着读者</strong>，可以是时间、空间、疑问。如果你要抛出一个观点，就全文都以这个观点为核心，让所有文字都通向那个观点；如果你要构思一个的故事，请把故事的结构隐藏起来，让读者自行去发现。</p>
-<p>例如在《白夜行》中，两位主角活在各自的世界里，东野圭吾用并行故事线构成了看不见的线索，让读者自行脑补两人关系，画出故事的来龙去脉。所以，请把发现真理的过程交给读者。</p>
-<p>最后，<strong>既要让文字满足读者期望，又不可预测</strong>。这要求乍看有点奢侈。人们不喜欢在故事里重复生活，也不喜欢完全脱离生活的故事。请不要平铺直叙，更不要太跳脱，要给读者制造舒适区，再打破它。读文章就像谈恋爱：「男人彻底地懂得了一个女人之后，是不会爱她的」。（出自张爱玲的短篇小说）</p>
-<h2 id="如何锻炼文笔">如何锻炼文笔？</h2>
-<p><strong>文笔是锦上添花，开始写作前请不要纠结</strong>，尤其是知识分享、论述观点类文章，比文笔更重要的是逻辑。</p>
-<p>第二，<strong>一句自我介绍，一条微博，都是最小粒度的写作</strong>。每次发微博、Twitter、朋友圈，都请字斟句酌，变成语言的艺术家。</p>
-<blockquote>
-<p>有些词语的周围需要全然安静，给它们足够的空间，就好比照片，有些照片周围不需要陪衬。</p>
-<p>——阿摩司·奥兹</p>
-</blockquote>
-<p>每次写作，<strong>请有意识地删除多余的副词、形容词，如果写故事，把那些形容感受的词（如「沮丧」、「快乐」）替换成具体的动作和神态</strong>。原研哉在《设计中的设计》说，「我们通常所说的五感，是非常不准确的，用指尖轻轻触碰的触感，和用手用力按压的触感肯定是不一样的」。所以，<strong>请去描写感受，不要概括感受</strong>。</p>
-<p>最后，<strong>请熟练使用口语写作，避免官方用词</strong>。尤其练习使用俗语、方言、俚语或其他习语。在我们国家，经常看到：「只有……才能」、「坚决落实」、「时刻牢记」。请把这些短语从脑袋里清出去，除非你打算写反乌托邦题材……</p>
-<h2 id="写在最后">写在最后</h2>
-<p>上面这些技巧，都是写作的外功，要理解它的内功，还是要长期保持写作者的心态。写作是一种自我重建——这句话出自新京报的一篇文章《纪念王小波》，我非常喜欢下面这段话，最后分享给你：</p>
-<blockquote>
-<p>对一个人来说，过去那种统一式教育所打造的自我，是一种童稚状态，人只有通过自我的重建，才能走向成熟。这种重建是一种孤独的旅程，一旦开始，就注定没有终点，你将作为「一个人」而不是「我们」中的一员，来面对世界。</p>
-</blockquote>
-]]></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>写作 on Steve Sun</title><link>https://sund.site/tags/%E5%86%99%E4%BD%9C/</link><description>Recent content in 写作 on Steve Sun</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 21 Aug 2022 15:29:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E5%86%99%E4%BD%9C/index.xml" rel="self" type="application/rss+xml"/><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><guid>https://sund.site/posts/2022/technical-writing/</guid><description>本文内容摘录自 Technical Writing （谷歌技术文档写作指南）的第一部分。
+本文适用于想要提高技术文档写作、技术领域日常沟通能力的读者，对于一些商务的、非文学性质的英语办公场景沟通，也能起一定帮助作用。
+阅读过本文的读者可以：
+提高在日常办公中清晰、准确、客观地传达概念和逻辑的能力。 掌握英文技术文档写作规范。 词汇（Words） 对于已有的术语，不要重复发明新的词汇，可以用一个链接指向解释它的页面。
+如果有必要，可以在文档中直接定义新的术语，但如果术语比较多，最好建立一个术语对照表。
+文档各处出现的术语应该保持一致的名称或缩写。
+关于缩写：第一次出现要用粗体写全称并用括号指明缩写，之后的文章中不要反复混用全称和缩写。
+例如：
+This document is for engineers who are new to the Telekinetic Tactile Network (TTN) or need to understand how to order TTN replacement parts through finger motions.
+如果一个术语出现频率不高，请不要使用缩写。
+使用缩写的情况有：1. 缩写明显更简短；2. 该术语出现频率很高。
+谨慎使用代名词（It，they，that 等）。
+代名词一定要出现在它所指代的名词之后。 如果代名词远离它指代的名词（超过 5 个单词），就不用代名词。 在名词和代名词之间出现第二个名词，会产生歧义，应避免这种情况。 类比计算机编程语言：
+缩写 = 对术语的一层抽象。读者需要花费更多脑力去把它展开成对应的名词。
+代名词 = 指针。它容易引起歧义，所以要避免在读者大脑中引起「空指针」错误。
+主动语态（Active voice） 技术文档中应尽量使用主动语态。 被动语态在读者大脑中需要额外的加工转换才能被理解。 被动语态用来间接地表达行为，容易引起混乱。 有些被动语态省略了行为主体，会迫使读者猜测主语是谁。 如果使用被动语态，应正确使用过去分词的各种形式和介词（如 as，by）。 祈使句的动词（命令式动词）应该使用主动语态。 科技论文中经常出现被动语态（如 It has been suggested that&amp;hellip;），这种写法并不能传递更多信息，很多科学期刊也开始鼓励使用主动语态。 炼句（Clear sentences，Short sentences） 选择准确、有力、具体的动词。减少不精确的、软弱的或通用的动词。</description></item><item><title>一篇心得，开始2020年写作之旅</title><link>https://sund.site/posts/2019/2019-12-28_learn-to-write/</link><pubDate>Sat, 28 Dec 2019 18:49:56 +0800</pubDate><guid>https://sund.site/posts/2019/2019-12-28_learn-to-write/</guid><description>养成写作的习惯，会使人生获益无穷。写作可以让我们避免浅显的认识，在搜索引擎几秒钟就能得到答案的时代，学会向自己提问是深度思考的第一步。我真的理清脉络了吗？是不是像我认为的那样？写作者分享思想，同时也帮助自己思考。
+写作让我们在和他人交流时懂得去理解，不是急着去回应。常写作的人会时刻收集素材，养成倾听的习惯。写作的人喜欢片刻的沉默，胜过表面的热闹。
+会说话的人就会写作。很多人拒绝写作，是觉得自己文笔不好，其实白话口语一样能写出好文章，精巧的构思，敏锐的嗅觉，缜密的思考，哪一种写作风格都有适合自己的路。
+三个月前，我开始刻意培养写作的习惯。这篇文章，我要与你分享这段时间的心得，这些话，有的来自我个人的体会，有的是来自记录的笔记，有的出自著名作家、编剧，我把它们整理出来，希望帮你启动写作之旅。
+写文章的关键是什么？ 诗人彼得·迈因克说，文学的表现力来自专注、巧妙和精细。
+每篇文章都要专注于一点，这一点就是主题，内容都在围绕这一点展开。想象一本书带给过你的感受，那就是它传达给你的主题，论文里它是论点，故事里它是基调，评论里它是观点。
+文章还要巧妙地搭建结构，像电影导演的运镜，把观众的视线引向你希望的方向，带领读者走向你预设的终点。
+好的文笔是精细的提炼，字斟句酌的金句，给读者的是惊喜，是寻常的陌生感。
+如何寻找主题？ 关注每个细节，每个引起你兴趣、兴奋、疑惑、恐惧、异物感的东西。读书是最简单的方法，除此之外，留心生活中有趣的短文、诗句、格言、广告、寓言、祈祷、标语、微博、短信……都是灵感的源泉。不把自己的生活局限在网络上，线下和朋友交流，参加有趣的活动、认识有趣的人、体验不一样的生活，都能让你产生写作的冲动。
+不断向自己提问，即便是再小的问题，也有无限挖掘下去的潜力。不断提出问题尝试去回答！搜索网络、求助他人、翻阅资料，总之在写出答案之前，你一定是深思熟虑过，不要给读者向你提问的机会，穷尽所有可能的路径、绞尽脑汁，这样的文章才是系统性思考过的、有价值的，对得起自己和读者的。
+一旦养成这样的习惯，不只是写作，生活的一切都从日复一日的重复中苏醒过来了。
+如何搭建文章的结构？ 有了主题，接下来的任务是布局，美感出自秩序。生活是个局，工作也是个局，你的文章更是让读者短暂逃离现实的局。
+首先，开头请一定要激发读者强烈的兴趣，可以设置一个谜题让读者自行去文中寻找答案；也可以是一个具体的场景，让读者身临其境后逐渐察觉异样。请看小说《追风筝的人》的开头：
+我成为今天的我，是在 1975 年某个阴云密布的寒冷冬日，那年我十二岁。
+是不是让人很好奇，想要读下去。即使你的文章是知识分享，也要注重故事性，从古至今流传下来的道理，都蕴含在故事里。
+其次，不要倾倒细节，要有一个看不见的线牵引着读者，可以是时间、空间、疑问。如果你要抛出一个观点，就全文都以这个观点为核心，让所有文字都通向那个观点；如果你要构思一个的故事，请把故事的结构隐藏起来，让读者自行去发现。
+例如在《白夜行》中，两位主角活在各自的世界里，东野圭吾用并行故事线构成了看不见的线索，让读者自行脑补两人关系，画出故事的来龙去脉。所以，请把发现真理的过程交给读者。
+最后，既要让文字满足读者期望，又不可预测。这要求乍看有点奢侈。人们不喜欢在故事里重复生活，也不喜欢完全脱离生活的故事。请不要平铺直叙，更不要太跳脱，要给读者制造舒适区，再打破它。读文章就像谈恋爱：「男人彻底地懂得了一个女人之后，是不会爱她的」。（出自张爱玲的短篇小说）
+如何锻炼文笔？ 文笔是锦上添花，开始写作前请不要纠结，尤其是知识分享、论述观点类文章，比文笔更重要的是逻辑。
+第二，一句自我介绍，一条微博，都是最小粒度的写作。每次发微博、Twitter、朋友圈，都请字斟句酌，变成语言的艺术家。
+有些词语的周围需要全然安静，给它们足够的空间，就好比照片，有些照片周围不需要陪衬。
+——阿摩司·奥兹
+每次写作，请有意识地删除多余的副词、形容词，如果写故事，把那些形容感受的词（如「沮丧」、「快乐」）替换成具体的动作和神态。原研哉在《设计中的设计》说，「我们通常所说的五感，是非常不准确的，用指尖轻轻触碰的触感，和用手用力按压的触感肯定是不一样的」。所以，请去描写感受，不要概括感受。
+最后，请熟练使用口语写作，避免官方用词。尤其练习使用俗语、方言、俚语或其他习语。在我们国家，经常看到：「只有……才能」、「坚决落实」、「时刻牢记」。请把这些短语从脑袋里清出去，除非你打算写反乌托邦题材……
+写在最后 上面这些技巧，都是写作的外功，要理解它的内功，还是要长期保持写作者的心态。写作是一种自我重建——这句话出自新京报的一篇文章《纪念王小波》，我非常喜欢下面这段话，最后分享给你：
+对一个人来说，过去那种统一式教育所打造的自我，是一种童稚状态，人只有通过自我的重建，才能走向成熟。这种重建是一种孤独的旅程，一旦开始，就注定没有终点，你将作为「一个人」而不是「我们」中的一员，来面对世界。</description></item></channel></rss>

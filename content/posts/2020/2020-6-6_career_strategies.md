@@ -65,7 +65,7 @@ aliases: [/posts/2020-6-6_career_strategies/]
 
 根据当下你的感受，给这四方面分别赋予一定权重（一个百分比），假如你更看重学习和乐趣，那么就给他们更高的权重，同时降低另外两项的权重。然后给当前工作的状态打出评分，10 分满分，最后用权重乘以评分得到每一项的职业价值分：
 
-![](/images/career-strategies/1.jpg)
+![](/images/career-strategies/1.jpeg)
 
 根据作者布赖恩的经验，如果总分在 700 分以上，那么你的工作就算非常有价值了。
 
@@ -95,7 +95,7 @@ aliases: [/posts/2020-6-6_career_strategies/]
 
 他们构成了支撑你职业生涯的金字塔。
 
-![](/images/career-strategies/2.jpg)
+![](/images/career-strategies/2.jpeg)
 
 联系人是你的通信录好友，你通过各种渠道认识的人。他们数量较多，通常他们中的少数人会成为你真正的好朋友。
 

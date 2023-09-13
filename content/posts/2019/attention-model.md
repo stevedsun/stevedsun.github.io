@@ -26,7 +26,7 @@ aliases: [/posts/attention-model/]
 - 在视觉边缘的反光镜和仪表盘，以及触觉反馈的方向盘和脚踏板，是次级注意力
 - 双闪、应急灯、收音机等设备，周围的环境音共同构成了第三级注意力
 
-![Untitled-81b16b63-34f5-4ac5-aef1-8f98cffa1300](https://tva1.sinaimg.cn/large/006y8mN6gy1g8coq07izhj30zm0mah8s.jpg)
+![](/images/attention-model/1.jpg)
 
 由此，注意力的三个等级可以归纳为：
 
@@ -90,7 +90,7 @@ aliases: [/posts/attention-model/]
 
 次级注意力会时不时把视觉中心夺走。许岑在自己的新书[《上手》](https://book.douban.com/subject/34464459/)中，提出使用聚光灯来营造极大提升专注力的舞台感办公环境。从注意力模型的角度说，次级注意力被较暗的环境包围时，更不容易阻断视觉注意力。
 
-![Untitled-4ffaba46-bd44-4794-8495-79d75a1ab83e](https://tva1.sinaimg.cn/large/006y8mN6gy1g8covpkgpsj30v40ite2e.jpg)
+![](/images/attention-model/2.jpg)
 
 市面上很多光线柔的台灯或是显示器灯，兼顾了保护视力和聚光灯的作用。比较知名的有少数派曾经发过的[《这是我今年买得最值的硬件 — WiT Genie》](https://sspai.com/post/43034)和《[夹在显示器上的台灯，美观实用的完美照明解决方案：明基 ScreenBar Plus 屏幕挂灯》](https://sspai.com/post/45870)，前者还详细讲解了照明亮度、频闪对视力的影响。
 
@@ -100,7 +100,7 @@ aliases: [/posts/attention-model/]
 
 我占领注意力边缘的方式是听音乐。有人会觉得听音乐干扰注意力，无法专心工作。有的人则相反，觉得听音乐是必要的「陪伴」。是干扰还是陪伴，这取决于音乐是激昂还是舒缓，歌词是陌生还是熟悉，音量是小还是大。熟悉的旋律和歌声需要你更少的注意力去理解，音乐也就不会轻易越迁到高一级注意力阻断你的工作，较小的音量可以保证它只存在于你的第三级注意力中。
 
-![Untitled-ccf52f38-3854-4adc-bc45-a8a4b29b0942](https://tva1.sinaimg.cn/large/006y8mN6gy1g8cow0ac1uj319f0u0txh.jpg)
+![](/images/attention-model/3.jpg)
 
 网易云音乐有很多歌单适合工作学习时听，比如我曾经整理过一个[《看书就好好看书》](http://music.163.com/playlist/133513964/131429/?userid=131429)，里面有 94 首小提琴曲和日系轻音乐。
 
@@ -110,7 +110,7 @@ aliases: [/posts/attention-model/]
 
 对于一个喜欢阅读的人，我坚信最适合人类阅读的姿势是半躺着。一个舒适的躺椅或是床头靠垫使你在阅读时不至于频繁更换姿势，配合舒适的暖色灯光，睡前阅读会成为你的习惯。
 
-![Untitled-50eb39e5-17de-4a5d-b633-28f6055ed7ba](https://tva1.sinaimg.cn/large/006y8mN6gy1g8cow6h8mnj30u00u0x6r.jpg)
+![](/images/attention-model/4.jpg)
 
 相信读到这里你已经知道了自己有哪些外部环境需要改善。
 

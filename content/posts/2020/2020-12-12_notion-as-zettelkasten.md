@@ -26,7 +26,7 @@ description: "卡片盒笔记法（Zettelkasten）是一种将零散的想法、
 
 **在另一些情况下，如艺术创作、技术创新等，我们的大脑会切换为发散模式——大脑在在一些关联但不同领域的知识间来回跳跃，形成一种全新的思考路径**。
 
-![](/images/notion-zenttle/1.png)
+![](/images/notion-zenttle/1.jpg)
 
 此时此刻，我为了将分散在不同笔记中零散的知识点关联起来形成这篇大家看到的文章，就需要同时借助两种模式，找到不同网站、文献间相关的内容，把他们组织起来。
 
@@ -36,7 +36,7 @@ description: "卡片盒笔记法（Zettelkasten）是一种将零散的想法、
 
 **而当我们在记录笔记过程中想到相关的内容在另一篇文献中也出现过，那么我们可以在笔记中用引用的方式把另一篇笔记内容和这篇内容做关联**。
 
-![](/images/notion-zenttle/2.png)
+![](/images/notion-zenttle/2.jpg)
 
 这样一篇笔记（卡片盒笔记法里的「卡片」），就有了两条途径来回顾它——**顺序阅读和延伸阅读**。例如，一段时间后，我们想把这段时间的学习心得梳理出来归纳成一篇文章，我们就可以先以某一篇笔记为起始点，顺序读下面的笔记卡片，读到感兴趣的内容再看看它关联的那些卡片是否可以作为素材。以此类推，从一片知识的网络中抽丝剥茧，抽象出一种独特的脉络。当然，这些卡片还可以和其他卡片组合，形成另一种视角。这一套卡片构成的卡片盒，就是一套不断碰撞出新想法的数据库。
 
@@ -48,7 +48,7 @@ Notion 在前一段时间更新了 Backlinks （反向链接）功能，这一�
 
 我们首先脱离 Notion 这个软件，看看通常情况下一张卡片由哪些部分组成。下图是来自 [Introduction to the Zettelkasten](https://zettelkasten.de/introduction/) 文章的配图，呈现了一张卡片的样子：
 
-![](/images/notion-zenttle/3.png)
+![](/images/notion-zenttle/3.jpg)
 
 - 标题。包含一个唯一编号的标题，编号的作用是在其他笔记中可以方便引用该笔记，而不用担心笔记的标题发生变化使引用失效
 - 标签。方便回顾笔记时对某一类内容做整理归纳
@@ -66,7 +66,7 @@ Notion 在前一段时间更新了 Backlinks （反向链接）功能，这一�
 
 所谓巧妇难为无米之炊，我们做笔记的第一步就是搭建文献资料库，这是一切笔记的源头，有点像数据工程里的「贴源数据层」，文献库是为了让互联网上经常失效的文章有个备份的好地方，同时你也可以在文献库里对文章进行划线、高亮和备注。
 
-![](/images/notion-zenttle/4.png)
+![](/images/notion-zenttle/4.jpg)
 
 这是我的一个文献库，专门收藏一些专业外的小知识。
 
@@ -80,11 +80,11 @@ Notion 在前一段时间更新了 Backlinks （反向链接）功能，这一�
 - URL，这是 Chrome 网页剪藏扩展（Save to Notion）的默认属性
 - 添加时间
 
-![](/images/notion-zenttle/5.png)
+![](/images/notion-zenttle/5.jpg)
 
 为了从网页上剪藏这样一篇文章，我在 Chrome 浏览器里安装了 [Save to Notion](https://chrome.google.com/webstore/detail/ldmmifpegigmeammaeckplhnjbbpccmm) 这个扩展，它的优点就是可以在剪藏网页内容同时设置好笔记的属性。把 Save to Notion 保存位置设置成你已经建立好的文献库，就可以一键保存到 Notion 了。
 
-![](/images/notion-zenttle/6.png)
+![](/images/notion-zenttle/6.jpg)
 
 对于那些无法被直接剪藏的文献（比如 pdf 格式的论文、书籍、视频等）也可以直接在笔记页面直接填写 meta data 的方式指明出处，下文会介绍何谓卡片笔记的 meta data。
 
@@ -94,7 +94,7 @@ Notion 在前一段时间更新了 Backlinks （反向链接）功能，这一�
 
 卡片盒可以用 Notion 的 Gallery Page 来展现。每一个笔记页面都是一张卡片。
 
-![](/images/notion-zenttle/7.png)
+![](/images/notion-zenttle/7.jpg)
 
 「卡片」也有一些基本属性需要设置：
 
@@ -109,14 +109,14 @@ Notion 在前一段时间更新了 Backlinks （反向链接）功能，这一�
 - 下一条。下一篇顺序关联的笔记
 - 索引。表明这篇文章是否被收录到索引里。关于索引在下文会介绍
 
-![](/images/notion-zenttle/8.png)
+![](/images/notion-zenttle/8.jpg)
 
 前文说，一张笔记卡片有两种方式和其他卡片或参考文献产生关联：
 
 1. 在参考中引用文献。这点在属性的文献、文献 metadata 中我们已经实现了。
 2. 直接在正文中引用。Notion 天然支持 backlinks 双向关联。一个页面如果提及了其他页面内容，可以在被引用的页面顶部的 backlinks 里看到二者的关联。
 
-![](/images/notion-zenttle/9.png)
+![](/images/notion-zenttle/9.jpg)
 
 另外针对思维的两种模式：专注模式和发散模式，有两种回顾卡片的方式：
 
@@ -133,7 +133,7 @@ Notion 在前一段时间更新了 Backlinks （反向链接）功能，这一�
 
 继续在 Notion 创建一个名为「索引」的列表页面，页面中每一个条目都是一个主题的索引页面，将多张卡片用超链接的方式组织在一个主题下，犹如图书的目录。比如这篇文章，我就是从这个索引中演化而来。
 
-![](/images/notion-zenttle/10.png)
+![](/images/notion-zenttle/10.jpg)
 
 这就好比一条信息高速公路。可以让我们直达这个主题下的笔记。但是修建高速公路的副作用，是会让我们忽略那些拥有别样风景的小路。每一张卡片，可以成为另一个主题里的内容。**重要的是，路径不只一条。**
 

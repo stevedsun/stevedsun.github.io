@@ -4,32 +4,20 @@ This project is auto deployed by Github Action.
 
 ## Build
 
+- Hugo version >= v0.110.0+extended
+
 ```bash
-brew install hugo
-# or
-sudo snap install hugo --channel=extended
+hugo
 ```
 
 ## New Post
 
-```
-hugo new posts/title.md
+```bash
+./new post-title
 ```
 
 ## Preview
 
-```
+```bash
 hugo serve
-```
-
-## Download theme
-
-```
-git submodule update --init --recursive
-```
-
-## Update theme
-
-```
-git submodule update --remote
 ```

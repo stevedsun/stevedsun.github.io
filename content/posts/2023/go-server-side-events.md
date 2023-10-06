@@ -72,3 +72,5 @@ func HeadersMiddleware() gin.HandlerFunc {
 ```
 
 Looking for more details please move to [Gin SSE example](https://github.com/gin-gonic/examples/blob/master/server-sent-event/main.go).
+
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px)](https://www.buymeacoffee.com/stevedsun)

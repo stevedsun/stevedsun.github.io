@@ -33,3 +33,5 @@ Docker has a startup parameter `--pid=host` to change the PID namespace to its h
 ## 3. By `docker --privileged`
 
 It is the last way you can access the host system, but it is not recommended for most cases.
+
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px)](https://www.buymeacoffee.com/stevedsun)

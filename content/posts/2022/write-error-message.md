@@ -67,3 +67,5 @@ Google 文档原文：[Error Messages](https://developers.google.com/tech-writin
     "error": "Bad Request - Request is missing a required parameter: -collection_name. Update parameter and resubmit. Issue Reference Number BR0x0071"
   }
   ```
+
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px)](https://www.buymeacoffee.com/stevedsun)

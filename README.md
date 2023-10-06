@@ -2,11 +2,9 @@
 
 This project is auto deployed by Github Action.
 
-## Hugo
+## Hugo Installation
 
-```bash
-CGO_ENABLED=1 go install -tags extended github.com/gohugoio/hugo@latest
-```
+Refer to <https://gohugo.io/installation/>
 
 ## Build
 

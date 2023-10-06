@@ -22,4 +22,4 @@ In this site, I share my favorite books, articles and notes about mindset.
 - [Wechat](https://mp.weixin.qq.com/s/zSNl-n4B9l9wyZYGVcnVJw)
 - [少数派](https://sspai.com/u/radiowave/overview)
 
-<a href="https://www.buymeacoffee.com/stevedsun" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px)](https://www.buymeacoffee.com/stevedsun)

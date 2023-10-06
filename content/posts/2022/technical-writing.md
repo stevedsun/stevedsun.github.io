@@ -191,5 +191,3 @@ _这部分原文涉及英文标点符号的用法，大部分和汉语规则近�
 - [Docs for Developers](https://docsfordevelopers.com/)
 - [Software Engineering at Google](https://www.oreilly.com/library/view/software-engineering-at/9781492082781/)
 - [Gitlab Technical Writing Fundamentals courese](https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/)
-
-[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px)](https://www.buymeacoffee.com/stevedsun)

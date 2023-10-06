@@ -21,5 +21,3 @@ In this site, I share my favorite books, articles and notes about mindset.
 - [Telegram](https://t.me/poorRideoReception)
 - [Wechat](https://mp.weixin.qq.com/s/zSNl-n4B9l9wyZYGVcnVJw)
 - [少数派](https://sspai.com/u/radiowave/overview)
-
-[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px)](https://www.buymeacoffee.com/stevedsun)

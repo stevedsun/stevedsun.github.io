@@ -84,5 +84,3 @@ description: ""
 前期排列任务优先级时也应遵循这样的优先级：
 
 > 业务目标 > 客户/用户目标 > 功能
-
-[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px)](https://www.buymeacoffee.com/stevedsun)

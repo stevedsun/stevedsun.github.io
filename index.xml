@@ -605,7 +605,7 @@ ubuntu 准备工作 分区 这一步可以用命令行实现，也可以在 mac 
 diskutil list 这里假设 U 盘是 disk1，执行
 diskutil unmountDisk /dev/disk1 接下来执行命令刻录，
 sudo dd if=/path/to/downloaded.img of=/dev/disk1 bs=1m ubuntu 官网针对上一条命令可能出现的两种错误提示给出了解决办法：
-If you see the error dd: Invalid number &amp;lsquo;1m&amp;rsquo;, you are using GNU dd.</description></item><item><title>About</title><link>https://sund.site/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sund.site/about/</guid><description>Hello, I&amp;rsquo;m Steve Sun. A full-stack software engineer based at Chengdu, China.
-I used to work for ThoughtWorks and Siemens. Now, I&amp;rsquo;m focusing on Industry Edge Computing and Distributed System.
-In this site, I share my favorite books, articles and notes about mindset.
+If you see the error dd: Invalid number &amp;lsquo;1m&amp;rsquo;, you are using GNU dd.</description></item><item><title>About</title><link>https://sund.site/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sund.site/about/</guid><description>Hello, I&amp;rsquo;m Steve Sun, a full-stack software engineer based in Chengdu, China.
+I used to work for ThoughtWorks and Siemens. Now, I&amp;rsquo;m focusing on Industry edge and Distributed system.
+On this site, I share my favorite books, articles and opinions.
 My Side Projects 👉 Notion Graph View - Generating a roam-research like network graph view from your notion pages. 👉 Useless Ideas Public API - A public Rest API that provides quotes and ideas.</description></item></channel></rss>

@@ -4,7 +4,7 @@ title: "About"
 
 Hello, I'm **Steve Sun**, a full-stack software engineer based in **Chengdu, China**.
 
-I used to work for [ThoughtWorks](https://www.thoughtworks.com/) and [Siemens](https://www.siemens.com/global/en.html). Now, I'm focusing on **Industry edge** and **Distributed system**.
+I used to work for [ThoughtWorks](https://www.thoughtworks.com/) and [Siemens](https://www.siemens.com/global/en.html). Now, I'm focusing on **industrial edge** and **distributed system**.
 
 On this site, I share my favorite books, articles and opinions.
 

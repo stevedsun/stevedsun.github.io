@@ -1,5 +1,5 @@
 ---
-title: "Implementing Prometheus Exporter for Fluentbit"
+title: "Implementing a Prometheus Exporter for Fluent-bit"
 date: 2022-11-24T12:26:23+08:00
 categories: [Go]
 tags: [go, fluentbit, prometheus]

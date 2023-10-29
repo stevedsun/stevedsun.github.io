@@ -1,5 +1,5 @@
 ---
-title: "Building A File Parser"
+title: "Building a File Parser"
 date: 2022-05-08T14:00:00+08:00
 categories: [Go]
 tags: [go, fluentbit]

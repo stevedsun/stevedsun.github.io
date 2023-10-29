@@ -1,8 +1,7 @@
 baseURL = "https://sund.site/"
 title = "Steve Sun"
 
-disqusShortname = 'v2steve'       # use disqus comments
-googleAnalytics = 'UA-64688885-1'
+# disqusShortname = 'v2steve'       # use disqus comments
 
 [params]
 # color style

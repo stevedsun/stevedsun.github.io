@@ -1,5 +1,5 @@
 ---
-title: "3 Ways To Access Host System In Docker Container"
+title: "3 Ways to Access Host System in a Docker Container"
 date: 2022-08-08T20:04:00+08:00
 categories: [Kubernetes]
 tags: [docker]

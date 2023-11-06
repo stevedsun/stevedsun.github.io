@@ -1,5 +1,5 @@
 ---
-title: "如何管理大型软件团队"
+title: "技术团队管理的tips"
 date: 2023-09-19T09:10:06+08:00
 categories: [随笔]
 tags: []

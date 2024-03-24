@@ -1,4 +1,4 @@
-<!doctype html><html class="not-ready lg:text-base dark" style=--bg:#faf8f1 lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><title>Python2 中字符类型的一些坑 - Steve Sun</title><meta name=theme-color><meta name=description content="问题 有一道面试题是这样的：
+<!doctype html><html class="not-ready lg:text-base" style=--bg:#faf8f1 lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><title>Python2 中字符类型的一些坑 - Steve Sun</title><meta name=theme-color><meta name=description content="问题 有一道面试题是这样的：
 a = u'China' b = 'China' c = u'中国' d = '中国' # 1 print '%s %s' % (a, b) # 2 print '%s' % c # 3 print '%s' % d # 4 print '%s %s' % (c, d) 判断打印后的效果。
 先说正确答案，只有最后一行会报错。
 分析 在 Python2 里，默认的字符类型是str，这个str和 Python3 的str完全不同，Python2 的str类型是 8 位的 ascii 序列。Python2 在处理str类型转换时遵循这样的规则：如果被处理的str型变量值小于 7 位，就可以和unicode类型混用。可以做+连接，格式化等操作，同 unicode 享受同样的待遇。

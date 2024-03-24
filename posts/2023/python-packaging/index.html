@@ -1,4 +1,4 @@
-<!doctype html><html class="not-ready lg:text-base dark" style=--bg:#faf8f1 lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><title>Python 依赖管理工具的研究 - Steve Sun</title><meta name=theme-color><meta name=description content="太长不读 如果你从事工程项目，poetry 是目前最好的方案，但是如果你不喜欢 Python 的 virtualenv，可以试试 pdm。
+<!doctype html><html class="not-ready lg:text-base" style=--bg:#faf8f1 lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><title>Python 依赖管理工具的研究 - Steve Sun</title><meta name=theme-color><meta name=description content="太长不读 如果你从事工程项目，poetry 是目前最好的方案，但是如果你不喜欢 Python 的 virtualenv，可以试试 pdm。
 混乱的 Python Python 的依赖管理工具 pip 一直被众多开发者吐槽。从我个人角度，pip 有三点致命缺陷：
 无法解决 Python 依赖环境的隔离问题 依赖管理文件 requirements.txt 无法真正开箱即用 打包部署非常麻烦，需要手动配置 环境隔离问题 Python 的依赖库可以安装到系统全局，也可以安装到用户目录（/home/${USER}/.local）。但如果你同时管理多个 Python 项目，就需要将不同项目的依赖拆分到不同的文件夹分开管理。
 传统方式是基于 virtualenv 创建隔离的 Python bin 文件和项目依赖的虚拟环境（所谓虚拟环境并不是虚拟机，只是个绑定 terminal session 的命令环境）。这种方式的缺点是：

@@ -1,8 +1,70 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>摄影 on Steve Sun</title><link>https://sund.site/tags/%E6%91%84%E5%BD%B1/</link><description>Recent content in 摄影 on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 14 Nov 2019 14:46:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%91%84%E5%BD%B1/index.xml" rel="self" type="application/rss+xml"/><item><title>Ricoh GR2 参数设置心得</title><link>https://sund.site/posts/2019/ricoh-gr2-settings/</link><pubDate>Thu, 14 Nov 2019 14:46:00 +0800</pubDate><guid>https://sund.site/posts/2019/ricoh-gr2-settings/</guid><description>常用相机术语 包围曝光：同时使用不同曝光参数或滤镜拍摄三张照片或是合成一张。
-NR：即降噪功能，如感光度 ISO NR，低速快门 NR。
-ND 滤镜：即减光镜，减少进光量，延长曝光时间，用于拍摄云彩，溪流等长曝光场景。
-AF：自动对焦（Auto Focus）。
-AE：自动曝光（Auto Exposure）。
-半按快门警告图标 抖动警告（!((📷))）：快门速度过慢，照片质量会因为微微抖动而模糊。可以改善周围环境亮度或是手动提高快门速度。
-自动曝光警告（!AE）：快门速度太快，可能照片会发暗。可以调低快门速度或是增大光圈等。
-各项参数的对抖动、曝光、噪点的影响 参数 增加参数值对进光量的影响 说明 光圈（F） 提高 手动对焦模式或者快拍模式下，光圈越小，【超焦距】带来的取景深度越大 快门速度越快 降低 快门速度 1/250 适合抓拍，1/60 为通常的安全快门 ISO 提高 800 以内画质较好，超过 800 噪点明显变强 曝光补偿（EV） 提高 影响亮度，非自动档可用，本质是增减相机控制光圈、快门、ISO 的比例时的权重，通常拍摄雪景和较黑的物体时候需要调节 白平衡（WB） 无影响 影响色彩 白平衡补偿（B：G） 无影响 手动增减白平衡权值，可以做出胶片等效果 效果（D:C:S） 无影响 影响滤镜效果，可以拍出风格强烈的作品 ND 滤镜（开） 降低 在强光状态下打开 ND 滤镜可以降低 3 档进光量，即使在白天也能用慢门或者大光圈 闪光灯（开） 提高 在白天背光和夜晚都可以提高近景中被摄体的亮度 景深标尺、ND 滤镜、曝光补偿的技巧</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>摄影 on Steve Sun</title><link>https://sund.site/tags/%E6%91%84%E5%BD%B1/</link><description>Recent content in 摄影 on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>En</language><lastBuildDate>Thu, 14 Nov 2019 14:46:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%91%84%E5%BD%B1/index.xml" rel="self" type="application/rss+xml"/><item><title>Ricoh GR2 参数设置心得</title><link>https://sund.site/posts/2019/ricoh-gr2-settings/</link><pubDate>Thu, 14 Nov 2019 14:46:00 +0800</pubDate><guid>https://sund.site/posts/2019/ricoh-gr2-settings/</guid><description>&lt;h2 id="常用相机术语">常用相机术语&lt;/h2>
+&lt;p>&lt;strong>包围曝光&lt;/strong>：同时使用不同曝光参数或滤镜拍摄三张照片或是合成一张。&lt;/p>
+&lt;p>&lt;strong>NR&lt;/strong>：即降噪功能，如感光度 ISO NR，低速快门 NR。&lt;/p>
+&lt;p>&lt;strong>ND 滤镜&lt;/strong>：即减光镜，减少进光量，延长曝光时间，用于拍摄云彩，溪流等长曝光场景。&lt;/p>
+&lt;p>&lt;strong>AF&lt;/strong>：自动对焦（Auto Focus）。&lt;/p>
+&lt;p>&lt;strong>AE&lt;/strong>：自动曝光（Auto Exposure）。&lt;/p>
+&lt;h2 id="半按快门警告图标">半按快门警告图标&lt;/h2>
+&lt;p>&lt;strong>抖动警告（!((📷))）&lt;/strong>：快门速度过慢，照片质量会因为微微抖动而模糊。可以改善周围环境亮度或是手动提高快门速度。&lt;/p>
+&lt;p>&lt;img src="https://sund.site/images/image-20220820184826880.png" alt="">&lt;/p>
+&lt;p>&lt;strong>自动曝光警告（!AE）&lt;/strong>：快门速度太快，可能照片会发暗。可以调低快门速度或是增大光圈等。&lt;/p>
+&lt;p>&lt;img src="https://sund.site/images/image-20220820184847600.png" alt="">&lt;/p>
+&lt;h2 id="各项参数的对抖动曝光噪点的影响">各项参数的对抖动、曝光、噪点的影响&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>参数&lt;/th>
+&lt;th>增加参数值对进光量的影响&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>光圈（F）&lt;/td>
+&lt;td>提高&lt;/td>
+&lt;td>手动对焦模式或者快拍模式下，光圈越小，【超焦距】带来的取景深度越大&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>快门速度越快&lt;/td>
+&lt;td>降低&lt;/td>
+&lt;td>快门速度 1/250 适合抓拍，1/60 为通常的安全快门&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ISO&lt;/td>
+&lt;td>提高&lt;/td>
+&lt;td>800 以内画质较好，超过 800 噪点明显变强&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>曝光补偿（EV）&lt;/td>
+&lt;td>提高&lt;/td>
+&lt;td>影响亮度，非自动档可用，本质是增减相机控制光圈、快门、ISO 的比例时的权重，通常拍摄雪景和较黑的物体时候需要调节&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>白平衡（WB）&lt;/td>
+&lt;td>无影响&lt;/td>
+&lt;td>影响色彩&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>白平衡补偿（B：G）&lt;/td>
+&lt;td>无影响&lt;/td>
+&lt;td>手动增减白平衡权值，可以做出胶片等效果&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>效果（D:C:S）&lt;/td>
+&lt;td>无影响&lt;/td>
+&lt;td>影响滤镜效果，可以拍出风格强烈的作品&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ND 滤镜（开）&lt;/td>
+&lt;td>降低&lt;/td>
+&lt;td>在强光状态下打开 ND 滤镜可以降低 3 档进光量，即使在白天也能用慢门或者大光圈&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>闪光灯（开）&lt;/td>
+&lt;td>提高&lt;/td>
+&lt;td>在白天背光和夜晚都可以提高近景中被摄体的亮度&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="景深标尺nd-滤镜曝光补偿的技巧">景深标尺、ND 滤镜、曝光补偿的技巧&lt;/h2>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6ly1g8s7jpj44nj319j0u0tgf.jpg" alt="4A78E115-0550-4D08-A4DE-672EE9D0E6EB">&lt;/p></description></item></channel></rss>

@@ -1,3 +1,220 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>audit on Steve Sun</title><link>https://sund.site/tags/audit/</link><description>Recent content in audit on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 15 Apr 2024 16:44:40 +0800</lastBuildDate><atom:link href="https://sund.site/tags/audit/index.xml" rel="self" type="application/rss+xml"/><item><title>审计追踪的设计</title><link>https://sund.site/posts/2024/audit-system-design/</link><pubDate>Mon, 15 Apr 2024 16:44:40 +0800</pubDate><guid>https://sund.site/posts/2024/audit-system-design/</guid><description>什么是审计追踪（Audit Trail）服务？ 审计轨迹（Audit trail、Audit log），也译作审计追踪、审计跟踪、审计日志、文件日志或轨迹纪录等名称，是一种作为信息系统审计手段的与安全相关的时间顺序记录、记录集和/或目的地和记录来源，它们提供了在任何时候影响特定操作，程序的活动顺序的文件证据或事件。 审计记录通常来自一些活动，例如：金融交易、科学研究和医疗保健数据交易，或个人、系统、账号以及其他实体的通信等活动。 透过对系统上的活动作时间顺序的纪录，从而监察系统是否存在违规的活动，协助审核人员快速的找出相关的交易资料。 ——维基百科
-审计追踪服务应该具备哪些能力？ 日志内容不可篡改。 日志链结构完整：不可任意添加或删除单独的日志条目。 兼容性：发送日志的客户端应该避免侵入式设计。 系统的加密服务应该尽早初始化，以减少未受保护的日志。 服务重启/关闭不应导致审核日志不一致。如果服务因紧急情况而关闭，审计日志应该是可验证的。 密钥安全性：加密密钥（用于计算完整性检查）应存储在专用密钥存储中，并在内存中驻留最短的时间。 性能：能够在几秒钟内验证受保护日志。 日志轮换友好性：审核日志应与分布式系统典型的日志轮换策略兼容。 可观测性：日志易于被解析（machine-readable）、人类可读（human-readable）。兼容主流日志处理程序的格式，维度设计便于日后做过滤筛选。 审计追踪涉及的行业标准 常见的工业标准有 IEC62443、NIST SP 800-92。
-工业标准 章节 安全级别 IEC 62443-4-2:2019 CR2.8 SL-C 1 IEC 62443-4-2:2019 CR6.1 SL-C 1 IEC 62443-4-2:2019 CR6.2 SL_C 2 IEC 62443-4-2:2019 CR1.13 SL_C 1 IEC 62443-4-2:2019 CR2.9 SL_C 1 IEC 62443-4-2:2019 CR2.10 SL_C 1 IEC 62443-4-2:2019 CR3.7 SL_C 1 IEC 62443-4-2:2019 CR3.9 SL_C 2 常见问题及应对措施 日志格式（协议） 对于本地运行的软件，通常 Syslog 具有更好的系统兼容性。对于使用 ELK 采集日志的项目更适合用 CEF，其他情况建议使用 自定义的 JSON。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>audit on Steve Sun</title><link>https://sund.site/tags/audit/</link><description>Recent content in audit on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>En</language><lastBuildDate>Mon, 15 Apr 2024 16:44:40 +0800</lastBuildDate><atom:link href="https://sund.site/tags/audit/index.xml" rel="self" type="application/rss+xml"/><item><title>审计追踪的设计</title><link>https://sund.site/posts/2024/audit-system-design/</link><pubDate>Mon, 15 Apr 2024 16:44:40 +0800</pubDate><guid>https://sund.site/posts/2024/audit-system-design/</guid><description>&lt;h2 id="什么是审计追踪audit-trail服务">什么是审计追踪（Audit Trail）服务？&lt;/h2>
+&lt;blockquote>
+&lt;p>审计轨迹（Audit trail、Audit log），也译作审计追踪、审计跟踪、审计日志、文件日志或轨迹纪录等名称，是一种作为信息系统审计手段的与安全相关的时间顺序记录、记录集和/或目的地和记录来源，它们提供了在任何时候影响特定操作，程序的活动顺序的文件证据或事件。 审计记录通常来自一些活动，例如：金融交易、科学研究和医疗保健数据交易，或个人、系统、账号以及其他实体的通信等活动。 透过对系统上的活动作时间顺序的纪录，从而监察系统是否存在违规的活动，协助审核人员快速的找出相关的交易资料。 ——维基百科&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="审计追踪服务应该具备哪些能力">审计追踪服务应该具备哪些能力？&lt;/h2>
+&lt;ol>
+&lt;li>日志内容不可篡改。&lt;/li>
+&lt;li>日志链结构完整：不可任意添加或删除单独的日志条目。&lt;/li>
+&lt;li>兼容性：发送日志的客户端应该避免侵入式设计。&lt;/li>
+&lt;li>系统的加密服务应该尽早初始化，以减少未受保护的日志。&lt;/li>
+&lt;li>服务重启/关闭不应导致审核日志不一致。如果服务因紧急情况而关闭，审计日志应该是可验证的。&lt;/li>
+&lt;li>密钥安全性：加密密钥（用于计算完整性检查）应存储在专用密钥存储中，并在内存中驻留最短的时间。&lt;/li>
+&lt;li>性能：能够在几秒钟内验证受保护日志。&lt;/li>
+&lt;li>日志轮换友好性：审核日志应与分布式系统典型的日志轮换策略兼容。&lt;/li>
+&lt;li>可观测性：日志易于被解析（machine-readable）、人类可读（human-readable）。兼容主流日志处理程序的格式，维度设计便于日后做过滤筛选。&lt;/li>
+&lt;/ol>
+&lt;h2 id="审计追踪涉及的行业标准">审计追踪涉及的行业标准&lt;/h2>
+&lt;p>常见的工业标准有 IEC62443、NIST SP 800-92。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>工业标准&lt;/th>
+&lt;th>章节&lt;/th>
+&lt;th>安全级别&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>IEC 62443-4-2:2019&lt;/td>
+&lt;td>CR2.8&lt;/td>
+&lt;td>SL-C 1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IEC 62443-4-2:2019&lt;/td>
+&lt;td>CR6.1&lt;/td>
+&lt;td>SL-C 1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IEC 62443-4-2:2019&lt;/td>
+&lt;td>CR6.2&lt;/td>
+&lt;td>SL_C 2&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IEC 62443-4-2:2019&lt;/td>
+&lt;td>CR1.13&lt;/td>
+&lt;td>SL_C 1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IEC 62443-4-2:2019&lt;/td>
+&lt;td>CR2.9&lt;/td>
+&lt;td>SL_C 1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IEC 62443-4-2:2019&lt;/td>
+&lt;td>CR2.10&lt;/td>
+&lt;td>SL_C 1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IEC 62443-4-2:2019&lt;/td>
+&lt;td>CR3.7&lt;/td>
+&lt;td>SL_C 1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IEC 62443-4-2:2019&lt;/td>
+&lt;td>CR3.9&lt;/td>
+&lt;td>SL_C 2&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="常见问题及应对措施">常见问题及应对措施&lt;/h2>
+&lt;h3 id="日志格式协议">日志格式（协议）&lt;/h3>
+&lt;p>对于本地运行的软件，通常 Syslog 具有更好的系统兼容性。对于使用 ELK 采集日志的项目更适合用 CEF，其他情况建议使用 自定义的 JSON。&lt;/p>
+&lt;p>下面是三种格式（协议）的对比。&lt;/p>
+&lt;h4 id="common-event-format-cefhttpsdocselasticcoenintegrationscef">&lt;a href="https://docs.elastic.co/en/integrations/cef">Common Event Format (CEF)&lt;/a>&lt;/h4>
+&lt;p>Elastic-Search 使用的、一种基于 Event-souring 思想设计的日志格式。优点是冗余信息少，适合配合 ELK 体系构建监控系统。&lt;/p>
+&lt;h4 id="sysloghttpsdatatrackerietforgdochtmlrfc5424">&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424">Syslog&lt;/a>&lt;/h4>
+&lt;p>Syslog 是 Linux 操作系统默认的审计日志格式，通常采用其 RFC5424 版本。大部分 SIEM&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> 系统都支持这种格式的导入。
+Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传统软件的同时，最大程度保证系统的安全性。但是对于微服务来说，实现和维护标准协议成本较高。所以如 AWS CloudTrail, OpenTelemetry 等都选择更简单的 HTTPS + JSON 格式。&lt;/p>
+&lt;h4 id="json">JSON&lt;/h4>
+&lt;p>大部分 SaaS 产品都是用 JSON，简单高效。例如，下面是&lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/">OpenTelemetry 官方文档&lt;/a>提到的日志模型中的字段：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Field Name&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Timestamp&lt;/td>
+&lt;td>Time when the event occurred.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ObservedTimestamp&lt;/td>
+&lt;td>Time when the event was observed.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>TraceId&lt;/td>
+&lt;td>Request trace id.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SpanId&lt;/td>
+&lt;td>Request span id.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>TraceFlags&lt;/td>
+&lt;td>W3C trace flag.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SeverityText&lt;/td>
+&lt;td>The severity text (also known as log level).&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SeverityNumber&lt;/td>
+&lt;td>Numerical value of the severity.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Body&lt;/td>
+&lt;td>The body of the log record.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Resource&lt;/td>
+&lt;td>Describes the source of the log.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>InstrumentationScope&lt;/td>
+&lt;td>Describes the scope that emitted the log.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Attributes&lt;/td>
+&lt;td>Additional information about the event.&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="审计追踪的安全性要求">审计追踪的安全性要求&lt;/h3>
+&lt;p>对于审计日志来说，安全性要求会被一般日志系统更高。&lt;/p>
+&lt;p>安全性，通常可以从机密性（Confidentiality），完整性（Integrity），可用性（Availability）三个维度来考量。&lt;/p>
+&lt;h4 id="机密性">机密性&lt;/h4>
+&lt;p>攻击者可以通过系统的安全漏洞，获取特殊权限，进而查看某些审计日志。&lt;/p>
+&lt;p>可以采取以下措施：&lt;/p>
+&lt;ul>
+&lt;li>加密日志：使用加密技术对日志进行保护，确保只有授权用户能够访问和修改日志。&lt;/li>
+&lt;li>访问控制：限制对发送、接收日志接口的访问权限。&lt;/li>
+&lt;li>敏感信息过滤：不应该在日志中记录用户敏感信息，如密码、证书等。&lt;/li>
+&lt;/ul>
+&lt;h4 id="完整性">完整性&lt;/h4>
+&lt;p>攻击者可以通过系统的安全漏洞，修改、删除某些审计日志。&lt;/p>
+&lt;p>除了上面提到的加密和权限控制，还可以采取以下措施：&lt;/p>
+&lt;ul>
+&lt;li>完整性检查&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>：在日志条目中添加哈希值，以便在验证日志时能够快速检测到任何篡改或截断。&lt;/li>
+&lt;li>定期备份：定期备份日志，以防止攻击者删除或修改所有的日志条目。&lt;/li>
+&lt;/ul>
+&lt;h4 id="可用性">可用性&lt;/h4>
+&lt;p>攻击者可以攻击审计追踪服务，导致审计追踪服务内存、磁盘空间不足等。&lt;/p>
+&lt;ul>
+&lt;li>设置最大用量限制：对内存、磁盘等服务器资源做出限制。&lt;/li>
+&lt;li>监测和响应：及时监测系统资源指标和日志的变化，并对异常活动进行响应。&lt;/li>
+&lt;/ul>
+&lt;h2 id="开源项目的架构设计">开源项目的架构设计&lt;/h2>
+&lt;p>根据自身项目需求，可以参考一些开源的架构设计。由于每个框架（方案）的设计侧重点不同，需要认真评估它们的优势和不足。&lt;/p>
+&lt;h3 id="auditd">Auditd&lt;/h3>
+&lt;p>大部分 Linux 系统默认的审计服务，配合 rsyslog 等工具，可以解决本地设备的日志采集、查看、过滤。&lt;/p>
+&lt;ul>
+&lt;li>优点：基于进程通信，标准日志格式，易于导出。性能优异。&lt;/li>
+&lt;li>不足：标准繁琐，进程模型不适用于网络服务。&lt;/li>
+&lt;/ul>
+&lt;h3 id="aws-cloud-trail">AWS Cloud Trail&lt;/h3>
+&lt;p>&lt;img src="https://sund.site/images/audit-system-design/aws-audit.png" alt="aws log">&lt;/p>
+&lt;p>AWS 的 Cloud Trail 采用应用服务主动推送审计事件的模式，用户可以为设计追踪服务设置策略，收集到的日志会分别按需流入后续的批处理和流处理工具链中。&lt;/p>
+&lt;ul>
+&lt;li>优点：微服务设计，JSON 格式日志更灵活，中心化的日志收集服务易于集成更多应用服务和导出到开源数据处理工具。&lt;/li>
+&lt;li>不足：分布式架构对存储、服务端加密、通信安全性和完整性要求更难实现。&lt;/li>
+&lt;/ul>
+&lt;h3 id="kubenetes">Kubenetes&lt;/h3>
+&lt;p>&lt;img src="https://sund.site/images/audit-system-design/k8s-audit.png" alt="k8s log">&lt;/p>
+&lt;p>K8s 的日志收集与 AWS 实现类似，也是基于中心化的服务，但是这套架构设计并非只为审计日志一种情况设计。&lt;/p>
+&lt;ul>
+&lt;li>优缺点同上&lt;/li>
+&lt;/ul>
+&lt;h3 id="opentelemetry">OpenTelemetry&lt;/h3>
+&lt;p>&lt;img src="https://sund.site/images/audit-system-design/opentel.png" alt="OpenTel">&lt;/p>
+&lt;p>OpenTelemetry 是现在云原生最主流的日志框架。可以支持侵入式（SDK）、非侵入式（Agent）两种日志采集模式。Collector 的设计可以让一部分日志处理的工作放在日志发送端完成。&lt;/p>
+&lt;ul>
+&lt;li>优点：微服务设计，支持 K8s 等基础设施，多语言多平台提供了 SDK 和扩展能力。有完善的安全、完整性考虑。未来可期。&lt;/li>
+&lt;li>不足：大部分情况下日志采集依然需要侵入到 App 内部修改代码。日志收集工具对 Go 等语言支持不够好（截至本文写作时还是测试版）。&lt;/li>
+&lt;/ul>
+&lt;h2 id="小结由-claude-ai-提供">小结（由 Claude AI 提供）&lt;/h2>
+&lt;p>审计追踪（Audit Trail）是指系统记录下所有影响操作或事件的时间顺序记录,用于追踪系统活动，核查是否存在违规行为。&lt;/p>
+&lt;p>审计日志应具备以下特性:&lt;/p>
+&lt;ul>
+&lt;li>不可篡改(加密存储、完整性校验)&lt;/li>
+&lt;li>高性能(快速验证)&lt;/li>
+&lt;li>可观测性(机器/人类可读)&lt;/li>
+&lt;li>安全性(保密性、可用性、完整性)&lt;/li>
+&lt;/ul>
+&lt;p>常见的审计日志格式有 Syslog、CEF、JSON 等,主要区别在于冗余信息、可读性和与日志收集系统的兼容性。&lt;/p>
+&lt;p>审计日志具有较高的安全性要求：&lt;/p>
+&lt;ul>
+&lt;li>机密性：只有授权用户可访问,通过访问控制实现&lt;/li>
+&lt;li>可用性：防止被攻击者删除或破坏,通过限制资源使用、多副本存储等实现&lt;/li>
+&lt;li>完整性：防止被篡改或截断,通过加密、完整性校验等实现&lt;/li>
+&lt;/ul>
+&lt;p>一些典型的审计日志系统架构：&lt;/p>
+&lt;ul>
+&lt;li>Auditd(Linux 默认) + rsyslog 等工具，基于进程通信&lt;/li>
+&lt;li>AWS CloudTrail 等云产品方案&lt;/li>
+&lt;li>Kubernetes 架构&lt;/li>
+&lt;li>OpenTelemetry 开源框架&lt;/li>
+&lt;/ul>
+&lt;div class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1">
+&lt;p>SIEM 是安全信息和事件管理(Security Information and Event Management)的缩写。&lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem">https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2">
+&lt;p>对于日志的加密，一般在服务端会对日志额外添加 checksum 链来校验。可以参考亚马逊的实现 &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html">server-side encryption (SSE-S3)&lt;/a>.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div></description></item></channel></rss>

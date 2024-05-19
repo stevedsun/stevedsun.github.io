@@ -1,67 +1,30 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>输入法 on 電波障害</title><link>https://sund.site/tags/%E8%BE%93%E5%85%A5%E6%B3%95/</link><description>Recent content in 输入法 on 電波障害</description><generator>Hugo -- gohugo.io</generator><language>En</language><lastBuildDate>Sun, 19 Jan 2020 07:21:17 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E8%BE%93%E5%85%A5%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>如何练习双拼输入法</title><link>https://sund.site/posts/2020/2020-1-19_xnheulpb/</link><pubDate>Sun, 19 Jan 2020 07:21:17 +0800</pubDate><guid>https://sund.site/posts/2020/2020-1-19_xnheulpb/</guid><description>&lt;h2 id="双拼输入法是什么">双拼输入法是什么？&lt;/h2>
-&lt;p>「双拼输入法」类似于我们大多人使用的全拼输入法，也是一种基于汉语拼音的汉字输入方案。&lt;/p>
-&lt;p>让我们先来复习一下小学的知识 😂，任何一个汉字都有对应的拼音，拼音由声母和韵母组成。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/1.jpg" alt="">&lt;/p>
-&lt;p>声母除了&lt;code>zh&lt;/code>，&lt;code>sh&lt;/code>，&lt;code>ch&lt;/code>之外，都是由单个字母表示。例如「拼」字的声母&lt;code>p&lt;/code>。&lt;/p>
-&lt;p>韵母通常由 1 到 4 个字母组成，例如拼字的韵母就是&lt;code>in&lt;/code>。&lt;/p>
-&lt;p>通常大家用的全拼输入法，韵母部分要全部打出来（现代输入法通常可以智能联想，但是大多数情况下都需要你打出大部分字母），比如输入「拼」你需要打三个键&lt;code>p&lt;/code>，&lt;code>i&lt;/code>，&lt;code>n&lt;/code>。&lt;/p>
-&lt;p>双拼输入法就是为了解决全拼输入法在输入韵母时低效率的问题。双拼的开发者试图把汉语拼音的全部韵母映射到键盘的所有按键上，这样每次输入一个汉字，只需要输入两个按键（声母+韵母）。&lt;/p>
-&lt;p>例如，我把&lt;code>ing&lt;/code>映射到键盘的字母&lt;code>K&lt;/code>上，把&lt;code>ang&lt;/code>映射到字母&lt;code>H&lt;/code>上。输入「乒乓」时就是下面的效果。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/2.jpg" alt="">&lt;/p>
-&lt;p>现在比较流行的双拼方案有很多，我选择了比较受大家青睐的小鹤双拼方案。它的键盘布局是下面这样的（初次看你可能会觉得不适……别急，读完这篇文章学起来就会很轻松）。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/3.jpg" alt="">&lt;/p>
-&lt;h2 id="双拼输入法能提高打字效率吗">双拼输入法能提高打字效率吗？&lt;/h2>
-&lt;p>学习之前我们通常有个疑问：这玩意真能提高打字效率？&lt;/p>
-&lt;p>我带着这个疑问，找到了一个测试汉字打字速度的&lt;a href="https://dz.wubidz.cn/">网站&lt;/a>，我通过一个月的使用，对比了前后的输入速度，得出的答案让我确信写这篇文章能够帮助你通过双拼提高打字效率。（不要吐槽我每分钟字数太少，测速网站采用了古诗词作为输入，一定程度上屏蔽输入法智能联想的效果。你可以亲自去尝试一下 😛）&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/4.jpg" alt="">&lt;/p>
-&lt;p>（KPM=每分钟按键次数，BPM=每分钟退格次数）&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/5.jpg" alt="">&lt;/p>
-&lt;h2 id="开始学习小鹤双拼">开始学习小鹤双拼&lt;/h2>
-&lt;p>学习知识之前，先了解它的原理会帮助我们更容易记忆它。理解原理看似是增加了额外的负担，但是死记硬背的知识往往难以形成结构化的记忆，很容易遗忘。&lt;/p>
-&lt;p>学习小鹤双拼前，我们先要了解三件事：&lt;/p>
-&lt;ul>
-&lt;li>声母的按键规律&lt;/li>
-&lt;li>韵母的按键规律&lt;/li>
-&lt;li>键盘布局的规律&lt;/li>
-&lt;/ul>
-&lt;h2 id="声母的规律">声母的规律&lt;/h2>
-&lt;p>前面提到，汉语拼音声母大多数是单个字母，除了三个特别的&lt;code>zh&lt;/code>，&lt;code>sh&lt;/code>，&lt;code>ch&lt;/code>。小鹤双拼和全拼一样，直接按字母键就可以输入对应的声母，那三个特别的声母映射到键盘的&lt;code>V&lt;/code>，&lt;code>U&lt;/code>，&lt;code>I&lt;/code>上。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/6.jpg" alt="">&lt;/p>
-&lt;p>之所以映射成&lt;code>zh=V，sh=U，ch=I&lt;/code>，是考虑到两个因素：&lt;/p>
-&lt;ul>
-&lt;li>这三个字母（V，U，I）都没有对应声母&lt;/li>
-&lt;li>这三个字母距离食指和中指都比较近&lt;/li>
-&lt;/ul>
-&lt;p>那有人要问了，为什么不把&lt;code>zh&lt;/code>放在&lt;code>Z&lt;/code>上，&lt;code>ch&lt;/code>放在&lt;code>C&lt;/code>上，&lt;code>sh&lt;/code>放在&lt;code>S&lt;/code>上，这样更好记忆呀？这是因为会造成输入的不一致性。比如&lt;code>O&lt;/code>对应的韵母是&lt;code>uo&lt;/code>，你输入了&lt;code>ZO&lt;/code>，那输入法就无法分辨你输入的是&lt;code>zhuo&lt;/code>（捉），还是&lt;code>zuo&lt;/code>（作）。如此一来就违背了双拼输入法一个汉字只要输入两个键的原则。&lt;/p>
-&lt;p>&lt;strong>所以，声母部分，你只要记住，&lt;code>zh&lt;/code>，&lt;code>sh&lt;/code>，&lt;code>ch&lt;/code>，对应的是&lt;code>V&lt;/code>，&lt;code>U&lt;/code>，&lt;code>I&lt;/code>就可以了。其他和全拼一毛一样。&lt;/strong>&lt;/p>
-&lt;h2 id="韵母的规律">韵母的规律&lt;/h2>
-&lt;p>汉语拼音的韵母有一些很特殊，例如&lt;code>ua&lt;/code> 和&lt;code>ia&lt;/code>前边的声母是&lt;strong>互斥&lt;/strong>的。以&lt;code>jia&lt;/code>（加）为例，你肯定没听过&lt;code>jua&lt;/code>的组合（可能小岳岳除外 😂）。所以&lt;code>ua&lt;/code>和&lt;code>ia&lt;/code>前边的声母不可能是同一个字母，那么即使把这两个韵母放在同一个按键上，也不会出现输入汉字时的混淆。&lt;/p>
-&lt;p>符合这种规律的韵母一共有 7 对，小鹤双拼的按键分布是下面这样的。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/7.jpg" alt="">&lt;/p>
-&lt;p>&lt;strong>为了方便记忆，小鹤双拼让每个按键对应的声母和其中一个韵母能组合成有意义的汉字发音。所以你只需按口诀或文末提到的练习工具针对练习即可，其中需特殊训练的只有上面的 7 个按键。&lt;/strong>&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/8.jpg" alt="">&lt;/p>
-&lt;p>有一些汉字没有声母（零声母），这种情况只要会全拼输入法就可以一秒解决：&lt;/p>
-&lt;p>单字母韵母，如：  啊＝ aa  哦=oo  额=ee&lt;/p>
-&lt;p>双字母韵母，如：  爱＝ ai  恩=en  欧=ou&lt;/p>
-&lt;p>三字母韵母，零声母+韵母所在键，如：  昂＝ ah&lt;/p>
-&lt;h2 id="键盘布局的规律">键盘布局的规律&lt;/h2>
-&lt;p>一些不太常用的韵母，小鹤双拼的作者把它们放到了键盘的边边角角，例如&lt;code>iu&lt;/code>，&lt;code>ie&lt;/code>，&lt;code>ou&lt;/code>，我起初很容易忘记，偶尔用到也想不起这些韵母的位置。所以这三个特殊按键，我在键盘上用蓝色高亮标记起来。结合上文提到的特殊按键，这个键盘看起来就是这样三层结构：&lt;/p>
-&lt;ul>
-&lt;li>第一层是声母，其中特殊的（红色高亮）是&lt;code>V&lt;/code>，&lt;code>U&lt;/code>，&lt;code>I&lt;/code>&lt;/li>
-&lt;li>第二层是韵母，其中特殊的（黄色高亮）是&lt;code>T&lt;/code>，&lt;code>O&lt;/code>，&lt;code>S&lt;/code>，&lt;code>K&lt;/code>，&lt;code>L&lt;/code>，&lt;code>X&lt;/code>，&lt;code>V&lt;/code>&lt;/li>
-&lt;li>第三层是易忘按键（蓝色高亮），它们分别是&lt;code>Q&lt;/code>，&lt;code>P&lt;/code>，&lt;code>Z&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/9.jpg" alt="">&lt;/p>
-&lt;p>你可以把这张图保存起来，放在桌面壁纸里或是打印出来放在键盘前边，练习时用来对照。&lt;/p>
-&lt;h2 id="记忆工具">记忆工具&lt;/h2>
-&lt;p>小鹤双拼&lt;a href="https://www.flypy.com/index.html">官网&lt;/a>提供了多种练习工具。你可以微信扫一扫这个小程序，随时用手机练习。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/10.jpg" alt="">&lt;/p>
-&lt;p>桌面端推荐一个在线的&lt;a href="https://api.ihint.me/shuang/">网页双拼练习工具&lt;/a>，地址是 &lt;a href="https://api.ihint.me/shuang/">https://api.ihint.me/shuang/&lt;/a>。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/shuangpin/11.jpg" alt="">&lt;/p>
-&lt;h2 id="测试工具">测试工具&lt;/h2>
-&lt;p>为了测试打字速度，你可以使用上文提到的&lt;a href="https://dz.wubidz.cn/">在线网页打字测速工具&lt;/a>，地址是&lt;a href="https://dz.wubidz.cn/">https://dz.wubidz.cn/&lt;/a>。&lt;/p>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>本文以小鹤双拼为例，为你分析了汉语拼音组合原理和双拼输入法的映射规律。未来你在学习任何拼音输入法时都可以按照这种规律，以分层结构提高对键盘布局的认识。&lt;/p>
-&lt;p>从练习时间角度，掌握双拼要一周左右，超过全拼打字速度也只需要两周多。所以双拼是非常值得学习的输入方案。&lt;/p>
-&lt;p>目前所有平台都有比较成熟的双拼输入法 App，例如 iOS 和 Mac 系统自带的双拼输入法、Google 的移动端输入法 Gboard。某些国产输入法，在我的测试下经常会出现「过度联想」的问题，比如输入一个字母，自动联想出一个甚至更多汉字，这和双拼输入法一个汉字两个字母的敲键节奏稍有违背，我个人倾向于在移动端使用 Gboard 或默认输入法。&lt;/p>
-&lt;p>&lt;a href="https://www.buymeacoffee.com/stevedsun">&lt;img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px" alt="Buy Me A Coffee">&lt;/a>&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>输入法 on</title><link>/tags/%E8%BE%93%E5%85%A5%E6%B3%95/</link><description>Recent content in 输入法 on</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 19 Jan 2020 07:21:17 +0800</lastBuildDate><atom:link href="/tags/%E8%BE%93%E5%85%A5%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>如何练习双拼输入法</title><link>/posts/2020/2020-1-19_xnheulpb/</link><pubDate>Sun, 19 Jan 2020 07:21:17 +0800</pubDate><guid>/posts/2020/2020-1-19_xnheulpb/</guid><description>双拼输入法是什么？ 「双拼输入法」类似于我们大多人使用的全拼输入法，也是一种基于汉语拼音的汉字输入方案。
+让我们先来复习一下小学的知识 😂，任何一个汉字都有对应的拼音，拼音由声母和韵母组成。
+声母除了zh，sh，ch之外，都是由单个字母表示。例如「拼」字的声母p。
+韵母通常由 1 到 4 个字母组成，例如拼字的韵母就是in。
+通常大家用的全拼输入法，韵母部分要全部打出来（现代输入法通常可以智能联想，但是大多数情况下都需要你打出大部分字母），比如输入「拼」你需要打三个键p，i，n。
+双拼输入法就是为了解决全拼输入法在输入韵母时低效率的问题。双拼的开发者试图把汉语拼音的全部韵母映射到键盘的所有按键上，这样每次输入一个汉字，只需要输入两个按键（声母+韵母）。
+例如，我把ing映射到键盘的字母K上，把ang映射到字母H上。输入「乒乓」时就是下面的效果。
+现在比较流行的双拼方案有很多，我选择了比较受大家青睐的小鹤双拼方案。它的键盘布局是下面这样的（初次看你可能会觉得不适……别急，读完这篇文章学起来就会很轻松）。
+双拼输入法能提高打字效率吗？ 学习之前我们通常有个疑问：这玩意真能提高打字效率？
+我带着这个疑问，找到了一个测试汉字打字速度的网站，我通过一个月的使用，对比了前后的输入速度，得出的答案让我确信写这篇文章能够帮助你通过双拼提高打字效率。（不要吐槽我每分钟字数太少，测速网站采用了古诗词作为输入，一定程度上屏蔽输入法智能联想的效果。你可以亲自去尝试一下 😛）
+（KPM=每分钟按键次数，BPM=每分钟退格次数）
+开始学习小鹤双拼 学习知识之前，先了解它的原理会帮助我们更容易记忆它。理解原理看似是增加了额外的负担，但是死记硬背的知识往往难以形成结构化的记忆，很容易遗忘。
+学习小鹤双拼前，我们先要了解三件事：
+声母的按键规律 韵母的按键规律 键盘布局的规律 声母的规律 前面提到，汉语拼音声母大多数是单个字母，除了三个特别的zh，sh，ch。小鹤双拼和全拼一样，直接按字母键就可以输入对应的声母，那三个特别的声母映射到键盘的V，U，I上。
+之所以映射成zh=V，sh=U，ch=I，是考虑到两个因素：
+这三个字母（V，U，I）都没有对应声母 这三个字母距离食指和中指都比较近 那有人要问了，为什么不把zh放在Z上，ch放在C上，sh放在S上，这样更好记忆呀？这是因为会造成输入的不一致性。比如O对应的韵母是uo，你输入了ZO，那输入法就无法分辨你输入的是zhuo（捉），还是zuo（作）。如此一来就违背了双拼输入法一个汉字只要输入两个键的原则。
+所以，声母部分，你只要记住，zh，sh，ch，对应的是V，U，I就可以了。其他和全拼一毛一样。
+韵母的规律 汉语拼音的韵母有一些很特殊，例如ua 和ia前边的声母是互斥的。以jia（加）为例，你肯定没听过jua的组合（可能小岳岳除外 😂）。所以ua和ia前边的声母不可能是同一个字母，那么即使把这两个韵母放在同一个按键上，也不会出现输入汉字时的混淆。
+符合这种规律的韵母一共有 7 对，小鹤双拼的按键分布是下面这样的。
+为了方便记忆，小鹤双拼让每个按键对应的声母和其中一个韵母能组合成有意义的汉字发音。所以你只需按口诀或文末提到的练习工具针对练习即可，其中需特殊训练的只有上面的 7 个按键。
+有一些汉字没有声母（零声母），这种情况只要会全拼输入法就可以一秒解决：
+单字母韵母，如： 啊＝ aa 哦=oo 额=ee
+双字母韵母，如： 爱＝ ai 恩=en 欧=ou
+三字母韵母，零声母+韵母所在键，如： 昂＝ ah
+键盘布局的规律 一些不太常用的韵母，小鹤双拼的作者把它们放到了键盘的边边角角，例如iu，ie，ou，我起初很容易忘记，偶尔用到也想不起这些韵母的位置。所以这三个特殊按键，我在键盘上用蓝色高亮标记起来。结合上文提到的特殊按键，这个键盘看起来就是这样三层结构：
+第一层是声母，其中特殊的（红色高亮）是V，U，I 第二层是韵母，其中特殊的（黄色高亮）是T，O，S，K，L，X，V 第三层是易忘按键（蓝色高亮），它们分别是Q，P，Z 你可以把这张图保存起来，放在桌面壁纸里或是打印出来放在键盘前边，练习时用来对照。
+记忆工具 小鹤双拼官网提供了多种练习工具。你可以微信扫一扫这个小程序，随时用手机练习。
+桌面端推荐一个在线的网页双拼练习工具，地址是 https://api.ihint.me/shuang/。
+测试工具 为了测试打字速度，你可以使用上文提到的在线网页打字测速工具，地址是https://dz.wubidz.cn/。
+小结 本文以小鹤双拼为例，为你分析了汉语拼音组合原理和双拼输入法的映射规律。未来你在学习任何拼音输入法时都可以按照这种规律，以分层结构提高对键盘布局的认识。</description></item></channel></rss>

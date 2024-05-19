@@ -1,5 +1,13 @@
 baseURL = "https://sund.site/"
 title = "電波障害"
+copyright = "Copyright © 2013–2024, Steve Sun; all rights reserved."
+paginate = 5
+languageCode = "en"
+DefaultContentLanguage = "en"
+enableInlineShortcodes = true
+# prevent build failures when using Hugo's Instagram shortcode due to deprecated Instagram API.
+# See https://github.com/gohugoio/hugo/issues/7228#issuecomment-714490456
+ignoreErrors = ["error-remote-getjson"]
 
 [module]
 [[module.imports]]
@@ -18,7 +26,7 @@ instagram = 'stevedsun' # instagram.com/YOUR_INSTAGRAM_ID
 rss = true # show rss icon
 
 # home page profile
-avatar = '/android-chrome-192x192.png' # gravatar email or image url
+avatar = '/images/profile.png' # gravatar email or image url
 name = 'Steve Sun'
 bio = 'I make softwares.'
 
@@ -35,19 +43,13 @@ graphCommentId = "steve-sun" # use graph comment (disqus alternative)
 [services.googleAnalytics]
 ID = 'G-XJJVVQ0LBH'
 
-[taxonomies]
-tag = "tags"
-category = "categories"
-
-[menu]
-[[menu.main]]
-identifier = "categories"
-name = "Categories"
-url = "/categories/"
-weight = 10
-
 [[menu.main]]
 identifier = "about"
 name = "About"
 url = "/about/"
 weight = 20
+
+[taxonomies]
+category = "categories"
+tag = "tags"
+series = "series"

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>效率 on</title><link>/categories/%E6%95%88%E7%8E%87/</link><description>Recent content in 效率 on</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 12 Dec 2020 22:42:53 +0800</lastBuildDate><atom:link href="/categories/%E6%95%88%E7%8E%87/index.xml" rel="self" type="application/rss+xml"/><item><title>用 Notion 实践卡片盒笔记法</title><link>/posts/2020/2020-12-12_notion-as-zettelkasten/</link><pubDate>Sat, 12 Dec 2020 22:42:53 +0800</pubDate><guid>/posts/2020/2020-12-12_notion-as-zettelkasten/</guid><description>今天给大家介绍一种整理和回顾碎片知识的方法——卡片盒笔记法。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>效率 on 電波障害</title><link>https://sund.site/categories/%E6%95%88%E7%8E%87/</link><description>Recent content in 效率 on 電波障害</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 12 Dec 2020 22:42:53 +0800</lastBuildDate><atom:link href="https://sund.site/categories/%E6%95%88%E7%8E%87/index.xml" rel="self" type="application/rss+xml"/><item><title>用 Notion 实践卡片盒笔记法</title><link>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</link><pubDate>Sat, 12 Dec 2020 22:42:53 +0800</pubDate><guid>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</guid><description>今天给大家介绍一种整理和回顾碎片知识的方法——卡片盒笔记法。
 应该不少人都读过少数派作者玉树芝兰老师写的关于卡片盒笔记法的文章。产品沉思录的主理人少楠也写过很多相关的内容，最近他们还出了一个工具（Flomo - 浮墨笔记）也是基于这套方法论的。
 在这篇文章中，我会结合自己用 Notion 的经验，分享一下我如何用 Notion 做卡片笔记。
 本文参考了 Youtube 频道 Mukul Khanna 关于 Notion 的一系列使用方法。
@@ -16,7 +16,7 @@ Notion 为什么适合做卡片盒笔记法 Notion 在前一段时间更新了 B
 用 Notion 实践卡片盒笔记法 我们首先脱离 Notion 这个软件，看看通常情况下一张卡片由哪些部分组成。下图是来自 Introduction to the Zettelkasten 文章的配图，呈现了一张卡片的样子：
 标题。包含一个唯一编号的标题，编号的作用是在其他笔记中可以方便引用该笔记，而不用担心笔记的标题发生变化使引用失效 标签。方便回顾笔记时对某一类内容做整理归纳 正文。笔记正文是一个想法或是一个知识点的总结。一定是用自己的话来归纳。可以引用其他笔记的编号或是参考文献的地址来配合内容展现 参考文献。结尾部分是这篇笔记卡片是由哪些文献引申而来的 由此可见，卡片盒笔记法中的「卡片」是通过
 引用卡片编号，来关联其他卡片 引用参考文献，来关联外部文献 下面回到 Notion 这个工具，我们一步步来搭建卡片盒笔记法。
-搭建文献库 - 零散知识的数据库 所谓巧妇难为无米之炊，我们做笔记的第一步就是搭建文献资料库，这是一切笔记的源头，有点像数据工程里的「贴源数据层」，文献库是为了让互联网上经常失效的文章有个备份的好地方，同时你也可以在文献库里对文章进行划线、高亮和备注。</description></item><item><title>番茄工作法和Keep是绝配</title><link>/posts/2020/2020-2-17_wfh/</link><pubDate>Mon, 17 Feb 2020 20:43:43 +0800</pubDate><guid>/posts/2020/2020-2-17_wfh/</guid><description>要有路线图 平时在办公室里，大家可以面对面沟通，有问题、回复都可以迅速得到反馈，好像一个走正步的方队，每个人的节奏都可以从余光中确认。但是在家办公，这种节奏就乱掉了。
+搭建文献库 - 零散知识的数据库 所谓巧妇难为无米之炊，我们做笔记的第一步就是搭建文献资料库，这是一切笔记的源头，有点像数据工程里的「贴源数据层」，文献库是为了让互联网上经常失效的文章有个备份的好地方，同时你也可以在文献库里对文章进行划线、高亮和备注。</description></item><item><title>番茄工作法和Keep是绝配</title><link>https://sund.site/posts/2020/2020-2-17_wfh/</link><pubDate>Mon, 17 Feb 2020 20:43:43 +0800</pubDate><guid>https://sund.site/posts/2020/2020-2-17_wfh/</guid><description>要有路线图 平时在办公室里，大家可以面对面沟通，有问题、回复都可以迅速得到反馈，好像一个走正步的方队，每个人的节奏都可以从余光中确认。但是在家办公，这种节奏就乱掉了。
 我最近正好转到数据团队做一些数据工程的工作，急需恶补很多知识。我在网上搜到几张数据工程师知识图谱和一些认证课程。按照自己的能力，我规划了学习路线，并且用 Notion 记录下来。这份路线图里包含了一些书籍和网络课程，能够帮我快速上手实践，以备在复工后快速进入状态。
 寻找免费的学习资源 有了路线，就要去找学习资源，付费的电子书和网络教程很多，我想重点说说那些免费资源（抛开盗版不谈），比如著名的动物书出版商 O’Reilly 就有一大堆免费的正版技术类电子书可供下载。
 另外，Youtube 上的教学视频质量也非常高，对于快速上手一种工具或是搭建开发环境非常有帮助。（随便一搜就有很多成套的教学视频，不乏官方教学视频，比如 Google Cloud Platform 提供了很多教学短片）
@@ -28,7 +28,7 @@ Notion 为什么适合做卡片盒笔记法 Notion 在前一段时间更新了 B
 给娱乐时间限量 我平时很少看电视，最近又把吃灰半年的《歧路旅人》拿出来玩，我给自己规定的是每天必须天黑才能打开游戏机，而且玩到 20%电量之前必须关机休息。这样每天娱乐时间就不会超过 2 个小时。
 最近奥斯卡颁奖后，一批电影片单也出来了，不如趁这段时间把 2019 年错过的好电影也补一补。
 用音乐和灯光隔离出个人空间 我在几个月前发的一篇文章《用一个模型理解什么是注意力的边缘》里已经分析过怎么用「聚光灯效应」和背景音乐来创造专注的环境，对这部分感兴趣的同学可以去阅读一下。
-小结 综上，充分利用假期的时间去充电吧，要给自己指定任务、要有追踪任务的工具，多利用闲暇时间锻炼、多关注平时上班时没空去关注的生活细节，给 2019 年错过的好东西一个补救的机会。</description></item><item><title>如何练习双拼输入法</title><link>/posts/2020/2020-1-19_xnheulpb/</link><pubDate>Sun, 19 Jan 2020 07:21:17 +0800</pubDate><guid>/posts/2020/2020-1-19_xnheulpb/</guid><description>双拼输入法是什么？ 「双拼输入法」类似于我们大多人使用的全拼输入法，也是一种基于汉语拼音的汉字输入方案。
+小结 综上，充分利用假期的时间去充电吧，要给自己指定任务、要有追踪任务的工具，多利用闲暇时间锻炼、多关注平时上班时没空去关注的生活细节，给 2019 年错过的好东西一个补救的机会。</description></item><item><title>如何练习双拼输入法</title><link>https://sund.site/posts/2020/2020-1-19_xnheulpb/</link><pubDate>Sun, 19 Jan 2020 07:21:17 +0800</pubDate><guid>https://sund.site/posts/2020/2020-1-19_xnheulpb/</guid><description>双拼输入法是什么？ 「双拼输入法」类似于我们大多人使用的全拼输入法，也是一种基于汉语拼音的汉字输入方案。
 让我们先来复习一下小学的知识 😂，任何一个汉字都有对应的拼音，拼音由声母和韵母组成。
 声母除了zh，sh，ch之外，都是由单个字母表示。例如「拼」字的声母p。
 韵母通常由 1 到 4 个字母组成，例如拼字的韵母就是in。
@@ -57,12 +57,12 @@ Notion 为什么适合做卡片盒笔记法 Notion 在前一段时间更新了 B
 记忆工具 小鹤双拼官网提供了多种练习工具。你可以微信扫一扫这个小程序，随时用手机练习。
 桌面端推荐一个在线的网页双拼练习工具，地址是 https://api.ihint.me/shuang/。
 测试工具 为了测试打字速度，你可以使用上文提到的在线网页打字测速工具，地址是https://dz.wubidz.cn/。
-小结 本文以小鹤双拼为例，为你分析了汉语拼音组合原理和双拼输入法的映射规律。未来你在学习任何拼音输入法时都可以按照这种规律，以分层结构提高对键盘布局的认识。</description></item><item><title>为 Mac OS 10.15 开启 HiDPI，让 2K 显示器更舒适</title><link>/posts/2019/macbook-hidpi/</link><pubDate>Sun, 24 Nov 2019 16:11:00 +0800</pubDate><guid>/posts/2019/macbook-hidpi/</guid><description>以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户ZeRo° Xu 在 一键开启 HiDPI 脚本 里的 Github Issue 和一篇博文 《为 mac 连接的 2k 显示器开启 HiDPI》。
+小结 本文以小鹤双拼为例，为你分析了汉语拼音组合原理和双拼输入法的映射规律。未来你在学习任何拼音输入法时都可以按照这种规律，以分层结构提高对键盘布局的认识。</description></item><item><title>为 Mac OS 10.15 开启 HiDPI，让 2K 显示器更舒适</title><link>https://sund.site/posts/2019/macbook-hidpi/</link><pubDate>Sun, 24 Nov 2019 16:11:00 +0800</pubDate><guid>https://sund.site/posts/2019/macbook-hidpi/</guid><description>以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户ZeRo° Xu 在 一键开启 HiDPI 脚本 里的 Github Issue 和一篇博文 《为 mac 连接的 2k 显示器开启 HiDPI》。
 什么是 HiDPI 引用自 Github 用户 ZeRo° Xu ：
 它使用横纵 2 个物理像素也就是 4 个物理像素来显示 1 个像素区域，结果就是图像的细节得到翻倍、更清晰、边缘更平滑。
 拿 13 寸的 MacBook Pro 举例，它的屏幕物理分辨率是 2560 x 1600，所以原生的 HIDPI 分辨率就是 1280x800。更高的一档 1440x900 hidpi 缩放分辨率，则是虚拟出一个 2880x1800 的分辨率，再进行软缩放输入。所以你能发现苹果的电脑总是有很高的分辨率。
 好了，既然你的屏幕是 1080p，本身就没有那么多像素去合成 HIDPI，如果以原生的显示计算，你这屏幕的 1080p 分辨率应该是 960x540，这么低的分辨率你是没法用的，所以就有了这个脚本。
-这个脚本的功能是虚拟出比你的屏幕物理分辨率更高的假分辨率，也就是你看到的 3360 x 1888，这样你就可以使用 1680 x 944 hidpi 这个缩放分辨率了。</description></item><item><title>抛弃笔记本，完全用标签管理笔记有什么需要注意的</title><link>/posts/2019/all-tag-in-evernote/</link><pubDate>Mon, 18 Nov 2019 13:49:00 +0800</pubDate><guid>/posts/2019/all-tag-in-evernote/</guid><description>日常工作中经常会出现这样的情况：
+这个脚本的功能是虚拟出比你的屏幕物理分辨率更高的假分辨率，也就是你看到的 3360 x 1888，这样你就可以使用 1680 x 944 hidpi 这个缩放分辨率了。</description></item><item><title>抛弃笔记本，完全用标签管理笔记有什么需要注意的</title><link>https://sund.site/posts/2019/all-tag-in-evernote/</link><pubDate>Mon, 18 Nov 2019 13:49:00 +0800</pubDate><guid>https://sund.site/posts/2019/all-tag-in-evernote/</guid><description>日常工作中经常会出现这样的情况：
 小张怎么也想不起来上次收藏的一篇健身饮食相关的文章，到底是在印象笔记的「健身」分类下，还是在「健康」或者「饮食」分类下，跨分类的文章太多，小张感到头秃 小李用标签管理文档，但是每次查询标签时，总是犹豫到底应该搜索时间管理还是效率，亦或是工作流，标签实在太多，小李很恼火 这两种情况都属于整理方法不科学，给检索时造成了麻烦。
 检索分类的难题 在正式介绍整理方法前，不得不先声明一个事实：**完全无重叠的分类是不可能实现的。**以小张为例，小张是一个健身教练，他在「健身方法」分类下有教会员如何管理「睡眠」、「饮食」和「健身动作」，同时小张也热爱生活，他在「生活」分类下有「财务知识」，并在「睡眠」和「饮食」里记录自己的睡眠和饮食习惯。这就造成了「睡眠」和「饮食」同时存在于个人生活和健身方法两个分类里。
 像小张这样的情况几乎不可避免，分类作为一种整理方法，就免不了出现上图中重叠的部分。什么是分类？**分类就是预先设计好一堆插槽，再把不同的东西分门别类放进对应的插槽里。**小张在检索「饮食」相关的内容时，他的分类系统失效了，同一个东西可以属于不同插槽。小张此时必须用「个人生活 + 饮食」或是「健身 + 饮食」的扩展分类形式才能得到想要的结果。由此可见，分类失效最简单的解决办法是扩展分类，比如增加两个子分类「生活饮食」和「健身饮食」。但是由于文档日积月累，这种小分类越来越多，越来越难管理；而一些分类里只存了 1、2 篇文档，根本没必要单独开个分类。
@@ -88,12 +88,12 @@ Notion 为什么适合做卡片盒笔记法 Notion 在前一段时间更新了 B
 通过父标签 &amp;gt; 子标签的方式逐层检索 通过搜索框输入标签名直接检索 如果你不是印象笔记用户，也可以采用一些迂回的手段，比如建立一张标签父子关系的笔记，来作为查找目录。
 看到这里你也许已经发现，这种完全标签化的方式其实只不过是把分类变成了标签，它同样存在父标签之间范围重叠的问题，所以一样要遵循前文的分类和标签的使用原则。
 小结 本文先分析了检索分类的难题——分类之间的重叠造成添加和检索时的不便。之后按照分类和标签两种归类方式的区别，提出了创建和使用分类、标签的原则，即谨慎分类，组合标签。之后介绍了一种完全标签化的管理信息方式。它的本质仍然是通过分类 + 标签的组合，提高检索效率。
-希望本文对你有所帮助，也欢迎在评论区留言发表你的观点。</description></item><item><title>Nintendo Switch 联机优化策略</title><link>/posts/2019/nintendo-switch-network-opt/</link><pubDate>Mon, 07 Oct 2019 22:18:00 +0800</pubDate><guid>/posts/2019/nintendo-switch-network-opt/</guid><description>简单方法 首先介绍下 Nintendo Switch 在哪里设置网络，如下图，设置界面=&amp;gt;互联网设置里，可以修改 IP，DNS 等常用网络配置。修改之后点击「链接测试」，可以测试你的 NAT 和下载、上传速度。
+希望本文对你有所帮助，也欢迎在评论区留言发表你的观点。</description></item><item><title>Nintendo Switch 联机优化策略</title><link>https://sund.site/posts/2019/nintendo-switch-network-opt/</link><pubDate>Mon, 07 Oct 2019 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2019/nintendo-switch-network-opt/</guid><description>简单方法 首先介绍下 Nintendo Switch 在哪里设置网络，如下图，设置界面=&amp;gt;互联网设置里，可以修改 IP，DNS 等常用网络配置。修改之后点击「链接测试」，可以测试你的 NAT 和下载、上传速度。
 首先：设置路由器的 WIFI 类型为 5G 因为 NS 对 2.4GHz 的 Wifi 优化非常差，所以一般玩家都选择设置 Wifi 类型为 5GHz，5G 的缺点是穿墙能力差，但是速度很快，所以建议把 NS 放在离路由器不太远的位置。
 最简单粗暴的方法：购买加速器 购买加速器是最省心省力的方案，以网易 UU 加速器为例，加速后可以把 NAT 从 D 上升到 B 或 A，完全可以满足大部分延迟要求较低游戏的需要。
 Mac 版 UU 加速器目前还处于免费测试阶段，可以随意使用。按照提示配置 NS 上的 IP 和 DNS 即可。但是如果想让联机速度突破 A，甚至小于 30ms 延迟，就要结合第二部分「进阶方法」中的内容了。
 最方便的方法：DNS 优化 这也是最多人的办法，以「Splatoon2」为例，四川电信在不使用任何加速器的情况下，单单设置了合适的 DNS，就可以流畅体验乌贼娘了。注意这种方法在晚上 8 ～ 10 点高峰期间有一定概率掉线。下面提供一些我常用的 DNS，不同地区效果不同，需要自己尝试。
-218.102.23.228 # 一般用作日本eshop下载游戏，速度提升明显 203.198.7.66 168.126.63.1 # 著名韩国DNS节点，Splatoon2 联机常用 168.126.63.2 # 同上 进阶方法 进阶方法可以最大限度的提升你的网络通信效率。</description></item><item><title>一些投资知识</title><link>/posts/investment/</link><pubDate>Thu, 19 Jan 2017 13:25:55 +0800</pubDate><guid>/posts/investment/</guid><description>资产配置 债、股、基金等综合配置。基金有的偏股，有的偏债，有的偏另类。看清楚哪些基金适合自己。
+218.102.23.228 # 一般用作日本eshop下载游戏，速度提升明显 203.198.7.66 168.126.63.1 # 著名韩国DNS节点，Splatoon2 联机常用 168.126.63.2 # 同上 进阶方法 进阶方法可以最大限度的提升你的网络通信效率。</description></item><item><title>一些投资知识</title><link>https://sund.site/posts/investment/</link><pubDate>Thu, 19 Jan 2017 13:25:55 +0800</pubDate><guid>https://sund.site/posts/investment/</guid><description>资产配置 债、股、基金等综合配置。基金有的偏股，有的偏债，有的偏另类。看清楚哪些基金适合自己。
 每种理财产品、基金都是有一些底层资产构成。
 什么是底层资产 债类资产(固定收益资产) 这类资产风险取决于平台投资的内容，债务主体(国家、公司、个人)。风险最低。
 股类资产(高风险、高收益)

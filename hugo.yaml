@@ -1,0 +1,40 @@
+baseURL: https://sund.site/
+title: 電波障害
+author: "Steve Sun"
+copyright: "Copyright © 2024, Steve Sun; all rights reserved."
+paginate: 5
+languageCode: en
+DefaultContentLanguage: en
+enableInlineShortcodes: true
+ignoreErrors:
+  - error-remote-getjson
+module:
+  imports:
+    - path: github.com/nanxiaobei/hugo-paper
+params:
+  color: linen
+  twitter: way2steve
+  github: stevedsun
+  instagram: stevedsun
+  rss: true
+  avatar: https://sund.site/images/profile.png
+  name: Steve Sun
+  bio: I make softwares.
+  graphCommentId: steve-sun
+services:
+  googleAnalytics:
+    ID: G-XJJVVQ0LBH
+menu:
+  main:
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 10
+    - identifier: about
+      name: About
+      url: /about/
+      weight: 20
+taxonomies:
+  category: categories
+  tag: tags
+  series: series

@@ -26,10 +26,6 @@ services:
     ID: G-XJJVVQ0LBH
 menu:
   main:
-    - identifier: tags
-      name: Tags
-      url: /tags/
-      weight: 10
     - identifier: about
       name: About
       url: /about/

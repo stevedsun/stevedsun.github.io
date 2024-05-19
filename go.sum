@@ -1,4 +1,4 @@
 github.com/hugomods/google-analytics v0.2.0 h1:ziRPsDMYKAmvfl6ofthJdmXq0w10yxNKI/dF0vbcX0k=
 github.com/hugomods/google-analytics v0.2.0/go.mod h1:Q89C3HmPHn2m2VT1INfnLwkpDyyYRLRIPitLA/aFIy8=
-github.com/nanxiaobei/hugo-paper v0.0.0-20230922171429-47bac0a8c04c h1:UsjWss9O0dFvNYjo87KiKLSiy7XagEIxw7sL9FnkMmQ=
-github.com/nanxiaobei/hugo-paper v0.0.0-20230922171429-47bac0a8c04c/go.mod h1:cS2hTYPgmZ2FkPTQbOiX6vB0yLQcWD067kJx2lkRPVQ=
+github.com/nanxiaobei/hugo-paper v0.0.0-20240513183536-90059f787877 h1:92A4/cwJmNVxk8B8au1rtJ3AdsGbUwsVGwtaCVU0IJM=
+github.com/nanxiaobei/hugo-paper v0.0.0-20240513183536-90059f787877/go.mod h1:cS2hTYPgmZ2FkPTQbOiX6vB0yLQcWD067kJx2lkRPVQ=

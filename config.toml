@@ -1,11 +1,13 @@
-baseURL = "https://sund.site/"
-title = "Steve Sun"
+[module]
+[[module.imports]]
+path = "github.com/nanxiaobei/hugo-paper"
 
-# disqusShortname = 'v2steve'       # use disqus comments
+baseURL = "https://sund.site/"
+title = "電波障害"
 
 [params]
 # color style
-color = 'gray' # linen, wheat, gray, light
+color = 'linen' # linen, wheat, gray, light
 
 # header social icons
 twitter = 'way2steve'   # twitter.com/YOUR_TWITTER_ID
@@ -16,9 +18,9 @@ instagram = 'stevedsun' # instagram.com/YOUR_INSTAGRAM_ID
 rss = true # show rss icon
 
 # home page profile
-#avatar = '/tx_small.jpg' # gravatar email or image url
-#name = 'Steve Sun'
-#bio = '.'
+avatar = '/android-chrome-192x192.png' # gravatar email or image url
+name = 'Steve Sun'
+bio = 'I make softwares.'
 
 
 # misc
@@ -29,18 +31,17 @@ rss = true # show rss icon
 graphCommentId = "steve-sun" # use graph comment (disqus alternative)
 # math = true # enable KaTeX math typesetting globally
 
-[menu]
+[services]
+[services.googleAnalytics]
+ID = 'G-XJJVVQ0LBH'
 
+# [taxonomies]
+# tag = "tags"
+# category = "categories"
+
+[menu]
 [[menu.main]]
 identifier = "about"
 name = "About"
 url = "/about/"
-weight = 10
-
-[module]
-[[module.imports]]
-path = "github.com/nanxiaobei/hugo-paper"
-[[module.imports]]
-path = 'github.com/hugomods/google-analytics'
-# [[module.imports]]
-# path = 'github.com/hugomods/images'
+weight = 20

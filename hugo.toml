@@ -1,9 +1,9 @@
+baseURL = "https://sund.site/"
+title = "電波障害"
+
 [module]
 [[module.imports]]
 path = "github.com/nanxiaobei/hugo-paper"
-
-baseURL = "https://sund.site/"
-title = "電波障害"
 
 [params]
 # color style
@@ -35,11 +35,17 @@ graphCommentId = "steve-sun" # use graph comment (disqus alternative)
 [services.googleAnalytics]
 ID = 'G-XJJVVQ0LBH'
 
-# [taxonomies]
-# tag = "tags"
-# category = "categories"
+[taxonomies]
+tag = "tags"
+category = "categories"
 
 [menu]
+[[menu.main]]
+identifier = "categories"
+name = "Categories"
+url = "/categories/"
+weight = 10
+
 [[menu.main]]
 identifier = "about"
 name = "About"

@@ -1,5 +1,5 @@
 ---
-title: "About Me"
+title: "About"
 ---
 
 Hi, I'm **Steve Sun**, a full-stack software engineer based in **Chengdu, China**.
@@ -10,7 +10,7 @@ On this site, I share my favorite books, articles and opinions.
 
 ---
 
-## My Side Projects
+## My Projects
 
 - [Notion Graph View](https://github.com/stevedsun/notion-graph-view) - Generating a roam-research like network graph view from your notion pages.
 - [Useless Ideas Public API](https://q24.io/useless) - A public Rest API that provides quotes and ideas. Supported by [灵感买家俱乐部](https://club.q24.io/).

@@ -2,7 +2,7 @@ baseURL: https://sund.site/
 title: 電波障害
 author: "Steve Sun"
 copyright: "Copyright © 2024, Steve Sun; all rights reserved."
-paginate: 5
+paginate: 7
 languageCode: en
 DefaultContentLanguage: en
 enableInlineShortcodes: true

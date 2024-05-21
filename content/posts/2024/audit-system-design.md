@@ -281,7 +281,6 @@ OpenTelemetry 是现在云原生最主流的日志框架。可以支持侵入式
 
 一些典型的审计日志系统架构：
 
-- Auditd(Linux 默认) + rsyslog 等工具，基于进程通信
-- AWS CloudTrail 等云产品方案
-- Kubernetes 架构
-- OpenTelemetry 开源框架
+- Auditd、rsyslog 等 Linux 原生日志程序
+- AWS 等云产品
+- OpenTelemetry

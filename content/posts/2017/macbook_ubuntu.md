@@ -2,6 +2,7 @@
 title: "macbook安装ubuntu"
 date: 2013-01-04T00:00:00
 tags: [macbook, linux]
+aliases: [/posts/macbook_ubuntu/]
 ---
 
 **注意，ubuntu 和 xubuntu 安装上有一定差别，请严格按照你选择的系统版本流程安装**

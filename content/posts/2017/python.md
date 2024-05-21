@@ -3,6 +3,7 @@ title: "《Python源码剖析》第一部分——Python对象基础"
 date: 2017-07-12T00:00:00
 categories: [Python]
 tags: [python]
+aliases: [/posts/python/]
 ---
 
 ## Python 的对象初始化

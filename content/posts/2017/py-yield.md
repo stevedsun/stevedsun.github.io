@@ -4,6 +4,7 @@ date: 2016-12-28T18:00:00
 categories: [Python]
 tags: [python]
 description: "总结一下yield关键字在C层面是如何实现的"
+aliases: [/posts/py-yield/]
 ---
 
 这几天面试被问到类似的问题，顺便看了看 Python 的源码，参考网上的教程，总结一下 yield 关键字在 C 层面是如何实现的。

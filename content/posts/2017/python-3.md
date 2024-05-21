@@ -3,6 +3,7 @@ title: "《Python源码剖析》第三部分——Python虚拟机进阶"
 date: 2017-07-14T00:00:00
 categories: [Python]
 tags: [python]
+aliases: [/posts/python-3/]
 ---
 
 ## Python 环境初始化

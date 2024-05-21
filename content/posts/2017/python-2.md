@@ -3,6 +3,7 @@ title: "《Python源码剖析》第二部分——Python虚拟机基础"
 date: 2017-07-13T00:00:00
 categories: [Python]
 tags: [python]
+aliases: [/posts/python-2/]
 ---
 
 ## Python 执行环境
@@ -127,7 +128,7 @@ Python 在编译阶段就把函数闭包内层和闭包外层使用的变量存�
 ## Descriptor
 
 > 在 PyType_Ready 中，Python 虚拟机会填充 tp_dict，其中与操作名对应的是一个个 descriptor
-> 对于一个 Python 中的对象 obj，如果 obj.** class**对应的 class 对象中存在**get**、**set**和**delete**三种操作，那么 obj 就可称为 Python 一个 descriptor。
+> 对于一个 Python 中的对象 obj，如果 obj.**class**对应的 class 对象中存在**get**、**set**和**delete**三种操作，那么 obj 就可称为 Python 一个 descriptor。
 
 > 如果细分，那么 descriptor 还可分为如下两种：
 
@@ -135,8 +136,8 @@ Python 在编译阶段就把函数闭包内层和闭包外层使用的变量存�
 2. non data descriptor : type 中只定义了**get**的 descriptor。
    在 Python 虚拟机访问 instance 对象的属性时，descriptor 的一个作用是影响 Python 虚拟机对属性的选择。从 PyObject_GenericGetAttr 的伪代码可以看出，Python 虚拟机会在 instance 对象自身的**dict**中寻找属性，也会在 instance 对象对应的 class 对象的 mro 列表中寻找
 
-> 1.  Python 虚拟机按照 instance 属性、class 属性的顺序选择属性，即 instance 属性优先于 class 属性；
-> 2.  如果在 class 属性中发现同名的 data descriptor，那么该 descriptor 会优先于 instance 属性被 Python 虚拟机选择
+> 1. Python 虚拟机按照 instance 属性、class 属性的顺序选择属性，即 instance 属性优先于 class 属性；
+> 2. 如果在 class 属性中发现同名的 data descriptor，那么该 descriptor 会优先于 instance 属性被 Python 虚拟机选择
 
 ![](https://i.loli.net/2021/03/05/1xKk3IVPdjWb8iB.jpg)
 

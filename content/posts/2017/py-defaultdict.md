@@ -4,6 +4,7 @@ date: 2016-10-11T15:00:16
 categories: [Python]
 tags: [python]
 description: ""
+aliases: [/posts/py-defaultdict/]
 ---
 
 在开发中经常需要用到计数器，当函数 foo 调用另一个函数 bar 时，为了确认调用 bar 之后处理的结果正确性，经常需要使用计数器来统计 bar 函数里处理成功了多少次。例如：

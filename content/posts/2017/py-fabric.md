@@ -4,6 +4,7 @@ date: 2016-10-19T16:25:51
 categories: [Python]
 tags: [python]
 description: "近期在调试fabric执行远程脚本时遇到的问题和产生原因"
+aliases: [/posts/py-fabric/]
 ---
 
 ## 问题和处理方法

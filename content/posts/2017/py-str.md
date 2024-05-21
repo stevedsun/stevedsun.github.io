@@ -4,6 +4,7 @@ date: 2017-01-11T11:09:00
 categories: [Python]
 tags: [python]
 description: "Python 2.x对str类型的双重标准"
+aliases: [/posts/py-str/]
 ---
 
 ## 问题
@@ -43,7 +44,7 @@ Python2 在格式化字符时，会把`str`格式化为`str`，如果字符串�
 - Python2 里不要混用`str`和`unicode`，如果处理文本时，先将全部数据格式化成 unicode
 - 能用 Python3 尽量不用 Python2 ~~(废话)~~
 
-## 参考资料：
+## 参考资料
 
 - 《Effective Python》 Brett Slatkin.
 - 不愿意透露姓名的某厂面试官

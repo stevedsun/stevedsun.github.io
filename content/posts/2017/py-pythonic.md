@@ -4,13 +4,14 @@ date: 2016-10-25T15:40:43
 categories: [Python]
 tags: [python]
 description: ""
+aliases: [/posts/py-pythonic/]
 ---
 
 这是一个外国人实现的 Zabbix(一个开源监控工具)的 Python Client——pyzabbix 里的代码片段。
 
 ## RPC 调用
 
-Rpc 调用的流程是向 rpc 服务端指定的 uri(如http://www.abc.com/jsonrpc.php) 发送 json(或其他双方约定格式)数据包，数据包里有 rpc 版本信息、方法名、参数等。下面`Zabbix`类里的`do_request`方法就完成了将方法名和方法参数打包 json 后发送请求的过程。
+Rpc 调用的流程是向 rpc 服务端指定的 uri(如<http://www.abc.com/jsonrpc.php>) 发送 json(或其他双方约定格式)数据包，数据包里有 rpc 版本信息、方法名、参数等。下面`Zabbix`类里的`do_request`方法就完成了将方法名和方法参数打包 json 后发送请求的过程。
 
 ```python
 class Zabbix(object):
@@ -83,6 +84,6 @@ class ZabbixAPIObjectClass(object):
 
 类似地，很多接口的实现都可以照搬这种方式把参数调用改成链式调用，如 pymongo，redis-py 等。
 
-## 参考资料：
+## 参考资料
 
 <https://github.com/lukecyca/pyzabbix>

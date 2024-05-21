@@ -51,7 +51,7 @@ aliases: [/posts/investment/]
 - P2P。现在买要比之前风险低，推荐资产是小资产(如个人消费、小买卖等)。P2P 在理财中占比不要超过 20%比较好。知名度比较高的平台：陆金所、人人贷、有利网、小赢、桔子理财、积木盒子等等。
 
 > 财经信息来源：财联社，财新网
-> 读研报推荐迈博汇金。又叫慧博投研资讯。网址是http://www.microbell.com/newweb/web/search?index=0
+> 读研报推荐迈博汇金。又叫慧博投研资讯。网址是<http://www.microbell.com/newweb/web/search?index=0>
 
 ### 浮动收益类资产
 

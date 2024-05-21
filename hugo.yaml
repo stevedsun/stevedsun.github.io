@@ -13,6 +13,7 @@ module:
     - path: github.com/nanxiaobei/hugo-paper
 params:
   color: linen
+  monoDarkIcon: true
   twitter: way2steve
   github: stevedsun
   instagram: stevedsun

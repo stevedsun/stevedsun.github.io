@@ -1,8 +1,10 @@
 ---
-title: "About"
+title: "Hello"
 ---
 
-Hi, I'm **Steve Sun**, a full-stack software engineer based in **Chengdu, China**.
+![%profile%](/images/g.gif)
+
+I'm **Steve Sun**, a full-stack software engineer based in **Chengdu, China**.
 
 I used to work for [ThoughtWorks](https://www.thoughtworks.com/) and [Siemens](https://www.siemens.com/global/en.html). Now, I'm focusing on **industrial edge** and **distributed system**.
 

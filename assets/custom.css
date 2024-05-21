@@ -1,0 +1,48 @@
+img[alt$="%profile%"] {
+    display: block;
+    float: none !important;
+    margin: 0.7rem auto;
+    /* you can replace the vertical '0.7rem' by
+                            whatever floats your boat, but keep the
+                            horizontal 'auto' for this to work */
+    box-shadow: 0 0 10px #555;
+    border-radius: 50%;
+    -webkit-box-shadow: 0 0 0px #ece7e7;
+    -moz-box-shadow: 0 0 0px #ece7e7;
+    max-width: 30%;
+    vertical-align: middle;
+    /* whatever else styles you fancy here */
+}
+
+img {
+    display: block;
+    float: none !important;
+    margin: 0.7rem auto;
+    box-shadow: 0 0 10px #555;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 0 0px #ece7e7;
+    -moz-box-shadow: 0 0 0px #ece7e7;
+    /* whatever else styles you fancy here */
+}
+
+img[alt$=">"] {
+    float: right;
+    margin: 0.7rem;
+    /* this margin is totally up to you */
+    box-shadow: 0 0 10px #555;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 0 0px #ece7e7;
+    -moz-box-shadow: 0 0 0px #ece7e7;
+    max-width: 45%;
+}
+
+img[alt$="<"] {
+    float: left;
+    margin: 0.7rem;
+    /* this margin is totally up to you */
+    box-shadow: 0 0 10px #555;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 0 0px #ece7e7;
+    -moz-box-shadow: 0 0 0px #ece7e7;
+    max-width: 45%;
+}

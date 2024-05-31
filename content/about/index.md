@@ -2,7 +2,7 @@
 title: "Hello"
 ---
 
-![%profile%](/images/g.gif)
+![%profile%](/images/g.png)
 
 I'm **Steve Sun**, a full-stack software engineer based in **Chengdu, China**.
 

@@ -4,11 +4,9 @@ title: "Hello"
 
 ![%profile%](/images/g.png)
 
-I'm **Steve Sun**, a full-stack software engineer based in **Chengdu, China**.
+I'm **Steve Sun**, a full-stack software developer based in **Chengdu, China**.
 
-I used to work for [ThoughtWorks](https://www.thoughtworks.com/) and [Siemens](https://www.siemens.com/global/en.html). Now, I'm focusing on **industrial edge** and **distributed system**.
-
-On this site, I share my favorite books, articles and opinions.
+I used to be a Tech Lead at [ThoughtWorks](https://www.thoughtworks.com/) and now I am an Architect at [Siemens](https://www.siemens.com/). On this site, I share my views and findings on Software Architecture design,reviews of best-selling books, popular articles and movies.
 
 ---
 

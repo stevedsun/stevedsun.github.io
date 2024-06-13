@@ -6,7 +6,7 @@ title: "Hello"
 
 I'm **Steve Sun**, a full-stack software developer based in **Chengdu, China**.
 
-I used to be a Tech Lead at [ThoughtWorks](https://www.thoughtworks.com/) and now I am an Architect at [Siemens](https://www.siemens.com/). On this site, I share my views and findings on Software Architecture design,reviews of best-selling books, popular articles and movies.
+I used to be a Tech Lead at [ThoughtWorks](https://www.thoughtworks.com/) and now I am an Architect at [Siemens](https://www.siemens.com/). On this site, I share my views and findings on Software Architecture design, reviews of best-selling books and movies.
 
 ---
 

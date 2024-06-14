@@ -58,7 +58,7 @@ description: ""
 
 ### [Common Event Format (CEF)](https://docs.elastic.co/en/integrations/cef)
 
-Elastic-Search 使用的、一种基于 Event-souring 思想设计的日志格式。优点是冗余信息少，适合配合 ELK 体系构建监控系统。
+Elastic-Search 使用的、一种基于 Event-souring 思想设计的日志格式。优点是冗余信息少，适合配合 ELK 体系构建监控系统。 它的传输基于 Syslog 协议，同时扩展了可读性的 key-value，基于文本的设计也可以让 CEF 格式的日志写入到文件。总体来说，它是这几种格式中在可读性、效率和标准三方面最平衡的一个。
 
 ### [Syslog](https://datatracker.ietf.org/doc/html/rfc5424)
 
@@ -69,7 +69,7 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
 
 ### [JSON Lines](https://jsonlines.org/)
 
-大部分 SaaS 产品都是用 JSON，简单高效。例如，下面是[OpenTelemetry 官方文档](https://opentelemetry.io/docs/specs/otel/logs/data-model/)提到的日志模型中的字段：
+大部分 SaaS 产品都是用 JSON，简单高效。JSON 的特点是冗余信息多，结构容易解析。例如，下面是[OpenTelemetry 官方文档](https://opentelemetry.io/docs/specs/otel/logs/data-model/)提到的日志模型中的字段：
 
 | Field Name           | Description                                  |
 | -------------------- | -------------------------------------------- |

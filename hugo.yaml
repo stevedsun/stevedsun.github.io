@@ -1,5 +1,5 @@
 baseURL: https://sund.site/
-title: 電波障害
+title: The Context Studio
 author: "Steve Sun"
 copyright: "Copyright © 2024, Steve Sun; all rights reserved."
 paginate: 7
@@ -20,7 +20,7 @@ params:
   rss: true
   avatar: https://sund.site/images/profile.png
   name: Steve Sun
-  bio: I make softwares.
+  bio: You need to solve a context, not just a problem.
   graphCommentId: steve-sun
 services:
   googleAnalytics:

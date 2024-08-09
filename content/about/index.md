@@ -21,7 +21,5 @@ I used to be a Tech Lead at [ThoughtWorks](https://www.thoughtworks.com/) and no
 ## Contact Me
 
 - [Github](https://github.com/stevedsun)
-- [Twitter](https://twitter.com/way2steve)
-- [Telegram](https://t.me/poorRideoReception)
 - [Wechat](https://mp.weixin.qq.com/s/zSNl-n4B9l9wyZYGVcnVJw)
 - [少数派](https://sspai.com/u/radiowave/overview)

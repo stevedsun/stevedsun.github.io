@@ -14,9 +14,7 @@ module:
 params:
   color: linen
   monoDarkIcon: true
-  twitter: way2steve
   github: stevedsun
-  instagram: stevedsun
   rss: true
   avatar: https://sund.site/images/profile.png
   name: Steve Sun

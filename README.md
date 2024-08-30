@@ -2,15 +2,18 @@
 
 This project is auto deployed by Github Action.
 
-## Hugo Installation
+Dependencies:
+
+- Hugo version >= v0.113.0+extended
+
+## Installation
 
 Refer to <https://gohugo.io/installation/>
 
 ## Build
 
-- Hugo version >= v0.113.0+extended
-
 ```bash
+hugo mod get -u
 hugo
 ```
 

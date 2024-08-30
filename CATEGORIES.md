@@ -2,6 +2,6 @@
 - Go
 - Python
 - Agile
-- 效率
+- Efficiency
 - 技术规范
 - 随笔

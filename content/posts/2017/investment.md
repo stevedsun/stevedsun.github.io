@@ -2,7 +2,7 @@
 title: "一些投资知识"
 date: 2017-01-19T13:25:55+08:00
 description: ""
-categories: [效率]
+categories: [Efficiency]
 tags: [投资]
 aliases: [/posts/investment/]
 ---

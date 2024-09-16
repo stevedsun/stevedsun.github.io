@@ -1,5 +1,5 @@
 ---
-title: "与器械共生"
+title: "磨合"
 date: 2024-09-16T23:31:14+08:00
 categories: [随笔]
 tags: []

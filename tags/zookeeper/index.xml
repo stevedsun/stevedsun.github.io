@@ -1,8 +1,37 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>zookeeper on The Context Works</title><link>https://sund.site/tags/zookeeper/</link><description>Recent content in zookeeper on The Context Works</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Tue, 14 Oct 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://sund.site/tags/zookeeper/index.xml" rel="self" type="application/rss+xml"/><item><title>ZooKeeper 帮助手册</title><link>https://sund.site/posts/2017/zookeeper/</link><pubDate>Tue, 14 Oct 2014 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/zookeeper/</guid><description>原文地址： http://zookeeper.apache.org/doc/r3.4.6/zookeeperProgrammers.html
-本文假设你已经具有一定分布式计算的基础知识。你将在第一部分看到以下内容：
-ZooKeeper数据模型 ZooKeeper Sessions ZooKeeper Watches 一致性保证(Consistency Guarantees) 接下来的4小节讲述了程序开发的实际应用：
-创建模块——ZooKeeper操作指引 编程语言接口 简单示例演示程序的结构 常见问题和故障 本文的附录中包含和ZooKeeper相关的有用信息。
-ZooKeeper的数据模型 ZooKeeper有一个类似分布式文件系统的命名体系。区别在于Zookeeper每个一个节点或子节点都可以拥有数据。节点路径是一个由斜线分开的绝对路径，注意没有相对路径。只要满足下面要求的unicode字符都可以作为节点路径：
-空字符不能出现在路径名 不能出现以下字符: \u0001 - \u0019 and \u007F - \u009F 以下字符不允许使用: \ud800 -uF8FFF, \uFFF0-uFFFF, \uXFFFE - \uXFFFF (where X is a digit 1 - E), \uF0000 - \uFFFFF 字符&amp;quot;.&amp;ldquo;可以作为一个名字的一部分, 但是&amp;rdquo;.&amp;ldquo;和&amp;rdquo;..&amp;ldquo;不能单独作为相对路径使用, 以下用法都是无效的: &amp;ldquo;/a/b/./c&amp;quot;或者&amp;rdquo;/a/b/../c&amp;rdquo; &amp;ldquo;zookeeper&amp;quot;为保留字符 ZNodes ZooKeeper树结构中的节点被称为znode。各个znode维护着一组用来标记数据和访问权限发生变化的版本号。这些版本号组成的状态结构具有时间戳。Zookeeper使用版本号和时间戳来验证缓存状态，调整更新。 每次znode中的数据发生变化，znode的版本号增加。例如，每当一个客户端恢复数据时，它就接收这个版本的数据，而当一个客户端提交了更新或删除记录，它必须同时提供这个znode当前正在发生变化的数据的版本。如果这个版本和目前真实的版本不匹配，则提交无效。 __提示，在分布式程序中，一个字节点可以代表一个通用的主机，服务器，集群中的一员，客户端程序等。但是在Zookeeper中，znode代表数据节点，Servers代表组成了Zookeeper服务的机器; quorum peers refer to the servers that make up an ensemble; 客户端代表任何使用ZooKeeper服务的主机或程序。
-znode作为对程序开发来说最重要的信息，有几个特性需要特别关注下：
-Watches 客户端可以在znode上设置Watch。znode发生的变化会触发watch然后清除watch。当一个watch被触发，Zookeeper给客户端发送一个通知。更多关于watch的内容请查看ZooKeeper Watches一节。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Zookeeper on The Context Works</title><link>https://sund.site/tags/zookeeper/</link><description>Recent content in Zookeeper on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Tue, 14 Oct 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://sund.site/tags/zookeeper/index.xml" rel="self" type="application/rss+xml"/><item><title>ZooKeeper 帮助手册</title><link>https://sund.site/posts/2017/zookeeper/</link><pubDate>Tue, 14 Oct 2014 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/zookeeper/</guid><description>&lt;p>原文地址：
+&lt;a href="http://zookeeper.apache.org/doc/r3.4.6/zookeeperProgrammers.html">http://zookeeper.apache.org/doc/r3.4.6/zookeeperProgrammers.html&lt;/a>&lt;/p>
+&lt;p>本文假设你已经具有一定分布式计算的基础知识。你将在第一部分看到以下内容：&lt;/p>
+&lt;ul>
+&lt;li>ZooKeeper数据模型&lt;/li>
+&lt;li>ZooKeeper Sessions&lt;/li>
+&lt;li>ZooKeeper Watches&lt;/li>
+&lt;li>一致性保证(Consistency Guarantees)&lt;/li>
+&lt;/ul>
+&lt;p>接下来的4小节讲述了程序开发的实际应用：&lt;/p>
+&lt;ul>
+&lt;li>创建模块——ZooKeeper操作指引&lt;/li>
+&lt;li>编程语言接口&lt;/li>
+&lt;li>简单示例演示程序的结构&lt;/li>
+&lt;li>常见问题和故障&lt;/li>
+&lt;/ul>
+&lt;p>本文的附录中包含和ZooKeeper相关的有用信息。&lt;/p>
+&lt;h3 id="zookeeper的数据模型">ZooKeeper的数据模型&lt;/h3>
+&lt;p>ZooKeeper有一个类似分布式文件系统的命名体系。区别在于Zookeeper每个一个节点或子节点都可以拥有数据。节点路径是一个由斜线分开的绝对路径，注意没有相对路径。只要满足下面要求的unicode字符都可以作为节点路径：&lt;/p>
+&lt;ul>
+&lt;li>空字符不能出现在路径名&lt;/li>
+&lt;li>不能出现以下字符: \u0001 - \u0019 and \u007F - \u009F&lt;/li>
+&lt;li>以下字符不允许使用: \ud800 -uF8FFF, \uFFF0-uFFFF, \uXFFFE - \uXFFFF (where X is a digit 1 - E), \uF0000 - \uFFFFF&lt;/li>
+&lt;li>字符&amp;quot;.&amp;ldquo;可以作为一个名字的一部分, 但是&amp;rdquo;.&amp;ldquo;和&amp;rdquo;..&amp;ldquo;不能单独作为相对路径使用, 以下用法都是无效的: &amp;ldquo;/a/b/./c&amp;quot;或者&amp;rdquo;/a/b/../c&amp;rdquo;&lt;/li>
+&lt;li>&amp;ldquo;zookeeper&amp;quot;为保留字符&lt;/li>
+&lt;/ul>
+&lt;h4 id="znodes">ZNodes&lt;/h4>
+&lt;p>ZooKeeper树结构中的节点被称为znode。各个znode维护着一组用来标记数据和访问权限发生变化的版本号。这些版本号组成的状态结构具有时间戳。Zookeeper使用版本号和时间戳来验证缓存状态，调整更新。
+每次znode中的数据发生变化，znode的版本号增加。例如，每当一个客户端恢复数据时，它就接收这个版本的数据，而当一个客户端提交了更新或删除记录，它必须同时提供这个znode当前正在发生变化的数据的版本。如果这个版本和目前真实的版本不匹配，则提交无效。
+__提示，在分布式程序中，一个字节点可以代表一个通用的主机，服务器，集群中的一员，客户端程序等。但是在Zookeeper中，znode代表数据节点，Servers代表组成了Zookeeper服务的机器; quorum peers refer to the servers that make up an ensemble; 客户端代表任何使用ZooKeeper服务的主机或程序。&lt;/p>
+&lt;p>znode作为对程序开发来说最重要的信息，有几个特性需要特别关注下：&lt;/p>
+&lt;p>&lt;strong>Watches&lt;/strong>
+客户端可以在znode上设置Watch。znode发生的变化会触发watch然后清除watch。当一个watch被触发，Zookeeper给客户端发送一个通知。更多关于watch的内容请查看ZooKeeper Watches一节。&lt;/p>
+&lt;p>&lt;strong>数据存取&lt;/strong>
+命名空间中每个znode中的数据读写是原子操作。读操作读取znode中的所有数据位，写操作则替换所有数据。每个节点都有一个访问权限控制表（ACL）来标记谁可以做什么。
+zookeeper不是设计成普通的数据库或大型对象存储的。它是用来管理coordination data。coordination data包括配置文件、状态信息、rendezvous等。这些数据结构的一个共同特点就是相对较小——以千字节为准。Zookeeper的客户端和服务会检查确保每个znode上的数据小于1M，实际平均数据要远远小于1M。
+大规模数据的操作会引发一些潜在的问题并且延长在网络和介质之间传输的时间。如果确实需要大型数据的存储，那么可以采用如NFS或HDFS之类的大型数据存储系统，亦或是在zookeeper中存储指向存储位置的指针。&lt;/p></description></item></channel></rss>

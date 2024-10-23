@@ -1,8 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>gateway on The Context Works</title><link>https://sund.site/tags/gateway/</link><description>Recent content in gateway on The Context Works</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Fri, 23 Jun 2023 10:36:36 +0800</lastBuildDate><atom:link href="https://sund.site/tags/gateway/index.xml" rel="self" type="application/rss+xml"/><item><title>Kong网关极简入门</title><link>https://sund.site/posts/2023/kong-gateway/</link><pubDate>Fri, 23 Jun 2023 10:36:36 +0800</pubDate><guid>https://sund.site/posts/2023/kong-gateway/</guid><description>基本概念 Kong Gateway is a Lua application running in Nginx. Kong Gateway is distributed along with OpenResty, which is a bundle of modules that extend the lua-nginx-module.
-Kong 是一个基于 Nginx 上运行的 Lua 程序。它改善了 Nginx 基于静态配置的缺点，可以动态添加插件和热部署。
-Kong 的基础模块 Service是后端服务的抽象。
-Routes是 client 到后端服务的路由规则的抽象。如，为不同的 client 设置不同的认证规则。
-Kong 的 routes 有两种模式 traditional_compat 和 expressions 。
-traditional_compat ：旧的基于通配符等匹配优先级的模式。 expressions ：新的基于表达式的匹配模式。 Upstreams是一个运维对象，在 Services 和真正的后台 API 服务之间，用来负载均衡。
-Plugins是用 lua 或 go 编写的插件，分为 Kong 官方提供的插件和第三方插件。
-Kong 的工作原理 Kong 支持三类协议：HTTP/HTTPS，TCL/TLS 和 GRPC/GRPCS。每种协议由不同的参数组成：</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Gateway on The Context Works</title><link>https://sund.site/tags/gateway/</link><description>Recent content in Gateway on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Fri, 23 Jun 2023 10:36:36 +0800</lastBuildDate><atom:link href="https://sund.site/tags/gateway/index.xml" rel="self" type="application/rss+xml"/><item><title>Kong网关极简入门</title><link>https://sund.site/posts/2023/kong-gateway/</link><pubDate>Fri, 23 Jun 2023 10:36:36 +0800</pubDate><guid>https://sund.site/posts/2023/kong-gateway/</guid><description>&lt;h2 id="基本概念">基本概念&lt;/h2>
+&lt;blockquote>
+&lt;p>Kong Gateway is a Lua application running in Nginx. Kong Gateway is distributed along with OpenResty, which is a bundle of modules that extend the lua-nginx-module.&lt;/p>
+&lt;/blockquote>
+&lt;p>Kong 是一个基于 Nginx 上运行的 Lua 程序。它改善了 Nginx 基于静态配置的缺点，可以动态添加插件和热部署。&lt;/p>
+&lt;p>&lt;img src="https://sund.site/images/kong-gateway/Kong.png" alt="">&lt;/p>
+&lt;h2 id="kong-的基础模块">Kong 的基础模块&lt;/h2>
+&lt;p>&lt;strong>Service&lt;/strong>是后端服务的抽象。&lt;/p>
+&lt;p>&lt;strong>Routes&lt;/strong>是 client 到后端服务的路由规则的抽象。如，为不同的 client 设置不同的认证规则。&lt;/p>
+&lt;p>Kong 的 routes 有两种模式 &lt;code>traditional_compat&lt;/code> 和 &lt;code>expressions&lt;/code> 。&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>traditional_compat&lt;/code> ：旧的基于通配符等匹配优先级的模式。&lt;/li>
+&lt;li>&lt;code>expressions&lt;/code> ：新的基于表达式的匹配模式。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Upstreams&lt;/strong>是一个运维对象，在 Services 和真正的后台 API 服务之间，用来负载均衡。&lt;/p>
+&lt;p>&lt;strong>Plugins&lt;/strong>是用 lua 或 go 编写的插件，分为 Kong 官方提供的插件和第三方插件。&lt;/p>
+&lt;h2 id="kong-的工作原理">Kong 的工作原理&lt;/h2>
+&lt;p>Kong 支持三类协议：HTTP/HTTPS，TCL/TLS 和 GRPC/GRPCS。每种协议由不同的参数组成：&lt;/p></description></item></channel></rss>

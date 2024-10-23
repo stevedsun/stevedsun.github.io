@@ -1,34 +1,231 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloud Native Computing on The Context Works</title><link>https://sund.site/categories/cloud-native-computing/</link><description>Recent content in Cloud Native Computing on The Context Works</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Sat, 13 Jul 2024 16:12:34 +0800</lastBuildDate><atom:link href="https://sund.site/categories/cloud-native-computing/index.xml" rel="self" type="application/rss+xml"/><item><title>RESTful Web Service Cookbook 笔记</title><link>https://sund.site/posts/2024/restful-api-cookbook/</link><pubDate>Sat, 13 Jul 2024 16:12:34 +0800</pubDate><guid>https://sund.site/posts/2024/restful-api-cookbook/</guid><description>RESTful Web Service Cookbook 是一本简短、精炼的 RESTful 接口设计指南。这篇文章（笔记）用来记录这本书中提到的重点。
-因为 RESTful 对后端开发来说实在太熟悉不过，所以我会省略掉那些习以为常的约定，只记录书中提到的、大多数开发者没有注意到的细节。
-HTTP Method GET 进行安全与幂等的信息获取。
-POST 执行的目标是一个资源集合（工厂），而不是具体的 URI。
-适用场景：
-创建新的资源,把资源作为一个工厂。 通过一个控制器资源来修改一个或多个资源。 执行需要大数据输入（参数较多）的查询。 在其他 HTTP 方法看上去不合适时，执行不安全或非幂等的操作。 解决方案：
-将一个已存在的资源标识为创建新资源的工厂。虽然您可以把任意资源用做工厂,但常见的做法是使用一个集合资源。 让客户端向工厂资源提交附有需要创建资源的表述的 POST 请求。通过可选支持的 Slug 头, 客户端可以向服务器建议一个名字,作为被创建资源的 URI 的一部分。 资源创建之后,返回响应码 201(Created),并在 Location 头中包含新创建资源的 URI。 如果响应正文包含了新创建资源的完整表述,那么在 Content-Location 头中包含新创建资源的 URI。 PUT 仅在客户端可以控制 URI 的构成时,才使用 PUT 方法创建新资源。（换句话说，PUT 也可以创建资源，但是仅限于客户端可以指定 URI）
-确定资源对象的粒度 应该以适合客户端使用模式的方式来设计资源,而不是基于现有的数据库或对象模型。
-可缓存性 减小修改频率 可变性——分离可变和不可变数据 如何设计复合资源? 复合资源降低了统一接口的可见性,因为它们的表述中包含了和其他资源相重叠的数据。
-如果符合资源使用频率不高，可以考虑用缓存替代。 考虑网络开销，复合资源会不会降低服务端吞吐量，增大延时。 HTTP Body 以 JSON 格式的 Body 为例：
-最好包含一个指向 self 的链接 如果分页，最好包含下一页的链接 如果分页，要指示集合的大小（总数） 如果查询对象是本地化的，添加一个属性来表示本地化内容的语言 { &amp;#34;name&amp;#34;: &amp;#34;John&amp;#34;, &amp;#34;id&amp;#34;: &amp;#34;urn:example:user:1234&amp;#34;, &amp;#34;link&amp;#34;: { &amp;#34;rel&amp;#34;: &amp;#34;self&amp;#34;, &amp;#34;href&amp;#34;: &amp;#34;http://www.</description></item><item><title>如何设计一个符合工业标准的审计系统</title><link>https://sund.site/posts/2024/audit-system-design/</link><pubDate>Mon, 15 Apr 2024 16:44:40 +0800</pubDate><guid>https://sund.site/posts/2024/audit-system-design/</guid><description>审计追踪（Audit Trail）是指一个系统中用于记录用户行为日志、控制组件的活动日志等关键安全信息的服务。日志通常以时间顺序排列，记录了“谁在什么时间做了什么”。
-下面是 kubernetes 官方文档对其审计服务的描述：
-Kubernetes 审计（Auditing） 功能提供了与安全相关的、按时间顺序排列的记录集，记录每个用户、使用 Kubernetes API 的应用以及控制面自身引发的活动。
-审计功能使得集群管理员能够回答以下问题：
-发生了什么？ 什么时候发生的？ 谁触发的？ 活动发生在哪个（些）对象上？ 在哪观察到的？ 它从哪触发的？ 活动的后续处理行为是什么？ 审计系统应该具备哪些能力？ 日志内容不可篡改。 日志链结构完整：不可任意添加或删除单独的日志条目。 兼容性：发送日志的客户端应该避免侵入式设计。 系统的加密服务应该尽早初始化，以减少未受保护的日志。 服务重启/关闭不应导致审核日志不一致。如果服务因紧急情况而关闭，审计日志应该是可验证的。 密钥安全性：加密密钥（用于计算完整性检查）应存储在专用密钥存储中，并在内存中驻留最短的时间。 性能：能够在几秒钟内验证受保护日志。 日志轮换友好性：审核日志应与分布式系统典型的日志轮换策略兼容。 可观测性：日志易于被解析（machine-readable）、人类可读（human-readable）。兼容主流日志处理程序的格式，维度设计便于日后做过滤筛选。 涉及的行业标准 与审计相关的，常见的工业标准有 IEC62443、NIST SP 800-92。下面是 IEC 中涉及到审计相关的章节。
-工业标准 章节 安全级别 IEC 62443-4-2:2019 CR2.8 SL-C 1 IEC 62443-4-2:2019 CR6.1 SL-C 1 IEC 62443-4-2:2019 CR6.2 SL_C 2 IEC 62443-4-2:2019 CR1.13 SL_C 1 IEC 62443-4-2:2019 CR2.9 SL_C 1 IEC 62443-4-2:2019 CR2.10 SL_C 1 IEC 62443-4-2:2019 CR3.</description></item><item><title>Kong网关极简入门</title><link>https://sund.site/posts/2023/kong-gateway/</link><pubDate>Fri, 23 Jun 2023 10:36:36 +0800</pubDate><guid>https://sund.site/posts/2023/kong-gateway/</guid><description>基本概念 Kong Gateway is a Lua application running in Nginx. Kong Gateway is distributed along with OpenResty, which is a bundle of modules that extend the lua-nginx-module.
-Kong 是一个基于 Nginx 上运行的 Lua 程序。它改善了 Nginx 基于静态配置的缺点，可以动态添加插件和热部署。
-Kong 的基础模块 Service是后端服务的抽象。
-Routes是 client 到后端服务的路由规则的抽象。如，为不同的 client 设置不同的认证规则。
-Kong 的 routes 有两种模式 traditional_compat 和 expressions 。
-traditional_compat ：旧的基于通配符等匹配优先级的模式。 expressions ：新的基于表达式的匹配模式。 Upstreams是一个运维对象，在 Services 和真正的后台 API 服务之间，用来负载均衡。
-Plugins是用 lua 或 go 编写的插件，分为 Kong 官方提供的插件和第三方插件。
-Kong 的工作原理 Kong 支持三类协议：HTTP/HTTPS，TCL/TLS 和 GRPC/GRPCS。每种协议由不同的参数组成：</description></item><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/2021/distributed-cache/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/2021/distributed-cache/</guid><description>很久不写技术文章了。这是一篇关于 Redis 构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。
-下面就以我做过的商品预约平台项目作为引子，引出分布式缓存设计的一些要点。
-该商品预约平台的背景如下：
-该系统由多个微服务组成 预约的过程：用户可以选择指定门店，指定日期到店提领商品，如果对应门店和日期没有库存，则不能预约 因为“预约”的是未来时刻的库存，所以门店的未来某个时间剩余库存是通过一系列公式计算得出的。这个公式比较复杂，考虑到了用户指定的日期是否在配货周期内等因素，这里省略掉细节 每年节日高峰时期，用户会集中预约商品，导致服务压力骤增。又因为未来日期的库存需要动态计算的特点（比如 A 预约了 1 月 1 日的最后一件商品，B 就会无法在该日预约），不同用户的预约操作会互相影响，严重时导致数据库死锁、数据不一致等问题 基于以上背景，这个预约系统的设计必须将性能作为主要优化目标，而缓存作为性能优化的不二选择，就承担了重要职责。
-识别热点数据 并不是所有数据都有必要被缓存，往往缓存的数据具有以下几个特点：
-读写比很高。如果写操作比读操作还多，缓存系统频繁更新会大大降低可用性 是热点数据。因为内存的价格昂贵，所以按照 2-8 原则，20%热点数据才值得被缓存 能够容忍短时间的不一致 结合项目需要，排除掉一些不适合缓存的数据：
-对于那些只读的、配置相关的数据，只需要做进程缓存（使用 Guava Cache），在服务启动时加载数据到内存就可以了 尽量用 CDN 和 Nginx 静态缓存来解决大部分不常更新的资源 对于该预约项目，用户最频繁查询的数据是不同门店在不同日期下的库存数量。这类数据是缓存设计的重点照顾对象：
-用户选择了指定城市、指定门店后，系统会返回最近 30 天的库存信息，用户只可能修改其中一条信息。所以读写比很高 库存信息是预约订单流程的必备步骤，而且是跨服务调用（预约服务 -&amp;gt; 库存服务）的数据，所以涉及到大量网络请求、数据库查询。 指定性能优化的指标 在即将完成业务系统开发时，我们就根据 Google SRE Books 提到的四个黄金指标，制定了监控系统性能的四个维度：
-请求率 错误数，非 200 返回结果数量 响应时间 资源利用率（CPU、内存） 我们使用 Prometheus + Grafana 的组合实现监控可视化，这样每次测试人员进行压力测试时，都可以通过这些指标对系统进行调整。缓存影响最大的指标是请求率（一般用 TPS 或者 QPS）和响应时间。所以在设计缓存系统时，要不断参照这两个指标进行优化。
-缓存的设计的实践 分级缓存 为了不让某一接口或者微服务的缓存失效导致其他接口或服务的并发量暴增，就要针对不同来源（数据库的表、接口等）的数据做分级缓存。比如用户在一次查询中涉及到“附近可预约门店”的查询、“活动期间不同日期剩余库存”的查询、“已预约数量“的查询，这三种查询逐层依赖后边的查询结果。
-假设如果只针对库存数量做缓存，一旦这部分缓存失效，那么“附近可预约门店”的查询就会直接访问数据库查询全部门店的剩余库存来确定哪个门店可以预约。这样就导致查询库存的接口并发量骤增。所以分级缓存一定程度上缓解了缓存雪崩的问题。
-自动化测试 API 参数合法性 我们的 QA 通常会写自动化脚本对后端 API 做定期的扫描，检查哪些接口的数据输入、输出有不合法的类型或是数值范围。除了巩固系统的健壮性，还能帮助缓存系统抵御缓存穿透的风险。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cloud Native Computing on The Context Works</title><link>https://sund.site/categories/cloud-native-computing/</link><description>Recent content in Cloud Native Computing on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Sat, 13 Jul 2024 16:12:34 +0800</lastBuildDate><atom:link href="https://sund.site/categories/cloud-native-computing/index.xml" rel="self" type="application/rss+xml"/><item><title>RESTful Web Service Cookbook 笔记</title><link>https://sund.site/posts/2024/restful-api-cookbook/</link><pubDate>Sat, 13 Jul 2024 16:12:34 +0800</pubDate><guid>https://sund.site/posts/2024/restful-api-cookbook/</guid><description>&lt;p>&lt;a href="https://www.oreilly.com/library/view/restful-web-services/9780596809140/">RESTful Web Service Cookbook&lt;/a> 是一本简短、精炼的 RESTful 接口设计指南。这篇文章（笔记）用来记录这本书中提到的重点。&lt;/p>
+&lt;blockquote>
+&lt;p>因为 RESTful 对后端开发来说实在太熟悉不过，所以我会省略掉那些习以为常的约定，只记录书中提到的、大多数开发者没有注意到的细节。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="http-method">HTTP Method&lt;/h2>
+&lt;h3 id="get">GET&lt;/h3>
+&lt;p>进行&lt;strong>安全&lt;/strong>与&lt;strong>幂等&lt;/strong>的信息获取。&lt;/p>
+&lt;h3 id="post">POST&lt;/h3>
+&lt;p>执行的目标是一个资源集合（工厂），而不是具体的 URI。&lt;/p>
+&lt;p>适用场景：&lt;/p>
+&lt;ul>
+&lt;li>创建新的资源,把资源作为一个工厂。&lt;/li>
+&lt;li>通过一个控制器资源来修改一个或多个资源。&lt;/li>
+&lt;li>执行需要大数据输入（参数较多）的查询。&lt;/li>
+&lt;li>&lt;strong>在其他 HTTP 方法看上去不合适时，执行不安全或非幂等的操作&lt;/strong>。&lt;/li>
+&lt;/ul>
+&lt;p>解决方案：&lt;/p>
+&lt;ul>
+&lt;li>将一个已存在的资源标识为创建新资源的工厂。虽然您可以把任意资源用做工厂,但常见的做法是使用一个集合资源。&lt;/li>
+&lt;li>让客户端向工厂资源提交附有需要创建资源的表述的 POST 请求。通过可选支持的 &lt;strong>Slug&lt;/strong> 头, 客户端可以向服务器建议一个名字,作为被创建资源的 URI 的一部分。&lt;/li>
+&lt;li>资源创建之后,返回响应码 &lt;strong>201(Created)&lt;/strong>,并在 &lt;strong>Location&lt;/strong> 头中包含新创建资源的 URI。&lt;/li>
+&lt;li>如果响应正文包含了新创建资源的完整表述,那么在 &lt;strong>Content-Location&lt;/strong> 头中包含新创建资源的 URI。&lt;/li>
+&lt;/ul>
+&lt;h3 id="put">PUT&lt;/h3>
+&lt;p>仅在客户端可以控制 URI 的构成时,才使用 PUT 方法创建新资源。&lt;strong>（换句话说，PUT 也可以创建资源，但是仅限于客户端可以指定 URI）&lt;/strong>&lt;/p>
+&lt;h2 id="确定资源对象的粒度">确定资源对象的粒度&lt;/h2>
+&lt;p>应该以适合客户端使用模式的方式来设计资源,而不是基于现有的数据库或对象模型。&lt;/p>
+&lt;ul>
+&lt;li>可缓存性&lt;/li>
+&lt;li>减小修改频率&lt;/li>
+&lt;li>可变性——分离可变和不可变数据&lt;/li>
+&lt;/ul>
+&lt;h3 id="如何设计复合资源">如何设计复合资源?&lt;/h3>
+&lt;p>&lt;strong>复合资源&lt;/strong>降低了统一接口的可见性,因为它们的表述中包含了和其他资源相重叠的数据。&lt;/p>
+&lt;ul>
+&lt;li>如果符合资源使用&lt;strong>频率不高&lt;/strong>，可以考虑用&lt;strong>缓存&lt;/strong>替代。&lt;/li>
+&lt;li>考虑网络开销，复合资源会不会降低服务端吞吐量，增大延时。&lt;/li>
+&lt;/ul>
+&lt;h2 id="http-body">HTTP Body&lt;/h2>
+&lt;p>以 JSON 格式的 Body 为例：&lt;/p>
+&lt;ol>
+&lt;li>最好包含一个指向 self 的链接&lt;/li>
+&lt;li>如果分页，最好包含下一页的链接&lt;/li>
+&lt;li>如果分页，要指示集合的大小（总数）&lt;/li>
+&lt;li>如果查询对象是本地化的，添加一个属性来表示本地化内容的语言&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;John&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;urn:example:user:1234&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;link&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;rel&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;self&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;href&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;http://www.example.org/person/john&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;address&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;urn:example:address:4567&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;link&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;rel&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;self&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;href&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;http://www.example.org/person/john/address&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="http-response">HTTP Response&lt;/h2>
+&lt;ol>
+&lt;li>对于客户端错误，返回 4xx 状态码 + Date （错误发生的时间）。&lt;/li>
+&lt;li>对于服务端错误，返回 5xx 状态码 + Date （错误发生的时间）。&lt;/li>
+&lt;li>Body 中要描述错误，如果有外部文档和链接可参考，在 Header 提供一个 Link 头或直接把链接写在 Body 里。&lt;/li>
+&lt;li>为了后期追踪或分析，在服务器上记录了错误日志，应该提供一个可以找到该错误的标识符或链接。&lt;/li>
+&lt;/ol>
+&lt;h2 id="设计查询结构">设计查询结构&lt;/h2>
+&lt;h3 id="设计查询请求">设计查询请求&lt;/h3>
+&lt;ol>
+&lt;li>为了缓存和性能，尽量避免范围查询。解决方法包括：
+&lt;ul>
+&lt;li>使用预定义查询&lt;/li>
+&lt;li>也可以使用 HTTP Header： Range&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>避免使用通用语言（SQL、XPATH）的查询。&lt;/li>
+&lt;li>避免 URI 和数据存储方式的紧耦合（前端把后端当作数据库）。&lt;/li>
+&lt;li>对于参数较多，可以考虑使用 POST（因为 URI 长度有最大限制）
+&lt;ul>
+&lt;li>POST 接口的缺点是丧失了缓存能力&lt;/li>
+&lt;li>POST 请求是不可缓存的，所以 Cache-Control 和 Expires 头无济于事&lt;/li>
+&lt;li>解决缓存问题，可以让 POST 创建一个临时资源，把 link 返回前端，前端下次用 GET 获取该资源&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="设计查询响应结果">设计查询响应结果&lt;/h3>
+&lt;ol>
+&lt;li>返回集合。添加合理的缓存过期头。&lt;/li>
+&lt;li>如果没有结果，应该返回&lt;strong>空集合&lt;/strong>。&lt;/li>
+&lt;/ol></description></item><item><title>如何设计一个符合工业标准的审计系统</title><link>https://sund.site/posts/2024/audit-system-design/</link><pubDate>Mon, 15 Apr 2024 16:44:40 +0800</pubDate><guid>https://sund.site/posts/2024/audit-system-design/</guid><description>&lt;p>审计追踪（Audit Trail）是指一个系统中用于记录用户行为日志、控制组件的活动日志等关键安全信息的服务。日志通常以时间顺序排列，记录了“谁在什么时间做了什么”。&lt;/p>
+&lt;p>下面是 kubernetes 官方文档对其审计服务的描述：&lt;/p>
+&lt;blockquote>
+&lt;p>Kubernetes 审计（Auditing） 功能提供了与安全相关的、按时间顺序排列的记录集，记录每个用户、使用 Kubernetes API 的应用以及控制面自身引发的活动。&lt;/p>
+&lt;p>审计功能使得集群管理员能够回答以下问题：&lt;/p>
+&lt;ul>
+&lt;li>发生了什么？&lt;/li>
+&lt;li>什么时候发生的？&lt;/li>
+&lt;li>谁触发的？&lt;/li>
+&lt;li>活动发生在哪个（些）对象上？&lt;/li>
+&lt;li>在哪观察到的？&lt;/li>
+&lt;li>它从哪触发的？&lt;/li>
+&lt;li>活动的后续处理行为是什么？&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;h2 id="审计系统应该具备哪些能力">审计系统应该具备哪些能力？&lt;/h2>
+&lt;ol>
+&lt;li>日志内容不可篡改。&lt;/li>
+&lt;li>日志链结构完整：不可任意添加或删除单独的日志条目。&lt;/li>
+&lt;li>兼容性：发送日志的客户端应该避免侵入式设计。&lt;/li>
+&lt;li>系统的加密服务应该尽早初始化，以减少未受保护的日志。&lt;/li>
+&lt;li>服务重启/关闭不应导致审核日志不一致。如果服务因紧急情况而关闭，审计日志应该是可验证的。&lt;/li>
+&lt;li>密钥安全性：加密密钥（用于计算完整性检查）应存储在专用密钥存储中，并在内存中驻留最短的时间。&lt;/li>
+&lt;li>性能：能够在几秒钟内验证受保护日志。&lt;/li>
+&lt;li>日志轮换友好性：审核日志应与分布式系统典型的日志轮换策略兼容。&lt;/li>
+&lt;li>可观测性：日志易于被解析（machine-readable）、人类可读（human-readable）。兼容主流日志处理程序的格式，维度设计便于日后做过滤筛选。&lt;/li>
+&lt;/ol>
+&lt;h2 id="涉及的行业标准">涉及的行业标准&lt;/h2>
+&lt;p>与审计相关的，常见的工业标准有 IEC62443、NIST SP 800-92。下面是 IEC 中涉及到审计相关的章节。&lt;/p>
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th>工业标准&lt;/th>
+ &lt;th>章节&lt;/th>
+ &lt;th>安全级别&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td>IEC 62443-4-2:2019&lt;/td>
+ &lt;td>CR2.8&lt;/td>
+ &lt;td>SL-C 1&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>IEC 62443-4-2:2019&lt;/td>
+ &lt;td>CR6.1&lt;/td>
+ &lt;td>SL-C 1&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>IEC 62443-4-2:2019&lt;/td>
+ &lt;td>CR6.2&lt;/td>
+ &lt;td>SL_C 2&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>IEC 62443-4-2:2019&lt;/td>
+ &lt;td>CR1.13&lt;/td>
+ &lt;td>SL_C 1&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>IEC 62443-4-2:2019&lt;/td>
+ &lt;td>CR2.9&lt;/td>
+ &lt;td>SL_C 1&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>IEC 62443-4-2:2019&lt;/td>
+ &lt;td>CR2.10&lt;/td>
+ &lt;td>SL_C 1&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>IEC 62443-4-2:2019&lt;/td>
+ &lt;td>CR3.7&lt;/td>
+ &lt;td>SL_C 1&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>IEC 62443-4-2:2019&lt;/td>
+ &lt;td>CR3.9&lt;/td>
+ &lt;td>SL_C 2&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table>
+&lt;h2 id="审计日志的格式应遵循哪些协议或标准">审计日志的格式应遵循哪些协议或标准？&lt;/h2>
+&lt;p>对于本地运行的软件，通常 Syslog 具有更好的系统兼容性。对于使用 ELK 采集日志的项目更适合用 CEF，其他情况建议使用自定义的 JSON。&lt;/p></description></item><item><title>Kong网关极简入门</title><link>https://sund.site/posts/2023/kong-gateway/</link><pubDate>Fri, 23 Jun 2023 10:36:36 +0800</pubDate><guid>https://sund.site/posts/2023/kong-gateway/</guid><description>&lt;h2 id="基本概念">基本概念&lt;/h2>
+&lt;blockquote>
+&lt;p>Kong Gateway is a Lua application running in Nginx. Kong Gateway is distributed along with OpenResty, which is a bundle of modules that extend the lua-nginx-module.&lt;/p>
+&lt;/blockquote>
+&lt;p>Kong 是一个基于 Nginx 上运行的 Lua 程序。它改善了 Nginx 基于静态配置的缺点，可以动态添加插件和热部署。&lt;/p>
+&lt;p>&lt;img src="https://sund.site/images/kong-gateway/Kong.png" alt="">&lt;/p>
+&lt;h2 id="kong-的基础模块">Kong 的基础模块&lt;/h2>
+&lt;p>&lt;strong>Service&lt;/strong>是后端服务的抽象。&lt;/p>
+&lt;p>&lt;strong>Routes&lt;/strong>是 client 到后端服务的路由规则的抽象。如，为不同的 client 设置不同的认证规则。&lt;/p>
+&lt;p>Kong 的 routes 有两种模式 &lt;code>traditional_compat&lt;/code> 和 &lt;code>expressions&lt;/code> 。&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>traditional_compat&lt;/code> ：旧的基于通配符等匹配优先级的模式。&lt;/li>
+&lt;li>&lt;code>expressions&lt;/code> ：新的基于表达式的匹配模式。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Upstreams&lt;/strong>是一个运维对象，在 Services 和真正的后台 API 服务之间，用来负载均衡。&lt;/p>
+&lt;p>&lt;strong>Plugins&lt;/strong>是用 lua 或 go 编写的插件，分为 Kong 官方提供的插件和第三方插件。&lt;/p>
+&lt;h2 id="kong-的工作原理">Kong 的工作原理&lt;/h2>
+&lt;p>Kong 支持三类协议：HTTP/HTTPS，TCL/TLS 和 GRPC/GRPCS。每种协议由不同的参数组成：&lt;/p></description></item><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/2021/distributed-cache/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/2021/distributed-cache/</guid><description>&lt;p>很久不写技术文章了。这是一篇关于 Redis 构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。&lt;/p>
+&lt;p>下面就以我做过的商品预约平台项目作为引子，引出分布式缓存设计的一些要点。&lt;/p>
+&lt;p>该商品预约平台的背景如下：&lt;/p>
+&lt;ul>
+&lt;li>该系统由多个微服务组成&lt;/li>
+&lt;li>预约的过程：用户可以选择指定门店，指定日期到店提领商品，如果对应门店和日期没有库存，则不能预约&lt;/li>
+&lt;li>因为“预约”的是未来时刻的库存，所以门店的未来某个时间剩余库存是通过一系列公式计算得出的。这个公式比较复杂，考虑到了用户指定的日期是否在配货周期内等因素，这里省略掉细节&lt;/li>
+&lt;li>每年节日高峰时期，用户会集中预约商品，导致服务压力骤增。又因为未来日期的库存需要动态计算的特点（比如 A 预约了 1 月 1 日的最后一件商品，B 就会无法在该日预约），不同用户的预约操作会互相影响，严重时导致数据库死锁、数据不一致等问题&lt;/li>
+&lt;/ul>
+&lt;p>基于以上背景，这个预约系统的设计必须将性能作为主要优化目标，而缓存作为性能优化的不二选择，就承担了重要职责。&lt;/p>
+&lt;h2 id="识别热点数据">识别热点数据&lt;/h2>
+&lt;p>并不是所有数据都有必要被缓存，往往缓存的数据具有以下几个特点：&lt;/p>
+&lt;ul>
+&lt;li>读写比很高。如果写操作比读操作还多，缓存系统频繁更新会大大降低可用性&lt;/li>
+&lt;li>是热点数据。因为内存的价格昂贵，所以按照 2-8 原则，20%热点数据才值得被缓存&lt;/li>
+&lt;li>能够容忍短时间的不一致&lt;/li>
+&lt;/ul>
+&lt;p>结合项目需要，排除掉一些不适合缓存的数据：&lt;/p>
+&lt;ul>
+&lt;li>对于那些只读的、配置相关的数据，只需要做进程缓存（使用 Guava Cache），在服务启动时加载数据到内存就可以了&lt;/li>
+&lt;li>尽量用 CDN 和 Nginx 静态缓存来解决大部分不常更新的资源&lt;/li>
+&lt;/ul>
+&lt;p>对于该预约项目，用户最频繁查询的数据是不同门店在不同日期下的库存数量。这类数据是缓存设计的重点照顾对象：&lt;/p>
+&lt;ul>
+&lt;li>用户选择了指定城市、指定门店后，系统会返回最近 30 天的库存信息，用户只可能修改其中一条信息。所以读写比很高&lt;/li>
+&lt;li>库存信息是预约订单流程的必备步骤，而且是跨服务调用（预约服务 -&amp;gt; 库存服务）的数据，所以涉及到大量网络请求、数据库查询。&lt;/li>
+&lt;/ul>
+&lt;h2 id="指定性能优化的指标">指定性能优化的指标&lt;/h2>
+&lt;p>在即将完成业务系统开发时，我们就根据 &lt;a href="https://sre.google/books/">Google SRE Books&lt;/a> 提到的四个黄金指标，制定了监控系统性能的四个维度：&lt;/p>
+&lt;ul>
+&lt;li>请求率&lt;/li>
+&lt;li>错误数，非 200 返回结果数量&lt;/li>
+&lt;li>响应时间&lt;/li>
+&lt;li>资源利用率（CPU、内存）&lt;/li>
+&lt;/ul>
+&lt;p>我们使用 Prometheus + Grafana 的组合实现监控可视化，这样每次测试人员进行压力测试时，都可以通过这些指标对系统进行调整。缓存影响最大的指标是&lt;strong>请求率&lt;/strong>（一般用 TPS 或者 QPS）和&lt;strong>响应时间&lt;/strong>。所以在设计缓存系统时，要不断参照这两个指标进行优化。&lt;/p>
+&lt;h2 id="缓存的设计的实践">缓存的设计的实践&lt;/h2>
+&lt;h3 id="分级缓存">分级缓存&lt;/h3>
+&lt;p>为了不让某一接口或者微服务的缓存失效导致其他接口或服务的并发量暴增，就要针对不同来源（数据库的表、接口等）的数据做分级缓存。比如用户在一次查询中涉及到“附近可预约门店”的查询、“活动期间不同日期剩余库存”的查询、“已预约数量“的查询，这三种查询逐层依赖后边的查询结果。&lt;/p>
+&lt;p>假设如果只针对库存数量做缓存，一旦这部分缓存失效，那么“附近可预约门店”的查询就会直接访问数据库查询全部门店的剩余库存来确定哪个门店可以预约。这样就导致查询库存的接口并发量骤增。所以&lt;strong>分级缓存一定程度上缓解了缓存雪崩的问题&lt;/strong>。&lt;/p>
+&lt;h3 id="自动化测试-api-参数合法性">自动化测试 API 参数合法性&lt;/h3>
+&lt;p>我们的 QA 通常会写自动化脚本对后端 API 做定期的扫描，检查哪些接口的数据输入、输出有不合法的类型或是数值范围。除了巩固系统的健壮性，还能帮助缓存系统抵御&lt;strong>缓存穿透&lt;/strong>的风险。&lt;/p></description></item></channel></rss>

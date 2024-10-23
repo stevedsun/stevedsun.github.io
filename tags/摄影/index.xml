@@ -1,14 +1,113 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>摄影 on The Context Works</title><link>https://sund.site/tags/%E6%91%84%E5%BD%B1/</link><description>Recent content in 摄影 on The Context Works</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Fri, 17 May 2024 23:07:29 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%91%84%E5%BD%B1/index.xml" rel="self" type="application/rss+xml"/><item><title>Ricoh GR 2 使用心得</title><link>https://sund.site/posts/2024/ricoh_gr2_sharing/</link><pubDate>Fri, 17 May 2024 23:07:29 +0800</pubDate><guid>https://sund.site/posts/2024/ricoh_gr2_sharing/</guid><description>买 GR2 已经很多年了，几年前写过一篇Ricol GR 2 参数说明，作为初学者分享了参数的说明。今天这篇分享一下这几年的使用心得。
-机内裁剪 GR2 作为 28mm 相机，对于普通人扫街来说，最大的痛点就是经常抓不到合适的构图。28mm 的优点是取景范围更大，可以捕捉更多环境信息，但是相对地，用它拍摄时经常混入太多杂乱的场景元素。
-但是好在 GR2 支持机内裁剪，可以把 28mm 裁切成 35mm 或 47mm 镜头。这让街拍时的构图更加灵活（当然以牺牲画质为代价）。
-不同光圈的适合场景 F2.8 室内的人物和场景 F4 静物 F5.6 均衡 F8 图像最锐利的光圈设定 F11 漂亮的星芒效果 自定义参数 FUJI 胶片风格 滤镜模式：正片。 饱和度：4、对比度：5、鲜明度：6 白平衡：复合 AWB 白平衡补偿：A：3、G：4 曝光补偿：-1.0 ~ -1.0 上面这套参数模仿富士相机的胶片效果。对比鲜明度较高，有淡淡的绿色调。
-日常蓝色调 滤镜模式：正片。 饱和度：7、对比度：3、鲜明度：7 白平衡：复合 AWB 白平衡补偿：B：7、M：0 曝光补偿：-1.0 ~ -1.0 这套参数画面干净，呈现静谧的蓝色。适合拍摄日常冷色调题材的画面。
-自然风小清新 滤镜模式：正片。 饱和度：2、对比度：4、鲜明度：3 白平衡：复合 AWB 白平衡补偿：B：8、M：0 曝光补偿：-1.0 ~ -1.0 适合旅行拍摄低对比度的小清新画面。
-性冷淡 滤镜模式：轻微。 饱和度：9、对比度：5、鲜明度：9 白平衡：CT：4200K 白平衡补偿：B：8、M：2 曝光补偿：-0.</description></item><item><title>Ricoh GR2 参数说明</title><link>https://sund.site/posts/2019/ricoh-gr2-settings/</link><pubDate>Thu, 14 Nov 2019 14:46:00 +0800</pubDate><guid>https://sund.site/posts/2019/ricoh-gr2-settings/</guid><description>常用相机术语 包围曝光：同时使用不同曝光参数或滤镜拍摄三张照片或是合成一张。
-NR：即降噪功能，如感光度 ISO NR，低速快门 NR。
-ND 滤镜：即减光镜，减少进光量，延长曝光时间，用于拍摄云彩，溪流等长曝光场景。
-AF：自动对焦（Auto Focus）。
-AE：自动曝光（Auto Exposure）。
-半按快门警告图标 抖动警告（!((📷))）：快门速度过慢，照片质量会因为微微抖动而模糊。可以改善周围环境亮度或是手动提高快门速度。
-自动曝光警告（!AE）：快门速度太快，可能照片会发暗。可以调低快门速度或是增大光圈等。
-各项参数的对抖动、曝光、噪点的影响 参数 增加参数值对进光量的影响 说明 光圈（F） 提高 手动对焦模式或者快拍模式下，光圈越小，【超焦距】带来的取景深度越大 快门速度越快 降低 快门速度 1/250 适合抓拍，1/60 为通常的安全快门 ISO 提高 800 以内画质较好，超过 800 噪点明显变强 曝光补偿（EV） 提高 影响亮度，非自动档可用，本质是增减相机控制光圈、快门、ISO 的比例时的权重，通常拍摄雪景和较黑的物体时候需要调节 白平衡（WB） 无影响 影响色彩 白平衡补偿（B：G） 无影响 手动增减白平衡权值，可以做出胶片等效果 效果（D:C:S） 无影响 影响滤镜效果，可以拍出风格强烈的作品 ND 滤镜（开） 降低 在强光状态下打开 ND 滤镜可以降低 3 档进光量，即使在白天也能用慢门或者大光圈 闪光灯（开） 提高 在白天背光和夜晚都可以提高近景中被摄体的亮度</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>摄影 on The Context Works</title><link>https://sund.site/tags/%E6%91%84%E5%BD%B1/</link><description>Recent content in 摄影 on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Fri, 17 May 2024 23:07:29 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%91%84%E5%BD%B1/index.xml" rel="self" type="application/rss+xml"/><item><title>Ricoh GR 2 使用心得</title><link>https://sund.site/posts/2024/ricoh_gr2_sharing/</link><pubDate>Fri, 17 May 2024 23:07:29 +0800</pubDate><guid>https://sund.site/posts/2024/ricoh_gr2_sharing/</guid><description>&lt;p>&lt;img src="https://i.imgur.com/XrMKTCC.png" alt="">&lt;/p>
+&lt;p>买 GR2 已经很多年了，几年前写过一篇&lt;a href="https://sund.site/posts/2019/ricoh-gr2-settings/">Ricol GR 2 参数说明&lt;/a>，作为初学者分享了参数的说明。今天这篇分享一下这几年的使用心得。&lt;/p>
+&lt;h2 id="机内裁剪">机内裁剪&lt;/h2>
+&lt;p>GR2 作为 28mm 相机，对于普通人扫街来说，最大的痛点就是经常抓不到合适的构图。28mm 的优点是取景范围更大，可以捕捉更多环境信息，但是相对地，用它拍摄时经常混入太多杂乱的场景元素。&lt;/p>
+&lt;p>但是好在 GR2 支持机内裁剪，可以把 28mm 裁切成 35mm 或 47mm 镜头。这让街拍时的构图更加灵活（当然以牺牲画质为代价）。&lt;/p>
+&lt;h2 id="不同光圈的适合场景">不同光圈的适合场景&lt;/h2>
+&lt;ul>
+&lt;li>F2.8 室内的人物和场景&lt;/li>
+&lt;li>F4 静物&lt;/li>
+&lt;li>F5.6 均衡&lt;/li>
+&lt;li>F8 图像最锐利的光圈设定&lt;/li>
+&lt;li>F11 漂亮的星芒效果&lt;/li>
+&lt;/ul>
+&lt;h2 id="自定义参数">自定义参数&lt;/h2>
+&lt;h3 id="fuji-胶片风格">FUJI 胶片风格&lt;/h3>
+&lt;ul>
+&lt;li>滤镜模式：正片。 饱和度：4、对比度：5、鲜明度：6&lt;/li>
+&lt;li>白平衡：复合 AWB&lt;/li>
+&lt;li>白平衡补偿：A：3、G：4&lt;/li>
+&lt;li>曝光补偿：-1.0 ~ -1.0&lt;/li>
+&lt;/ul>
+&lt;p>上面这套参数模仿富士相机的胶片效果。对比鲜明度较高，有淡淡的绿色调。&lt;/p>
+&lt;h3 id="日常蓝色调">日常蓝色调&lt;/h3>
+&lt;ul>
+&lt;li>滤镜模式：正片。 饱和度：7、对比度：3、鲜明度：7&lt;/li>
+&lt;li>白平衡：复合 AWB&lt;/li>
+&lt;li>白平衡补偿：B：7、M：0&lt;/li>
+&lt;li>曝光补偿：-1.0 ~ -1.0&lt;/li>
+&lt;/ul>
+&lt;p>这套参数画面干净，呈现静谧的蓝色。适合拍摄日常冷色调题材的画面。&lt;/p>
+&lt;h3 id="自然风小清新">自然风小清新&lt;/h3>
+&lt;ul>
+&lt;li>滤镜模式：正片。 饱和度：2、对比度：4、鲜明度：3&lt;/li>
+&lt;li>白平衡：复合 AWB&lt;/li>
+&lt;li>白平衡补偿：B：8、M：0&lt;/li>
+&lt;li>曝光补偿：-1.0 ~ -1.0&lt;/li>
+&lt;/ul>
+&lt;p>适合旅行拍摄低对比度的小清新画面。&lt;/p>
+&lt;h3 id="性冷淡">性冷淡&lt;/h3>
+&lt;ul>
+&lt;li>滤镜模式：轻微。 饱和度：9、对比度：5、鲜明度：9&lt;/li>
+&lt;li>白平衡：CT：4200K&lt;/li>
+&lt;li>白平衡补偿：B：8、M：2&lt;/li>
+&lt;li>曝光补偿：-0.3 ~ -1.0&lt;/li>
+&lt;/ul>
+&lt;p>这套参数适合拍摄山脉、沙漠、城市人文等低静默、低色调的景物。&lt;/p></description></item><item><title>Ricoh GR2 参数说明</title><link>https://sund.site/posts/2019/ricoh-gr2-settings/</link><pubDate>Thu, 14 Nov 2019 14:46:00 +0800</pubDate><guid>https://sund.site/posts/2019/ricoh-gr2-settings/</guid><description>&lt;h2 id="常用相机术语">常用相机术语&lt;/h2>
+&lt;p>&lt;strong>包围曝光&lt;/strong>：同时使用不同曝光参数或滤镜拍摄三张照片或是合成一张。&lt;/p>
+&lt;p>&lt;strong>NR&lt;/strong>：即降噪功能，如感光度 ISO NR，低速快门 NR。&lt;/p>
+&lt;p>&lt;strong>ND 滤镜&lt;/strong>：即减光镜，减少进光量，延长曝光时间，用于拍摄云彩，溪流等长曝光场景。&lt;/p>
+&lt;p>&lt;strong>AF&lt;/strong>：自动对焦（Auto Focus）。&lt;/p>
+&lt;p>&lt;strong>AE&lt;/strong>：自动曝光（Auto Exposure）。&lt;/p>
+&lt;h2 id="半按快门警告图标">半按快门警告图标&lt;/h2>
+&lt;p>&lt;strong>抖动警告（!((📷))）&lt;/strong>：快门速度过慢，照片质量会因为微微抖动而模糊。可以改善周围环境亮度或是手动提高快门速度。&lt;/p>
+&lt;p>&lt;img src="https://sund.site/images/image-20220820184826880.png" alt="">&lt;/p>
+&lt;p>&lt;strong>自动曝光警告（!AE）&lt;/strong>：快门速度太快，可能照片会发暗。可以调低快门速度或是增大光圈等。&lt;/p>
+&lt;p>&lt;img src="https://sund.site/images/image-20220820184847600.png" alt="">&lt;/p>
+&lt;h2 id="各项参数的对抖动曝光噪点的影响">各项参数的对抖动、曝光、噪点的影响&lt;/h2>
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th>参数&lt;/th>
+ &lt;th>增加参数值对进光量的影响&lt;/th>
+ &lt;th>说明&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td>光圈（F）&lt;/td>
+ &lt;td>提高&lt;/td>
+ &lt;td>手动对焦模式或者快拍模式下，光圈越小，【超焦距】带来的取景深度越大&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>快门速度越快&lt;/td>
+ &lt;td>降低&lt;/td>
+ &lt;td>快门速度 1/250 适合抓拍，1/60 为通常的安全快门&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>ISO&lt;/td>
+ &lt;td>提高&lt;/td>
+ &lt;td>800 以内画质较好，超过 800 噪点明显变强&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>曝光补偿（EV）&lt;/td>
+ &lt;td>提高&lt;/td>
+ &lt;td>影响亮度，非自动档可用，本质是增减相机控制光圈、快门、ISO 的比例时的权重，通常拍摄雪景和较黑的物体时候需要调节&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>白平衡（WB）&lt;/td>
+ &lt;td>无影响&lt;/td>
+ &lt;td>影响色彩&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>白平衡补偿（B：G）&lt;/td>
+ &lt;td>无影响&lt;/td>
+ &lt;td>手动增减白平衡权值，可以做出胶片等效果&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>效果（D:C:S）&lt;/td>
+ &lt;td>无影响&lt;/td>
+ &lt;td>影响滤镜效果，可以拍出风格强烈的作品&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>ND 滤镜（开）&lt;/td>
+ &lt;td>降低&lt;/td>
+ &lt;td>在强光状态下打开 ND 滤镜可以降低 3 档进光量，即使在白天也能用慢门或者大光圈&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>闪光灯（开）&lt;/td>
+ &lt;td>提高&lt;/td>
+ &lt;td>在白天背光和夜晚都可以提高近景中被摄体的亮度&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table></description></item></channel></rss>

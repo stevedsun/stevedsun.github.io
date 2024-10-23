@@ -1,13 +1,45 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Go on The Context Works</title><link>https://sund.site/categories/go/</link><description>Recent content in Go on The Context Works</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Wed, 13 Sep 2023 09:19:18 +0800</lastBuildDate><atom:link href="https://sund.site/categories/go/index.xml" rel="self" type="application/rss+xml"/><item><title>Go Server Side Events</title><link>https://sund.site/posts/2023/go-server-side-events/</link><pubDate>Wed, 13 Sep 2023 09:19:18 +0800</pubDate><guid>https://sund.site/posts/2023/go-server-side-events/</guid><description>Server-Sent Events (SSE) is a technology that enables real-time communication between a web browser and a server. It allows the server to send updates or event notifications to the browser without the need for the browser to repeatedly make requests.
-SSE is often used in applications that require real-time updates, such as chat applications, social media feeds, stock market tickers, or notifications systems. It provides a lightweight and efficient way to deliver server-side updates to clients, improving responsiveness and reducing unnecessary network traffic.</description></item><item><title>Go 内存泄漏常见模式</title><link>https://sund.site/posts/2023/goroutine-leak/</link><pubDate>Tue, 27 Jun 2023 14:46:59 +0800</pubDate><guid>https://sund.site/posts/2023/goroutine-leak/</guid><description>最近在工作中排查 Go 语言内存泄漏问题时，发现这篇 Uber 写的博客，其中分享了几种常见的 goroutine 内存泄漏模式，于是把整理了 goroutine 的相关问题，希望更多人搜索到到这篇文章，帮助大家快速定位内存泄漏问题。
-Goroutine 内存泄漏的原因 Go 语言的内存泄漏通常因为错误地使用 goroutine 和 channel。例如以下几种情况：
-在 goroutine 里打开一个连接（如 gRPC）但是忘记 close 在 goroutine 里的全局变量对象没有释放 在 goroutine 里读 channel， 但是没有写入端，而被阻塞 在 goroutine 里写入无缓冲的 channel，但是由于 channel 的读端被其他协程关闭而阻塞 在 goroutine 里写入有缓冲的 channel，但是 channel 缓冲已满 这几种情况，通常掺杂在复杂的代码里逻辑里，很难调试发现问题。因此衍生出以下几种日常工作中最容易出现问题的模式。
-常见 Goroutine 内存泄漏模式 Premature Function Return /功能过早返回 一个 goroutine 要写入 channel，但是在另一个端意外退出导致 channel 读取的代码没有执行。
-func Example() { a := 1 c := make(chan error) go func() { c &amp;lt;- err return }() // do something if a &amp;gt; 0 { return } // do something err := &amp;lt;-c } 代码中主进程在if a &amp;gt; 0 处 return，导致 channel 无法写入而被阻塞。</description></item><item><title>Implementing a Prometheus Exporter for Fluent-bit</title><link>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</link><pubDate>Thu, 24 Nov 2022 12:26:23 +0800</pubDate><guid>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</guid><description>Background Fluent-bit is a great tool for logging and monitoring, many teams are using it to collect metrics and logs. Prometheus is also a popular tool for metrics analysis, but if you want to output Fluent-bit data to Prometheus, the only way is to use the node-exporter input plugin, which has fixed metrics and data format.
-In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.</description></item><item><title>Building a File Parser</title><link>https://sund.site/posts/2022/2022-5-8_lexer_design/</link><pubDate>Sun, 08 May 2022 14:00:00 +0800</pubDate><guid>https://sund.site/posts/2022/2022-5-8_lexer_design/</guid><description>Last week, after reading this article - How to Write a Lexer in Go, I found that it is not so difficult to design a configuration file parser by this article&amp;rsquo;s mindset. Then I tried to write a fluent-bit configuration parser and finally got this Fluent-Bit configuration parser for Golang.
-In this article, I want to introduce how to parse Fluent-bit configuration .conf file, and the thinking behind it.
-Fluent-bit configuration format and schema [FIRST_SECTION]
-Key1 some value
-Key2 another value
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Go on The Context Works</title><link>https://sund.site/categories/go/</link><description>Recent content in Go on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Wed, 13 Sep 2023 09:19:18 +0800</lastBuildDate><atom:link href="https://sund.site/categories/go/index.xml" rel="self" type="application/rss+xml"/><item><title>Go Server Side Events</title><link>https://sund.site/posts/2023/go-server-side-events/</link><pubDate>Wed, 13 Sep 2023 09:19:18 +0800</pubDate><guid>https://sund.site/posts/2023/go-server-side-events/</guid><description>&lt;p>Server-Sent Events (&lt;strong>SSE&lt;/strong>) is a technology that enables real-time communication between a web browser and a server. It allows the server to send updates or event notifications to the browser without the need for the browser to repeatedly make requests.&lt;/p>
+&lt;p>SSE is often used in applications that require real-time updates, such as chat applications, social media feeds, stock market tickers, or notifications systems. It provides a lightweight and efficient way to deliver server-side updates to clients, improving responsiveness and reducing unnecessary network traffic.&lt;/p></description></item><item><title>Go 内存泄漏常见模式</title><link>https://sund.site/posts/2023/goroutine-leak/</link><pubDate>Tue, 27 Jun 2023 14:46:59 +0800</pubDate><guid>https://sund.site/posts/2023/goroutine-leak/</guid><description>&lt;p>最近在工作中排查 Go 语言内存泄漏问题时，发现&lt;a href="https://www.uber.com/blog/leakprof-featherlight-in-production-goroutine-leak-detection/">这篇 Uber 写的博客&lt;/a>，其中分享了几种常见的 goroutine 内存泄漏模式，于是把整理了 goroutine 的相关问题，希望更多人搜索到到这篇文章，帮助大家快速定位内存泄漏问题。&lt;/p>
+&lt;h2 id="goroutine-内存泄漏的原因">Goroutine 内存泄漏的原因&lt;/h2>
+&lt;p>Go 语言的内存泄漏通常因为错误地使用 goroutine 和 channel。例如以下几种情况：&lt;/p>
+&lt;ol>
+&lt;li>在 goroutine 里打开一个连接（如 gRPC）但是忘记 close&lt;/li>
+&lt;li>在 goroutine 里的全局变量对象没有释放&lt;/li>
+&lt;li>在 goroutine 里读 channel， 但是没有写入端，而被阻塞&lt;/li>
+&lt;li>在 goroutine 里写入无缓冲的 channel，但是由于 channel 的读端被其他协程关闭而阻塞&lt;/li>
+&lt;li>在 goroutine 里写入有缓冲的 channel，但是 channel 缓冲已满&lt;/li>
+&lt;/ol>
+&lt;p>这几种情况，通常掺杂在复杂的代码里逻辑里，很难调试发现问题。因此衍生出以下几种日常工作中&lt;strong>最容易出现问题的模式&lt;/strong>。&lt;/p>
+&lt;h2 id="常见-goroutine-内存泄漏模式">常见 Goroutine 内存泄漏模式&lt;/h2>
+&lt;h3 id="premature-function-return-功能过早返回">Premature Function Return /功能过早返回&lt;/h3>
+&lt;p>一个 goroutine 要写入 channel，但是在另一个端意外退出导致 channel 读取的代码没有执行。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">Example&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">a&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">c&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> make(&lt;span style="color:#66d9ef">chan&lt;/span> &lt;span style="color:#66d9ef">error&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">go&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">c&lt;/span> &lt;span style="color:#f92672">&amp;lt;-&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// do something
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">a&lt;/span> &amp;gt; &lt;span style="color:#ae81ff">0&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// do something
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;lt;-&lt;/span>&lt;span style="color:#a6e22e">c&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>代码中主进程在&lt;code>if a &amp;gt; 0&lt;/code> 处 return，导致 channel 无法写入而被阻塞。&lt;/p></description></item><item><title>Implementing a Prometheus Exporter for Fluent-bit</title><link>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</link><pubDate>Thu, 24 Nov 2022 12:26:23 +0800</pubDate><guid>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</guid><description>&lt;h2 id="background">Background&lt;/h2>
+&lt;p>Fluent-bit is a great tool for logging and monitoring, many teams are using it to collect metrics and logs. Prometheus is also a popular tool for metrics analysis, but if you want to output Fluent-bit data to Prometheus, the only way is to use the node-exporter input plugin, which has fixed metrics and data format.&lt;/p>
+&lt;p>In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.&lt;/p></description></item><item><title>Building a File Parser</title><link>https://sund.site/posts/2022/2022-5-8_lexer_design/</link><pubDate>Sun, 08 May 2022 14:00:00 +0800</pubDate><guid>https://sund.site/posts/2022/2022-5-8_lexer_design/</guid><description>&lt;p>Last week, after reading this article - &lt;a href="https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go">How to Write a Lexer in Go&lt;/a>, I found that it is not so difficult to design a configuration file parser by this article&amp;rsquo;s mindset. Then I tried to write a fluent-bit configuration parser and finally got this &lt;a href="https://github.com/stevedsun/go-fluentbit-conf-parser">Fluent-Bit configuration parser for Golang&lt;/a>.&lt;/p>
+&lt;p>In this article, I want to introduce how to parse Fluent-bit configuration &lt;code>.conf&lt;/code> file, and the thinking behind it.&lt;/p>
+&lt;h2 id="fluent-bit-configuration-format-and-schema">Fluent-bit configuration format and schema&lt;/h2>
+&lt;pre tabindex="0">&lt;code>[FIRST_SECTION]
+ Key1 some value
+ Key2 another value
+
 [SECOND_SECTION]
-KeyN 3.</description></item></channel></rss>
+ KeyN 3.14
+&lt;/code>&lt;/pre>&lt;p>Here is a classic mode configuration of Fluent-bit, it includes two parts:&lt;/p></description></item></channel></rss>

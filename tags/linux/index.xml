@@ -1,9 +1,24 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>linux on The Context Works</title><link>https://sund.site/tags/linux/</link><description>Recent content in linux on The Context Works</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Fri, 04 Jan 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://sund.site/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>macbook安装ubuntu</title><link>https://sund.site/posts/2017/macbook_ubuntu/</link><pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/macbook_ubuntu/</guid><description>注意，ubuntu 和 xubuntu 安装上有一定差别，请严格按照你选择的系统版本流程安装
-ubuntu 准备工作 分区 这一步可以用命令行实现，也可以在 mac 下直接用磁盘工具分区，初学者建议后者。有经验的朋友可以在网上查询 diskutils 的用法，这是 mac 提供的分区工具
-使用磁盘工具，打开左侧最上边磁盘位置（不是 macosx，而是整个硬盘）的选项，右边会出现分区标签。选择分区，你可以用鼠标拖动轻松将 macos 的一部分划分给 ubuntu 使用。分区格式可以选择 mac 日志文件。其实选什么都一样，等会还要重新格式化。
-把 iso 镜像转化为苹果电脑识别的 img 镜像 hdiutil convert /path/to/ubuntu.iso -format UDRW -o /path/to/target.img 命令中path/to/ubuntu.iso是你下载的 iso 路径，path/to/target.img自然是你要保存成 img 的路径
-插入 U 盘，刻录镜像 先运行如下命令查询你 U 盘的设备名
-diskutil list 这里假设 U 盘是 disk1，执行
-diskutil unmountDisk /dev/disk1 接下来执行命令刻录，
-sudo dd if=/path/to/downloaded.img of=/dev/disk1 bs=1m ubuntu 官网针对上一条命令可能出现的两种错误提示给出了解决办法：
-If you see the error dd: Invalid number &amp;lsquo;1m&amp;rsquo;, you are using GNU dd.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on The Context Works</title><link>https://sund.site/tags/linux/</link><description>Recent content in Linux on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Fri, 04 Jan 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://sund.site/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>macbook安装ubuntu</title><link>https://sund.site/posts/2017/macbook_ubuntu/</link><pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/macbook_ubuntu/</guid><description>&lt;p>&lt;strong>注意，ubuntu 和 xubuntu 安装上有一定差别，请严格按照你选择的系统版本流程安装&lt;/strong>&lt;/p>
+&lt;h3 id="ubuntu">ubuntu&lt;/h3>
+&lt;h3 id="准备工作">准备工作&lt;/h3>
+&lt;h5 id="分区">分区&lt;/h5>
+&lt;p>这一步可以用命令行实现，也可以在 mac 下直接用磁盘工具分区，初学者建议后者。有经验的朋友可以在网上查询 diskutils 的用法，这是 mac 提供的分区工具&lt;/p>
+&lt;p>使用磁盘工具，打开左侧最上边磁盘位置（不是 macosx，而是整个硬盘）的选项，右边会出现&lt;code>分区&lt;/code>标签。选择分区，你可以用鼠标拖动轻松将 macos 的一部分划分给 ubuntu 使用。分区格式可以选择 mac 日志文件。其实选什么都一样，等会还要重新格式化。&lt;/p>
+&lt;h4 id="把-iso-镜像转化为苹果电脑识别的-img-镜像">把 iso 镜像转化为苹果电脑识别的 img 镜像&lt;/h4>
+&lt;pre>&lt;code>hdiutil convert /path/to/ubuntu.iso -format UDRW -o /path/to/target.img
+&lt;/code>&lt;/pre>
+&lt;p>命令中&lt;code>path/to/ubuntu.iso&lt;/code>是你下载的 iso 路径，&lt;code>path/to/target.img&lt;/code>自然是你要保存成 img 的路径&lt;/p>
+&lt;h4 id="插入-u-盘刻录镜像">插入 U 盘，刻录镜像&lt;/h4>
+&lt;p>先运行如下命令查询你 U 盘的设备名&lt;/p>
+&lt;pre>&lt;code>diskutil list
+&lt;/code>&lt;/pre>
+&lt;p>这里假设 U 盘是 disk1，执行&lt;/p>
+&lt;pre>&lt;code>diskutil unmountDisk /dev/disk1
+&lt;/code>&lt;/pre>
+&lt;p>接下来执行命令刻录，&lt;/p>
+&lt;pre>&lt;code>sudo dd if=/path/to/downloaded.img of=/dev/disk1 bs=1m
+&lt;/code>&lt;/pre>
+&lt;p>ubuntu 官网针对上一条命令可能出现的两种错误提示给出了解决办法：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>If you see the error dd: Invalid number &amp;lsquo;1m&amp;rsquo;, you are using GNU dd. Use the same command but replace bs=1m with bs=1M.&lt;/p></description></item></channel></rss>

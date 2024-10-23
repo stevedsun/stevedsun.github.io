@@ -1,6 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nintendo on The Context Works</title><link>https://sund.site/tags/nintendo/</link><description>Recent content in Nintendo on The Context Works</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Mon, 07 Oct 2019 22:18:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/nintendo/index.xml" rel="self" type="application/rss+xml"/><item><title>Nintendo Switch 联机优化策略</title><link>https://sund.site/posts/2019/nintendo-switch-network-opt/</link><pubDate>Mon, 07 Oct 2019 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2019/nintendo-switch-network-opt/</guid><description>简单方法 首先介绍下 Nintendo Switch 在哪里设置网络，如下图，设置界面=&amp;gt;互联网设置里，可以修改 IP，DNS 等常用网络配置。修改之后点击「链接测试」，可以测试你的 NAT 和下载、上传速度。
-首先：设置路由器的 WIFI 类型为 5G 因为 NS 对 2.4GHz 的 Wifi 优化非常差，所以一般玩家都选择设置 Wifi 类型为 5GHz，5G 的缺点是穿墙能力差，但是速度很快，所以建议把 NS 放在离路由器不太远的位置。
-最简单粗暴的方法：购买加速器 购买加速器是最省心省力的方案，以网易 UU 加速器为例，加速后可以把 NAT 从 D 上升到 B 或 A，完全可以满足大部分延迟要求较低游戏的需要。
-Mac 版 UU 加速器目前还处于免费测试阶段，可以随意使用。按照提示配置 NS 上的 IP 和 DNS 即可。但是如果想让联机速度突破 A，甚至小于 30ms 延迟，就要结合第二部分「进阶方法」中的内容了。
-最方便的方法：DNS 优化 这也是最多人的办法，以「Splatoon2」为例，四川电信在不使用任何加速器的情况下，单单设置了合适的 DNS，就可以流畅体验乌贼娘了。注意这种方法在晚上 8 ～ 10 点高峰期间有一定概率掉线。下面提供一些我常用的 DNS，不同地区效果不同，需要自己尝试。
-218.102.23.228 # 一般用作日本eshop下载游戏，速度提升明显 203.198.7.66 168.126.63.1 # 著名韩国DNS节点，Splatoon2 联机常用 168.126.63.2 # 同上 进阶方法 进阶方法可以最大限度的提升你的网络通信效率。</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nintendo on The Context Works</title><link>https://sund.site/tags/nintendo/</link><description>Recent content in Nintendo on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Mon, 07 Oct 2019 22:18:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/nintendo/index.xml" rel="self" type="application/rss+xml"/><item><title>Nintendo Switch 联机优化策略</title><link>https://sund.site/posts/2019/nintendo-switch-network-opt/</link><pubDate>Mon, 07 Oct 2019 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2019/nintendo-switch-network-opt/</guid><description>&lt;h2 id="简单方法">简单方法&lt;/h2>
+&lt;p>首先介绍下 Nintendo Switch 在哪里设置网络，如下图，设置界面=&amp;gt;互联网设置里，可以修改 IP，DNS 等常用网络配置。修改之后点击「链接测试」，可以测试你的 NAT 和下载、上传速度。&lt;/p>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pz8xft9ej31i30u0ng9.jpg" alt="1">&lt;/p>
+&lt;h3 id="首先设置路由器的-wifi-类型为-5g">首先：设置路由器的 WIFI 类型为 5G&lt;/h3>
+&lt;p>因为 NS 对 2.4GHz 的 Wifi 优化非常差，所以一般玩家都选择设置 Wifi 类型为 5GHz，5G 的缺点是穿墙能力差，但是速度很快，所以建议把 NS 放在离路由器不太远的位置。&lt;/p>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pzbkstq4j30vy0l2mz4.jpg" alt="image-20191007215608157">&lt;/p>
+&lt;h3 id="最简单粗暴的方法购买加速器">最简单粗暴的方法：购买加速器&lt;/h3>
+&lt;p>购买加速器是最省心省力的方案，以网易 UU 加速器为例，加速后可以把 NAT 从 D 上升到 B 或 A，完全可以满足大部分延迟要求较低游戏的需要。&lt;/p>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyt6dxbij31aw0qokjl.jpg" alt="image-20191007213820867">&lt;/p>
+&lt;p>Mac 版 UU 加速器目前还处于免费测试阶段，可以随意使用。按照提示配置 NS 上的 IP 和 DNS 即可。但是如果想让联机速度突破 A，甚至小于 30ms 延迟，就要结合第二部分「进阶方法」中的内容了。&lt;/p>
+&lt;h3 id="最方便的方法dns-优化">最方便的方法：DNS 优化&lt;/h3>
+&lt;p>这也是最多人的办法，以「Splatoon2」为例，四川电信在不使用任何加速器的情况下，单单设置了合适的 DNS，就可以流畅体验乌贼娘了。注意这种方法在晚上 8 ～ 10 点高峰期间有一定概率掉线。下面提供一些我常用的 DNS，不同地区效果不同，需要自己尝试。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>218.102.23.228 &lt;span style="color:#75715e"># 一般用作日本eshop下载游戏，速度提升明显&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>203.198.7.66
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.1 &lt;span style="color:#75715e"># 著名韩国DNS节点，Splatoon2 联机常用&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.2 &lt;span style="color:#75715e"># 同上&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="进阶方法">进阶方法&lt;/h2>
+&lt;p>进阶方法可以最大限度的提升你的网络通信效率。&lt;/p></description></item></channel></rss>

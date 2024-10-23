@@ -29,6 +29,10 @@ menu:
       name: About
       url: /about/
       weight: 20
+    - identifier: blogroll
+      name: Blogroll
+      url: /blogroll/
+      weight: 21
 taxonomies:
   category: categories
   tag: tags

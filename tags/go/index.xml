@@ -1,4 +1,50 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Go on The Context Works</title><link>https://sund.site/tags/go/</link><description>Recent content in Go on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Wed, 13 Sep 2023 09:19:18 +0800</lastBuildDate><atom:link href="https://sund.site/tags/go/index.xml" rel="self" type="application/rss+xml"/><item><title>Go Server Side Events</title><link>https://sund.site/posts/2023/go-server-side-events/</link><pubDate>Wed, 13 Sep 2023 09:19:18 +0800</pubDate><guid>https://sund.site/posts/2023/go-server-side-events/</guid><description>&lt;p>Server-Sent Events (&lt;strong>SSE&lt;/strong>) is a technology that enables real-time communication between a web browser and a server. It allows the server to send updates or event notifications to the browser without the need for the browser to repeatedly make requests.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Go on The Context Works</title><link>https://sund.site/tags/go/</link><description>Recent content in Go on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Thu, 21 Nov 2024 11:26:22 +0800</lastBuildDate><atom:link href="https://sund.site/tags/go/index.xml" rel="self" type="application/rss+xml"/><item><title>Go 语言的依赖倒置</title><link>https://sund.site/posts/2024/go-dependency-inject/</link><pubDate>Thu, 21 Nov 2024 11:26:22 +0800</pubDate><guid>https://sund.site/posts/2024/go-dependency-inject/</guid><description>&lt;blockquote>
+&lt;p>这篇文章比较基础，是我在给 Java 程序员做 go 语言培训时用到的。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="为什么要做依赖倒置dip">为什么要做依赖倒置（DIP）？&lt;/h2>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle">依赖倒置&lt;/a>，或叫依赖反转、DIP，是软件开发非常重要的设计原则。很多国内的初级程序员没有了解过相关知识，或者只从 Java Spring 知道大致思想。我今天想用一篇简短的文章，用 Go 语言做一个简单的例子。&lt;/p>
+&lt;p>如果你还不知道它是什么，可以参考 wiki 中的描述，或者阅读&lt;a href="https://martinfowler.com/articles/dipInTheWild.html">马丁福勒关于 DIP 的文章&lt;/a>。&lt;/p>
+&lt;p>依赖倒置原则要解决一个软件开发中常见的风险：依赖。&lt;/p>
+&lt;p>尝试回忆一下：&lt;/p>
+&lt;ol>
+&lt;li>当你尝试通过 Mock 方式屏蔽底层细节做测试时，你发现你要测试的类引用了大量框架提供的接口，导致你需要 mock 大量底层的实现。&lt;/li>
+&lt;li>当你尝试修改一个旧的底层类，但是依赖该类的上层服务类太多，你一边担心造成副作用，一边在所有依赖的位置重构上层代码。&lt;/li>
+&lt;/ol>
+&lt;p>我们分析一下这两个场景：&lt;/p>
+&lt;p>场景 1 里，应用类依赖于框架提供的实现，导致应用类很难从框架上剥离出来，业内处理这种问题的方法叫&lt;strong>控制反转&lt;/strong>（IoC, Inversion of Control）。即应用类不应该依赖框架，而是框架提供插槽一样，把应用类注册给框架，由框架统一调度应用，执行对应的方法。&lt;/p>
+&lt;p>场景 2 里，服务类依赖底层类，导致底层修改难度越来越大。解决办法是&lt;strong>依赖注入&lt;/strong>（DI, Dependency Injection）。即上层类不直接引用底层类，而是在使用的地方把上层类依赖的底层类注入进来。&lt;/p>
+&lt;p>把这两个场景结合起来，就是依赖倒置原则的核心：&lt;/p>
+&lt;ul>
+&lt;li>高层次的模块不应该依赖于低层次的模块，两者都应该依赖于抽象接口。&lt;/li>
+&lt;li>抽象接口不应该依赖于具体实现。而具体实现则应该依赖于抽象接口。&lt;/li>
+&lt;/ul>
+&lt;p>这两个原则保证了代码中模块的高内聚、低耦合，同时给 Mock、迭代更新模块创造了条件。&lt;/p>
+&lt;h2 id="用-go-语言实现它">用 Go 语言实现它&lt;/h2>
+&lt;p>假设现在要从一个用户的服务中查询用户的信息。有两个接口，UserRepository 作为数据层负责查询数据库， UserService 负责业务逻辑，它依赖 UserRepository。同时为了方便测试，我们还要写一个 Mock 的数据层实现。 整个结构如下图。&lt;/p>
+&lt;p>&lt;img src="https://sund.site/images/go-dependency-inject/example.png" alt="Go example">&lt;/p>
+&lt;p>接下来非常轻松地，我们实现两个接口，并写了他们的实现类。同时我们还在 UserService 的实现类里写了一个 NewUserService，来把它依赖的 UserRepository 实现注入进来。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 在 user_repository.go 中实现具体的接口
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">UserRepository&lt;/span> &lt;span style="color:#66d9ef">interface&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">GetByID&lt;/span>(&lt;span style="color:#a6e22e">id&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>) (&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">User&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Save&lt;/span>(&lt;span style="color:#a6e22e">user&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">User&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ... 具体实现 UserRepository，略
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// user_service.go 中实现
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">UserService&lt;/span> &lt;span style="color:#66d9ef">interface&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">GetUser&lt;/span>(&lt;span style="color:#a6e22e">id&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>) (&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">User&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">CreateUser&lt;/span>(&lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>, &lt;span style="color:#a6e22e">age&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ... 具体实现 UserService，略
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">NewUserService&lt;/span>(&lt;span style="color:#a6e22e">repo&lt;/span> &lt;span style="color:#a6e22e">UserRepository&lt;/span>) &lt;span style="color:#a6e22e">UserService&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">UserServiceImpl&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">repo&lt;/span>: &lt;span style="color:#a6e22e">repo&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>那么问题来了，可不可以直接在 &lt;code>user_service.go&lt;/code> 中直接把 repository 引用进来呢？显然不行，因为这样，两个模块就形成了依赖关系。&lt;/p></description></item><item><title>Go Server Side Events</title><link>https://sund.site/posts/2023/go-server-side-events/</link><pubDate>Wed, 13 Sep 2023 09:19:18 +0800</pubDate><guid>https://sund.site/posts/2023/go-server-side-events/</guid><description>&lt;p>Server-Sent Events (&lt;strong>SSE&lt;/strong>) is a technology that enables real-time communication between a web browser and a server. It allows the server to send updates or event notifications to the browser without the need for the browser to repeatedly make requests.&lt;/p>
 &lt;p>SSE is often used in applications that require real-time updates, such as chat applications, social media feeds, stock market tickers, or notifications systems. It provides a lightweight and efficient way to deliver server-side updates to clients, improving responsiveness and reducing unnecessary network traffic.&lt;/p></description></item><item><title>Go 内存泄漏常见模式</title><link>https://sund.site/posts/2023/goroutine-leak/</link><pubDate>Tue, 27 Jun 2023 14:46:59 +0800</pubDate><guid>https://sund.site/posts/2023/goroutine-leak/</guid><description>&lt;p>最近在工作中排查 Go 语言内存泄漏问题时，发现&lt;a href="https://www.uber.com/blog/leakprof-featherlight-in-production-goroutine-leak-detection/">这篇 Uber 写的博客&lt;/a>，其中分享了几种常见的 goroutine 内存泄漏模式，于是把整理了 goroutine 的相关问题，希望更多人搜索到到这篇文章，帮助大家快速定位内存泄漏问题。&lt;/p>
 &lt;h2 id="goroutine-内存泄漏的原因">Goroutine 内存泄漏的原因&lt;/h2>
 &lt;p>Go 语言的内存泄漏通常因为错误地使用 goroutine 和 channel。例如以下几种情况：&lt;/p>

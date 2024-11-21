@@ -11,7 +11,7 @@ description: ""
 
 ## 为什么要做依赖倒置（DIP）？
 
-[依赖倒置](https://en.wikipedia.org/wiki/Dependency_inversion_principle)，或叫依赖反转、DIP，是软件开发非常重要的设计原则。很多国内的初级程序员没有了解过相关知识，或者只从 Java Spring 知道大致思想。我今天想用一篇简短的文章，用 Go 语言做一个简单的例子。
+[依赖倒置](https://en.wikipedia.org/wiki/Dependency_inversion_principle)，或叫依赖反转、DIP，是软件开发非常重要的设计原则。很多程序员没有了解过相关知识，或者只从 Java Spring 知道大致思想。我今天想用一篇简短的文章，用 Go 语言做一个简单的例子。
 
 如果你还不知道它是什么，可以参考 wiki 中的描述，或者阅读[马丁福勒关于 DIP 的文章](https://martinfowler.com/articles/dipInTheWild.html)。
 

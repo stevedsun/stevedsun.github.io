@@ -2,7 +2,8 @@ baseURL: https://sund.site/
 title: The Context Works
 author: "Steve Sun"
 copyright: "Copyright © 2024, Steve Sun; all rights reserved."
-paginate: 7
+pagination:
+  pagerSize: 7
 languageCode: en
 DefaultContentLanguage: en
 enableInlineShortcodes: true

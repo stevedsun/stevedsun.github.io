@@ -1,42 +1,340 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on The Context Works</title><link>https://sund.site/tags/python/</link><description>Recent content in Python on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Thu, 19 Jan 2023 08:05:27 +0800</lastBuildDate><atom:link href="https://sund.site/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Python 依赖管理工具的研究</title><link>https://sund.site/posts/2023/python-packaging/</link><pubDate>Thu, 19 Jan 2023 08:05:27 +0800</pubDate><guid>https://sund.site/posts/2023/python-packaging/</guid><description>&lt;h2 id="太长不读">太长不读&lt;/h2>
-&lt;p>如果你从事工程项目，&lt;a href="https://python-poetry.org/">poetry&lt;/a> 是目前最好的方案，但是如果你不喜欢 Python 的 virtualenv，可以试试 &lt;a href="https://pdm.fming.dev/latest/">pdm&lt;/a>。&lt;/p>
-&lt;h2 id="混乱的-python">混乱的 Python&lt;/h2>
-&lt;p>Python 的依赖管理工具 &lt;code>pip&lt;/code> 一直被众多开发者吐槽。从我个人角度，&lt;code>pip&lt;/code> 有三点致命缺陷：&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on Steve Sun</title><link>https://sund.site/tags/python/</link><description>Recent content in Python on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Thu, 19 Jan 2023 08:05:27 +0800</lastBuildDate><atom:link href="https://sund.site/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Python 依赖管理工具的研究</title><link>https://sund.site/posts/2023/python-packaging/</link><pubDate>Thu, 19 Jan 2023 08:05:27 +0800</pubDate><guid>https://sund.site/posts/2023/python-packaging/</guid><description>&lt;h2 id="太长不读">太长不读
+&lt;/h2>&lt;p>如果你从事工程项目，&lt;a class="link" href="https://python-poetry.org/" target="_blank" rel="noopener"
+>poetry&lt;/a> 是目前最好的方案，但是如果你不喜欢 Python 的 virtualenv，可以试试 &lt;a class="link" href="https://pdm.fming.dev/latest/" target="_blank" rel="noopener"
+>pdm&lt;/a>。&lt;/p>
+&lt;h2 id="混乱的-python">混乱的 Python
+&lt;/h2>&lt;p>Python 的依赖管理工具 &lt;code>pip&lt;/code> 一直被众多开发者吐槽。从我个人角度，&lt;code>pip&lt;/code> 有三点致命缺陷：&lt;/p>
 &lt;ul>
 &lt;li>无法解决 Python 依赖环境的隔离问题&lt;/li>
 &lt;li>依赖管理文件 &lt;code>requirements.txt&lt;/code> 无法真正开箱即用&lt;/li>
 &lt;li>打包部署非常麻烦，需要手动配置&lt;/li>
 &lt;/ul>
-&lt;h3 id="环境隔离问题">环境隔离问题&lt;/h3>
-&lt;p>Python 的依赖库可以安装到系统全局，也可以安装到用户目录（&lt;code>/home/${USER}/.local&lt;/code>）。但如果你同时管理多个 Python 项目，就需要将不同项目的依赖拆分到不同的文件夹分开管理。&lt;/p>
+&lt;h3 id="环境隔离问题">环境隔离问题
+&lt;/h3>&lt;p>Python 的依赖库可以安装到系统全局，也可以安装到用户目录（&lt;code>/home/${USER}/.local&lt;/code>）。但如果你同时管理多个 Python 项目，就需要将不同项目的依赖拆分到不同的文件夹分开管理。&lt;/p>
 &lt;p>传统方式是基于 virtualenv 创建隔离的 Python bin 文件和项目依赖的虚拟环境（所谓虚拟环境并不是虚拟机，只是个绑定 terminal session 的命令环境）。这种方式的缺点是：&lt;/p>
 &lt;ul>
 &lt;li>开发者需要经常关注“我现在处于哪个项目目录？我需要切换到当前虚拟环境里吗？”之类的问题。&lt;/li>
 &lt;li>virtualenv 只解决环境隔离，但是无法同步更新依赖文件、打包发布。&lt;/li>
 &lt;/ul>
-&lt;h3 id="依赖安装问题">依赖安装问题&lt;/h3>
-&lt;p>Python 管理依赖的手段，最早是手动执行&lt;code>pip install xxx&lt;/code>来安装依赖，最后 &lt;code>pip freeze&lt;/code> 来导出依赖列表到一个 &lt;code>requirements.txt&lt;/code> 文件里。但是这个 txt 文件非常令人困惑。&lt;/p>
+&lt;h3 id="依赖安装问题">依赖安装问题
+&lt;/h3>&lt;p>Python 管理依赖的手段，最早是手动执行&lt;code>pip install xxx&lt;/code>来安装依赖，最后 &lt;code>pip freeze&lt;/code> 来导出依赖列表到一个 &lt;code>requirements.txt&lt;/code> 文件里。但是这个 txt 文件非常令人困惑。&lt;/p>
 &lt;ul>
 &lt;li>不像 NodeJS 那么方便，想要升、降级某个依赖版本，无法自动同步到 txt 文件里。&lt;/li>
 &lt;li>平铺式地列出了所有一级、二级依赖包（即依赖包的依赖包）。因为 Python 某些依赖又基于系统上安装的 C 库版本，这就导致不同系统环境上执行 &lt;code>pip install -r requirements.txt&lt;/code> 得到的效果并不一致，经常报错。&lt;/li>
 &lt;/ul>
-&lt;h3 id="打包部署问题">打包部署问题&lt;/h3>
-&lt;p>Python 一般使用 &lt;code>wheel&lt;/code> 打包二进制，它只解决打包问题，环境依赖是靠 pip 和 setuptools 完成，所以使用 wheel 你仍然要操心环境隔离和依赖管理问题。&lt;/p></description></item><item><title>《Python源码剖析》第三部分——Python虚拟机进阶</title><link>https://sund.site/posts/2017/python-3/</link><pubDate>Fri, 14 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/python-3/</guid><description>&lt;h2 id="python-环境初始化">Python 环境初始化&lt;/h2>
-&lt;p>进程启动后创建 PyInterpreterObject，PyInterpreterObject 里面维护了全局 module 映射表&lt;code>interp-&amp;gt;modules&lt;/code>，该表默认初始化为&lt;strong>buildin&lt;/strong>模块，&lt;/p>
-&lt;h2 id="python-的-import-机制">Python 的 import 机制&lt;/h2>
+&lt;h3 id="打包部署问题">打包部署问题
+&lt;/h3>&lt;p>Python 一般使用 &lt;code>wheel&lt;/code> 打包二进制，它只解决打包问题，环境依赖是靠 pip 和 setuptools 完成，所以使用 wheel 你仍然要操心环境隔离和依赖管理问题。&lt;/p>
+&lt;p>另外基于 Python 各版本之间兼容性问题和底层实现上的不可抗拒力量，wheel 也经常会莫名其妙失败。&lt;/p>
+&lt;h2 id="现有的解决方案">现有的解决方案
+&lt;/h2>&lt;p>一直以来，出现过 &lt;code>pipx&lt;/code>，&lt;code>pipenv&lt;/code>， &lt;code>conda&lt;/code>，&lt;code>poetry&lt;/code> 以及我最近接触的 &lt;code>pdm&lt;/code>。他们都在某种程度上解决了 Python 的问题，这篇文章：&lt;/p>
+&lt;p>&lt;a class="link" href="https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging" target="_blank" rel="noopener"
+>How to improve Python packaging, or why fourteen tools are at least twelve too many&lt;/a>&lt;/p>
+&lt;p>对比了各种工具的利弊。最后得出结论是 poetry 和 pdm 是目前最合适的工具。而 pdm 是目前唯一支持 &lt;a class="link" href="https://peps.python.org/pep-0582/" target="_blank" rel="noopener"
+>PEP 582&lt;/a> 的依赖管理工具。&lt;/p>
+&lt;h3 id="什么是-pep-582">什么是 PEP 582
+&lt;/h3>&lt;blockquote>
+&lt;p>This PEP proposes to add to Python a mechanism to automatically recognize a &lt;code>__pypackages__&lt;/code> directory and prefer importing packages installed in this location over user or global site-packages. This will avoid the steps to create, activate or deactivate “virtual environments”. Python will use the &lt;code>__pypackages__&lt;/code> from the base directory of the script when present.&lt;/p>
+&lt;/blockquote>
+&lt;p>这个 PEP 的目的就是基于一个文件夹 &lt;code>__pypackages__ &lt;/code>来管理 Python 的依赖，类似 nodejs 的&lt;code>node_modules&lt;/code>，用户不需要再创建虚拟环境来隔离依赖包。Python 会自动识别和安装依赖。&lt;/p>
 &lt;blockquote>
+&lt;p>更新于 2023 年 7 月 2 日：PEP 582 提案已经被拒绝，PDM 暂时仍然支持，但是不建议开发者使用这一特性。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="pdm">PDM
+&lt;/h3>&lt;p>PDM 实现了 PEP 582！这让我们在解决 Python 依赖问题时不用再考虑虚拟环境。&lt;/p>
+&lt;h4 id="初始化项目">初始化项目
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">pdm init
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>之后 PDM 会问几个问题，记得选择&lt;strong>不使用虚拟机环境&lt;/strong>，这样 PDM 就会默认使用 PEP 582 的解决方案，在项目下生成一个类似 NodeJS 的 &lt;code>__pypackages__&lt;/code>。&lt;/p>
+&lt;p>剩下的操作就跟 NodeJS 的 npm 非常像了。&lt;/p>
+&lt;p>添加一个依赖之后，PDM 会自动更新&lt;code>pyproject.toml&lt;/code>文件。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">pdm add requests
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="安装项目依赖">安装项目依赖
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">pdm install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="启动项目">启动项目
+&lt;/h4>&lt;p>先在 &lt;code>pyproject.toml&lt;/code>里添加&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>tool.pdm.scripts&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">start&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;flask run -p 54321&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后执行&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">pdm run start
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="打包部署">打包部署
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">pdm build
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pdm publish
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="总结">总结
+&lt;/h2>&lt;p>如果你从事科研工作，用 &lt;code>conda&lt;/code>。&lt;/p>
+&lt;p>如果你从事工程项目，&lt;code>poetry&lt;/code>是目前业内用的最多的方案，大多数情况下它是个不错的依赖管理工具。但是如果你不喜欢 Python 的 virtualenv，&lt;code>pdm&lt;/code>是更好的选择。&lt;/p></description></item><item><title>《Python源码剖析》第三部分——Python虚拟机进阶</title><link>https://sund.site/posts/2017/python-3/</link><pubDate>Fri, 14 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/python-3/</guid><description>&lt;h2 id="python-环境初始化">Python 环境初始化
+&lt;/h2>&lt;p>进程启动后创建 PyInterpreterObject，PyInterpreterObject 里面维护了全局 module 映射表&lt;code>interp-&amp;gt;modules&lt;/code>，该表默认初始化为&lt;strong>buildin&lt;/strong>模块，&lt;/p>
+&lt;h2 id="python-的-import-机制">Python 的 import 机制
+&lt;/h2>&lt;blockquote>
 &lt;p>Python 虚拟机在执行“import A”时，会为 package A 创建一个 module 对象，同时会在该 module 维护的 dict 中添加两个表示元信息的属性：&lt;strong>name&lt;/strong>和&lt;strong>path&lt;/strong>。而 Python 虚拟机从 A/&lt;strong>init&lt;/strong>.py 中执行“import mod1”时，也会为 mod1 创建一个 module 对象，同时也会设置&lt;strong>name&lt;/strong>属性，但是这时就不设置&lt;strong>path&lt;/strong>属性了。&lt;/p>
 &lt;/blockquote>
 &lt;blockquote>
 &lt;p>package 是由 module 聚合而成。更清楚的表述是：module 属于一个 package。我们不能说，module1 属于 module2。我们前面已经看到，module 的路径实际上是一种树状结构，从图 14-11 中可以看到，在这个树状结构中，module 的父节点只能是 package，而不可能是另一个 module。&lt;/p>
 &lt;/blockquote>
-&lt;h2 id="gil">GIL&lt;/h2>
-&lt;p>Python 虚拟机使用一个全局解释器锁（Global Interpreter Lock，GIL）来互斥线程对 python 虚拟机的使用。&lt;/p>
+&lt;h2 id="gil">GIL
+&lt;/h2>&lt;p>Python 虚拟机使用一个全局解释器锁（Global Interpreter Lock，GIL）来互斥线程对 python 虚拟机的使用。&lt;/p>
 &lt;p>注意这里 GIL 是解释器一级的互斥锁，也就是同一时间只能有一个线程占用 python 解释器。所以&lt;strong>GIL 是用来让操作系统中分配的多个线程互斥的使用 python 解释器的，是建立在系统线程调度基础之上的一套 C API 互斥机制&lt;/strong>，是比操作系统线程资源更大粒度的锁。&lt;/p>
 &lt;p>Python 的线程是基于操作系统原生线程的，所以 python 的线程不是「虚拟出来的」。&lt;/p>
 &lt;blockquote>
-&lt;p>那么究竟 Python 会在众多的等待线程中选择哪一个幸运儿呢？答案是，不知道。没错，对于这个问题，Python 完全没有插手，而是交给了底层的操作系统来解决。也就是说，Python 借用了底层操作系统所提供的线程调度机制来决定下一个进入 Python 解释器的线程究竟是谁。&lt;/p></description></item><item><title>《Python源码剖析》第二部分——Python虚拟机基础</title><link>https://sund.site/posts/2017/python-2/</link><pubDate>Thu, 13 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/python-2/</guid><description>&lt;h2 id="python-执行环境">Python 执行环境&lt;/h2>
+&lt;p>那么究竟 Python 会在众多的等待线程中选择哪一个幸运儿呢？答案是，不知道。没错，对于这个问题，Python 完全没有插手，而是交给了底层的操作系统来解决。也就是说，Python 借用了底层操作系统所提供的线程调度机制来决定下一个进入 Python 解释器的线程究竟是谁。&lt;/p>
+&lt;/blockquote>
+&lt;p>GIL 在 C 里对应的结构：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="n">thread_nt&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">h&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">typedef&lt;/span> &lt;span class="k">struct&lt;/span> &lt;span class="n">NRMUTEX&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">LONG&lt;/span> &lt;span class="n">owned&lt;/span> &lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">DWORD&lt;/span> &lt;span class="n">thread_id&lt;/span> &lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">HANDLE&lt;/span> &lt;span class="n">hevent&lt;/span> &lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span> &lt;span class="n">NRMUTEX&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">PNRMUTEX&lt;/span> &lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>其中&lt;code>owned&lt;/code>初始化为-1，表示锁可用，否则为不可用。&lt;code>thread_id&lt;/code>代表线程 id，最后一个是平台相关的变量，win32 上是一个 event 内核对象。&lt;/p>
+&lt;h2 id="多线程---标准调度">多线程 - 标准调度
+&lt;/h2>&lt;blockquote>
+&lt;p>当 Python 启动时，是并不支持多线程的。换句话说，Python 中支持多线程的数据结构以及 GIL 都是没有创建的，Python 之所以有这种行为是因为大多数的 Python 程序都不需要多线程的支持&lt;/p>
+&lt;/blockquote>
+&lt;p>书中指出，由于 python 的多线程标准调度机制是有代价的，所以默认单线程不初始化 GIL。&lt;/p>
+&lt;ol>
+&lt;li>主线程启动后，会用&lt;code>ident = PyThread_start_new_thread(t_bootstrap, (void*) boot);&lt;/code>函数调用操作系统内核接口创建子线程，然后主线程挂起等待&lt;code>obj.done&lt;/code>。注意，此时主线程中持有 GIL。&lt;/li>
+&lt;li>主线程等待的这段时间里，子线程将自己的线程 id 等信息设置好，通知内核对象&lt;code>obj.done&lt;/code>，唤醒等待中的主线程。此刻，主线程和子线程都同时由操作系统调度，但是主线程一直持有着 GIL。&lt;/li>
+&lt;li>子线程继续执行后进入 python 解释器，发现需要等待获取 GIL。此时子线程主动将自己挂起(而不是由操作系统挂起)。这样就进入了两个线程通过 GIL 调度的阶段。&lt;/li>
+&lt;li>主线程被唤醒后，继续执行，直到 python 内置的时钟计时器&lt;code>_Py_Ticker&lt;/code>结束才将自己挂起，让出 GIL(&lt;code>_Py_Ticker&lt;/code>会在每次执行一条字节码后自动减 1，初始默认为 100)。&lt;/li>
+&lt;/ol>
+&lt;p>通过上面 4 步，python 的两个线程就完成了从系统调度上升到 python 标准 GIL 调度的流程。&lt;/p>
+&lt;h2 id="阻塞调度">阻塞调度
+&lt;/h2>&lt;p>如同上面流程介绍的，标准调度是 python 使用软件时钟调度线程，那么有时候 python 的线程会自我阻塞，比如&lt;code>raw_input()&lt;/code>、&lt;code>sleep()&lt;/code>等函数，这时 python 就会使用阻塞调度的方式。&lt;/p>
+&lt;ol>
+&lt;li>主线程调用&lt;code>sleep(1)&lt;/code>后，调用&lt;code>Py_BEGIN_ALLOW_THREADS&lt;/code>立刻释放 GIL，然后调用操作系统的 sleep 操作。此时主线程就由操作系统自动管理。&lt;/li>
+&lt;li>子线程拿到 GIL。此时主线程和子线程同时可被操作系统调度。操作系统在执行一段时间子线程后会挂起，调度主线程，发现主线程 sleep 没结束就挂起主线程，就继续唤醒子线程执行。&lt;/li>
+&lt;li>当主线程 sleep 结束，操作系统唤醒主线程。主线程调用&lt;code>Py_END_ALLOW_THREADS&lt;/code>再次申请 GIL，重新进入 python 标准调度流程。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>可见 python 在保证线程安全的前提下，允许线程在某些时刻脱离 GIL 标准调度流程。&lt;/strong>&lt;/p>
+&lt;p>其中&lt;code>Py_BEGIN_ALLOW_THREADS&lt;/code>和&lt;code>Py_END_ALLOW_THREADS&lt;/code>两个负责释放和等待 GIL 的宏的实现如下。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="n">ceval&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">h&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#define Py_BEGIN_ALLOW_THREADS { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp"> PyThreadState *_save; \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp"> _save = PyEval_SaveThread();
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#define Py_END_ALLOW_THREADS PyEval_RestoreThread(_save); \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="n">ceval&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">PyThreadState&lt;/span>&lt;span class="o">*&lt;/span> &lt;span class="nf">PyEval_SaveThread&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">PyThreadState&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">tstate&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nf">PyThreadState_Swap&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">NULL&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">interpreter_lock&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">PyThread_release_lock&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">interpreter_lock&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">tstate&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">void&lt;/span> &lt;span class="nf">PyEval_RestoreThread&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">PyThreadState&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">tstate&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">interpreter_lock&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">int&lt;/span> &lt;span class="n">err&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">errno&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">PyThread_acquire_lock&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">interpreter_lock&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">errno&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">err&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">PyThreadState_Swap&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">tstate&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="用户级互斥">用户级互斥
+&lt;/h2>&lt;p>用户级的互斥锁利用操作系统的互斥机制实现，同时要考虑防止和 GIL 形成死锁。所以过程与阻塞调度类似需要使用&lt;code>Py_BEGIN_ALLOW_THREADS&lt;/code>和&lt;code>Py_END_ALLOW_THREADS&lt;/code>这两个宏。&lt;/p>
+&lt;ol>
+&lt;li>线程 a 调用 lock 对象加锁，lock 对象内部调用系统互斥机制，同时执行&lt;code>Py_BEGIN_ALLOW_THREADS&lt;/code>释放 GIL 防止死锁。&lt;/li>
+&lt;li>线程 b 获得 GIL，执行到某处释放锁，lock 对象内部调用系统机制释放锁，同时底层调用了&lt;code>Py_END_ALLOW_THREADS&lt;/code>等待 GIL。&lt;/li>
+&lt;li>线程 a 被系统唤醒，获取 GIL，一气呵成。&lt;/li>
+&lt;/ol>
+&lt;h2 id="子线程的销毁">子线程的销毁
+&lt;/h2>&lt;blockquote>
+&lt;p>在线程的全部计算完成之后，Python 将销毁线程。需要注意的是，Python 主线程的销毁与子线程的销毁是不同的，因为主线程的销毁动作必须要销毁 Python 的运行时环境，而子线程的销毁则不需要进行这些动作。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="内存管理">内存管理
+&lt;/h2>&lt;p>大块内存管理直接调用 C 的 malloc 和 free 接口，小块内存分配则由 python 的内存池管理机制调度。&lt;/p>
+&lt;h3 id="小块内存管理的对象">小块内存管理的对象
+&lt;/h3>&lt;p>Python 的内存块叫 block，每个 block 大小不同，都是 8 的整数倍。管理 block 的叫 pool，一个 pool 是 4K。pool 管理&lt;strong>相同大小&lt;/strong>的一堆 block。pool 对象的 szindex 变量保存了这个 pool 对应的 block 大小。&lt;/p>
 &lt;blockquote>
+&lt;p>，一个 pool 可能管理了 100 个 32 个字节的 block，也可能管理了 100 个 64 个字节的 block，但是绝不会有一个管理了 50 个 32 字节的 block 和 50 个 64 字节的 block 的 pool 存在&lt;/p>
+&lt;/blockquote>
+&lt;p>Python 对于内存块的管理类似对象的策略，每次内存分配一整个 block，回收时先将不用的 Block 加入闲置的队列里等待重新利用，不是直接回收。(惰性回收策略)&lt;/p>
+&lt;p>管理多个 pool 的数据对象是 arena。下图可见，pool 结构是一次性分配好一块内存，而 arena 则是通过指针连向一块 pool。&lt;/p>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/2duvofnkP9LEO8x.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;p>而 python 维护一个名叫 arenas 的数组，数组元素就是 arena 对象。arena 之间通过由两条链表相连。它们分别是：&lt;/p>
+&lt;ul>
+&lt;li>&lt;em>unused_arena_objects&lt;/em> 是单向量表，指向未分配 pool 的 arena&lt;/li>
+&lt;li>&lt;em>usable_arenas&lt;/em> 是双向链表，表示已经分配了 pool 的 arena&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/duFq5I6lWACjQyw.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>当一个 arena 的 area_object 没有与 pool 集合建立联系时，这时的 arena 处于“未使用”状态；一旦建立了联系，这时 arena 就转换到了“可用”状态。对于每一种状态，都有一个 arena 的链表。“未使用”的 arena 的链表表头是 unused_arena_objects、arena 与 arena 之间通过 nextarena 连接，是一个单向链表；而“可用”的 arena 的链表表头是 usable_arenas、arena 与 arena 之间通过 nextarena 和 prevarena 连接，是一个双向链表。&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Pool 是 python 管理内存的对象，arena 虽然更上层，但是 arena 内的 pool 集合可能管理 32 字节的 block，也可能管理 64 字节的 block，所以 arena 无法决定销毁和分配内存。Python 仍然以 pool 为单位管理内存开销。(pool 有 size 概念，arena 没有 size 概念)&lt;/strong>&lt;/p>
+&lt;p>Pool 有三种状态 full、empty 和 used。其中 full 不需要连接起来，其他两种状态会被 freepools 和 usedpools 连接起来方便管理。&lt;/p>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/mZr1P7ocQYbpCFB.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;h3 id="arena-的分配">arena 的分配
+&lt;/h3>&lt;p>arena 可以指向 32 位 pool 集合，也可以指向 64 位 pool 集合。分配内存的过程如下：&lt;/p>
+&lt;ol>
+&lt;li>先在 usable_arenas 链表上找可用的 arena，然后找到符合要求的 pool&lt;/li>
+&lt;li>如果没有可用的 arena，则从 arenas 数组里摘下来新的 arena，放在 usable_arenas 里，然后初始化 pool&lt;/li>
+&lt;li>从 usedpools 链表里找可用的 blocks&lt;/li>
+&lt;li>usedpools 没有可用的 pool，就从 freepools 链表分配一个 empty 状态的 pool&lt;/li>
+&lt;/ol>
+&lt;h3 id="python-编译时指定内存上限">Python 编译时指定内存上限
+&lt;/h3>&lt;blockquote>
+&lt;p>当 Python 在 WITH_MEMORY_LIMITS 编译符号打开的背景下进行编译时，Python 内部的另一个符号会被激活，这个名为 SMALL_MEMORY_LIMIT 的符号限制了整个内存池的大小，同时，也就限制了可以创建的 arena 的个数。在默认情况下，不论是 Win32 平台，还是 unix 平台，这个编译符号都是没有打开的，所以通常 Python 都没有对小块内存的内存池的大小做任何的限制。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="小块内存管理的流程">小块内存管理的流程
+&lt;/h3>&lt;p>&lt;em>(此部分摘自书中代码注释)&lt;/em>&lt;/p>
+&lt;ol>
+&lt;li>如果申请的内存小于 SMALL_REQUEST_THRESHOLD，使用 Python 的小块内存的内存池。否则，转向 malloc&lt;/li>
+&lt;li>根据申请内存的大小获得对应的 size class index&lt;/li>
+&lt;li>如果 usedpools 中可用的 pool，使用这个 pool 来分配 block&lt;/li>
+&lt;li>分配结束后，如果 pool 中的 block 都被分配了，将 pool 从 usedpools 中摘除&lt;/li>
+&lt;li>如果 usedpools 中没有可用的 pool，从 usable_arenas 中获取 pool&lt;/li>
+&lt;li>如果 usable_arenas 中没有就“可用”的 arena，开始申请 arena&lt;/li>
+&lt;li>从 usable_arenas 的第一个 arena 中获取一个 pool&lt;/li>
+&lt;li>获取 pool 成功，进行 init pool 的动作，将 pool 放入 used_pools 中，并返回分配得到的 block&lt;/li>
+&lt;li>获取 pool 失败，对 arena 中的 pool 集合进行初始化，然后转入 goto 到 init pool 的动作处，初始化一个特定的 pool&lt;/li>
+&lt;/ol>
+&lt;h3 id="python-25-对多次分配小内存造成内存泄漏的处理">Python 2.5 对多次分配小内存造成内存泄漏的处理
+&lt;/h3>&lt;p>在 2.5 之前版本，Python 的 arena 从来不释放 pool。这就造成反复分配小内存后造成的 arena 太多而内存无法回收。&lt;/p>
+&lt;p>2.5 之后的处理办法：arena 有两种状态，unused 和 usable。上文已经介绍过。&lt;/p>
+&lt;ol>
+&lt;li>如果 arena 中所有的 pool 都是 empty 的，释放 pool 集合占用的内存。arena 变成 unused 状态，从 usable_arenas 剔除&lt;/li>
+&lt;li>如果 arena 初始化了新的 pool，arena 变成 usable 状态，从 usable_arenas 链表中顺序查找位置插入该 arena。注意，usable_arenas 是有序链表(按照 arena 中 pool 的个数排序，pool 多的 arena 排前边，pool 少的排后边)&lt;/li>
+&lt;li>这样，再有分配内存的请求时，先从 usable_arenas 表头顺序查，排在前边 pool 多的 arena 就被利用的充分，pool 少的 arena 就更有可能变成 unused 状态，容易被释放掉。达到节省内存的目的&lt;/li>
+&lt;/ol>
+&lt;h3 id="内存池全景">内存池全景
+&lt;/h3>&lt;p>&lt;img src="https://i.loli.net/2021/03/05/1Lh6u4awv8ZyQ9H.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;h2 id="python-垃圾回收机制">Python 垃圾回收机制
+&lt;/h2>&lt;p>除了计数器，python 还是使用了标记-清除，分代回收机制。&lt;/p>
+&lt;h3 id="标记---清除">标记 - 清除
+&lt;/h3>&lt;h4 id="三色模型">三色模型
+&lt;/h4>&lt;p>根据系统内所有对象的引用情况建立有向图，沿着有向图从根开始的逐层染色，黑色代表该节点所有引用都检查过了，灰色表示节点是可达的，当所有灰色节点都变为黑色，检查结束。&lt;/p>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/2a1kYDnyT4fBQxP.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;h3 id="python-中的标记清除">Python 中的标记清除
+&lt;/h3>&lt;p>Python 的对象由三大部分组成，PyGC_Head，PyObject_Head 和本体。其中 PyObject_Head 里存计数器用来标记当前节点是否可回收，但是对于循环引用的情况，就需要 PyGC_Head 里的 refs，python 会根据一些触发条件进行三色模型的标记，某个对象的「可达次数」标记在 PyGC_Head 里，当这个可达次数为 0 时，代表对象不可达，也就需要回收之。PyGC_Head 之间有一条双向链表连接了所有对象，将他们纳入内存回收管理系统里。&lt;/p>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/UT5ry697VXINBQp.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;h4 id="流程">流程
+&lt;/h4>&lt;ol>
+&lt;li>在垃圾收集的第一步，就是遍历可收集对象链表，将每个对象的 gc.gc_ref 值设置为其 ob_refcnt 值。&lt;/li>
+&lt;li>接下来的动作就是要将环引用从引用中摘除。&lt;/li>
+&lt;li>有一些 container 对象的&lt;code>PyGC_Head.gc.gc_ref&lt;/code>还不为 0，这就意味着存在对这些对象的外部引用，这些对象，就是开始标记 - 清除算法的 root object 集合。&lt;/li>
+&lt;/ol>
+&lt;h3 id="分代回收">分代回收
+&lt;/h3>&lt;blockquote>
+&lt;p>这种以空间换时间的总体思想是：将系统中的所有内存块根据其存活时间划分为不同的集合，每一个集合就称为一个“代”，垃圾收集的频率随着“代”的存活时间的增大而减小，也就是说，活得越长的对象，就越可能不是垃圾，就应该越少去收集。&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/mQuPrwyD73ZjhBv.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>Python 采用了三代的分代收集机制，如果当前收集的是第 1 代，那么在开始垃圾收集之前，Python 会将比其“年轻”的所有代的内存链表（当然，在这里只有第 0 代）整个地链接到第 1 代内存链表之后，这个操作是通过 gc_list_merge 实现的。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="总结">总结
+&lt;/h3>&lt;ol>
+&lt;li>将比当前处理的“代”更年轻的“代”的链表合并到当前“代”中&lt;/li>
+&lt;li>在待处理链表上进行打破循环的模拟，寻找 root object&lt;/li>
+&lt;li>将待处理链表中的 unreachable object 转移到 unreachable 链表中，处理完成后，当前“代”中只剩下 reachable object 了&lt;/li>
+&lt;li>如果可能，将当前“代”中的 reachable object 合并到更老的“代”中&lt;/li>
+&lt;li>对于 unreachable 链表中的对象，如果其带有&lt;code>__del__&lt;/code>函数，则不能安全回收，需要将这些对象收集到 finalizers 链表中，因此，这些对象引用的对象也不能回收,也需要放入 finalizers 链表中&lt;/li>
+&lt;li>处理弱引用（weakref），如果可能，调用弱引用中注册的 callback 操作&lt;/li>
+&lt;li>对 unreachable 链表上的对象进行垃圾回收操作&lt;/li>
+&lt;li>将含有&lt;code>__del__&lt;/code>操作的实例对象收集到 Python 内部维护的名为 garbage 的链表中，同时将 finalizers 链表中所有对象加入 old 链表中&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>注意，如果对象拥有&lt;code>__del__&lt;/code>方法，就不能通过垃圾回收来自动回收&lt;/strong>，所以要慎重使用这个方法。&lt;/p></description></item><item><title>《Python源码剖析》第二部分——Python虚拟机基础</title><link>https://sund.site/posts/2017/python-2/</link><pubDate>Thu, 13 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/python-2/</guid><description>&lt;h2 id="python-执行环境">Python 执行环境
+&lt;/h2>&lt;blockquote>
 &lt;p>在编译过程中，这些包含在 Python 源代码中的静态信息都会被 Python 编译器收集起来，编译的结果中包含了字符串，常量值，字节码等在源代码中出现的一切有用的静态信息。在 Python 运行期间，这些源文件中提供的静态信息最终会被存储在一个运行时的对象中，当 Python 运行结束后，这个运行时对象中所包含的信息甚至还会被存储在一种文件中。这个对象和文件就是我们这章探索的重点：PyCodeObject 对象和 pyc 文件。&lt;/p>
 &lt;/blockquote>
 &lt;blockquote>
@@ -46,202 +344,788 @@
 &lt;p>不被 import 的 py 文件不会生成 pyc。标准库里有 py_compile 等方法也可以生成 pyc。&lt;/p>
 &lt;p>&lt;strong>import 机制&lt;/strong> 导入某个模块时，先查找对应的 pyc，如果没有 pyc 就生成然后 import 这个 pyc。(所以实际导入的并不是 py 文件，而是 py 文件编译后的 PyCodeObject)。&lt;/p>
 &lt;p>&lt;strong>PyFrameObject&lt;/strong> Python 程序运行时的「执行环境」。参考操作系统执行可执行文件的过程。Python 也是将函数对应的执行环境封装成栈帧的形式加载进内存。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">typedef&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> _frame {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> PyObject_VAR_HEAD
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">struct&lt;/span> _frame &lt;span style="color:#f92672">*&lt;/span>f_back; &lt;span style="color:#75715e">//执行环境链上的前一个frame
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> PyCodeObject &lt;span style="color:#f92672">*&lt;/span>f_code; &lt;span style="color:#75715e">//PyCodeObject对象
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">*&lt;/span>f_builtins; &lt;span style="color:#75715e">//builtin名字空间
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">*&lt;/span>f_globals; &lt;span style="color:#75715e">//global名字空间
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">*&lt;/span>f_locals; &lt;span style="color:#75715e">//local名字空间
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">**&lt;/span>f_valuestack; &lt;span style="color:#75715e">//运行时栈的栈底位置
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">**&lt;/span>f_stacktop; &lt;span style="color:#75715e">//运行时栈的栈顶位置
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">……&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> f_lasti; &lt;span style="color:#75715e">//上一条字节码指令在f_code中的偏移位置
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> f_lineno; &lt;span style="color:#75715e">//当前字节码对应的源代码行
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">……&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">//动态内存，维护（局部变量+cell对象集合+free对象集合+运行时栈）所需要的空间
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> PyObject &lt;span style="color:#f92672">*&lt;/span>f_localsplus[&lt;span style="color:#ae81ff">1&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} PyFrameObject;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Python 标准库的&lt;code>sys._getframe()&lt;/code>可以动态的在程序执行时获取当前内存中活跃的 PyFrameObject 信息。&lt;/p></description></item><item><title>《Python源码剖析》第一部分——Python对象基础</title><link>https://sund.site/posts/2017/python/</link><pubDate>Wed, 12 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/python/</guid><description>&lt;h2 id="python-的对象初始化">Python 的对象初始化&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">typedef&lt;/span> &lt;span class="k">struct&lt;/span> &lt;span class="n">_frame&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">PyObject_VAR_HEAD&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">struct&lt;/span> &lt;span class="n">_frame&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">f_back&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">//执行环境链上的前一个frame
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">PyCodeObject&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">f_code&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">//PyCodeObject对象
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">PyObject&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">f_builtins&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">//builtin名字空间
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">PyObject&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">f_globals&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">//global名字空间
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">PyObject&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">f_locals&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">//local名字空间
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">PyObject&lt;/span> &lt;span class="o">**&lt;/span>&lt;span class="n">f_valuestack&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">//运行时栈的栈底位置
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">PyObject&lt;/span> &lt;span class="o">**&lt;/span>&lt;span class="n">f_stacktop&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">//运行时栈的栈顶位置
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="err">……&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">int&lt;/span> &lt;span class="n">f_lasti&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">//上一条字节码指令在f_code中的偏移位置
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">f_lineno&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">//当前字节码对应的源代码行
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="err">……&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">//动态内存，维护（局部变量+cell对象集合+free对象集合+运行时栈）所需要的空间
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">PyObject&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">f_localsplus&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span> &lt;span class="n">PyFrameObject&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Python 标准库的&lt;code>sys._getframe()&lt;/code>可以动态的在程序执行时获取当前内存中活跃的 PyFrameObject 信息。&lt;/p>
+&lt;h2 id="legb-规则">LEGB 规则
+&lt;/h2>&lt;p>即 python 作用域的查找顺序是&lt;code>local&lt;/code>-&lt;code>enclosing&lt;/code>-&lt;code>global&lt;/code>-&lt;code>buildin&lt;/code>。看下面代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">a&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">g&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span> &lt;span class="n">a&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">f&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="o">//&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">a&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">2&lt;/span> &lt;span class="o">//&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span> &lt;span class="n">a&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">g&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>代码在[1]处会抛出异常，原因是 python 在编译阶段就把静态数据(局部变量、全局变量、字节码)放入 pyc 里，执行到&lt;code>f()&lt;/code>里时，查找到&lt;code>a&lt;/code>是在 local 作用域里定义的而不是 global 里，但是此时 local 的 a 还没赋值，所以就会抛出异常。由此可见，&lt;strong>python 作用域信息是在静态编译时就处理好了的&lt;/strong>。&lt;/p>
+&lt;h2 id="python-虚拟机运行框架">Python 虚拟机运行框架
+&lt;/h2>&lt;blockquote>
+&lt;p>运行时环境是一个全局的概念，而执行环境实际就是一个栈帧，是一个与某个 Code Block 对应的概念。&lt;/p>
+&lt;/blockquote>
 &lt;blockquote>
+&lt;p>在 PyCodeObject 对象的 co_code 域中保存着字节码指令和字节码指令的参数，Python 虚拟机执行字节码指令序列的过程就是从头到尾遍历整个 co_code、依次执行字节码指令的过程。&lt;/p>
+&lt;/blockquote>
+&lt;p>由上文引用可见，python 在编译阶段将代码块的字节码保存在 PyCodeObject 的 co_code 属性里，然后在执行阶段从头到尾遍历这个 co_code 属性解读字节码。&lt;/p>
+&lt;p>&lt;strong>Python 运行时环境&lt;/strong> Python 在运行时用 PyInterpreterState 结构维护进程运行环境，PyThreadState 维护线程运行环境，PyFrameObject 维护栈帧运行环境，三者是依次包含关系，如下图所示：&lt;/p>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/GHImB214fvxSXgk.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>Python 虚拟机就是一个「软 CPU」，动态加载上述三种结构进内存，并模拟操作系统执行过程。程序执行后，先创建各个运行时环境，再将栈帧中的字节码载入，循环遍历解释执行。&lt;/p>
+&lt;h2 id="python-字节码">Python 字节码
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="mi">0&lt;/span> &lt;span class="n">LOAD_CONST&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="mi">3&lt;/span> &lt;span class="n">STORE_NAME&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>例如 python 的一条语句&lt;code>i=1&lt;/code>可以解释为下面两行字节码，最左边的第 1 列数字代表这行字节码在内存中的偏移位置，第 2 列是字节码的名字(CPU 并不关心名字，它只是根据偏移量读出字节码，所以这个名字是方便阅读用的)，第 3 列是字节码的参数，如&lt;code>LOAD_CONST&lt;/code>对应的数据在变量&lt;code>f-&amp;gt;f_code-&amp;gt;co_consts&lt;/code>里，0 就是这个参数位于&lt;code>f-&amp;gt;f_code-&amp;gt;co_consts&lt;/code>的偏移量。最后一列的括号里是从参数里取到的 value。&lt;/p>
+&lt;h2 id="python-的异常抛出机制">Python 的异常抛出机制
+&lt;/h2>&lt;p>异常处理的操作都在&lt;code>Python/traceback.c&lt;/code>文件里，python 每次调用一层函数，就创建改函数对应的 PyFrameObject 对象来保存函数运行时信息，PythonFrameObject 里调用 PyEval_EvalFrameEx 循环解释字节码，如果抛出异常就创建 PyTraceBackObject 对象，将对象交给上一层 PyFrameObject 里的 PyTracebackObject 组成链表，最后返回最上层 PyRun_SimpleFileExFlags 函数，该函数调用 PyErr_Print 遍历 PyTraceBackObject 链表打印出异常信息。&lt;/p>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/9bEUBjYov8mZy3s.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;h2 id="函数对象的实现">函数对象的实现
+&lt;/h2>&lt;p>PyFunctionObject 是函数对象。在 python 调用函数时，生成 PyFunctionObject 对象，该对象的 f_global 指针用来将外层的全局变量传递给函数内部，然后在&lt;code>ceval.c&lt;/code>文件的&lt;code>fast_function&lt;/code>里解出 PyFunctionObject 对象里携带的信息，创建新的 PyFrameObject 对象(上文说过这个对象是维护运行时环境的)，最后调用执行字节码的函数&lt;code>PyEval_EvalFrameEx&lt;/code>执行真正函数字节码。&lt;/p>
+&lt;p>&lt;strong>Python 执行一段代码需要什么？&lt;/strong> 从书中描述可见，python 执行一段代码需要做几件事：&lt;/p>
+&lt;ul>
+&lt;li>从源码编译出 PyCodeObject 保存变量和字节码&lt;/li>
+&lt;li>执行阶段，从 PyCodeObject 里取出信息交给 PyFrameObject，执行 PyEval_EvalFrameEx 解释字节码&lt;/li>
+&lt;li>如果遇到函数调用，就把函数对应的代码段从 PyCodeObject 存入 PyFunctionObject 对象，然后把这个函数对象通过参数传给新创建的 PyFrameObject ，在内层空间执行 PyEval_EvalFrameEx 解释字节码&lt;/li>
+&lt;li>将结果或异常存入 PyFrameObject 的变量( 异常是存入 f_blockstack 里，外层判断 f_blockstack 里的数据是被 except 捕获还是没有捕获而继续下一步操作) 抛给外层&lt;/li>
+&lt;/ul>
+&lt;p>值得注意的是，&lt;strong>python 在执行阶段，将对函数参数的键值查找，转换为索引查找&lt;/strong>，即在转换 PyCodeObject 为 PyFrameObject 时，将参数信息按位置参数、键参数按照一定顺序存储在 f_localsplus 变量中，再用索引来查找对应参数，而需要查找键值。这样提高了运行时效率。下图是&lt;code>foo('Rboert', age=5)&lt;/code>在内存中的存储形式。&lt;/p>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/IGy8JTzZpgmN6sL.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;h2 id="闭包的实现">闭包的实现
+&lt;/h2>&lt;p>Python 在编译阶段就把函数闭包内层和闭包外层使用的变量存入 PyCodeObject 中：&lt;/p>
+&lt;ul>
+&lt;li>co_cellvars：通常是一个 tuple，保存嵌套的作用域中使用的变量名集合；&lt;/li>
+&lt;li>co_freevars：通常也是一个 tuple，保存使用了的外层作用域中的变量名集合。&lt;/li>
+&lt;/ul>
+&lt;p>在执行阶段，PyFrameObject 的 f_localsplus 中也为闭包的变量划分的内存区域，如下图所示：&lt;/p>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/fUB4wC36dAc7rqt.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;h2 id="元类">元类
+&lt;/h2>&lt;p>元类&lt;code>&amp;lt;type type&amp;gt;&lt;/code>和其他类的关系如下图：&lt;/p>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/N76woqSlmR28Oyt.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;p>&lt;strong>可调用性（callable）&lt;/strong> ，只要一个对象对应的 class 对象中实现了“&lt;strong>call&lt;/strong>”操作（更确切地说，在 Python 内部的 PyTypeObject 中，tp_call 不为空）那么这个对象就是一个可调用的对象，换句话说，在 Python 中，所谓“调用”，就是执行对象的 type 所对应的 class 对象的 tp_call 操作。&lt;/p>
+&lt;h2 id="descriptor">Descriptor
+&lt;/h2>&lt;blockquote>
+&lt;p>在 PyType_Ready 中，Python 虚拟机会填充 tp_dict，其中与操作名对应的是一个个 descriptor
+对于一个 Python 中的对象 obj，如果 obj.&lt;strong>class&lt;/strong>对应的 class 对象中存在&lt;strong>get&lt;/strong>、&lt;strong>set&lt;/strong>和&lt;strong>delete&lt;/strong>三种操作，那么 obj 就可称为 Python 一个 descriptor。&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>如果细分，那么 descriptor 还可分为如下两种：&lt;/p>
+&lt;/blockquote>
+&lt;ol>
+&lt;li>data descriptor : type 中定义了&lt;strong>get&lt;/strong>和&lt;strong>set&lt;/strong>的 descriptor；&lt;/li>
+&lt;li>non data descriptor : type 中只定义了&lt;strong>get&lt;/strong>的 descriptor。
+在 Python 虚拟机访问 instance 对象的属性时，descriptor 的一个作用是影响 Python 虚拟机对属性的选择。从 PyObject_GenericGetAttr 的伪代码可以看出，Python 虚拟机会在 instance 对象自身的&lt;strong>dict&lt;/strong>中寻找属性，也会在 instance 对象对应的 class 对象的 mro 列表中寻找&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;ol>
+&lt;li>Python 虚拟机按照 instance 属性、class 属性的顺序选择属性，即 instance 属性优先于 class 属性；&lt;/li>
+&lt;li>如果在 class 属性中发现同名的 data descriptor，那么该 descriptor 会优先于 instance 属性被 Python 虚拟机选择&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/1xKk3IVPdjWb8iB.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;h3 id="引申python-黑魔法-descriptor-描述器">引申：Python 黑魔法 Descriptor (描述器)
+&lt;/h3>&lt;ul>
+&lt;li>&lt;a class="link" href="http://www.jianshu.com/p/250f0d305c35" target="_blank" rel="noopener"
+>http://www.jianshu.com/p/250f0d305c35&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html" target="_blank" rel="noopener"
+>http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="bound-method-和-unbound-method">Bound Method 和 Unbound Method
+&lt;/h2>&lt;p>假设有下面两种对类方法的调用：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">A&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">object&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">f&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">pass&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">a&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">A&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># [1]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">a&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># [2]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">A&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># [3]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">func&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">a&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">f&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">func&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在代码[1]里，实例 a 调用类方法 f，python 底层会自动完成实例 a 和类方法 f 之间的绑定动作(调用&lt;code>func_ descr_get(A.f, a, A)&lt;/code>，将实例地址和函数对象 PyFunctionObject 封装到一个 PyMethodObject)，而代码[2]里直接通过 A 调用，则 f 为非绑定的 PyMethodObject，里面没有实例信息，需要传入 a。&lt;/p>
+&lt;p>比较绑定方法与非绑定方法可知，通过[1]的方式每次都要绑定一次实例，开销非常大，下图比较的是[1]和[3]两种方式，绑定操作的执行次数。&lt;/p>
+&lt;p>&lt;img src="https://i.loli.net/2021/03/05/TpCcdaYmHlQnXzE.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;p>结论： &lt;strong>调用类实例绑定的方法时，如果方法执行次数非常多，最好将方法赋值给一个变量，防止重复绑定增加开销&lt;/strong>&lt;/p></description></item><item><title>《Python源码剖析》第一部分——Python对象基础</title><link>https://sund.site/posts/2017/python/</link><pubDate>Wed, 12 Jul 2017 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/python/</guid><description>&lt;h2 id="python-的对象初始化">Python 的对象初始化
+&lt;/h2>&lt;blockquote>
 &lt;p>在 Python 中，对象就是为 C 中的结构体在堆上申请的一块内存，一般来说，对象是不能被静态初始化的，并且也不能在栈空间上生存。唯一的例外就是类型对象，Python 中所有的内建的类型对象（如整数类型对象，字符串类型对象）都是被静态初始化的。&lt;/p>
 &lt;/blockquote>
 &lt;p>python 的对象不像 C 是分配在栈、堆、data segment 等位置，而是全部分配在堆上！只有 python 内置类型在初始化时候才是被 C 语言层静态初始化。&lt;/p>
 &lt;p>PyObject 内部就两样：引用计数器、类型对象指针。&lt;/p>
 &lt;p>类型对象的定义：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">typedef&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> _typeobject {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> PyObject_VAR_HEAD
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">char&lt;/span> &lt;span style="color:#f92672">*&lt;/span>tp_name; &lt;span style="color:#75715e">/* For printing, in format &amp;#34;&amp;lt;module&amp;gt;.&amp;lt;name&amp;gt;&amp;#34; */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> tp_basicsize, tp_itemsize; &lt;span style="color:#75715e">/* For allocation */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">/* Methods to implement standard operations */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> destructor tp_dealloc;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printfunc tp_print;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">……&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">/* More standard operations (here for binary compatibility) */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hashfunc tp_hash;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ternaryfunc tp_call;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">……&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} PyTypeObject;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>PyObject_VAR_HEAD&lt;/code>是可变类型的头信息，其中除了&lt;code>PyObject_HEAD&lt;/code>的内容外，额外添加了一个代表该对象元素数量的整型。从上边代码可见，python 的类型也是一个可变对象。&lt;/p></description></item><item><title>Python2 中字符类型的一些坑</title><link>https://sund.site/posts/2017/py-str/</link><pubDate>Wed, 11 Jan 2017 11:09:00 +0000</pubDate><guid>https://sund.site/posts/2017/py-str/</guid><description>&lt;h2 id="问题">问题&lt;/h2>
-&lt;p>有一道面试题是这样的：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>a &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">u&lt;/span>&lt;span style="color:#e6db74">&amp;#39;China&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>b &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;China&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">u&lt;/span>&lt;span style="color:#e6db74">&amp;#39;中国&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>d &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;中国&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print &lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74"> &lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> (a, b)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 2&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print &lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> c
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 3&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print &lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> d
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 4&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print &lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74"> &lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> (c, d)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>判断打印后的效果。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">typedef&lt;/span> &lt;span class="k">struct&lt;/span> &lt;span class="n">_typeobject&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">PyObject_VAR_HEAD&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">char&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">tp_name&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="cm">/* For printing, in format &amp;#34;&amp;lt;module&amp;gt;.&amp;lt;name&amp;gt;&amp;#34; */&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">int&lt;/span> &lt;span class="n">tp_basicsize&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">tp_itemsize&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="cm">/* For allocation */&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* Methods to implement standard operations */&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">destructor&lt;/span> &lt;span class="n">tp_dealloc&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">printfunc&lt;/span> &lt;span class="n">tp_print&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">……&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* More standard operations (here for binary compatibility) */&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hashfunc&lt;/span> &lt;span class="n">tp_hash&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ternaryfunc&lt;/span> &lt;span class="n">tp_call&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">……&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span> &lt;span class="n">PyTypeObject&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>PyObject_VAR_HEAD&lt;/code>是可变类型的头信息，其中除了&lt;code>PyObject_HEAD&lt;/code>的内容外，额外添加了一个代表该对象元素数量的整型。从上边代码可见，python 的类型也是一个可变对象。&lt;/p>
+&lt;h2 id="python-的多态">Python 的多态
+&lt;/h2>&lt;p>Python 中所有类型在初始化后，在 C 语言层面都使用同一种指针&lt;code>PyObject *&lt;/code>，所以 python 实现多态就非常容易。任何函数的参数都是一个 PyObject 类型指针，也就不存在编译器需要判断函数参数类型。&lt;/p>
+&lt;h2 id="python-对象内存池">Python 对象内存池
+&lt;/h2>&lt;p>Python 为了避免频繁的释放对象，采用了内存池的机制，在对象引用计数为 0 时，不会释放内存，而是将内存交还给内存池供 python 重新分配使用。&lt;strong>每一种 python 类型，都有特定的内存池机制。&lt;/strong>&lt;/p>
+&lt;h2 id="整数对象">整数对象
+&lt;/h2>&lt;p>-5 至 257 之间的小整数，存储在「小整数数组」里，这个数组 Python 自动创建，每次创建一个小整数，就指向这个数组里对应的 PyIntObject 值并把 PyIntObject 的计数加 1。(因此在-5 到 257 之间的数实际指向同一片内存空间，整数-5 和-5 的内存地址肯定是一样的)&lt;/p>
+&lt;p>大整数则由一个叫&lt;code>block_list&lt;/code>的链表管理，每次分配一个大整数就在&lt;code>free_list&lt;/code>(一个指向空闲内存 block 的指针)里拿出一个节点并把&lt;code>free_list&lt;/code>后移一个&lt;code>block&lt;/code>。关于&lt;code>free_list&lt;/code>是如何把尚未分配的内存和已被释放的内存链接起来的，可以参见书中 113 页的插图理解。&lt;/p>
+&lt;p>值得注意的是，python 用于分配给整型的堆内存是不会自行销毁的，而是不断复用。也就是说，&lt;strong>同一时间如果同时使用的整型太多，会消耗大量内存，并且这些内存在 python 关闭之前一直被 python 持有着。&lt;/strong>&lt;/p>
+&lt;h2 id="字符串对象">字符串对象
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">typedef&lt;/span> &lt;span class="k">struct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">PyObject_VAR_HEAD&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">long&lt;/span> &lt;span class="n">ob_shash&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">int&lt;/span> &lt;span class="n">ob_sstate&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">char&lt;/span> &lt;span class="n">ob_sval&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span> &lt;span class="n">PyStringObject&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在 Python 源码中的注释显示，预存字符串的 hash 值(为了节省字符串比较的时间)和这里的 intern 机制将 Python 虚拟机的执行效率提升了 20%。&lt;/p>
+&lt;p>&lt;strong>intern 机制&lt;/strong> 将新建的字符串缓存在一个 PyDictObject 里，相同的字符串共用同一内存。&lt;/p>
+&lt;p>单一字符的字符串，除了用 intern 缓存外，还会缓存在系统自带的一个字符串缓冲池里：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">static&lt;/span> &lt;span class="n">PyStringObject&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">characters&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">UCHAR_MAX&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>&lt;code>+&lt;/code>操作符和&lt;code>join&lt;/code>的效率问题&lt;/strong> &lt;code>+&lt;/code>连接 n 个操作符会创建 n-1 次临时空间，&lt;code>join&lt;/code>会直接处理一个 list 里的字符串，只分配一次内存。节省开销。&lt;/p>
+&lt;h2 id="列表对象">列表对象
+&lt;/h2>&lt;p>参见 C++ vector 对象的存储方式。&lt;/p>
+&lt;h2 id="字典对象">字典对象
+&lt;/h2>&lt;p>Python 使用散列表(时间复杂度 O(1))而非红黑树(时间复杂度 O(logN))来存储 map 结构。&lt;/p>
+&lt;p>**Hash 冲突(碰撞)**不同的值映射到相同的键时，就产生了冲突。一般解决办法有：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>开链法(哈希桶)：
+&lt;img src="https://i.loli.net/2021/03/05/bQuAwlOTUIXkJ7x.gif"
+loading="lazy"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>开放定址法：
+hash 一次没有命中就再 hash 一次，直到找到为止……(二次探测)&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>小于 8 个元素的 Dict，python 使用 PyDIctObject 内部的 smalltable 数组保存元素内容。&lt;/p>
+&lt;p>PyDictObject 对 String 类型的 key 做了特殊对待——简化了计算 hash 函数的过程(正常情况下 key 值是一个&lt;code>PyObject *&lt;/code>对象，需要做大量类型判断，但是对 PyStringObject 就省了)。&lt;/p>
+&lt;p>**装载率(使用的空间/预先分配的空间)**大于 2/3 时，hash 冲突的概率会急速升高，这时 python 就会动态分配更多的空间。与其他类型一样，如果装载率太小，也会自动缩减分配的空间。&lt;/p>
+&lt;blockquote>
+&lt;p>在确定新的 table 的大小时，通常选用的策略是时新的 table 中 entry 的数量是现在 table 中 Active 态 entry 数量的 4 倍，选用 4 倍是为了使 table 中处于 Active 态的 entry 的分布更加稀疏，减少插入元素时的冲突概率……所以当 table 中 Active 态的 entry 数量非常大时，Python 只会要求 2 倍的空间，这次又是以执行速度来交换内存空间。&lt;/p>
+&lt;/blockquote>
+&lt;p>注意这段话，执行速度和内存大小是反比关系，划分的空间越大，执行一次查找就越费时，所以分配的内存空间不是越大越好。&lt;/p>
+&lt;p>PyDictObject 也使用了同 PyListObject 一样的缓冲池方式。参考列表对象部分内容。&lt;/p>
+&lt;p>&lt;em>&lt;strong>笔者总结：从上面的各种类型的处理规律可以总结出 Python 遵循的原则：小变量缓存，大变量尽量整块分配内存，回收变量时不释放内存而是尽量复用，预分配的空间既要满足需要又不能太大(太大就缩减)&lt;/strong>&lt;/em>&lt;/p></description></item><item><title>Python2 中字符类型的一些坑</title><link>https://sund.site/posts/2017/py-str/</link><pubDate>Wed, 11 Jan 2017 11:09:00 +0000</pubDate><guid>https://sund.site/posts/2017/py-str/</guid><description>&lt;h2 id="问题">问题
+&lt;/h2>&lt;p>有一道面试题是这样的：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">a&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sa">u&lt;/span>&lt;span class="s1">&amp;#39;China&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">b&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;China&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">c&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sa">u&lt;/span>&lt;span class="s1">&amp;#39;中国&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">d&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;中国&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span> &lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="si">%s&lt;/span>&lt;span class="s1"> &lt;/span>&lt;span class="si">%s&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">b&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span> &lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="si">%s&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">c&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span> &lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="si">%s&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">d&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 4&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span> &lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="si">%s&lt;/span>&lt;span class="s1"> &lt;/span>&lt;span class="si">%s&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>判断打印后的效果。&lt;/p>
 &lt;p>先说正确答案，只有最后一行会报错。&lt;/p>
-&lt;h2 id="分析">分析&lt;/h2>
-&lt;p>在 Python2 里，默认的字符类型是&lt;code>str&lt;/code>，这个&lt;code>str&lt;/code>和 Python3 的&lt;code>str&lt;/code>完全不同，Python2 的&lt;code>str&lt;/code>类型是 8 位的 ascii 序列。Python2 在处理&lt;code>str&lt;/code>类型转换时遵循这样的规则：&lt;strong>如果被处理的&lt;code>str&lt;/code>型变量值小于 7 位，就可以和&lt;code>unicode&lt;/code>类型混用。可以做&lt;code>+&lt;/code>连接，格式化等操作，同 unicode 享受同样的待遇。&lt;/strong>&lt;/p>
-&lt;p>Python2 在格式化字符时，会把&lt;code>str&lt;/code>格式化为&lt;code>str&lt;/code>，如果字符串里混入了&lt;code>unicode&lt;/code>，就会把其他字符都转化为&lt;code>unicode&lt;/code>。所以这道题里 1 处的 a，b 两个值混合后的字符就是一个 unicode 字符串，c 和 d 单独格式化后仍保留了自己的格式。但是 Python2 在格式化代码位置 4 时，发现 c 是 unicode 而 d 不是，就会尝试按照上面的混用规则，格式化 d 为 unicode 类型，但是 d 的值&lt;code>'中国'&lt;/code>显然是一个大于 7 位的&lt;code>str&lt;/code>，因此 Python2 抛出 UnicodeDecodeError。&lt;/p></description></item><item><title>Python yield关键字的底层实现</title><link>https://sund.site/posts/2017/py-yield/</link><pubDate>Wed, 28 Dec 2016 18:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/py-yield/</guid><description>&lt;p>这几天面试被问到类似的问题，顺便看了看 Python 的源码，参考网上的教程，总结一下 yield 关键字在 C 层面是如何实现的。&lt;/p>
-&lt;h2 id="举个栗子">举个栗子&lt;/h2>
-&lt;p>我们先看一个 python 生成器函数的例子：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> dis &lt;span style="color:#f92672">import&lt;/span> dis
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">func&lt;/span>():
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">4&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">yield&lt;/span> i
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print i
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dis(func)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>a &lt;span style="color:#f92672">=&lt;/span>func()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>a&lt;span style="color:#f92672">.&lt;/span>next()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>a&lt;span style="color:#f92672">.&lt;/span>next()
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 python 的库 dis 可以直接查看 python 虚拟机运行的字节码。&lt;code>dis(func)&lt;/code>的打印如下：&lt;/p>
-&lt;pre tabindex="0">&lt;code> 6 0 LOAD_CONST 1 (4)
- 3 STORE_FAST 0 (i)
-
- 7 6 LOAD_FAST 0 (i)
- 9 YIELD_VALUE
- 10 POP_TOP
-
- 8 11 LOAD_FAST 0 (i)
- 14 PRINT_ITEM
- 15 PRINT_NEWLINE
- 16 LOAD_CONST 0 (None)
- 19 RETURN_VALUE
-&lt;/code>&lt;/pre>&lt;p>我们猜测其中第二列(代表字节码偏移量)为 9 的指令&lt;code>YIELD_VALUE&lt;/code>就是 yield 关键字的执行代码，进入 Python2.7.12 源码目录，在解释器执行字节码的主函数&lt;code>PyEval_EvalFrameEx&lt;/code>中找到了下面一段：&lt;/p></description></item><item><title>Python 巧妙地将rpc接口封装成pythonic的链式调用</title><link>https://sund.site/posts/2017/py-pythonic/</link><pubDate>Tue, 25 Oct 2016 15:40:43 +0000</pubDate><guid>https://sund.site/posts/2017/py-pythonic/</guid><description>&lt;p>这是一个外国人实现的 Zabbix(一个开源监控工具)的 Python Client——pyzabbix 里的代码片段。&lt;/p>
-&lt;h2 id="rpc-调用">RPC 调用&lt;/h2>
-&lt;p>Rpc 调用的流程是向 rpc 服务端指定的 uri(如&lt;a href="http://www.abc.com/jsonrpc.php">http://www.abc.com/jsonrpc.php&lt;/a>) 发送 json(或其他双方约定格式)数据包，数据包里有 rpc 版本信息、方法名、参数等。下面&lt;code>Zabbix&lt;/code>类里的&lt;code>do_request&lt;/code>方法就完成了将方法名和方法参数打包 json 后发送请求的过程。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Zabbix&lt;/span>(object):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># ... skip other class methods&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">do_request&lt;/span>(self, method, params&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> request_json &lt;span style="color:#f92672">=&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;jsonrpc&amp;#39;&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;2.0&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;method&amp;#39;&lt;/span>: method,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;params&amp;#39;&lt;/span>: params &lt;span style="color:#f92672">or&lt;/span> {},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;id&amp;#39;&lt;/span>: self&lt;span style="color:#f92672">.&lt;/span>id,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> response &lt;span style="color:#f92672">=&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>session&lt;span style="color:#f92672">.&lt;/span>post(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>url,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> data&lt;span style="color:#f92672">=&lt;/span>json&lt;span style="color:#f92672">.&lt;/span>dumps(request_json),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timeout&lt;span style="color:#f92672">=&lt;/span>self&lt;span style="color:#f92672">.&lt;/span>timeout
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="技巧">技巧&lt;/h2>
-&lt;p>但是为了方便，我们在 python 里一般使用&lt;code>zabbixclient.host.get(args)&lt;/code>这样的链式调用，而不用&lt;code>zabbixclient('host.get', args)&lt;/code>这样的调用方式。pyzabbix 的作者巧妙的实现了这样的转换。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Zabbix&lt;/span>(object):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># ... skip other class methods&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">do_request&lt;/span>(self, method, params&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> request_json &lt;span style="color:#f92672">=&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;jsonrpc&amp;#39;&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;2.0&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;method&amp;#39;&lt;/span>: method,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;params&amp;#39;&lt;/span>: params &lt;span style="color:#f92672">or&lt;/span> {},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;id&amp;#39;&lt;/span>: self&lt;span style="color:#f92672">.&lt;/span>id,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> response &lt;span style="color:#f92672">=&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>session&lt;span style="color:#f92672">.&lt;/span>post(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>url,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> data&lt;span style="color:#f92672">=&lt;/span>json&lt;span style="color:#f92672">.&lt;/span>dumps(request_json),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timeout&lt;span style="color:#f92672">=&lt;/span>self&lt;span style="color:#f92672">.&lt;/span>timeout
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># python内建方法，当获取某个对象的属性时，调用该对象的该方法&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> __getattr__(self, attr):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;Dynamically create an object class (ie: host)&amp;#34;&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 此处把self传给ZabbixAPIObjectClass的self.parent&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> ZabbixAPIObjectClass(attr, self)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ZabbixAPIObjectClass&lt;/span>(object):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> __init__(self, name, parent):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>name &lt;span style="color:#f92672">=&lt;/span> name
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>parent &lt;span style="color:#f92672">=&lt;/span> parent
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> __getattr__(self, attr):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;Dynamically create a method (ie: get)&amp;#34;&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">fn&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>args, &lt;span style="color:#f92672">**&lt;/span>kwargs):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> args &lt;span style="color:#f92672">and&lt;/span> kwargs:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">raise&lt;/span> &lt;span style="color:#a6e22e">TypeError&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Found both args and kwargs&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 此处把父类传进来的方法名name和子方法attr拼成rpc的方法名&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>parent&lt;span style="color:#f92672">.&lt;/span>do_request(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#e6db74">{0}&lt;/span>&lt;span style="color:#e6db74">.&lt;/span>&lt;span style="color:#e6db74">{1}&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>format(self&lt;span style="color:#f92672">.&lt;/span>name, attr),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> args &lt;span style="color:#f92672">or&lt;/span> kwargs
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )[&lt;span style="color:#e6db74">&amp;#39;result&amp;#39;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> fn
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>类似地，很多接口的实现都可以照搬这种方式把参数调用改成链式调用，如 pymongo，redis-py 等。&lt;/p></description></item><item><title>Python Fabric库无法启动后台进程的问题和解决办法</title><link>https://sund.site/posts/2017/py-fabric/</link><pubDate>Wed, 19 Oct 2016 16:25:51 +0000</pubDate><guid>https://sund.site/posts/2017/py-fabric/</guid><description>&lt;h2 id="问题和处理方法">问题和处理方法&lt;/h2>
-&lt;p>Python 的 Fabric 库能够方便的远程操作 Linux 主机执行命令或传输文件。其实现方式就是底层实现 ssh 协议，例如执行下面代码的 run 方法，在目标主机上启动一个 zabbix 后台服务：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> fabric &lt;span style="color:#f92672">import&lt;/span> api
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> fabric.tasks &lt;span style="color:#f92672">import&lt;/span> Task
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Zabbix&lt;/span>(Task):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">run&lt;/span>(self, kwargs):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">with&lt;/span> api&lt;span style="color:#f92672">.&lt;/span>settings(host_string&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;192.168.1.2&amp;#39;&lt;/span>, user&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;root&amp;#39;&lt;/span>, password&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;123456&amp;#39;&lt;/span>):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> api&lt;span style="color:#f92672">.&lt;/span>run(&lt;span style="color:#e6db74">&amp;#39;service zabbix_agentd start&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>但是这样操作后虽然 Fabric 的 output 返回结果打印是启动成功，但是 ssh 登录目标主机，却不见 zabbix_agentd 进程，这说明没有真正启动起来。&lt;/p>
+&lt;h2 id="分析">分析
+&lt;/h2>&lt;p>在 Python2 里，默认的字符类型是&lt;code>str&lt;/code>，这个&lt;code>str&lt;/code>和 Python3 的&lt;code>str&lt;/code>完全不同，Python2 的&lt;code>str&lt;/code>类型是 8 位的 ascii 序列。Python2 在处理&lt;code>str&lt;/code>类型转换时遵循这样的规则：&lt;strong>如果被处理的&lt;code>str&lt;/code>型变量值小于 7 位，就可以和&lt;code>unicode&lt;/code>类型混用。可以做&lt;code>+&lt;/code>连接，格式化等操作，同 unicode 享受同样的待遇。&lt;/strong>&lt;/p>
+&lt;p>Python2 在格式化字符时，会把&lt;code>str&lt;/code>格式化为&lt;code>str&lt;/code>，如果字符串里混入了&lt;code>unicode&lt;/code>，就会把其他字符都转化为&lt;code>unicode&lt;/code>。所以这道题里 1 处的 a，b 两个值混合后的字符就是一个 unicode 字符串，c 和 d 单独格式化后仍保留了自己的格式。但是 Python2 在格式化代码位置 4 时，发现 c 是 unicode 而 d 不是，就会尝试按照上面的混用规则，格式化 d 为 unicode 类型，但是 d 的值&lt;code>'中国'&lt;/code>显然是一个大于 7 位的&lt;code>str&lt;/code>，因此 Python2 抛出 UnicodeDecodeError。&lt;/p>
+&lt;p>在 Python3 里，&lt;code>str&lt;/code>类型则变成了一个纯 unicode 字符，也就是说 Python3 里的&lt;code>str&lt;/code>等价于 Python2 里的&lt;code>unicode&lt;/code>类型。Python3 里为了清晰明了，使用&lt;code>bytes&lt;/code>代表 8 位 ascii 序列。除此之外，Python3 严格禁止混用两种类型。&lt;/p>
+&lt;h2 id="总结">总结
+&lt;/h2>&lt;ul>
+&lt;li>使用 Python2 处理字符串，尤其是中文字符串，最好前边加上 u&lt;/li>
+&lt;li>Python2 里不要混用&lt;code>str&lt;/code>和&lt;code>unicode&lt;/code>，如果处理文本时，先将全部数据格式化成 unicode&lt;/li>
+&lt;li>能用 Python3 尽量不用 Python2 &lt;del>(废话)&lt;/del>&lt;/li>
+&lt;/ul>
+&lt;h2 id="参考资料">参考资料
+&lt;/h2>&lt;ul>
+&lt;li>《Effective Python》 Brett Slatkin.&lt;/li>
+&lt;li>不愿意透露姓名的某厂面试官&lt;/li>
+&lt;/ul></description></item><item><title>Python yield关键字的底层实现</title><link>https://sund.site/posts/2016/py-yield/</link><pubDate>Wed, 28 Dec 2016 18:00:00 +0000</pubDate><guid>https://sund.site/posts/2016/py-yield/</guid><description>&lt;p>这几天面试被问到类似的问题，顺便看了看 Python 的源码，参考网上的教程，总结一下 yield 关键字在 C 层面是如何实现的。&lt;/p>
+&lt;h2 id="举个栗子">举个栗子
+&lt;/h2>&lt;p>我们先看一个 python 生成器函数的例子：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">dis&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">dis&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">func&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">4&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">yield&lt;/span> &lt;span class="n">i&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span> &lt;span class="n">i&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dis&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">func&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">a&lt;/span> &lt;span class="o">=&lt;/span>&lt;span class="n">func&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">a&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">next&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">a&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">next&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用 python 的库 dis 可以直接查看 python 虚拟机运行的字节码。&lt;code>dis(func)&lt;/code>的打印如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"> 6 0 LOAD_CONST 1 (4)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 3 STORE_FAST 0 (i)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 7 6 LOAD_FAST 0 (i)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 9 YIELD_VALUE
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 10 POP_TOP
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 8 11 LOAD_FAST 0 (i)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 14 PRINT_ITEM
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 15 PRINT_NEWLINE
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 16 LOAD_CONST 0 (None)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 19 RETURN_VALUE
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我们猜测其中第二列(代表字节码偏移量)为 9 的指令&lt;code>YIELD_VALUE&lt;/code>就是 yield 关键字的执行代码，进入 Python2.7.12 源码目录，在解释器执行字节码的主函数&lt;code>PyEval_EvalFrameEx&lt;/code>中找到了下面一段：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">TARGET_NOARG&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">YIELD_VALUE&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">retval&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nf">POP&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">f&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">f_stacktop&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">stack_pointer&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">why&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">WHY_YIELD&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 跳转到fast_yield处。fast_yield里处理了一下状态位然后返回结果
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">goto&lt;/span> &lt;span class="n">fast_yield&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>其中&lt;code>TARGET_NOARG&lt;/code>为封装了&lt;code>case&lt;/code>语句的宏，这句话的意思是，如果字节码是&lt;code>YIELD_VALUE&lt;/code>，就把栈顶元素赋值给&lt;code>retval&lt;/code>，然后跳转到&lt;code>fast_yield&lt;/code>处，&lt;code>fast_yield&lt;/code>处代码进行了一些状态判断后直接返回了&lt;code>retval&lt;/code>。&lt;/p>
+&lt;h2 id="生成器是如何记录代码返回位置的">生成器是如何记录代码返回位置的
+&lt;/h2>&lt;p>显然，如果这时候调用代码&lt;code>a.next()&lt;/code>就会直接返回 yield 后边的表达式结果。这对应了上面 C 代码的&lt;code>fast_yield&lt;/code>部分，那生成器怎么记录上次执行的位置并在下一次调用&lt;code>a.next()&lt;/code>的时候从上次的位置继续执行的呢？&lt;/p>
+&lt;p>Python 在解释代码时，是将代码块加载为一个叫 PyFrameObject 的对象，这个对象代表了当前运行的栈帧。PyFrameObject 里有个&lt;code>f_lasti&lt;/code>变量用于保存代码当前执行到了字节码的哪个位置。在第二次执行&lt;code>a.next()&lt;/code>时，生成器对象把之前携带了&lt;code>f_lasti&lt;/code>的 PyFrameObject 当参数传给&lt;code>PyEval_EvalFrameEx&lt;/code>，在&lt;code>PyEval_EvalFrameEx&lt;/code>里的执行一个 JUMPTO 就直接跳转到了上一次结束生成器时的字节码位置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="n">PyObject&lt;/span> &lt;span class="o">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">PyEval_EvalFrameEx&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">PyFrameObject&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">throwflag&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#define FAST_DISPATCH() \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp"> { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp"> if (!lltrace &amp;amp;&amp;amp; !_Py_TracingPossible) { \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp"> f-&amp;gt;f_lasti = INSTR_OFFSET(); \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp"> goto *opcode_targets[*next_instr++]; \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp"> } \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp"> &lt;/span>&lt;span class="c1">// 跳转到fast_next_opcode处
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">goto&lt;/span> &lt;span class="n">fast_next_opcode&lt;/span>&lt;span class="p">;&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nl">fast_next_opcode&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">f&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">f_lasti&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nf">INSTR_OFFSET&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* line-by-line tracing support */&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">_Py_TracingPossible&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tstate&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">c_tracefunc&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="nb">NULL&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">tstate&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">tracing&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* Reload possibly changed frame fields */&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 按照f-&amp;gt;f_lasti中的偏移量跳转字节码
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nf">JUMPTO&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">f_lasti&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>其中&lt;code>INSTR_OFFSET&lt;/code>宏正是字节码的偏移量。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#define INSTR_OFFSET() ((int)(next_instr - first_instr))
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// co-&amp;gt;co_code里保存的是字节码
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">first_instr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">unsigned&lt;/span> &lt;span class="kt">char&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="nf">PyString_AS_STRING&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">co&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">co_code&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">next_instr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">first_instr&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">f_lasti&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>所以生成器对象每次执行结束都把字节码的偏移量记录下来，并把运行状态保存在 PyFrameObject 里，下一次运行时生成器时，python 解释器直接按照偏移量寻找下一个字节码指令。&lt;/p></description></item><item><title>Python 巧妙地将rpc接口封装成pythonic的链式调用</title><link>https://sund.site/posts/2016/py-pythonic/</link><pubDate>Tue, 25 Oct 2016 15:40:43 +0000</pubDate><guid>https://sund.site/posts/2016/py-pythonic/</guid><description>&lt;p>这是一个外国人实现的 Zabbix(一个开源监控工具)的 Python Client——pyzabbix 里的代码片段。&lt;/p>
+&lt;h2 id="rpc-调用">RPC 调用
+&lt;/h2>&lt;p>Rpc 调用的流程是向 rpc 服务端指定的 uri(如&lt;a class="link" href="http://www.abc.com/jsonrpc.php" target="_blank" rel="noopener"
+>http://www.abc.com/jsonrpc.php&lt;/a>) 发送 json(或其他双方约定格式)数据包，数据包里有 rpc 版本信息、方法名、参数等。下面&lt;code>Zabbix&lt;/code>类里的&lt;code>do_request&lt;/code>方法就完成了将方法名和方法参数打包 json 后发送请求的过程。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Zabbix&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">object&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># ... skip other class methods&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">do_request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">method&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">None&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">request_json&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;jsonrpc&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;2.0&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;method&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">method&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;params&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">params&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;id&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">response&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">session&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">post&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dumps&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request_json&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">timeout&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timeout&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="技巧">技巧
+&lt;/h2>&lt;p>但是为了方便，我们在 python 里一般使用&lt;code>zabbixclient.host.get(args)&lt;/code>这样的链式调用，而不用&lt;code>zabbixclient('host.get', args)&lt;/code>这样的调用方式。pyzabbix 的作者巧妙的实现了这样的转换。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Zabbix&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">object&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># ... skip other class methods&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">do_request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">method&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">None&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">request_json&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;jsonrpc&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;2.0&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;method&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">method&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;params&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">params&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;id&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">response&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">session&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">post&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dumps&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request_json&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">timeout&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timeout&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># python内建方法，当获取某个对象的属性时，调用该对象的该方法&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__getattr__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">attr&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;&amp;#34;&amp;#34;Dynamically create an object class (ie: host)&amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 此处把self传给ZabbixAPIObjectClass的self.parent&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">ZabbixAPIObjectClass&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">attr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">ZabbixAPIObjectClass&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">object&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">parent&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">name&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">name&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parent&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">parent&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__getattr__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">attr&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;&amp;#34;&amp;#34;Dynamically create a method (ie: get)&amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">fn&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">**&lt;/span>&lt;span class="n">kwargs&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">args&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">kwargs&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">TypeError&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Found both args and kwargs&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 此处把父类传进来的方法名name和子方法attr拼成rpc的方法名&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parent&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_request&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="si">{0}&lt;/span>&lt;span class="s1">.&lt;/span>&lt;span class="si">{1}&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">attr&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">args&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="n">kwargs&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)[&lt;/span>&lt;span class="s1">&amp;#39;result&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">fn&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>类似地，很多接口的实现都可以照搬这种方式把参数调用改成链式调用，如 pymongo，redis-py 等。&lt;/p>
+&lt;h2 id="参考资料">参考资料
+&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/lukecyca/pyzabbix" target="_blank" rel="noopener"
+>https://github.com/lukecyca/pyzabbix&lt;/a>&lt;/p></description></item><item><title>Python Fabric库无法启动后台进程的问题和解决办法</title><link>https://sund.site/posts/2016/py-fabric/</link><pubDate>Wed, 19 Oct 2016 16:25:51 +0000</pubDate><guid>https://sund.site/posts/2016/py-fabric/</guid><description>&lt;h2 id="问题和处理方法">问题和处理方法
+&lt;/h2>&lt;p>Python 的 Fabric 库能够方便的远程操作 Linux 主机执行命令或传输文件。其实现方式就是底层实现 ssh 协议，例如执行下面代码的 run 方法，在目标主机上启动一个 zabbix 后台服务：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">fabric&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">api&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">fabric.tasks&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Task&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Zabbix&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Task&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">run&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">kwargs&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">with&lt;/span> &lt;span class="n">api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">settings&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">host_string&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;192.168.1.2&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">user&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;root&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">password&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;123456&amp;#39;&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">run&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;service zabbix_agentd start&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>但是这样操作后虽然 Fabric 的 output 返回结果打印是启动成功，但是 ssh 登录目标主机，却不见 zabbix_agentd 进程，这说明没有真正启动起来。&lt;/p>
 &lt;p>我查询了 Fabric 文档，发现需要在 api.run 里添加参数&lt;code>pty=False&lt;/code>。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span> api&lt;span style="color:#f92672">.&lt;/span>run(&lt;span style="color:#e6db74">&amp;#39;service zabbix_agentd start&amp;#39;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">，&lt;/span> pty&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样就成功启动了后台进程。&lt;/p>
-&lt;h2 id="原因">原因&lt;/h2>
-&lt;h3 id="什么是-pty">什么是 pty？&lt;/h3>
-&lt;p>pty 是 pseudo-tty，众所周知 tty 是 Linux 支持输入与输出的终端设备，在 shell 下执行&lt;code>ps&lt;/code>可以查看每个进程对应的 tty 设备号，如&lt;code>ttys0001&lt;/code>。&lt;/p>
-&lt;p>pty 是为了解决远程连接时一方不希望对方直接 ssh 连接到主机上而诞生的「虚拟设备」，即伪 tty，其原理是在远程主机和本地之间同时启动 pty 端口连接终端，可以类比进程间的通道，pty 两端同时执行输入输出操作，如同本地直接连接到远程主机。但是一旦断开本地与远程主机的连接，pty 就会结束所有刚才的进程。&lt;/p></description></item><item><title>Python defaultdict结构作计数器的用法</title><link>https://sund.site/posts/2017/py-defaultdict/</link><pubDate>Tue, 11 Oct 2016 15:00:16 +0000</pubDate><guid>https://sund.site/posts/2017/py-defaultdict/</guid><description>&lt;p>在开发中经常需要用到计数器，当函数 foo 调用另一个函数 bar 时，为了确认调用 bar 之后处理的结果正确性，经常需要使用计数器来统计 bar 函数里处理成功了多少次。例如：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">foo&lt;/span>():
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> success_num &lt;span style="color:#f92672">=&lt;/span> bar()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print success_num
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">bar&lt;/span>():
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> n &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 假设这个任务要迭代100次.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">100&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> i &lt;span style="color:#f92672">in&lt;/span> count:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Do something.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> n &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">except&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">pass&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">finally&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> n
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>但是，这里需要定义多个计数器变量来保存计数。每多一个 bar 函数就要多定义两次计数器。有没有类似 C 语言指针一样的方法，可以在 foo 中定义后直接传给 bar，在 bar 里修改值呢。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl"> &lt;span class="n">api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">run&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;service zabbix_agentd start&amp;#39;&lt;/span>&lt;span class="err">，&lt;/span> &lt;span class="n">pty&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">False&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这样就成功启动了后台进程。&lt;/p>
+&lt;h2 id="原因">原因
+&lt;/h2>&lt;h3 id="什么是-pty">什么是 pty？
+&lt;/h3>&lt;p>pty 是 pseudo-tty，众所周知 tty 是 Linux 支持输入与输出的终端设备，在 shell 下执行&lt;code>ps&lt;/code>可以查看每个进程对应的 tty 设备号，如&lt;code>ttys0001&lt;/code>。&lt;/p>
+&lt;p>pty 是为了解决远程连接时一方不希望对方直接 ssh 连接到主机上而诞生的「虚拟设备」，即伪 tty，其原理是在远程主机和本地之间同时启动 pty 端口连接终端，可以类比进程间的通道，pty 两端同时执行输入输出操作，如同本地直接连接到远程主机。但是一旦断开本地与远程主机的连接，pty 就会结束所有刚才的进程。&lt;/p>
+&lt;p>根据网上的资料，Github 仓库的 ssh 连接就采用 pty， Github 不希望用户创建一个可与它的主机交互的 ssh 连接，所以采用这种模式。&lt;/p>
+&lt;p>Fabric 在默认情况下就采用 pty ，所以想要用 fabric 登录目标主机启动后台进程，必须加上 &lt;code>pty=False&lt;/code>。&lt;/p>
+&lt;h2 id="参考资料">参考资料
+&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/fabric/fabric/issues/395" target="_blank" rel="noopener"
+>https://github.com/fabric/fabric/issues/395&lt;/a>
+&lt;a class="link" href="http://ytliu.info/blog/2013/09/28/ttyde-na-xie-shi-er/" target="_blank" rel="noopener"
+>http://ytliu.info/blog/2013/09/28/ttyde-na-xie-shi-er/&lt;/a>
+&lt;a class="link" href="http://7056824.blog.51cto.com/69854/276610" target="_blank" rel="noopener"
+>http://7056824.blog.51cto.com/69854/276610&lt;/a>&lt;/p></description></item><item><title>Python defaultdict结构作计数器的用法</title><link>https://sund.site/posts/2016/py-defaultdict/</link><pubDate>Tue, 11 Oct 2016 15:00:16 +0000</pubDate><guid>https://sund.site/posts/2016/py-defaultdict/</guid><description>&lt;p>在开发中经常需要用到计数器，当函数 foo 调用另一个函数 bar 时，为了确认调用 bar 之后处理的结果正确性，经常需要使用计数器来统计 bar 函数里处理成功了多少次。例如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">foo&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">success_num&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">bar&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span> &lt;span class="n">success_num&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">bar&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">n&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 假设这个任务要迭代100次.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">100&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">try&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">count&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># Do something.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">n&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">except&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">pass&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">finally&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">n&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>但是，这里需要定义多个计数器变量来保存计数。每多一个 bar 函数就要多定义两次计数器。有没有类似 C 语言指针一样的方法，可以在 foo 中定义后直接传给 bar，在 bar 里修改值呢。&lt;/p>
 &lt;p>众所周知，Python 的参数传值实际传的是变量的拷贝，但是对于像字典、列表等非基本数据结构，实际传给参数的是这个数据结构的指针地址，修改指针地址指向的实际值就可以在函数内外实现传递数据的效果了。那么利用这个特性，可以结合 python 标准库 collections 里的 defaultdict 结构来实现一个更方便的计数器：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> collections &lt;span style="color:#f92672">import&lt;/span> defaultdict
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">foo&lt;/span>():
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result &lt;span style="color:#f92672">=&lt;/span> defaultdict(int)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> bar(result)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print result
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">bar&lt;/span>(result):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">100&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> i &lt;span style="color:#f92672">in&lt;/span> count:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Do something.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result[&lt;span style="color:#e6db74">&amp;#39;success&amp;#39;&lt;/span>] &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">except&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result[&lt;span style="color:#e6db74">&amp;#39;fail&amp;#39;&lt;/span>] &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样，变量&lt;code>result&lt;/code>就是存有正确计数和错误计数的字典。&lt;/p></description></item></channel></rss>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">collections&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">defaultdict&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">foo&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">defaultdict&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">result&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span> &lt;span class="n">result&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">bar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">result&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">100&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">count&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">try&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># Do something.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">result&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;success&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">except&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">result&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;fail&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这样，变量&lt;code>result&lt;/code>就是存有正确计数和错误计数的字典。&lt;/p></description></item></channel></rss>

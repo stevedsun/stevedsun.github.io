@@ -1,4 +1,23 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on The Context Works</title><link>https://sund.site/tags/docker/</link><description>Recent content in Docker on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Mon, 08 Aug 2022 20:04:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>3 Ways to Access Host System in a Docker Container</title><link>https://sund.site/posts/2022/3_ways_to_access_host_system_in_container/</link><pubDate>Mon, 08 Aug 2022 20:04:00 +0800</pubDate><guid>https://sund.site/posts/2022/3_ways_to_access_host_system_in_container/</guid><description>&lt;p>When we are using Docker, we always access the host system by mounting the host folders as a volume. But sometimes we can not do that due to deployment reasons or security limits.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on Steve Sun</title><link>https://sund.site/tags/docker/</link><description>Recent content in Docker on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Mon, 08 Aug 2022 20:04:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>3 Ways to Access Host System in a Docker Container</title><link>https://sund.site/posts/2022/3_ways_to_access_host_system_in_container/</link><pubDate>Mon, 08 Aug 2022 20:04:00 +0800</pubDate><guid>https://sund.site/posts/2022/3_ways_to_access_host_system_in_container/</guid><description>&lt;p>When we are using Docker, we always access the host system by mounting the host folders as a volume. But sometimes we can not do that due to deployment reasons or security limits.&lt;/p>
 &lt;p>There are three workaround ways to access the host system.&lt;/p>
-&lt;h2 id="1-mount-dockersocks-into-container">1. Mount &lt;code>docker.socks&lt;/code> into container&lt;/h2>
-&lt;p>&lt;code>docker.socks&lt;/code> is a Unix socket that Docker Engine API listens on. You can mount &lt;code>/var/run/docker.socks&lt;/code> file to your container and call Docker Engine API through this socket.&lt;/p></description></item></channel></rss>
+&lt;h2 id="1-mount-dockersocks-into-container">1. Mount &lt;code>docker.socks&lt;/code> into container
+&lt;/h2>&lt;p>&lt;code>docker.socks&lt;/code> is a Unix socket that Docker Engine API listens on. You can mount &lt;code>/var/run/docker.socks&lt;/code> file to your container and call Docker Engine API through this socket.&lt;/p>
+&lt;p>For instance, If I want to get docker information by calling that API:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">curl -s --unix-socket /var/run/docker.sock http://localhost/info
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>You can refer to &lt;a class="link" href="https://docs.docker.com/engine/api/v1.41/" target="_blank" rel="noopener"
+>Docker Engine API&lt;/a> to find more useful details.&lt;/p>
+&lt;h2 id="2-using-pid-mode-host">2. Using PID mode &lt;code>host&lt;/code>
+&lt;/h2>&lt;p>By default, Docker uses the Linux PID namespace to isolate containers&amp;rsquo; filesystem view. It means if two processes have the same PID, they will share the filesystem permission.&lt;/p>
+&lt;p>Docker has a startup parameter &lt;code>--pid=host&lt;/code> to change the PID namespace to its host process&amp;rsquo;s namespace. You can use this parameter to make your docker container have the same privilege as the host process.&lt;/p>
+&lt;blockquote>
+&lt;p>When using &lt;code>--pid=host&lt;/code>, you can list host system&amp;rsquo;s processes by &lt;code>ps -ef&lt;/code>.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="3-by-docker---privileged">3. By &lt;code>docker --privileged&lt;/code>
+&lt;/h2>&lt;p>It is the last way you can access the host system, but it is not recommended for most cases.&lt;/p></description></item></channel></rss>

@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Macbook on The Context Works</title><link>https://sund.site/tags/macbook/</link><description>Recent content in Macbook on The Context Works</description><generator>Hugo</generator><language>en</language><copyright>Copyright © 2024, Steve Sun; all rights reserved.</copyright><lastBuildDate>Fri, 04 Jan 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://sund.site/tags/macbook/index.xml" rel="self" type="application/rss+xml"/><item><title>macbook安装ubuntu</title><link>https://sund.site/posts/2017/macbook_ubuntu/</link><pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2017/macbook_ubuntu/</guid><description>&lt;p>&lt;strong>注意，ubuntu 和 xubuntu 安装上有一定差别，请严格按照你选择的系统版本流程安装&lt;/strong>&lt;/p>
-&lt;h3 id="ubuntu">ubuntu&lt;/h3>
-&lt;h3 id="准备工作">准备工作&lt;/h3>
-&lt;h5 id="分区">分区&lt;/h5>
-&lt;p>这一步可以用命令行实现，也可以在 mac 下直接用磁盘工具分区，初学者建议后者。有经验的朋友可以在网上查询 diskutils 的用法，这是 mac 提供的分区工具&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Macbook on Steve Sun</title><link>https://sund.site/tags/macbook/</link><description>Recent content in Macbook on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Fri, 04 Jan 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://sund.site/tags/macbook/index.xml" rel="self" type="application/rss+xml"/><item><title>macbook安装ubuntu</title><link>https://sund.site/posts/2013/macbook_ubuntu/</link><pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2013/macbook_ubuntu/</guid><description>&lt;p>&lt;strong>注意，ubuntu 和 xubuntu 安装上有一定差别，请严格按照你选择的系统版本流程安装&lt;/strong>&lt;/p>
+&lt;h3 id="ubuntu">ubuntu
+&lt;/h3>&lt;h3 id="准备工作">准备工作
+&lt;/h3>&lt;h5 id="分区">分区
+&lt;/h5>&lt;p>这一步可以用命令行实现，也可以在 mac 下直接用磁盘工具分区，初学者建议后者。有经验的朋友可以在网上查询 diskutils 的用法，这是 mac 提供的分区工具&lt;/p>
 &lt;p>使用磁盘工具，打开左侧最上边磁盘位置（不是 macosx，而是整个硬盘）的选项，右边会出现&lt;code>分区&lt;/code>标签。选择分区，你可以用鼠标拖动轻松将 macos 的一部分划分给 ubuntu 使用。分区格式可以选择 mac 日志文件。其实选什么都一样，等会还要重新格式化。&lt;/p>
-&lt;h4 id="把-iso-镜像转化为苹果电脑识别的-img-镜像">把 iso 镜像转化为苹果电脑识别的 img 镜像&lt;/h4>
-&lt;pre>&lt;code>hdiutil convert /path/to/ubuntu.iso -format UDRW -o /path/to/target.img
+&lt;h4 id="把-iso-镜像转化为苹果电脑识别的-img-镜像">把 iso 镜像转化为苹果电脑识别的 img 镜像
+&lt;/h4>&lt;pre>&lt;code>hdiutil convert /path/to/ubuntu.iso -format UDRW -o /path/to/target.img
 &lt;/code>&lt;/pre>
 &lt;p>命令中&lt;code>path/to/ubuntu.iso&lt;/code>是你下载的 iso 路径，&lt;code>path/to/target.img&lt;/code>自然是你要保存成 img 的路径&lt;/p>
-&lt;h4 id="插入-u-盘刻录镜像">插入 U 盘，刻录镜像&lt;/h4>
-&lt;p>先运行如下命令查询你 U 盘的设备名&lt;/p>
+&lt;h4 id="插入-u-盘刻录镜像">插入 U 盘，刻录镜像
+&lt;/h4>&lt;p>先运行如下命令查询你 U 盘的设备名&lt;/p>
 &lt;pre>&lt;code>diskutil list
 &lt;/code>&lt;/pre>
 &lt;p>这里假设 U 盘是 disk1，执行&lt;/p>
@@ -21,4 +21,91 @@
 &lt;p>ubuntu 官网针对上一条命令可能出现的两种错误提示给出了解决办法：&lt;/p>
 &lt;ol>
 &lt;li>
-&lt;p>If you see the error dd: Invalid number &amp;lsquo;1m&amp;rsquo;, you are using GNU dd. Use the same command but replace bs=1m with bs=1M.&lt;/p></description></item></channel></rss>
+&lt;p>If you see the error dd: Invalid number &amp;lsquo;1m&amp;rsquo;, you are using GNU dd. Use the same command but replace bs=1m with bs=1M.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>If you see the error dd: /dev/disk1: Resource busy, make sure the disk is not in use. Start the &amp;lsquo;Disk Utility.app&amp;rsquo; and unmount (don&amp;rsquo;t eject) the drive.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>好了，刻完就可以重启安装了。重启后按住&lt;code>option&lt;/code>会看到一个 refit 命名的移动设备图标，点进去就开始安装了。&lt;/p>
+&lt;h4 id="安装过程">安装过程
+&lt;/h4>&lt;p>安装过程可以参考网上其他人的帖子。一般有两种方式&lt;/p>
+&lt;ol>
+&lt;li>选择&lt;code>ubuntu和mac os x共存&lt;/code>，系统会自动被安装到空闲分区。&lt;/li>
+&lt;li>选择&lt;code>其他选项&lt;/code>，可以自己手动分区，我一般是选这个来手动分区。&lt;/li>
+&lt;/ol>
+&lt;p>假设你选了&lt;code>其他选项&lt;/code>就会进入分区的窗口，这时你就会看到所有磁盘分区的情况，刚才在 mac 下给 ubuntu 预先分好一块空闲分区也在其中，名字可能叫 disk02，或者 disk03 什么的。
+接下来要进行四次分区。这一段分区方法参考了百度经验上一个网友的教程，我进行了 2 处修改，原帖地址&lt;a class="link" href="http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html" target="_blank" rel="noopener"
+>http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html&lt;/a>&lt;/p>
+&lt;p>第一次分区：&lt;/p>
+&lt;pre>&lt;code>点你刚才留出来的“空闲”分区，点“+”，进行如下设置：
+挂载点：“/”
+大小：22000MB
+新分区的类型：主分区
+新分区的位置：空间起始位置
+用于：EXT4日志文件系统
+&lt;/code>&lt;/pre>
+&lt;p>第二次分区：&lt;/p>
+&lt;pre>&lt;code>“空闲”处，继续点“+”，如下设置，
+挂载点：（不设置）
+大小：4096MB
+新分区的类型：逻辑分区
+新分区的位置：空间起始位置
+用于：交换空间
+&lt;/code>&lt;/pre>
+&lt;p>第三次分区：&lt;/p>
+&lt;pre>&lt;code>“空闲”处，继续点“+”，如下设置，
+挂载点：/boot
+大小：200MB
+新分区的类型：逻辑分区
+新分区的位置：空间起始位置
+用于：EXT4日志文件系统
+&lt;/code>&lt;/pre>
+&lt;p>第四次分区：&lt;/p>
+&lt;pre>&lt;code>“空闲”处，继续点“+”，如下设置，
+挂载点：/home
+大小：（剩余全部空间，剩下显示多少，就多少）
+新分区的类型：逻辑分区
+新分区的位置：空间起始位置
+用于：EXT4日志文件系统
+&lt;/code>&lt;/pre>
+&lt;p>分区设置完毕后，下方还有一项“安装启动引导器的设备”，macbookpro 用户需要选择/boot 这个分区所在磁盘位置。&lt;/p>
+&lt;h3 id="开机引导程序-refit">开机引导程序 rEFIT
+&lt;/h3>&lt;p>安装完 ubuntu，重启在 mac 下下载安装 rEFIt。安装好后在终端里输入&lt;code>/efi/refit/. enable-always.sh&lt;/code>启动 rEFIt。重启，你就会看到 ubuntu 的选项。&lt;/p>
+&lt;h3 id="xubuntu估计-lubuntu-和-kubuntu-也应该适用仅是猜想">Xubuntu(估计 Lubuntu 和 Kubuntu 也应该适用，仅是猜想。)
+&lt;/h3>&lt;h3 id="准备工作-1">准备工作
+&lt;/h3>&lt;h4 id="如何刻录镜像到移动设备">如何刻录镜像到移动设备
+&lt;/h4>&lt;p>这个问题很重要，如果你下载了 iso 格式的 Xubuntu 系统镜像，
+你需要将该镜像不经过任何转换的完整刻录到移动设备或光盘上
+（我使用的是 unetbootin 这个软件，开源，跨平台，操作简便）。
+注意，绝对不可以将 iso 格式转换成 img（mac 镜像）后刻录。
+这样会导致 ubuntu 部分版本无法安装 grub 引导器。&lt;/p>
+&lt;h4 id="开机引导程序-refit-1">开机引导程序 rEFIt
+&lt;/h4>&lt;p>安装完的系统无法被 mac 直接引导，所以需要安装 rEFIt 引导。如果不想要安装它，
+可以参考下边附录 1 里的安装方法。重新修改引导文件。&lt;/p>
+&lt;h4 id="安装过程-1">安装过程
+&lt;/h4>&lt;ol>
+&lt;li>在官网下载 xubuntu 镜像，使用 uneetbootin 刻录到设备
+上(mac 版的 unetbootin 貌似刻录 iso 有问题，可以在 windows 上下载该软件使用)。&lt;/li>
+&lt;li>重启，开机界面按住&lt;code>option&lt;/code>键，有个 windows 命名的移动设备图标，选中进入。&lt;/li>
+&lt;li>安装过程不敷述, 装后重启&lt;/li>
+&lt;li>从 mac 进入，安装 rEFIt，在 shell 里运行&lt;code>/efi/refit/. enable-always.sh&lt;/code>启动 rEFIt&lt;/li>
+&lt;li>重启，出现两个图标，苹果代表 mac，企鹅代表 linux。至此，完成安装过程。&lt;/li>
+&lt;/ol>
+&lt;h2 id="ubuntu-或-xubuntu-安装后的一些配置">ubuntu 或 Xubuntu 安装后的一些配置
+&lt;/h2>&lt;p>打开系统配置文件，&lt;/p>
+&lt;pre>&lt;code>sudo gedit /etc/rc.local
+&lt;/code>&lt;/pre>
+&lt;p>在 exit 0 前边加入下边对应的语句,
+默认关闭功能键 Fn:&lt;/p>
+&lt;pre>&lt;code>echo 2 &amp;gt; /sys/module/hid_apple/parameters/fnmode
+&lt;/code>&lt;/pre>
+&lt;p>设置默认亮度(数字 2565 可以修改任意亮度)（xubuntu 下不起作用，原因未知）&lt;/p>
+&lt;pre>&lt;code>echo 2565 &amp;gt; /sys/class/backlight/intel_backlight/brightness
+&lt;/code>&lt;/pre>
+&lt;p>设置键盘灯亮度（数字 1 代表亮度):&lt;/p>
+&lt;pre>&lt;code>echo 1 &amp;gt; /sys/class/leds/smc::kbd_backlight/brightness
+&lt;/code>&lt;/pre>
+&lt;h3 id="附录-1">附录 1
+&lt;/h3>&lt;p>&lt;a class="link" href="https://help.ubuntu.com/community/MacBookPro11-1/Saucy" target="_blank" rel="noopener"
+>https://help.ubuntu.com/community/MacBookPro11-1/Saucy&lt;/a>&lt;/p></description></item></channel></rss>

@@ -59,7 +59,7 @@ params:
     avatar:
       enabled: true
       local: false
-      src: images/profile.png
+      src: /images/profile.png
 
   article:
     math: false

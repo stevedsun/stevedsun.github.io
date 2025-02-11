@@ -1,8 +1,6 @@
 ---
-title: "Hello"
+title: "Hi"
 ---
-
-![%profile%](/images/g.png)
 
 I'm **Steve Sun**, a full-stack software developer based in **Chengdu, China**.
 

@@ -1,40 +1,295 @@
-baseURL: https://sund.site/
-title: The Context Works
-author: "Steve Sun"
-copyright: "Copyright © 2024, Steve Sun; all rights reserved."
-pagination:
-  pagerSize: 20
-languageCode: en
-DefaultContentLanguage: en
-enableInlineShortcodes: true
-ignoreErrors:
-  - error-remote-getjson
+baseurl: https://sund.site/
+languageCode: zh-cn
+title: ContextLab
+copyright: Steve Sun
+
 module:
   imports:
-    - path: github.com/nanxiaobei/hugo-paper
-params:
-  color: linen
-  monoDarkIcon: true
-  github: stevedsun
-  rss: true
-  avatar: https://sund.site/images/profile.png
-  name: Steve Sun
-  bio: You need to solve a context, not just a problem.
-  graphCommentId: steve-sun
+    - path: github.com/CaiJimmy/hugo-theme-stack/v3
+
+# Theme i18n support
+# Available values: ar, bn, ca, de, el, en, es, fr, hu, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw
+DefaultContentLanguage: zh-cn
+
+# Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
+# This will make .Summary and .WordCount behave correctly for CJK languages.
+hasCJKLanguage: true
+
+languages:
+  zh-cn:
+    languageName: 中文
+    title: Steve Sun
+    weight: 1
+    params:
+      sidebar:
+        subtitle: "程序员，在 ThoughtWorks 和 Siemens 做过技术负责人。目前专注AI应用开发。"
+
 services:
+  # Change it to your Disqus shortname before using
+  disqus:
+    shortname: "v2steve"
+  # GA Tracking ID
   googleAnalytics:
-    ID: G-XJJVVQ0LBH
+    id: G-XJJVVQ0LBH
+
+pagination:
+  pagerSize: 10
+
+permalinks:
+  posts: /posts/:year/:filename
+
+params:
+  mainSections:
+    - posts
+  featuredImageField: image
+  rssFullContent: true
+  favicon: /favicon.ico # e.g.: favicon placed in `static/favicon.ico` of your site folder, then set this field to `/favicon.ico` (`/` is necessary)
+
+  footer:
+    since: 2013
+    customText:
+
+  dateFormat:
+    published: Jan 02, 2006
+    lastUpdated: Jan 02, 2006 15:04 MST
+
+  sidebar:
+    emoji:
+    subtitle:
+    avatar:
+      enabled: true
+      local: false
+      src: images/profile.png
+
+  article:
+    math: false
+    toc: true
+    readingTime: true
+    license:
+      enabled: true
+      default: Licensed under CC BY-NC-SA 4.0
+
+  comments:
+    enabled: true
+    provider: disqus
+
+    disqusjs:
+      shortname: v2steve
+      apiUrl:
+      apiKey:
+      admin:
+      adminLabel:
+
+    utterances:
+      repo:
+      issueTerm: pathname
+      label:
+
+    beaudar:
+      repo:
+      issueTerm: pathname
+      label:
+      theme:
+
+    remark42:
+      host:
+      site:
+      locale:
+
+    vssue:
+      platform:
+      owner:
+      repo:
+      clientId:
+      clientSecret:
+      autoCreateIssue: false
+
+    # Waline client configuration see: https://waline.js.org/en/reference/component.html
+    waline:
+      serverURL:
+      lang:
+      pageview:
+      emoji:
+        - https://unpkg.com/@waline/emojis@1.0.1/weibo
+      requiredMeta:
+        - name
+        - email
+        - url
+      locale:
+        admin: Admin
+        placeholder:
+
+    twikoo:
+      envId:
+      region:
+      path:
+      lang:
+
+    # See https://cactus.chat/docs/reference/web-client/#configuration for description of the various options
+    cactus:
+      defaultHomeserverUrl: "https://matrix.cactus.chat:8448"
+      serverName: "cactus.chat"
+      siteName: "" # You must insert a unique identifier here matching the one you registered (See https://cactus.chat/docs/getting-started/quick-start/#register-your-site)
+
+    giscus:
+      repo:
+      repoID:
+      category:
+      categoryID:
+      mapping:
+      lightTheme:
+      darkTheme:
+      reactionsEnabled: 1
+      emitMetadata: 0
+
+    gitalk:
+      owner:
+      admin:
+      repo:
+      clientID:
+      clientSecret:
+      proxy:
+
+    cusdis:
+      host:
+      id:
+  widgets:
+    homepage:
+      - type: search
+      - type: archives
+        params:
+          limit: 5
+      - type: categories
+        params:
+          limit: 10
+      - type: tag-cloud
+        params:
+          limit: 10
+    page:
+      - type: toc
+
+  opengraph:
+    twitter:
+      # Your Twitter username
+      site:
+
+      # Available values: summary, summary_large_image
+      card: summary_large_image
+
+  defaultImage:
+    opengraph:
+      enabled: true
+      local: false
+      src:
+
+  colorScheme:
+    # Display toggle
+    toggle: true
+
+    # Available values: auto, light, dark
+    default: auto
+
+  imageProcessing:
+    cover:
+      enabled: true
+    content:
+      enabled: true
+
+### Custom menu
+### See https://stack.jimmycai.com/config/menu
+### To remove about, archive and search page menu item, remove `menu` field from their FrontMatter
 menu:
   main:
+    - identifier: home
+      name: 主页 / Home
+      url: /
+      weight: -100
+      params:
+        icon: home
+        newTab: false
+
     - identifier: about
-      name: About
+      name: 关于 / About
       url: /about/
-      weight: 20
-    - identifier: blogroll
-      name: Blogroll
-      url: /blogroll/
-      weight: 21
-taxonomies:
-  category: categories
-  tag: tags
-  series: series
+      weight: -99
+      params:
+        icon: user
+        newTab: false
+
+    - identifier: archive
+      name: 归档 / Archive
+      url: /posts/
+      weight: -98
+      params:
+        icon: archives
+        newTab: false
+
+    - identifier: friends
+      name: 友链 / Friends
+      url: /friends/
+      weight: -97
+      params:
+        icon: link
+        newTab: false
+
+    - identifier: rss
+      name: 订阅 / RSS
+      url: /index.xml
+      weight: -97
+      params:
+        icon: rss
+        newTab: true
+
+  social:
+    - identifier: github
+      name: GitHub
+      url: https://github.com/stevedsun
+      params:
+        icon: brand-github
+
+    - identifier: x
+      name: X
+      url: https://x.com/s6sdev
+      params:
+        icon: brand-twitter
+
+related:
+  includeNewer: true
+  threshold: 60
+  toLower: false
+  indices:
+    - name: tags
+      weight: 100
+
+    - name: categories
+      weight: 200
+
+markup:
+  goldmark:
+    extensions:
+      passthrough:
+        enable: true
+        delimiters:
+          block:
+            - - \[
+              - \]
+            - - $$
+              - $$
+          inline:
+            - - \(
+              - \)
+    renderer:
+      ## Set to true if you have HTML content inside Markdown
+      unsafe: true
+  tableOfContents:
+    endLevel: 4
+    ordered: true
+    startLevel: 2
+  highlight:
+    noClasses: false
+    codeFences: true
+    guessSyntax: true
+    lineNoStart: 1
+    lineNos: true
+    lineNumbersInTable: true
+    tabWidth: 4

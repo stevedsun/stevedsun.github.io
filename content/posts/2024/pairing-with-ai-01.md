@@ -1,7 +1,7 @@
 ---
 title: "与AI协作编程──测试篇"
 date: 2024-12-11T17:02:43+08:00
-categories: [Cloud Native Computing]
+categories: [Software Architecture]
 tags: [ai, unit test]
 aliases: [/posts/pairing-with-ai-01/]
 description: ""

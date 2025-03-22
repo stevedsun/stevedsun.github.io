@@ -1,7 +1,7 @@
 ---
 title: "如何设计一个符合工业标准的审计系统"
 date: 2024-04-15T16:44:40+08:00
-categories: [Cloud Native Computing]
+categories: [Software Architecture]
 tags: [audit]
 aliases: [/posts/audit-system-design/]
 description: ""

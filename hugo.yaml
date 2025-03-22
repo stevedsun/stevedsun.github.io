@@ -22,7 +22,7 @@ languages:
     weight: 1
     params:
       sidebar:
-        subtitle: "程序员，在 ThoughtWorks 和 Siemens 做过技术负责人。目前专注AI应用开发。"
+        subtitle: "工业软件架构师，热爱学习和分享，喜欢读书和看电影。目前关注AI，边缘计算。"
 
 services:
   # Change it to your Disqus shortname before using

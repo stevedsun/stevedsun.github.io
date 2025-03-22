@@ -1,7 +1,7 @@
 ---
 title: "监控系统项目复盘"
 date: 2024-10-24T15:52:22+08:00
-categories: [Cloud Native Computing]
+categories: [Software Architecture]
 tags: [边缘计算]
 aliases: [/posts/metrics-project-retro/]
 description: ""

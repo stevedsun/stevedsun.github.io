@@ -1,7 +1,7 @@
 ---
 title: "Go 语言的依赖倒置"
 date: 2024-11-21T11:26:22+08:00
-categories: [Cloud Native Computing]
+categories: [Software Architecture]
 tags: [go]
 aliases: [/posts/go-dependency-inject/]
 description: ""

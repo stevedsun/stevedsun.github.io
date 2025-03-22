@@ -1,4 +1,21 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in Posts on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Wed, 11 Dec 2024 17:02:43 +0800</lastBuildDate><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p>未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in Posts on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Sun, 23 Mar 2025 00:00:01 +0800</lastBuildDate><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/pairing-with-ai-02/</guid><description>&lt;p>在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p>
+&lt;ul>
+&lt;li>任务死循环&lt;/li>
+&lt;li>模型无法修复环境问题&lt;/li>
+&lt;li>模型执行长任务后半段忘记上下文&lt;/li>
+&lt;/ul>
+&lt;h2 id="一些使用经验">一些使用经验
+&lt;/h2>&lt;p>以我自己为例，我经常使用 Cline + Github Copilot 的组合。我很喜欢 Cline 的功能是 &lt;code>Checkpoint restore&lt;/code>，它可以在执行错误的位置重新编辑提示词执行。这让我可以在相同的任务中调用不同的模型，观察他们处理问题的能力。&lt;/p>
+&lt;p>用作规划（Plan）的模型通常用 Deepseek-R1，Gemini 2.0 Flash Thinking，Claude 3.7。这里除了 Claude 3.7 能够比较准确给出计划外，其他模型多少都容易走「歪路」， 比如 Deepseek-R1 喜欢做一些多余的事情，让它翻译中文，它会调用 MCP 的翻译服务而不是自己翻译。&lt;/p>
+&lt;p>从经济角度考虑，解决简单问题 Gemini 2.0 Flash Thinking 是比较快速、经济的模型。复杂问题直接上 Claude 3.7 可能更容易控制成本。&lt;/p>
+&lt;p>用作执行任务（Act）的模型里，Deepseek-V3 表现非常不稳定，经常死循环或丢失上下文。Claude 太贵，而 Gemini 2.0 Flash 是相对准确且划算的模型。置于国产的 Qwen 系列模型不完全支持 Function Calling，Cline 也没有适配，所以暂时无法测试。&lt;/p>
+&lt;h2 id="ai-编程疑难杂症的应对方法">AI 编程疑难杂症的应对方法
+&lt;/h2>&lt;p>最近读到&lt;a class="link" href="https://ezyang.github.io/ai-blindspots/" target="_blank" rel="noopener"
+>AI Blindspots&lt;/a>这篇文章，作者系统性整理了 AI 编程中遇到的问题和他的思路。对我非常有启发。我用 Agent 把它翻译成了中文并人工做了润色，你可以在这里读到：&lt;a class="link" href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5" target="_blank" rel="noopener"
+>AI 编程的盲点&lt;/a>。&lt;/p>
+&lt;p>概括起来，解决 AI 问题的核心要领还是三点：更准确的提示词、更完整的上下文、缩小问题规模。&lt;/p>
+&lt;p>相信随着技术的发展，编程范式会发生翻天覆地的变化。如果重构变得如此容易，那么马丁福勒的《重构》是否应该出一套 AI 时代下的新范式。如果文档不再是被人读，而是喂给模型当作上下文，那么文档的形态应该是什么样？是否提供一个向量化的文档接口供大模型调用，将是未来编程框架的新常态？&lt;/p>
+&lt;p>我对未来充满期待。&lt;/p></description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p>未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p>
 &lt;p>我试图浅显地讨论一下哪些软件开发的手段更适合在 AI 时代提高 AI 编写代码的可观测性和维护性。接下来所有以「与 AI 协作编程」为标题的文章都只是抛砖引玉，并未形成系统化方法论。期望任何错误之处，读者不吝赐教。&lt;/p>
 &lt;h2 id="使用-ai-编写代码有哪些常见问题">使用 AI 编写代码有哪些常见问题？
 &lt;/h2>&lt;p>&lt;strong>可观测性问题：AI 实现的功能不完备，经常要手动修改片段&lt;/strong>&lt;/p>
@@ -1274,60 +1291,7 @@ alt="OpenTel"
 &lt;/div>&lt;p>这样在 WaitGroup 全部结束后，主程序会关闭 channel，从而让异步的 goroutine 内部的 range 退出循环等待。&lt;/p>
 &lt;h2 id="小结">小结
 &lt;/h2>&lt;p>Goroutine 内存泄漏是 Go 语言最容易发生的内存泄漏情况，它通常伴随着错误地使用 goroutine 和 channel。而 channel 的特殊用法如 select 和 range 又让 channel 阻塞变得更加隐蔽不易发现，进而增加排查内存泄漏的难度。&lt;/p>
-&lt;p>在写 goroutine 和调试内存泄漏问题时，要重点关注 channel 相关的操作，尤其涉及到文中列举的四类模式：功能过早返回、超时泄漏、多端读写泄漏、通道迭代误用。&lt;/p></description></item><item><title>Kong网关极简入门</title><link>https://sund.site/posts/2023/kong-gateway/</link><pubDate>Fri, 23 Jun 2023 10:36:36 +0800</pubDate><guid>https://sund.site/posts/2023/kong-gateway/</guid><description>&lt;h2 id="基本概念">基本概念
-&lt;/h2>&lt;blockquote>
-&lt;p>Kong Gateway is a Lua application running in Nginx. Kong Gateway is distributed along with OpenResty, which is a bundle of modules that extend the lua-nginx-module.&lt;/p>
-&lt;/blockquote>
-&lt;p>Kong 是一个基于 Nginx 上运行的 Lua 程序。它改善了 Nginx 基于静态配置的缺点，可以动态添加插件和热部署。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/kong-gateway/Kong.png"
-loading="lazy"
->&lt;/p>
-&lt;h2 id="kong-的基础模块">Kong 的基础模块
-&lt;/h2>&lt;p>&lt;strong>Service&lt;/strong>是后端服务的抽象。&lt;/p>
-&lt;p>&lt;strong>Routes&lt;/strong>是 client 到后端服务的路由规则的抽象。如，为不同的 client 设置不同的认证规则。&lt;/p>
-&lt;p>Kong 的 routes 有两种模式 &lt;code>traditional_compat&lt;/code> 和 &lt;code>expressions&lt;/code> 。&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>traditional_compat&lt;/code> ：旧的基于通配符等匹配优先级的模式。&lt;/li>
-&lt;li>&lt;code>expressions&lt;/code> ：新的基于表达式的匹配模式。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>Upstreams&lt;/strong>是一个运维对象，在 Services 和真正的后台 API 服务之间，用来负载均衡。&lt;/p>
-&lt;p>&lt;strong>Plugins&lt;/strong>是用 lua 或 go 编写的插件，分为 Kong 官方提供的插件和第三方插件。&lt;/p>
-&lt;h2 id="kong-的工作原理">Kong 的工作原理
-&lt;/h2>&lt;p>Kong 支持三类协议：HTTP/HTTPS，TCL/TLS 和 GRPC/GRPCS。每种协议由不同的参数组成：&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>http&lt;/code>: &lt;code>methods&lt;/code>, &lt;code>hosts&lt;/code>, &lt;code>headers&lt;/code>, &lt;code>paths&lt;/code> (and &lt;code>snis&lt;/code>, if &lt;code>https&lt;/code>)&lt;/li>
-&lt;li>&lt;code>tcp&lt;/code>: &lt;code>sources&lt;/code>, &lt;code>destinations&lt;/code> (and &lt;code>snis&lt;/code>, if &lt;code>tls&lt;/code>)&lt;/li>
-&lt;li>&lt;code>grpc&lt;/code>: &lt;code>hosts&lt;/code>, &lt;code>headers&lt;/code>, &lt;code>paths&lt;/code> (and &lt;code>snis&lt;/code>, if &lt;code>grpcs&lt;/code>)&lt;/li>
-&lt;/ul>
-&lt;p>Kong 支持按 HTTP header、URL、method、源地址、目标地址、&lt;a class="link" href="https://en.wikipedia.org/wiki/Server_Name_Indication" target="_blank" rel="noopener"
->Server Name Indication&lt;/a> 来路由请求。&lt;/p>
-&lt;p>Kong 默认以&lt;a class="link" href="https://tools.ietf.org/html/rfc3986" target="_blank" rel="noopener"
->RFC 3986&lt;/a>协议对请求的路径处理。&lt;/p>
-&lt;h3 id="kong-匹配规则的优先级">Kong 匹配规则的优先级
-&lt;/h3>&lt;p>按最多匹配的规则来路由。&lt;/p>
-&lt;blockquote>
-&lt;p>The rule is: &lt;strong>when evaluating a request, Kong Gateway first tries to match the
-routes with the most rules&lt;/strong>.&lt;/p>
-&lt;/blockquote>
-&lt;p>当所有匹配规则检查完，Kong 会通过下层的 Nginx 模块发送请求。Response 返回之后，Kong 再经过&lt;code>header_filter&lt;/code>和&lt;code>body_filter&lt;/code>两个 hook 来修改 response header 和 body。&lt;/p>
-&lt;h3 id="对-websocket-的支持">对 WebSocket 的支持
-&lt;/h3>&lt;p>有两种配置方式来路由 wss 请求：&lt;/p>
-&lt;ul>
-&lt;li>HTTP(S) services and routes：把 wss 流量当作不透明的字节流。&lt;/li>
-&lt;li>WS(S) services and routes (&lt;strong>企业版功能&lt;/strong>)：可以更好的用 websocket 插件控制流量。&lt;/li>
-&lt;/ul>
-&lt;h3 id="负载均衡">负载均衡
-&lt;/h3>&lt;p>Kong 支持两类负载均衡方式&lt;/p>
-&lt;ul>
-&lt;li>基于 DNS （服务注册和发现是静态的）&lt;/li>
-&lt;li>基于哈希环的动态负载均衡（服务注册发现由 Kong 管理，可以动态增删）&lt;/li>
-&lt;/ul>
-&lt;p>这部分跟 Nginx 类似。&lt;/p>
-&lt;h3 id="健康检查">健康检查
-&lt;/h3>&lt;ul>
-&lt;li>&lt;strong>active checks&lt;/strong>（心跳检查）&lt;/li>
-&lt;li>&lt;strong>passive checks&lt;/strong>（被动检查，即断路器，根据流量检查）&lt;/li>
-&lt;/ul></description></item><item><title>用户故事地图</title><link>https://sund.site/posts/2023/user-story-mapping/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><guid>https://sund.site/posts/2023/user-story-mapping/</guid><description>&lt;blockquote>
+&lt;p>在写 goroutine 和调试内存泄漏问题时，要重点关注 channel 相关的操作，尤其涉及到文中列举的四类模式：功能过早返回、超时泄漏、多端读写泄漏、通道迭代误用。&lt;/p></description></item><item><title>用户故事地图</title><link>https://sund.site/posts/2023/user-story-mapping/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><guid>https://sund.site/posts/2023/user-story-mapping/</guid><description>&lt;blockquote>
 &lt;p>用户故事是软件开发和项目管理中的常用术语。主旨是以日常语言或商务用语撰写句子，是一段简单的功能表述。以客户或使用者的观点撰写下有价值的功能、引导、框架来与使用者进行互动，进而推动工作进程。可以被认为是一种规格文件，但更精确而言，它代表客户的需求与方向。&lt;/p>
 &lt;/blockquote>
 &lt;p>在敏捷开发需求分析阶段，要使用一些流程工具，如&lt;strong>用户故事地图&lt;/strong>，来把那些抽象、模糊的用户需求，转化为具体的、分优先级的、模块化的用户故事。&lt;/p>

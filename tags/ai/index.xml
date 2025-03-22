@@ -1,4 +1,21 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ai on Steve Sun</title><link>https://sund.site/tags/ai/</link><description>Recent content in Ai on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Wed, 11 Dec 2024 17:02:43 +0800</lastBuildDate><atom:link href="https://sund.site/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p>未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/tags/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Sun, 23 Mar 2025 00:00:01 +0800</lastBuildDate><atom:link href="https://sund.site/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/pairing-with-ai-02/</guid><description>&lt;p>在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p>
+&lt;ul>
+&lt;li>任务死循环&lt;/li>
+&lt;li>模型无法修复环境问题&lt;/li>
+&lt;li>模型执行长任务后半段忘记上下文&lt;/li>
+&lt;/ul>
+&lt;h2 id="一些使用经验">一些使用经验
+&lt;/h2>&lt;p>以我自己为例，我经常使用 Cline + Github Copilot 的组合。我很喜欢 Cline 的功能是 &lt;code>Checkpoint restore&lt;/code>，它可以在执行错误的位置重新编辑提示词执行。这让我可以在相同的任务中调用不同的模型，观察他们处理问题的能力。&lt;/p>
+&lt;p>用作规划（Plan）的模型通常用 Deepseek-R1，Gemini 2.0 Flash Thinking，Claude 3.7。这里除了 Claude 3.7 能够比较准确给出计划外，其他模型多少都容易走「歪路」， 比如 Deepseek-R1 喜欢做一些多余的事情，让它翻译中文，它会调用 MCP 的翻译服务而不是自己翻译。&lt;/p>
+&lt;p>从经济角度考虑，解决简单问题 Gemini 2.0 Flash Thinking 是比较快速、经济的模型。复杂问题直接上 Claude 3.7 可能更容易控制成本。&lt;/p>
+&lt;p>用作执行任务（Act）的模型里，Deepseek-V3 表现非常不稳定，经常死循环或丢失上下文。Claude 太贵，而 Gemini 2.0 Flash 是相对准确且划算的模型。置于国产的 Qwen 系列模型不完全支持 Function Calling，Cline 也没有适配，所以暂时无法测试。&lt;/p>
+&lt;h2 id="ai-编程疑难杂症的应对方法">AI 编程疑难杂症的应对方法
+&lt;/h2>&lt;p>最近读到&lt;a class="link" href="https://ezyang.github.io/ai-blindspots/" target="_blank" rel="noopener"
+>AI Blindspots&lt;/a>这篇文章，作者系统性整理了 AI 编程中遇到的问题和他的思路。对我非常有启发。我用 Agent 把它翻译成了中文并人工做了润色，你可以在这里读到：&lt;a class="link" href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5" target="_blank" rel="noopener"
+>AI 编程的盲点&lt;/a>。&lt;/p>
+&lt;p>概括起来，解决 AI 问题的核心要领还是三点：更准确的提示词、更完整的上下文、缩小问题规模。&lt;/p>
+&lt;p>相信随着技术的发展，编程范式会发生翻天覆地的变化。如果重构变得如此容易，那么马丁福勒的《重构》是否应该出一套 AI 时代下的新范式。如果文档不再是被人读，而是喂给模型当作上下文，那么文档的形态应该是什么样？是否提供一个向量化的文档接口供大模型调用，将是未来编程框架的新常态？&lt;/p>
+&lt;p>我对未来充满期待。&lt;/p></description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p>未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p>
 &lt;p>我试图浅显地讨论一下哪些软件开发的手段更适合在 AI 时代提高 AI 编写代码的可观测性和维护性。接下来所有以「与 AI 协作编程」为标题的文章都只是抛砖引玉，并未形成系统化方法论。期望任何错误之处，读者不吝赐教。&lt;/p>
 &lt;h2 id="使用-ai-编写代码有哪些常见问题">使用 AI 编写代码有哪些常见问题？
 &lt;/h2>&lt;p>&lt;strong>可观测性问题：AI 实现的功能不完备，经常要手动修改片段&lt;/strong>&lt;/p>

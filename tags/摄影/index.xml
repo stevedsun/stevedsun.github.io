@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>摄影 on Steve Sun</title><link>https://sund.site/tags/%E6%91%84%E5%BD%B1/</link><description>Recent content in 摄影 on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Fri, 17 May 2024 23:07:29 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%91%84%E5%BD%B1/index.xml" rel="self" type="application/rss+xml"/><item><title>Ricoh GR 2 使用心得</title><link>https://sund.site/posts/2024/ricoh_gr2_sharing/</link><pubDate>Fri, 17 May 2024 23:07:29 +0800</pubDate><guid>https://sund.site/posts/2024/ricoh_gr2_sharing/</guid><description>&lt;p>&lt;img src="https://i.imgur.com/XrMKTCC.png"
-loading="lazy"
->&lt;/p>
-&lt;p>买 GR2 已经很多年了，几年前写过一篇&lt;a class="link" href="https://sund.site/posts/2019/ricoh-gr2-settings/" >Ricol GR 2 参数说明&lt;/a>，作为初学者分享了参数的说明。今天这篇分享一下这几年的使用心得。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>摄影 on Steve Sun</title><link>https://sund.site/tags/%E6%91%84%E5%BD%B1/</link><description>Recent content in 摄影 on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Fri, 17 May 2024 23:07:29 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%91%84%E5%BD%B1/index.xml" rel="self" type="application/rss+xml"/><item><title>Ricoh GR 2 使用心得</title><link>https://sund.site/posts/2024/ricoh_gr2_sharing/</link><pubDate>Fri, 17 May 2024 23:07:29 +0800</pubDate><guid>https://sund.site/posts/2024/ricoh_gr2_sharing/</guid><description>&lt;p>买 GR2 已经很多年了，几年前写过一篇&lt;a class="link" href="https://sund.site/posts/2019/ricoh-gr2-settings/" >Ricol GR 2 参数说明&lt;/a>，作为初学者分享了参数的说明。今天这篇分享一下这几年的使用心得。&lt;/p>
 &lt;h2 id="机内裁剪">机内裁剪
 &lt;/h2>&lt;p>GR2 作为 28mm 相机，对于普通人扫街来说，最大的痛点就是经常抓不到合适的构图。28mm 的优点是取景范围更大，可以捕捉更多环境信息，但是相对地，用它拍摄时经常混入太多杂乱的场景元素。&lt;/p>
 &lt;p>但是好在 GR2 支持机内裁剪，可以把 28mm 裁切成 35mm 或 47mm 镜头。这让街拍时的构图更加灵活（当然以牺牲画质为代价）。&lt;/p>
@@ -15,7 +12,10 @@ loading="lazy"
 &lt;/ul>
 &lt;h2 id="自定义参数">自定义参数
 &lt;/h2>&lt;h3 id="fuji-胶片风格">FUJI 胶片风格
-&lt;/h3>&lt;ul>
+&lt;/h3>&lt;p>&lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%283%29.png"
+loading="lazy"
+>&lt;/p>
+&lt;ul>
 &lt;li>滤镜模式：正片。 饱和度：4、对比度：5、鲜明度：6&lt;/li>
 &lt;li>白平衡：复合 AWB&lt;/li>
 &lt;li>白平衡补偿：A：3、G：4&lt;/li>
@@ -23,7 +23,10 @@ loading="lazy"
 &lt;/ul>
 &lt;p>上面这套参数模仿富士相机的胶片效果。对比鲜明度较高，有淡淡的绿色调。&lt;/p>
 &lt;h3 id="日常蓝色调">日常蓝色调
-&lt;/h3>&lt;ul>
+&lt;/h3>&lt;p>&lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%282%29.png"
+loading="lazy"
+>&lt;/p>
+&lt;ul>
 &lt;li>滤镜模式：正片。 饱和度：7、对比度：3、鲜明度：7&lt;/li>
 &lt;li>白平衡：复合 AWB&lt;/li>
 &lt;li>白平衡补偿：B：7、M：0&lt;/li>
@@ -39,7 +42,10 @@ loading="lazy"
 &lt;/ul>
 &lt;p>适合旅行拍摄低对比度的小清新画面。&lt;/p>
 &lt;h3 id="性冷淡">性冷淡
-&lt;/h3>&lt;ul>
+&lt;/h3>&lt;p>&lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%284%29.png"
+loading="lazy"
+>&lt;/p>
+&lt;ul>
 &lt;li>滤镜模式：轻微。 饱和度：9、对比度：5、鲜明度：9&lt;/li>
 &lt;li>白平衡：CT：4200K&lt;/li>
 &lt;li>白平衡补偿：B：8、M：2&lt;/li>

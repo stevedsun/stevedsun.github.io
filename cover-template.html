@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>封面预览</title>
+    <!-- 引入 Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Font: Poppins (使用较粗字重保证可见性) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <!-- 引入 html2canvas for download functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+        /* 应用 Poppins 字体 */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5; /* 页面背景色 */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 主容器样式 */
+        .cover-container {
+            /* 严格保持 2.35:1 比例 */
+            aspect-ratio: 235 / 100;
+            position: relative; /* 基准定位 */
+            overflow: hidden; /* 隐藏模糊溢出 */
+            border-radius: 0; /* 直角 */
+            width: 100%;
+            max-width: 940px; /* 设定一个预览的最大宽度 */
+            /* margin: 20px auto; */
+            display: flex; /* 用于居中文本 */
+            align-items: center;
+            justify-content: center;
+            /* 内边距给文本留空，防止贴边 */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 背景层：应用渐变和模糊 */
+        .background-layer {
+            position: absolute;
+            /* 稍微放大以避免模糊后边缘出现空白 */
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            /* 背景将在 JS 中设置 */
+            background: linear-gradient(135deg, #eee, #ccc); /* 默认/占位背景 */
+            /* 毛玻璃效果 */
+            filter: blur(18px); /* 模糊半径，可调整 */
+            z-index: 1; /* 在内容之下 */
+            /* 平滑过渡，虽然每次刷新都变，但可以用于未来的动态效果 */
+            transition: background 0.5s ease;
+        }
+
+        /* 主封面标题文字样式 */
+        .main-title {
+            position: relative; /* 确保在背景层之上 */
+            z-index: 2; /* 提升层级 */
+            font-size: 6rem;
+            font-weight: 700; /* Bold */
+            color: white; /* 白色文字通常在模糊背景上效果好 */
+            text-align: center;
+            line-height: 1.3; /* 调整行间距 */
+            /* 增加更明显的阴影以提高可读性 */
+            text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.7);
+            /* 防止文字可选影响截图 */
+            user-select: none;
+            max-width: 90%; /* 防止文字太长溢出容器 */
+        }
+
+        /* 下载按钮样式 */
+        .download-button {
+            display: block;
+            margin-top: 25px;
+            padding: 12px 25px;
+            /* 使用一个中性但专业的颜色 */
+            background-color: #4A5568; /* Tailwind gray-700 */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .download-button:hover {
+            background-color: #2D3748; /* Tailwind gray-800 */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .download-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 页面标题 */
+        .page-title {
+            text-align: center;
+            font-size: 1.75rem; /* Tailwind text-2xl */
+            font-weight: 700; /* Tailwind font-bold */
+            margin-bottom: 1rem; /* Tailwind mb-4 */
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1 class="page-title">封面预览</h1>
+
+    <!-- 这个 div 是我们要截图的区域 -->
+    <div id="capture-area" class="cover-container">
+        <!-- 背景层 -->
+        <div id="background-gradient" class="background-layer"></div>
+
+        <!-- 主封面标题 -->
+        <h2 class="main-title">
+            {{ Title }}<br>
+            {{ Subtitle }}
+        </h2>
+    </div>
+
+    <!-- 下载按钮 -->
+    <button id="download-btn" class="download-button">下载封面图片</button>
+
+<script>
+    // --- Random Gradient Logic ---
+    function getRandomHexColor() {
+        // 生成更鲜艳或更和谐的颜色，避免纯黑纯白
+        const h = Math.floor(Math.random() * 360); // 色相 (0-359)
+        const s = Math.floor(Math.random() * 40) + 60; // 饱和度 (60-100%) - 保证较高饱和度
+        const l = Math.floor(Math.random() * 30) + 40; // 亮度 (40-70%) - 避免太亮或太暗
+        return `hsl(${h}, ${s}%, ${l}%)`;
+    }
+
+    function applyRandomGradient() {
+        const backgroundElement = document.getElementById('background-gradient');
+        if (backgroundElement) {
+            const color1 = getRandomHexColor();
+            const color2 = getRandomHexColor();
+            // 随机渐变角度
+            const angle = Math.floor(Math.random() * 360);
+            backgroundElement.style.background = `linear-gradient(${angle}deg, ${color1}, ${color2})`;
+        } else {
+            console.error("Background element not found!");
+        }
+    }
+
+    // --- Download Logic ---
+    document.getElementById('download-btn').addEventListener('click', function() {
+        const elementToCapture = document.getElementById('capture-area');
+        const button = this;
+
+        button.textContent = '生成中...';
+        button.disabled = true;
+
+        html2canvas(elementToCapture, {
+            useCORS: true,
+            scale: window.devicePixelRatio * 2, // 提高清晰度
+            backgroundColor: null, // 必须为 null 以捕获透明或渐变背景
+            logging: false,
+            scrollX: 0,
+            scrollY: -window.scrollY,
+             // --- 重要：确保伪元素和滤镜被渲染 ---
+            // html2canvas 默认会尝试渲染伪元素和滤镜，但有时需要特定设置
+            // 通常默认行为已经足够，但如果遇到问题，可以查阅其文档
+            // 例如 onclone 回调可以在克隆DOM后做一些调整，但这里应该不需要
+        }).then(canvas => {
+            const link = document.createElement('a');
+            const titleText = elementToCapture.querySelector('.main-title').innerText.replace(/\s+/g, '-').substring(0, 30);
+            link.download = `post-cover-${titleText}.png`; // 更新文件名
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+
+            button.textContent = '下载封面图片';
+            button.disabled = false;
+
+        }).catch(err => {
+            console.error('截图失败:', err);
+            alert('抱歉，生成图片时出错，请检查控制台信息或稍后重试。');
+            button.textContent = '下载封面图片';
+            button.disabled = false;
+        });
+    });
+
+    // --- Initial Setup ---
+    // 在页面加载完成后应用随机渐变
+    document.addEventListener('DOMContentLoaded', applyRandomGradient);
+
+</script>
+
+</body>
+</html>

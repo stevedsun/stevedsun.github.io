@@ -7,8 +7,6 @@ aliases: [/posts/richo_gr2_exp/]
 description: ""
 ---
 
-![](https://i.imgur.com/XrMKTCC.png)
-
 买 GR2 已经很多年了，几年前写过一篇[Ricol GR 2 参数说明](/posts/2019/ricoh-gr2-settings/)，作为初学者分享了参数的说明。今天这篇分享一下这几年的使用心得。
 
 ## 机内裁剪
@@ -29,6 +27,8 @@ GR2 作为 28mm 相机，对于普通人扫街来说，最大的痛点就是经�
 
 ### FUJI 胶片风格
 
+![](<https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20(3).png>)
+
 - 滤镜模式：正片。 饱和度：4、对比度：5、鲜明度：6
 - 白平衡：复合 AWB
 - 白平衡补偿：A：3、G：4
@@ -37,6 +37,8 @@ GR2 作为 28mm 相机，对于普通人扫街来说，最大的痛点就是经�
 上面这套参数模仿富士相机的胶片效果。对比鲜明度较高，有淡淡的绿色调。
 
 ### 日常蓝色调
+
+![](<https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20(2).png>)
 
 - 滤镜模式：正片。 饱和度：7、对比度：3、鲜明度：7
 - 白平衡：复合 AWB
@@ -55,6 +57,8 @@ GR2 作为 28mm 相机，对于普通人扫街来说，最大的痛点就是经�
 适合旅行拍摄低对比度的小清新画面。
 
 ### 性冷淡
+
+![](<https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20(4).png>)
 
 - 滤镜模式：轻微。 饱和度：9、对比度：5、鲜明度：9
 - 白平衡：CT：4200K

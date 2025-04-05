@@ -5,5 +5,5 @@ go 1.22.0
 toolchain go1.22.3
 
 require (
-	github.com/CaiJimmy/hugo-theme-stack/v3 v3.30.0 // indirect
+	github.com/rokcso/hugo-bearblog-neo v0.0.0-20250223130437-f969b1e8fde6 // indirect
 )

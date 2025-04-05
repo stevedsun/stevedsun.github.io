@@ -1,10 +1,16 @@
 ---
-title: "Hi"
+title: "Home"
 ---
 
-I'm **Steve Sun**, a full-stack software developer based in **Chengdu, China**.
+(｡･ω･)ﾉﾞ
 
-I used to be a Tech Lead at [ThoughtWorks](https://www.thoughtworks.com/) and now an Architect in Industrial Software area. On this site, I share my views and findings on Software Architecture design, reviews of best-selling books and movies.
+你好，我叫 Steve Sun，是一名在成都的软件架构师，喜爱书籍、电影，平时在这里分享软件开发的知识和日常见闻。目前关注 AI，边缘计算。
+
+---
+
+Hi, I'm **Steve Sun**, a software architect based in **Chengdu, China**.
+
+I used to be a Tech Lead at [ThoughtWorks](https://www.thoughtworks.com/) and now an Architect in Industrial Edge Computing. On this site, I share my views and findings on Software Architecture design, reviews of best-selling books and movies.
 
 ---
 

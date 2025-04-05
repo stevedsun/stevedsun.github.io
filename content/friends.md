@@ -1,5 +1,6 @@
 ---
-title: "友情链接"
+title: "Friends"
+menu: "main"
 ---
 
 - [见字如面](https://hiwannz.com/)

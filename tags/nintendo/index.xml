@@ -1,63 +1,35 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nintendo on Steve Sun</title><link>https://sund.site/tags/nintendo/</link><description>Recent content in Nintendo on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Mon, 07 Oct 2019 22:18:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/nintendo/index.xml" rel="self" type="application/rss+xml"/><item><title>Nintendo Switch 联机优化策略</title><link>https://sund.site/posts/2019/nintendo-switch-network-opt/</link><pubDate>Mon, 07 Oct 2019 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2019/nintendo-switch-network-opt/</guid><description>&lt;h2 id="简单方法">简单方法
-&lt;/h2>&lt;p>首先介绍下 Nintendo Switch 在哪里设置网络，如下图，设置界面=&amp;gt;互联网设置里，可以修改 IP，DNS 等常用网络配置。修改之后点击「链接测试」，可以测试你的 NAT 和下载、上传速度。&lt;/p>
-&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pz8xft9ej31i30u0ng9.jpg"
-loading="lazy"
-alt="1"
->&lt;/p>
-&lt;h3 id="首先设置路由器的-wifi-类型为-5g">首先：设置路由器的 WIFI 类型为 5G
-&lt;/h3>&lt;p>因为 NS 对 2.4GHz 的 Wifi 优化非常差，所以一般玩家都选择设置 Wifi 类型为 5GHz，5G 的缺点是穿墙能力差，但是速度很快，所以建议把 NS 放在离路由器不太远的位置。&lt;/p>
-&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pzbkstq4j30vy0l2mz4.jpg"
-loading="lazy"
-alt="image-20191007215608157"
->&lt;/p>
-&lt;h3 id="最简单粗暴的方法购买加速器">最简单粗暴的方法：购买加速器
-&lt;/h3>&lt;p>购买加速器是最省心省力的方案，以网易 UU 加速器为例，加速后可以把 NAT 从 D 上升到 B 或 A，完全可以满足大部分延迟要求较低游戏的需要。&lt;/p>
-&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyt6dxbij31aw0qokjl.jpg"
-loading="lazy"
-alt="image-20191007213820867"
->&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nintendo on Steve Sun</title><link>https://sund.site/tags/nintendo/</link><description>Recent content in Nintendo on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 07 Oct 2019 22:18:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/nintendo/index.xml" rel="self" type="application/rss+xml"/><item><title>Nintendo Switch 联机优化策略</title><link>https://sund.site/posts/2019/nintendo-switch-network-opt/</link><pubDate>Mon, 07 Oct 2019 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2019/nintendo-switch-network-opt/</guid><description>&lt;h2 id="简单方法">简单方法&lt;/h2>
+&lt;p>首先介绍下 Nintendo Switch 在哪里设置网络，如下图，设置界面=&amp;gt;互联网设置里，可以修改 IP，DNS 等常用网络配置。修改之后点击「链接测试」，可以测试你的 NAT 和下载、上传速度。&lt;/p>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pz8xft9ej31i30u0ng9.jpg" alt="1">&lt;/p>
+&lt;h3 id="首先设置路由器的-wifi-类型为-5g">首先：设置路由器的 WIFI 类型为 5G&lt;/h3>
+&lt;p>因为 NS 对 2.4GHz 的 Wifi 优化非常差，所以一般玩家都选择设置 Wifi 类型为 5GHz，5G 的缺点是穿墙能力差，但是速度很快，所以建议把 NS 放在离路由器不太远的位置。&lt;/p>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pzbkstq4j30vy0l2mz4.jpg" alt="image-20191007215608157">&lt;/p>
+&lt;h3 id="最简单粗暴的方法购买加速器">最简单粗暴的方法：购买加速器&lt;/h3>
+&lt;p>购买加速器是最省心省力的方案，以网易 UU 加速器为例，加速后可以把 NAT 从 D 上升到 B 或 A，完全可以满足大部分延迟要求较低游戏的需要。&lt;/p>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyt6dxbij31aw0qokjl.jpg" alt="image-20191007213820867">&lt;/p>
 &lt;p>Mac 版 UU 加速器目前还处于免费测试阶段，可以随意使用。按照提示配置 NS 上的 IP 和 DNS 即可。但是如果想让联机速度突破 A，甚至小于 30ms 延迟，就要结合第二部分「进阶方法」中的内容了。&lt;/p>
-&lt;h3 id="最方便的方法dns-优化">最方便的方法：DNS 优化
-&lt;/h3>&lt;p>这也是最多人的办法，以「Splatoon2」为例，四川电信在不使用任何加速器的情况下，单单设置了合适的 DNS，就可以流畅体验乌贼娘了。注意这种方法在晚上 8 ～ 10 点高峰期间有一定概率掉线。下面提供一些我常用的 DNS，不同地区效果不同，需要自己尝试。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">218.102.23.228 &lt;span class="c1"># 一般用作日本eshop下载游戏，速度提升明显&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">203.198.7.66
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">168.126.63.1 &lt;span class="c1"># 著名韩国DNS节点，Splatoon2 联机常用&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">168.126.63.2 &lt;span class="c1"># 同上&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="进阶方法">进阶方法
-&lt;/h2>&lt;p>进阶方法可以最大限度的提升你的网络通信效率。&lt;/p>
-&lt;h3 id="路由器设置优化">路由器设置优化
-&lt;/h3>&lt;p>路由器有两处可优化的地方：&lt;/p>
+&lt;h3 id="最方便的方法dns-优化">最方便的方法：DNS 优化&lt;/h3>
+&lt;p>这也是最多人的办法，以「Splatoon2」为例，四川电信在不使用任何加速器的情况下，单单设置了合适的 DNS，就可以流畅体验乌贼娘了。注意这种方法在晚上 8 ～ 10 点高峰期间有一定概率掉线。下面提供一些我常用的 DNS，不同地区效果不同，需要自己尝试。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>218.102.23.228 &lt;span style="color:#75715e"># 一般用作日本eshop下载游戏，速度提升明显&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>203.198.7.66
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.1 &lt;span style="color:#75715e"># 著名韩国DNS节点，Splatoon2 联机常用&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.2 &lt;span style="color:#75715e"># 同上&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="进阶方法">进阶方法&lt;/h2>
+&lt;p>进阶方法可以最大限度的提升你的网络通信效率。&lt;/p>
+&lt;h3 id="路由器设置优化">路由器设置优化&lt;/h3>
+&lt;p>路由器有两处可优化的地方：&lt;/p>
 &lt;ol>
 &lt;li>
 &lt;p>设置路由器 DMZ，所谓 DMZ 就是隔离区，简单理解为外网可以直接访问你 DMZ 中指定的 IP。现在把你主机的 IP 放入 DMZ 中，这样牺牲一定安全性的同时换来延迟的进一步降低。&lt;/p>
-&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyoqpcpsj311s0ccgow.jpg"
-loading="lazy"
-alt="image-20191007213358497"
->&lt;/p>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyoqpcpsj311s0ccgow.jpg" alt="image-20191007213358497">&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>开启路由器的「Full Cone NAT」。以 pandavan 固件为例，在防火墙设置中可以找到。其他路由器也一定有类似的设置，耐心找一下。&lt;/p>
-&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyq72iu5j311w0m8q5q.jpg"
-loading="lazy"
-alt="image-20191007213535337"
->&lt;/p>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyq72iu5j311w0m8q5q.jpg" alt="image-20191007213535337">&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;h3 id="电信宽带改为桥接方式">电信宽带改为桥接方式
-&lt;/h3>&lt;p>中国电信宽带默认使用光猫拨号上网。这样普通用户免去很多麻烦的同时，也增加了 NAT 联机的延迟。解决办法就是把宽带连接方式改为「桥接」。&lt;/p>
+&lt;h3 id="电信宽带改为桥接方式">电信宽带改为桥接方式&lt;/h3>
+&lt;p>中国电信宽带默认使用光猫拨号上网。这样普通用户免去很多麻烦的同时，也增加了 NAT 联机的延迟。解决办法就是把宽带连接方式改为「桥接」。&lt;/p>
 &lt;p>所谓桥接，就是不使用电信提供的光猫进行拨号上网，而是直接由你自己的路由器拨号，这样可以一定程度降低延迟。中国电信网上营业厅可以直接修改，也可以自己打客服电话或去营业厅办理（只要告诉业务人员，我要把宽带连接方式改为桥接）。&lt;/p>
 &lt;p>修改之后的十几分钟内时间，你的网络会断开，此时你必须用自己的宽带账号和密码在路由器上（注意不是光猫）重新登录宽带上网。我使用桥接+DNS 修改，在未使用加速器的情况下，就可以把 NAT 直接从 D 提升为 A。&lt;/p>
-&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pz96eo7pj31hs0u07gp.jpg"
-loading="lazy"
-alt="2"
->&lt;/p></description></item></channel></rss>
+&lt;p>&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pz96eo7pj31hs0u07gp.jpg" alt="2">&lt;/p></description></item></channel></rss>

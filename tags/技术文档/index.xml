@@ -1,16 +1,13 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>技术文档 on Steve Sun</title><link>https://sund.site/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/</link><description>Recent content in 技术文档 on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Tue, 23 Aug 2022 22:18:00 +0800</lastBuildDate><atom:link href="https://sund.site/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.xml" rel="self" type="application/rss+xml"/><item><title>规范的错误信息</title><link>https://sund.site/posts/2022/write-error-message/</link><pubDate>Tue, 23 Aug 2022 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2022/write-error-message/</guid><description>&lt;p>&lt;img src="https://sund.site/images/20221031083917.png"
-loading="lazy"
->&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>技术文档 on Steve Sun</title><link>https://sund.site/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/</link><description>Recent content in 技术文档 on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Tue, 23 Aug 2022 22:18:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/index.xml" rel="self" type="application/rss+xml"/><item><title>规范的错误信息</title><link>https://sund.site/posts/2022/write-error-message/</link><pubDate>Tue, 23 Aug 2022 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2022/write-error-message/</guid><description>&lt;p>&lt;img src="https://sund.site/images/20221031083917.png" alt="">&lt;/p>
 &lt;p>本文整理了 Google 官方文档中关于错误信息的编写规范。适用于有一定编程经验，尤其从事业务开发的程序员。&lt;/p>
 &lt;p>通过本文你可以：&lt;/p>
 &lt;ul>
 &lt;li>写出风格统一、用户友好的错误信息&lt;/li>
 &lt;li>提高代码的可维护性，降低沟通成本&lt;/li>
 &lt;/ul>
-&lt;p>Google 文档原文：&lt;a class="link" href="https://developers.google.com/tech-writing/error-messages" target="_blank" rel="noopener"
->Error Messages&lt;/a>&lt;/p>
-&lt;h2 id="基本原则">基本原则
-&lt;/h2>&lt;ul>
+&lt;p>Google 文档原文：&lt;a href="https://developers.google.com/tech-writing/error-messages">Error Messages&lt;/a>&lt;/p>
+&lt;h2 id="基本原则">基本原则&lt;/h2>
+&lt;ul>
 &lt;li>错误不应该被掩盖 (Don&amp;rsquo;t fail silently)&lt;/li>
 &lt;li>遵循语言的规范 (Follow the programming language guides)&lt;/li>
 &lt;li>实现完整的错误模型 (Implement the full error model)
@@ -22,8 +19,8 @@ loading="lazy"
 &lt;li>输出错误代码 (Log the error codes)&lt;/li>
 &lt;li>快速抛出错误 (Raise errors immediately)&lt;/li>
 &lt;/ul>
-&lt;h2 id="解释错误原因">解释错误原因
-&lt;/h2>&lt;p>使用错误信息给用户解释原因时，应该遵循：&lt;/p>
+&lt;h2 id="解释错误原因">解释错误原因&lt;/h2>
+&lt;p>使用错误信息给用户解释原因时，应该遵循：&lt;/p>
 &lt;ul>
 &lt;li>具体，准确，避免含糊。&lt;/li>
 &lt;li>在错误信息中包含用户输入的错误内容。如果输入的内容特别长：
@@ -34,21 +31,20 @@ loading="lazy"
 &lt;/li>
 &lt;li>明确告诉用户，系统的要求和限制&lt;/li>
 &lt;/ul>
-&lt;h2 id="解释如何处理问题">解释如何处理问题
-&lt;/h2>&lt;ul>
+&lt;h2 id="解释如何处理问题">解释如何处理问题&lt;/h2>
+&lt;ul>
 &lt;li>对用户来说，错误信息必须有可操作性。也就是说，在解释了问题的原因后，说明如何解决这个问题。&lt;/li>
 &lt;li>最好给用户提供一个例子。&lt;/li>
 &lt;/ul>
-&lt;h2 id="清晰的错误信息">清晰的错误信息
-&lt;/h2>&lt;ul>
-&lt;li>简明扼要，使用主动语态。（这方面内容可以参考&lt;a class="link" href="https://sund.site/posts/2022/technical-writing/" target="_blank" rel="noopener"
->技术文档写作指南&lt;/a>）&lt;/li>
+&lt;h2 id="清晰的错误信息">清晰的错误信息&lt;/h2>
+&lt;ul>
+&lt;li>简明扼要，使用主动语态。（这方面内容可以参考&lt;a href="https://sund.site/posts/2022/technical-writing/">技术文档写作指南&lt;/a>）&lt;/li>
 &lt;li>避免出现双重否定句式。&lt;/li>
 &lt;li>让目标用户能够理解，即根据用户掌握的知识，提供有帮助的内容。&lt;/li>
 &lt;li>专业术语应前后一致。&lt;/li>
 &lt;/ul>
-&lt;h2 id="错误信息的格式">错误信息的格式
-&lt;/h2>&lt;ul>
+&lt;h2 id="错误信息的格式">错误信息的格式&lt;/h2>
+&lt;ul>
 &lt;li>使用链接提供更多信息。&lt;/li>
 &lt;li>渐进式呈现错误信息（比如可以展开详情的省略号）。&lt;/li>
 &lt;li>错误提示应该贴近错误发生的位置。&lt;/li>
@@ -60,33 +56,23 @@ loading="lazy"
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="对后端开发的建议">对后端开发的建议
-&lt;/h2>&lt;ul>
+&lt;h2 id="对后端开发的建议">对后端开发的建议&lt;/h2>
+&lt;ul>
 &lt;li>错误要有错误码&lt;/li>
 &lt;li>可以在错误信息结构里提供一个指向错误解释的 ID，如：
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;error&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Bad Request - Request is missing a required parameter: -collection_name. Update parameter and resubmit. Issue Reference Number BR0x0071&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;/li>
-&lt;/ul></description></item><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><guid>https://sund.site/posts/2022/technical-writing/</guid><description>&lt;p>本文内容摘录自 &lt;a class="link" href="https://developers.google.com/tech-writing/overview" target="_blank" rel="noopener"
->Technical Writing&lt;/a> （谷歌技术文档写作指南）的第一部分。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;error&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Bad Request - Request is missing a required parameter: -collection_name. Update parameter and resubmit. Issue Reference Number BR0x0071&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul></description></item><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><guid>https://sund.site/posts/2022/technical-writing/</guid><description>&lt;p>本文内容摘录自 &lt;a href="https://developers.google.com/tech-writing/overview">Technical Writing&lt;/a> （谷歌技术文档写作指南）的第一部分。&lt;/p>
 &lt;p>本文适用于想要提高技术文档写作、技术领域日常沟通能力的读者，对于一些商务的、非文学性质的英语办公场景沟通，也能起一定帮助作用。&lt;/p>
 &lt;p>阅读过本文的读者可以：&lt;/p>
 &lt;ul>
 &lt;li>提高在日常办公中清晰、准确、客观地传达概念和逻辑的能力。&lt;/li>
 &lt;li>掌握英文技术文档写作规范。&lt;/li>
 &lt;/ul>
-&lt;h2 id="词汇words">词汇（Words）
-&lt;/h2>&lt;ul>
+&lt;h2 id="词汇words">词汇（Words）&lt;/h2>
+&lt;ul>
 &lt;li>
 &lt;p>对于已有的术语，不要重复发明新的词汇，可以用一个链接指向解释它的页面。&lt;/p>
 &lt;/li>
@@ -121,8 +107,8 @@ loading="lazy"
 &lt;p>类比计算机编程语言：&lt;/p>
 &lt;p>缩写 = 对术语的一层抽象。读者需要花费更多脑力去把它展开成对应的名词。&lt;/p>
 &lt;p>代名词 = 指针。它容易引起歧义，所以要避免在读者大脑中引起「空指针」错误。&lt;/p>
-&lt;h2 id="主动语态active-voice">主动语态（Active voice）
-&lt;/h2>&lt;ul>
+&lt;h2 id="主动语态active-voice">主动语态（Active voice）&lt;/h2>
+&lt;ul>
 &lt;li>技术文档中应尽量使用主动语态。
 &lt;ul>
 &lt;li>被动语态在读者大脑中需要额外的加工转换才能被理解。&lt;/li>
@@ -134,8 +120,8 @@ loading="lazy"
 &lt;li>祈使句的动词（命令式动词）应该使用主动语态。&lt;/li>
 &lt;li>科技论文中经常出现被动语态（如 It has been suggested that&amp;hellip;），这种写法并不能传递更多信息，很多科学期刊也开始鼓励使用主动语态。&lt;/li>
 &lt;/ul>
-&lt;h2 id="炼句clear-sentencesshort-sentences">炼句（Clear sentences，Short sentences）
-&lt;/h2>&lt;ul>
+&lt;h2 id="炼句clear-sentencesshort-sentences">炼句（Clear sentences，Short sentences）&lt;/h2>
+&lt;ul>
 &lt;li>
 &lt;p>选择准确、有力、具体的动词。减少不精确的、软弱的或通用的动词。&lt;/p>
 &lt;p>错误的例子:&lt;/p>
@@ -175,8 +161,8 @@ loading="lazy"
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="列表和表格lists-and-tables">列表和表格（Lists and tables）
-&lt;/h2>&lt;ul>
+&lt;h2 id="列表和表格lists-and-tables">列表和表格（Lists and tables）&lt;/h2>
+&lt;ul>
 &lt;li>
 &lt;p>正确区分有序列表（数字列表，numbered lists）和无序列表（圆点列表，bulleted lists）。&lt;/p>
 &lt;/li>
@@ -225,15 +211,15 @@ loading="lazy"
 &lt;p>表格或列表的前面，用一句话来介绍上下文&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="段落paragraphs">段落（Paragraphs）
-&lt;/h2>&lt;ul>
+&lt;h2 id="段落paragraphs">段落（Paragraphs）&lt;/h2>
+&lt;ul>
 &lt;li>以中心句开头。&lt;/li>
 &lt;li>每段只围绕一个主题写作，不要包含其他段落中出现的主题内容。&lt;/li>
 &lt;li>三到五句话一段，不要超过七句。&lt;/li>
 &lt;li>段落能够解释清楚三件事： what，why，how。&lt;/li>
 &lt;/ul>
-&lt;h2 id="读者audience">读者（Audience）
-&lt;/h2>&lt;blockquote>
+&lt;h2 id="读者audience">读者（Audience）&lt;/h2>
+&lt;blockquote>
 &lt;p>好的文档 = 读者要完成任务所需的知识和技能 - 读者已有的知识和技能&lt;/p>
 &lt;/blockquote>
 &lt;ul>
@@ -259,8 +245,8 @@ loading="lazy"
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="文档documents">文档（Documents）
-&lt;/h2>&lt;ul>
+&lt;h2 id="文档documents">文档（Documents）&lt;/h2>
+&lt;ul>
 &lt;li>
 &lt;p>声明文档的适用场景（scope）。&lt;/p>
 &lt;ul>
@@ -305,18 +291,17 @@ loading="lazy"
 &lt;/blockquote>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="标点符号punctuation">标点符号（Punctuation）
-&lt;/h2>&lt;p>&lt;em>这部分原文涉及英文标点符号的用法，大部分和汉语规则近似，略过不译。以下是我在排版方面的经验：
-大多数中国人对英文排版易错的地方是空格的滥用。可以参考这篇文章： &lt;a class="link" href="https://zhuanlan.zhihu.com/p/110266694" target="_blank" rel="noopener"
->英文标点要如何排版？&lt;/a>&lt;/em>&lt;/p>
+&lt;h2 id="标点符号punctuation">标点符号（Punctuation）&lt;/h2>
+&lt;p>&lt;em>这部分原文涉及英文标点符号的用法，大部分和汉语规则近似，略过不译。以下是我在排版方面的经验：
+大多数中国人对英文排版易错的地方是空格的滥用。可以参考这篇文章： &lt;a href="https://zhuanlan.zhihu.com/p/110266694">英文标点要如何排版？&lt;/a>&lt;/em>&lt;/p>
 &lt;p>概括起来：&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>, ; : . ? !&lt;/code> 这些符号后加空格&lt;/li>
 &lt;li>&lt;code>() '' &amp;quot;&amp;quot;&lt;/code> 这些成对的符号左右加空格，内部不加空格&lt;/li>
 &lt;li>&lt;code>/ - _&lt;/code>不加空格&lt;/li>
 &lt;/ul>
-&lt;h2 id="总结">总结
-&lt;/h2>&lt;ul>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;ul>
 &lt;li>统一使用术语。&lt;/li>
 &lt;li>避免模棱两可的代名词。&lt;/li>
 &lt;li>主动语态优于被动语态。&lt;/li>
@@ -334,12 +319,9 @@ loading="lazy"
 &lt;li>使文档适应读者。&lt;/li>
 &lt;li>在文档的开头指出关键信息。&lt;/li>
 &lt;/ul>
-&lt;h2 id="延伸阅读资料">延伸阅读资料
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://docsfordevelopers.com/" target="_blank" rel="noopener"
->Docs for Developers&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.oreilly.com/library/view/software-engineering-at/9781492082781/" target="_blank" rel="noopener"
->Software Engineering at Google&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/" target="_blank" rel="noopener"
->Gitlab Technical Writing Fundamentals courese&lt;/a>&lt;/li>
+&lt;h2 id="延伸阅读资料">延伸阅读资料&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://docsfordevelopers.com/">Docs for Developers&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.oreilly.com/library/view/software-engineering-at/9781492082781/">Software Engineering at Google&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/">Gitlab Technical Writing Fundamentals courese&lt;/a>&lt;/li>
 &lt;/ul></description></item></channel></rss>

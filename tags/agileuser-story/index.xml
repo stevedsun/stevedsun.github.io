@@ -1,13 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agile，user-Story on Steve Sun</title><link>https://sund.site/tags/agileuser-story/</link><description>Recent content in Agile，user-Story on Steve Sun</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Steve Sun</copyright><lastBuildDate>Fri, 07 Apr 2023 06:37:53 +0800</lastBuildDate><atom:link href="https://sund.site/tags/agileuser-story/index.xml" rel="self" type="application/rss+xml"/><item><title>用户故事地图</title><link>https://sund.site/posts/2023/user-story-mapping/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><guid>https://sund.site/posts/2023/user-story-mapping/</guid><description>&lt;blockquote>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agile，user-Story on Steve Sun</title><link>https://sund.site/tags/agileuser-story/</link><description>Recent content in Agile，user-Story on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Fri, 07 Apr 2023 06:37:53 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/agileuser-story/index.xml" rel="self" type="application/rss+xml"/><item><title>用户故事地图</title><link>https://sund.site/posts/2023/user-story-mapping/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><guid>https://sund.site/posts/2023/user-story-mapping/</guid><description>&lt;blockquote>
 &lt;p>用户故事是软件开发和项目管理中的常用术语。主旨是以日常语言或商务用语撰写句子，是一段简单的功能表述。以客户或使用者的观点撰写下有价值的功能、引导、框架来与使用者进行互动，进而推动工作进程。可以被认为是一种规格文件，但更精确而言，它代表客户的需求与方向。&lt;/p>
 &lt;/blockquote>
 &lt;p>在敏捷开发需求分析阶段，要使用一些流程工具，如&lt;strong>用户故事地图&lt;/strong>，来把那些抽象、模糊的用户需求，转化为具体的、分优先级的、模块化的用户故事。&lt;/p>
 &lt;p>一个用户地图看起来是这样的。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/user-story-mapping/user-story.png"
-loading="lazy"
->&lt;/p>
-&lt;h2 id="绘制用户故事地图的过程">绘制用户故事地图的过程
-&lt;/h2>&lt;p>绘制用户故事地图应遵循一些基本原则：&lt;/p>
+&lt;p>&lt;img src="https://sund.site/images/user-story-mapping/user-story.png" alt="">&lt;/p>
+&lt;h2 id="绘制用户故事地图的过程">绘制用户故事地图的过程&lt;/h2>
+&lt;p>绘制用户故事地图应遵循一些基本原则：&lt;/p>
 &lt;ol>
 &lt;li>边思考边记录，把所有过程可视化到便签纸上&lt;/li>
 &lt;li>聚焦整体，不要过早陷入细节&lt;/li>
@@ -18,8 +16,8 @@ loading="lazy"
 &lt;li>用户地图的目的是让团队能达成有效沟通，提出问题和评估工作量&lt;/li>
 &lt;li>估算工作量时，度量越频繁，准确度越高&lt;/li>
 &lt;/ol>
-&lt;h3 id="使用目标层级">使用目标层级
-&lt;/h3>&lt;p>在拆分用户故事时，应遵循逐层拆分的原则，每一层级只聚焦这一层级的任务颗粒度，不要过早陷入细节。&lt;/p>
+&lt;h3 id="使用目标层级">使用目标层级&lt;/h3>
+&lt;p>在拆分用户故事时，应遵循逐层拆分的原则，每一层级只聚焦这一层级的任务颗粒度，不要过早陷入细节。&lt;/p>
 &lt;p>首先是设定宏观的&lt;strong>活动&lt;/strong>，比如把用户需求分解为几个大的活动，如查看账户、存钱等。&lt;/p>
 &lt;p>接下来是梳理&lt;strong>主干故事&lt;/strong>。针对每一个活动，拆分成一个个步骤，这些步骤就是主干故事。每一个主干故事：&lt;/p>
 &lt;ol>
@@ -29,9 +27,7 @@ loading="lazy"
 &lt;/ol>
 &lt;p>第三步是针对每一个主干故事，通过头脑风暴的形式补充更多小的用户故事，用便签纸贴在下边。&lt;/p>
 &lt;p>最后按优先级，把重要的用户故事放在上面，不那么重要的放在下边。然后横向划分出不同的泳道，把故事按特定的&lt;strong>目标成果&lt;/strong>划分为不同的阶段。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/user-story-mapping/user-story-2.png"
-loading="lazy"
->&lt;/p>
+&lt;p>&lt;img src="https://sund.site/images/user-story-mapping/user-story-2.png" alt="">&lt;/p>
 &lt;p>比如第一阶段完成基本的功能开发，那么横向的第一排所有用户故事就是第一个版本需要完成的工作。&lt;/p>
 &lt;p>这样就完成了用户故事的设计。我们重新梳理一下过程：&lt;/p>
 &lt;ol>
@@ -42,11 +38,9 @@ loading="lazy"
 &lt;li>从上到下排优先级&lt;/li>
 &lt;li>横向切分用户故事，划分出每一个迭代的工作和关键成果&lt;/li>
 &lt;/ol>
-&lt;h2 id="运用设计思维">运用设计思维
-&lt;/h2>&lt;p>上面介绍了用户故事的绘制过程，但是其实找到真正的用户需求点才是最难的。为了从特定领域的客户或用户那里挖掘出有价值的需求，通常需要使用&lt;strong>设计思维&lt;/strong>（Design Thinking）来帮助团队沟通、寻找焦点问题。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/user-story-mapping/design-thinking.png"
-loading="lazy"
->&lt;/p>
+&lt;h2 id="运用设计思维">运用设计思维&lt;/h2>
+&lt;p>上面介绍了用户故事的绘制过程，但是其实找到真正的用户需求点才是最难的。为了从特定领域的客户或用户那里挖掘出有价值的需求，通常需要使用&lt;strong>设计思维&lt;/strong>（Design Thinking）来帮助团队沟通、寻找焦点问题。&lt;/p>
+&lt;p>&lt;img src="https://sund.site/images/user-story-mapping/design-thinking.png" alt="">&lt;/p>
 &lt;p>设计思维一共有五步。&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>共情&lt;/strong>：沟通，找到问题。&lt;/li>
@@ -55,8 +49,8 @@ loading="lazy"
 &lt;li>&lt;strong>原型&lt;/strong>：制作具体的可视化的原型。&lt;/li>
 &lt;li>&lt;strong>测试&lt;/strong>：于用户一起完成测试，收集反馈。&lt;/li>
 &lt;/ul>
-&lt;h2 id="组成探索团队">组成探索团队
-&lt;/h2>&lt;p>一个探索团队由三名重要角色组成：&lt;/p>
+&lt;h2 id="组成探索团队">组成探索团队&lt;/h2>
+&lt;p>一个探索团队由三名重要角色组成：&lt;/p>
 &lt;ul>
 &lt;li>懂产品和需求的 Product Owner&lt;/li>
 &lt;li>懂设计和交互的 UX Designer&lt;/li>

@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in Posts on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Tue, 29 Apr 2025 10:49:39 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Hand on Enablement</title><link>https://sund.site/posts/2025/hand-on-enablement/</link><pubDate>Tue, 29 Apr 2025 10:49:39 +0800</pubDate><guid>https://sund.site/posts/2025/hand-on-enablement/</guid><description>&lt;p>最近在读《沃顿商学院最受欢迎的谈判课》这本书。有两个可以快速上手的实用技巧：&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in Posts on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Thu, 01 May 2025 09:27:36 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>为什么不应该让AI生成单元测试</title><link>https://sund.site/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/posts/2025/do-not-vibe-testing/</guid><description>&lt;p>最近听到 Gru.ai 创始人张海龙老师在一档&lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9">播客节目&lt;/a>中提到自动生成 Unit Testing 是他们在做 AI Coding 的主要方向。&lt;/p>
+&lt;p>Gru.ai 官网上有这么两句话：&lt;/p>
+&lt;blockquote>
+&lt;p>Forget about unit testing – get covered automatically (忘记单元测试 - 自动覆盖)
+Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing efficiency while reducing costs and ensuring top-notch quality. (利用 AI 工程师的专业知识来提高团队的测试效率，同时降低成本并确保一流的质量。)&lt;/p>
+&lt;/blockquote>
+&lt;p>张海龙老师在 AI Coding 方向的洞见让我很有启发。我只是对用 AI 写测试降本增效这种说法，持怀疑态度。我想他们在写第二句话时还有点不自信，最后还要画蛇添足补充一句 ensuring top-notch quality（确保一流质量）。&lt;/p>
+&lt;p>单元测试是需求的具象化。是整个测试体系中最小粒度、最贴近代码实现的约束工具。单元测试不仅被用来检查代码是否满足需求，更多时候，被用来检测边界条件（Corner Case），因为一段程序是否可靠，最重要的是在边界条件下它不会出错。这也是有经验的人类工程师区别于初级工程师的特点。&lt;/p>
+&lt;p>但是 Gru.ai 在做的，是用&lt;strong>AI 提高单元测试覆盖率， 众所周知，覆盖率提高不等价于测试效率提高，更不等于质量提高&lt;/strong>。&lt;/p>
+&lt;p>用一句提示词让 AI 自动帮你写出可以运行的单元测试。这对初级程序员来说非常具有诱惑力。好比一个射击运动员为了提高射击准确度，每次先开枪，然后在子弹坑附近画上靶子。&lt;/p>
+&lt;p>提升测试覆盖率的目的，本来是让人类工程师充分考虑边界条件。而 Gru.ai 却让我们「忘记单元测试，自动覆盖」。但 AI 大多时候不清楚边界条件，除非人类显式地告诉它。 那么 AI 如何自动推断边界条件？我们又如何确信 AI 推断的边界条件是正确的？AI 测试了代码，谁来测试 AI ？&lt;/p>
+&lt;p>如果说 Cursor 这类 AI Coding 产品凝聚了硅谷程序员们对 Vibe Coding 的想象，那么 Gru.ai 就是中国程序员们对 Vibe Testing 的「美好期望」。&lt;/p></description></item><item><title>Hand on Enablement</title><link>https://sund.site/posts/2025/hand-on-enablement/</link><pubDate>Tue, 29 Apr 2025 10:49:39 +0800</pubDate><guid>https://sund.site/posts/2025/hand-on-enablement/</guid><description>&lt;p>最近在读《沃顿商学院最受欢迎的谈判课》这本书。有两个可以快速上手的实用技巧：&lt;/p>
 &lt;ol>
 &lt;li>在做没有把握的事之前，找人一起模拟演练一下&lt;/li>
 &lt;li>快速行动，避免焦虑&lt;/li>
@@ -345,59 +356,4 @@
 &lt;p>&lt;img src="https://sund.site/images/leshan/15.jpg" alt="">&lt;/p>
 &lt;p>结束了乐山之行，赶回成都已经困得睁不开眼了，一觉睡到第二天下午两点。发现上午朋友在微信群里发了张图片。&lt;/p>
 &lt;p>&lt;img src="https://sund.site/images/leshan/16.jpg" alt="">&lt;/p>
-&lt;p>从乐山回来我突然领悟了那句话：如果浪费时间能让你感到快乐，那时间就没有浪费。&lt;/p></description></item><item><title>Ricoh GR 2 使用心得</title><link>https://sund.site/posts/2024/ricoh_gr2_sharing/</link><pubDate>Fri, 17 May 2024 23:07:29 +0800</pubDate><guid>https://sund.site/posts/2024/ricoh_gr2_sharing/</guid><description>&lt;p>买 GR2 已经很多年了，几年前写过一篇&lt;a href="https://sund.site/posts/2019/ricoh-gr2-settings/">Ricol GR 2 参数说明&lt;/a>，作为初学者分享了参数的说明。今天这篇分享一下这几年的使用心得。&lt;/p>
-&lt;h2 id="机内裁剪">机内裁剪&lt;/h2>
-&lt;p>GR2 作为 28mm 相机，对于普通人扫街来说，最大的痛点就是经常抓不到合适的构图。28mm 的优点是取景范围更大，可以捕捉更多环境信息，但是相对地，用它拍摄时经常混入太多杂乱的场景元素。&lt;/p>
-&lt;p>但是好在 GR2 支持机内裁剪，可以把 28mm 裁切成 35mm 或 47mm 镜头。这让街拍时的构图更加灵活（当然以牺牲画质为代价）。&lt;/p>
-&lt;h2 id="不同光圈的适合场景">不同光圈的适合场景&lt;/h2>
-&lt;ul>
-&lt;li>F2.8 室内的人物和场景&lt;/li>
-&lt;li>F4 静物&lt;/li>
-&lt;li>F5.6 均衡&lt;/li>
-&lt;li>F8 图像最锐利的光圈设定&lt;/li>
-&lt;li>F11 漂亮的星芒效果&lt;/li>
-&lt;/ul>
-&lt;h2 id="自定义参数">自定义参数&lt;/h2>
-&lt;h3 id="fuji-胶片风格">FUJI 胶片风格&lt;/h3>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20(3).png" alt="">&lt;/p>
-&lt;ul>
-&lt;li>滤镜模式：正片。 饱和度：4、对比度：5、鲜明度：6&lt;/li>
-&lt;li>白平衡：复合 AWB&lt;/li>
-&lt;li>白平衡补偿：A：3、G：4&lt;/li>
-&lt;li>曝光补偿：-1.0 ~ -1.0&lt;/li>
-&lt;/ul>
-&lt;p>上面这套参数模仿富士相机的胶片效果。对比鲜明度较高，有淡淡的绿色调。&lt;/p>
-&lt;h3 id="日常蓝色调">日常蓝色调&lt;/h3>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20(2).png" alt="">&lt;/p>
-&lt;ul>
-&lt;li>滤镜模式：正片。 饱和度：7、对比度：3、鲜明度：7&lt;/li>
-&lt;li>白平衡：复合 AWB&lt;/li>
-&lt;li>白平衡补偿：B：7、M：0&lt;/li>
-&lt;li>曝光补偿：-1.0 ~ -1.0&lt;/li>
-&lt;/ul>
-&lt;p>这套参数画面干净，呈现静谧的蓝色。适合拍摄日常冷色调题材的画面。&lt;/p>
-&lt;h3 id="自然风小清新">自然风小清新&lt;/h3>
-&lt;ul>
-&lt;li>滤镜模式：正片。 饱和度：2、对比度：4、鲜明度：3&lt;/li>
-&lt;li>白平衡：复合 AWB&lt;/li>
-&lt;li>白平衡补偿：B：8、M：0&lt;/li>
-&lt;li>曝光补偿：-1.0 ~ -1.0&lt;/li>
-&lt;/ul>
-&lt;p>适合旅行拍摄低对比度的小清新画面。&lt;/p>
-&lt;h3 id="性冷淡">性冷淡&lt;/h3>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20(4).png" alt="">&lt;/p>
-&lt;ul>
-&lt;li>滤镜模式：轻微。 饱和度：9、对比度：5、鲜明度：9&lt;/li>
-&lt;li>白平衡：CT：4200K&lt;/li>
-&lt;li>白平衡补偿：B：8、M：2&lt;/li>
-&lt;li>曝光补偿：-0.3 ~ -1.0&lt;/li>
-&lt;/ul>
-&lt;p>这套参数适合拍摄山脉、沙漠、城市人文等低静默、低色调的景物。&lt;/p>
-&lt;p>上面两套参数来自&lt;a href="https://weibo.com/calcas">霜绝的分享&lt;/a>，他还有其他几套参数。&lt;/p>
-&lt;h2 id="快拍模式snap-mode">快拍模式（Snap Mode）&lt;/h2>
-&lt;p>快拍模式就是当你快速全按快门时，GR 按照你预先设置的快拍距离来快速捕捉画面的模式。&lt;/p>
-&lt;p>快拍模式适合用 F5.6 ~ F6.0 的光圈，因为在这个光圈范围内，快拍对焦距离为 1&lt;del>5 米甚至更远，可以清晰地拍摄到 1&lt;/del>5 米范围的物体。&lt;/p>
-&lt;p>关于这个模式的更多介绍推荐阿默的视频： &lt;a href="https://www.youtube.com/watch?v=JAZd5cM03NY">【ＧＲ浪漫】 GR III GR IIIx 感性で描く日常スナップ&lt;/a>。&lt;/p>
-&lt;h2 id="tav-模式和-p-模式">Tav 模式和 P 模式&lt;/h2>
-&lt;p>Tav 和 P 模式很相似，是 GR2 特有的一种模式。在 Tav 模式下，你可以手动调节 F 和 快门速度，让相机自动调节 ISO，这个好处就是你可以用一个相对较快的快门速度（比如 1/125）来保证抓拍街道上移动的人物的同时，很轻松地调节 F 来获得不同的取景深度。但是要切忌让 ISO 高于 800，噪点会明显增加。&lt;/p>
-&lt;p>P 模式是我街拍用的比较多的模式，它固定了 ISO，你可以在 F 和快门二选一，另一个交给相机自动设置。这种适合在光线环境不好的情况下抓拍，尤其适合成都这种常年阴暗的城市 🤣&lt;/p></description></item></channel></rss>
+&lt;p>从乐山回来我突然领悟了那句话：如果浪费时间能让你感到快乐，那时间就没有浪费。&lt;/p></description></item></channel></rss>

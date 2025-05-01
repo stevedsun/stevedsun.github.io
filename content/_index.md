@@ -14,7 +14,7 @@ I used to be a Tech Lead at [ThoughtWorks](https://www.thoughtworks.com/) and no
 
 ---
 
-## My Projects
+## My Side Projects
 
 - [Notion Graph View](https://github.com/stevedsun/notion-graph-view) - Generating a roam-research like network graph view from your notion pages.
 - [Useless Ideas Public API](https://q24.io/useless) - A public Rest API that provides quotes and ideas. Supported by [灵感买家俱乐部](https://club.q24.io/).

@@ -1,4 +1,30 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in Posts on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Thu, 01 May 2025 09:27:36 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>为什么不应该让AI生成单元测试</title><link>https://sund.site/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/posts/2025/do-not-vibe-testing/</guid><description>&lt;p>最近听到 Gru.ai 创始人张海龙老师在一档&lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9">播客节目&lt;/a>中提到自动生成 Unit Testing 是他们在做 AI Coding 的主要方向。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in Posts on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Tue, 06 May 2025 10:35:41 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p>最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p>
+&lt;p>我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/">Go 内存泄漏常见模式&lt;/a>中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p>
+&lt;p>在上一次教训之后，我们对代码单元测试层面做了 goruntine 内存泄漏的检测——使用&lt;code>go.uber.org/goleak&lt;/code>。只需要在单元测试开头加上一句:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">TestXXX&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">T&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#a6e22e">goleak&lt;/span>.&lt;span style="color:#a6e22e">VerifyNone&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>它就会在测试结束后自动检查是否有残留的 goroutine 协程。对于一些延迟执行的后台 goroutine 可以在单元测试里用 wait 或者 sleep 等待后台释放再结束测试用例。&lt;/p>
+&lt;p>经过第一轮排查可以排除代码本身 goroutine 造成的问题。于是我把注意力转向了另一个地方：定时任务。&lt;/p>
+&lt;p>根据客户反馈，在无任何前台操作的情况下，内存也会缓慢上升。&lt;/p>
+&lt;p>在我们代码里，使用了&lt;code>github.com/robfig/cron/v3&lt;/code>这个第三方包，它的作用是编排定时任务。用法是&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">c&lt;/span> = &lt;span style="color:#a6e22e">cron&lt;/span>.&lt;span style="color:#a6e22e">New&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">c&lt;/span>.&lt;span style="color:#a6e22e">AddFunc&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;@every 10s&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">callbackFunc&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这种结构定义一个定时任务。它的实现也基于 goroutine，所以我把 go 自带的 pprof 加入到 main.go 的依赖中，重新编译了项目二进制文件并部署到测试环境上（使用跟用户相同的硬件配置）。这样启动项目后就可以在特定端口获取内存信息。（关于 pprof，你可以参考 &lt;a href="https://go.dev/blog/pprof">Profiling Go Programs&lt;/a>）&lt;/p>
+&lt;p>我使用 pprof 的接口获取了不同时间间隔的 heap 数据&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">curl&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#a6e22e">o&lt;/span> &lt;span style="color:#a6e22e">heap&lt;/span>&lt;span style="color:#ae81ff">.1&lt;/span>.&lt;span style="color:#a6e22e">out&lt;/span> &lt;span style="color:#a6e22e">http&lt;/span>:&lt;span style="color:#75715e">//127.0.0.1:6060/debug/pprof/heap
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">go&lt;/span> &lt;span style="color:#a6e22e">tool&lt;/span> &lt;span style="color:#a6e22e">pprof&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#a6e22e">http&lt;/span>=:&lt;span style="color:#ae81ff">8099&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#a6e22e">base&lt;/span> &lt;span style="color:#a6e22e">heap&lt;/span>&lt;span style="color:#ae81ff">.1&lt;/span>.&lt;span style="color:#a6e22e">out&lt;/span> &lt;span style="color:#a6e22e">heap&lt;/span>&lt;span style="color:#ae81ff">.2&lt;/span>.&lt;span style="color:#a6e22e">out&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>比较两次结果的差异，在 Web UI 上选择 In Use Space 选项，可以查看到哪些内存没有释放。&lt;/p>
+&lt;p>虽然经过第二轮排查，依然没有发现内存泄漏。但这一次我注意到服务中的一个定时任务会每隔 10 秒执行一次，执行过程中 CPU 占用率明显上升。在这个任务的代码里，它使用了&lt;code>github.com/shirou/gopsutil/process&lt;/code>这个第三方库来查询系统进程 ID 和进程名等信息。&lt;/p>
+&lt;p>我查看它的源码后发现，这个库查询进程 ID 的方式，是把系统中所有的进程信息加载到内存中，然后匹配 ID 或者名称。因此，如果用户设备上的进程过多，就会每次查询时占用大量内存。&lt;/p>
+&lt;p>在一个 10 秒执行一次的定时任务中调用这个库，显然是非常低效的。&lt;/p>
+&lt;p>经过与客户进一步沟通，我们发现出现内存过高的两个进程中，另一个进程也有 CPU 占用过高的现象。于是我们让客户把 &lt;code>top&lt;/code> 命令的截图发给我们。在看到截图的一瞬间，问题的真相就浮出水面了:&lt;/p>
+&lt;p>客户使用的 IPC 设备是性能比较低的版本，虽然内存较大，但 CPU 性能捉急。如果有多个进程同时执行后台任务，CPU 就会周期性打满，造成任务阻塞。而我们使用的第三方库基于 goroutine 来实现定时任务。在上一个任务被阻塞时，下一个任务依然会继续创建新的后台 goroutine，导致内存中的 goroutine 协程堆积地越来越多。&lt;/p>
+&lt;p>这是一个定时任务的 CPU 占用过高，间隔过短，造成的 goroutine 阻塞问题。&lt;/p>
+&lt;p>知道了原因，剩下的工作就是优化代码逻辑、更新版本、跟客户解释原因……&lt;/p>
+&lt;p>以上就是这次排查 Go 服务性能问题的过程，如果你也遇到类似情况，希望对你有所帮助。&lt;/p></description></item><item><title>为什么不应该让AI生成单元测试</title><link>https://sund.site/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/posts/2025/do-not-vibe-testing/</guid><description>&lt;p>最近听到 Gru.ai 创始人张海龙老师在一档&lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9">播客节目&lt;/a>中提到自动生成 Unit Testing 是他们在做 AI Coding 的主要方向。&lt;/p>
 &lt;p>Gru.ai 官网上有这么两句话：&lt;/p>
 &lt;blockquote>
 &lt;p>Forget about unit testing – get covered automatically (忘记单元测试 - 自动覆盖)
@@ -315,45 +341,4 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;ol>
 &lt;li>返回集合。添加合理的缓存过期头。&lt;/li>
 &lt;li>如果没有结果，应该返回&lt;strong>空集合&lt;/strong>。&lt;/li>
-&lt;/ol></description></item><item><title>乐山游记</title><link>https://sund.site/posts/2024/leshan/</link><pubDate>Sun, 23 Jun 2024 18:50:51 +0800</pubDate><guid>https://sund.site/posts/2024/leshan/</guid><description>&lt;p>&lt;img src="https://sund.site/images/leshan/1.jpg" alt="">&lt;/p>
-&lt;p>最近工作节奏放缓，业余时间也多了。我决定去乐山看看。久闻小吃之都的美名，但是来成都之后一直在全国出差，对这座高铁只要 50 分钟就能到达的城市，一次面都没见过，实在说不过去。&lt;/p>
-&lt;p>作为时间管理小能手，我星期六早上 6 点就从家出发，8 点多到了乐山站。先找个早餐店弄一碗乐山豆腐脑吧，这是我在成都最爱的小吃之一，很期待原产地的风味。很多店铺都还没开门，一直走到了火车站对面的美食街才找到一家。坐下，一碗酥肉豆腐脑，一个牛肉咔饼。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/2.jpg" alt="">&lt;/p>
-&lt;p>乐山豆腐脑和北方豆腐脑不太一样。它的主食是豆花和红薯粉丝。在粘稠的豆花粉丝汤里，加上炸黄豆、花生、牛肉（或者酥肉、鸡丝）、香菜。洒上辣椒油。有时候再放点薄脆。吃到嘴里是滑滑的咸辣汤汁裹着肉和黄豆的酥脆口感。乐山本地的豆腐脑用的豆花似乎和成都小店里有区别，是比嫩豆腐要稍微老一点的豆腐，汤也更入味。&lt;/p>
-&lt;p>牛肉咔饼其实就是肉夹馍的四川版。把牛肉剁碎，再用葱姜蒜等调料用粉蒸肉的手法蒸熟，夹在一个软软的面饼里。一大早肉刚出锅，眼看老板夹着带热气的蒸肉放到饼里，香得很！&lt;/p>
-&lt;p>吃饱喝足之后，第一个要去的地方是乐山大佛。&lt;/p>
-&lt;p>乐山大佛在地图上很容易找到。乐山市面积不大，整个城市位于三江交汇处。乐山大佛就坐在三江口，眼观峨眉山。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/3.png" alt="">&lt;/p>
-&lt;p>从地图上就能看出，大渡河泥沙更多，河水偏黄色。而岷江水是青绿色。在大佛前的交汇点，形成一条非常明显的分界线。&lt;/p>
-&lt;p>打车 40 分钟到了景区，门票分两种：坐船和爬山。小小一座凌云山，被当地开辟出山和水两条收费路线，颇有四川小吃的特色，一菜多吃。&lt;/p>
-&lt;p>我选择了更轻松的坐船。船从岷江的嘉州渡开船，行至大渡河交汇处，江水已经开始由青泛黄。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/4.jpg" alt="">&lt;/p>
-&lt;p>复行十几分钟，就到了大佛脚下。大佛的左脚先映入眼帘，大佛身边左右护法已经被千年的江风磨平了棱角。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/5.jpg" alt="">&lt;/p>
-&lt;p>乐山大佛项目立项于唐代，经过了三代项目经理才完工。到现代也在不断修缮。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/6.jpg" alt="">&lt;/p>
-&lt;p>大佛周围的山崖有很多方孔，是用来搭建脚手架的。据说大佛外层原本有一座叫“大像阁”的七层建筑罩住大佛本体。但在历史上被毁掉了。在乐山博物馆还能看到很多相关资料。博物馆里还有一些有趣的豆知识：大佛头上的每一个圆圈都是一根长条状的石头，工匠先于大佛头部开凿出一个个插槽，再把这些长条状的“慧根”嵌进去。这可能是最早期的模块化设计。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/7.jpg" alt="">&lt;/p>
-&lt;p>继续前行，绕过大佛，就能看到凌云山的栈道和像蚂蚁穴一样的山路，如果选了登山门票，你就会和其他游客像小蚂蚁一样出现在这里。凌云山其实只是江上的一座小山丘，能在这样一个光滑无附着的地方凿出道路，很佩服古人的毅力。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/8.jpg" alt="">&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/9.jpg" alt="">&lt;/p>
-&lt;p>船往回开时，站在船尾能看到凌云山的远影形成一尊向右躺平的卧佛形象。这个躺平的形象，就是乐山的精神图腾。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/10.jpg" alt="">&lt;/p>
-&lt;p>离开乐山大佛景区，继续探索乐山的美食吧！坐公交车前往上中顺特色街区。&lt;/p>
-&lt;p>上中顺有很多小吃，比如叶婆婆钵钵鸡，但是因为排队人太多，一个人吃钵钵鸡又浪费了一大锅锅底，所以我这次就放弃了。直奔海汇源纸皮烧麦。&lt;/p>
-&lt;p>海汇源的烧麦有鲜肉、牛肉、羊肉三种馅，还可以加钱把烧麦做成锅贴。我这次买的就是锅贴烧麦。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/11.jpg" alt="">&lt;/p>
-&lt;p>乐山纸皮烧麦跟成都的烧麦、北方的烧麦都不一样。成都烧麦的馅是肉粒和糯米混合的，味道像广式粽子；北方是牛羊肉馅。乐山烧麦肉馅更像北方，皮非常薄，用油煎一下口感脆香。我过去吃烧麦最不喜欢吃它顶端的褶皱。因为蒸烧麦时那里经常蒸不熟，会有生面渣的口感。但是海汇源的烧麦完全没有这个问题，它把服务态度以外的卖点都做足了（服务态度不好也是四川小吃的特色）。海汇源的烧麦不但皮薄馅大，小料（四川叫蘸水）也很有特色，辣椒油里似乎还能吃出一点点柠檬汁的味道。&lt;/p>
-&lt;p>从海汇源出来，我又在街边买了三串糖醋酱裹着的炸豆腐，算是乐山近年和绵绵冰（中式 Gelato）一样流行的街边小吃，不过味道一般，不作推荐。&lt;/p>
-&lt;p>从上中顺街区往东南方向走，就能看到大渡河。沿着大渡河有几座渡口，可以眺望对面的凌云山。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/12.jpg" alt="">&lt;/p>
-&lt;p>沿江有很多小亭子，当地老年人会聚到这里打一种叫“贰柒拾”的四川桥牌。这种牌有 1~10 十种数字和红黑两类花色。像打麻将一样可以吃碰胡，本质是个凑牌型算番数的概率计分游戏。&lt;/p>
-&lt;p>据说之所以用这种长条形的纸牌，是因为过去物质匮乏，人们用工厂里填物料用的废纸来制作纸牌。这种乐山“贰柒拾”应该是四川长牌的一个变种，四川长牌在湖广地区也曾经流行，很多老年人都会打。但是现如今当地的年轻人也都沉迷王者荣耀了，再过几年只能在非遗博物馆听讲解员讲解玩法。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/13.jpg" alt="">&lt;/p>
-&lt;p>我很欣赏乐山街头这种随处可见的景象：茶馆、打牌的小桌子。根本不需要特别的场地，一棵树周围的三米圈出一个阴凉，就是当地老年人的天然棋牌馆。随着年纪增长，我也越来越享受这种不容易变质的快乐，像下班回家看看体育运动，或者打开斗鱼看魔兽争霸比赛。这些赛事最大的特点是规则几乎不会变化，它们不像王者荣耀，几天不玩就陌生了，不会时不时给你更新个玩法，增加个人物。人不是计算机，更不是所谓“用户”，我不需要经常更新。年纪越大，多巴胺越是依赖那些简单、不变的东西。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/14.jpg" alt="">&lt;/p>
-&lt;p>沿着大渡河：远处是镇坐千年的大佛，脚下三江汇聚，水花在岷江与大渡河之间，像用粉笔划出的分界线。近处是急流中游泳的老人。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/15.jpg" alt="">&lt;/p>
-&lt;p>结束了乐山之行，赶回成都已经困得睁不开眼了，一觉睡到第二天下午两点。发现上午朋友在微信群里发了张图片。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/leshan/16.jpg" alt="">&lt;/p>
-&lt;p>从乐山回来我突然领悟了那句话：如果浪费时间能让你感到快乐，那时间就没有浪费。&lt;/p></description></item></channel></rss>
+&lt;/ol></description></item></channel></rss>

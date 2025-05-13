@@ -1,4 +1,64 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in Posts on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Tue, 06 May 2025 10:35:41 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p>最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in Posts on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Tue, 13 May 2025 13:49:37 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>读完这本书，沟通将是一个有迹可循的过程</title><link>https://sund.site/posts/2025/super-communicator/</link><pubDate>Tue, 13 May 2025 13:49:37 +0800</pubDate><guid>https://sund.site/posts/2025/super-communicator/</guid><description>&lt;p>沟通能力能够决定了一个人是否幸福。在与周围人相处融洽的环境下，能让我们觉得被包容，被理解。反之会让我们苦恼：明明抱有善意的交流，为什么总是导致冲突和分歧。到底问题出在哪里？&lt;/p>
+&lt;p>《超级沟通者》这本书最近给我很多启发，我希望和你分享一些沟通技巧。这和那些强调同理心，强调谈判方法的书籍不同，它提出了一个更深层次的观点：&lt;strong>对话的目的，是了解身边人如何看待世界的同时，帮助他们理解我们的想法&lt;/strong>。&lt;/p>
+&lt;h2 id="当对话进入到个人感受层面的交流时人与人才能建立起深度的连接">当对话进入到个人感受层面的交流时，人与人才能建立起深度的连接&lt;/h2>
+&lt;p>哈佛大学进行过一项调查，为什么有些会议能够缓和参与各方的冲突并达成共识，为什么有些谈话的参与者能够建立起深层次的连接。研究者发现，这类沟通中往往存在一个高中心度参与者，也就是标题中的「超级沟通者」，他具有这些特点：&lt;/p>
+&lt;ul>
+&lt;li>能够仔细倾听对方的表达和言外之意&lt;/li>
+&lt;li>能够识别并回应对方的情绪&lt;/li>
+&lt;li>能够提出问题并引导对方交流内心的感受&lt;/li>
+&lt;/ul>
+&lt;p>进一步地，研究发现人与人的不信任和不理解，往往出于以下一些原因：&lt;/p>
+&lt;ul>
+&lt;li>沟通浮于表面，谈话的目的模糊，或者内心真实想法没有表露&lt;/li>
+&lt;li>情绪没有得到回应&lt;/li>
+&lt;li>身份没有获得认同&lt;/li>
+&lt;/ul>
+&lt;p>因此，为了进行深入的沟通，人们通常要从一些表面的事实性问题，进入到更关注内心感受、观点、人生经历、价值观、信仰等层面的交流。也就是作者认为的，学习型对话。&lt;/p>
+&lt;h2 id="学习型对话">学习型对话&lt;/h2>
+&lt;p>作者提出学习型对话这个概念，认为一个深度的沟通过程，围绕着三种类型的对话展开：&lt;/p>
+&lt;p>务实对话、情感对话，以及社交对话。&lt;/p>
+&lt;h3 id="务实对话">务实对话&lt;/h3>
+&lt;p>务实对话是指那些为了协商做出决策，或者各方为了达成共识而参与的对话。&lt;/p>
+&lt;p>这一类对话通常遵循理性的态度，按照「成本-收益」的逻辑进行。这是很多职场会议、谈判、家庭决策场景最常见的对话。这一类对话有个难点：虽然大家都知道要理性客观，但是往往分歧出现在一些价值观问题上。&lt;/p>
+&lt;p>比如你明知道父母是为你好，但是有些他们的期望就是无法满足。再比如工作中，你给同事提了一个建议，但是对方因为过往工作经历的原因不愿意采纳，即使没有正当的理由。&lt;/p>
+&lt;p>这种时候，谈话的思维方式就要从「成本-收益逻辑」，切换到「相似性逻辑」。即我们要从生活经验和价值观出发，找到双方具有的相似性，从而跨越鸿沟。&lt;/p>
+&lt;p>&lt;strong>改变一个人的想法，要触及他的自我认知，让他明白改变观点带来的价值，感受到因做出正确决定而带来的自尊心&lt;/strong>。&lt;/p>
+&lt;p>价值观是从长期的个人经历中建立起来的东西，很难被改变。人们会觉得信仰崩塌、自尊心受挫。沟通的关键是让从对方的底层价值观出发，让他认可改变带来的价值，并把做决定的权力交给对方。&lt;/p>
+&lt;p>下面是一些作者分享的，谈话中可以参考的方法：&lt;/p>
+&lt;ul>
+&lt;li>可以提前准备一个话题库，在聊天陷入沉默时抛出一些话题，增强你谈话的自信心。&lt;/li>
+&lt;li>当识别出谈话是一个务实谈话时，先通过开放性问题让对方谈谈自己的感受、价值观和信念。&lt;/li>
+&lt;li>邀请对方做出判断，询问对方的经历。&lt;/li>
+&lt;li>如果对方转移话题，这代表对方希望扩展谈话的范围，你可以鼓励并留心他的言外之意。&lt;/li>
+&lt;/ul>
+&lt;p>想象关于家庭决策的冲突，当父母的价值观无法被你接受，你可以询问他们的经历，信念（过去遇到类似的事情会怎么办），分享我们的经历和感受，找到相似的部分（比如初衷都希望让家人过得更好）。然后突破屏障（如果父母处在我们的经历中，他们会怎么做）。&lt;/p>
+&lt;p>退一步讲，即使无法一次性彻底解决分歧，也可以在这次深度交流中获得更多理解，加深双方的感情。&lt;/p>
+&lt;h3 id="情感对话">情感对话&lt;/h3>
+&lt;p>情感类型的对话，通常源于谈话的一方希望自己的情绪得到回应。&lt;/p>
+&lt;p>生活中经常发生的一类思维错位：女朋友跟你表达情绪，你跟她分析问题。&lt;/p>
+&lt;p>情感对话不是为了找到解决方案或者达成一致。情感对话的目的是触发情绪传染。一方感受到对方的脆弱，并以自身的脆弱作为回应，从而建立起信任、理解以及情感连接。&lt;/p>
+&lt;p>&lt;strong>情感对话的难点是通过对方点滴的情绪流动，识别出这是一场情感对话，并给予恰当的回应&lt;/strong>。&lt;/p>
+&lt;p>我们总听到别人谈共情和换位思考。其实这很难做到，当我们和对方有不同的人生经历、处于不同的情境时，很难真正地与对方换位思考。所以，进入情感对话第一步，是要询问对方，用问题打开对方的心扉，&lt;strong>先试探性地提出表面的、安全的事实性问题，逐步询问到对方的信仰、价值观、意义、体验等等&lt;/strong>。&lt;/p>
+&lt;p>当对方愿意分享内心真实想法时，就到了第二步，给予足够的回应。什么叫足够呢？回应的情绪能量要和对方的情绪能量匹配，不要太过也不要太少。让双方进入到一场情绪表达的共振中。要避免单向输出，尽量轮流表达，互相回应。有一个经典的错误是，当对方讲述了一个过往悲伤的经历后，我们为了表达理解，滔滔不绝讲述自己的个人经历并把谈话的注意力引向自己。这就会让对方的情绪无法着陆。一定要&lt;strong>持续的、双向的、深入的个性化表达&lt;/strong>。&lt;/p>
+&lt;p>最后一步，建立「理解循环」。在倾听之后，询问对方自己理解的是否正确。不要试图掌控对话的走向和论调，不要试图控制对方。&lt;/p>
+&lt;p>在亲密关系中，关于控制权的争夺屡见不鲜。一方意识到自己无法掌控某件对自己重要的事情时，就会发怒甚至责难对方。而往往这种内心对控制欲的渴望存在于生活各个细节中，处理不好就会令双方互不相让，引发的连锁反应被称为「数怨并诉」(kitchen-sinking)，演变成破坏性争吵。&lt;/p>
+&lt;p>书中分享了一个调查，那些幸福的家庭和不幸福的家庭一样，都经常发生关于内部控制权的争吵，但是幸福家庭总能把冲突控制在一个合理的范围内。这些家庭成员不会试图控制对方，而是控制自己，控制自己所处的环境或是控制冲突的界限。然后通过对话，让双方找到可以共同控制的事情。&lt;/p>
+&lt;p>比如在一个关于「谁该做家务」的争吵中，我们可以控制自己（不要发怒或者指责对方），控制环境（在一个双方情绪愉悦的情况下讨论这个话题），控制冲突的界限（不去指责对方的生活习惯等），再通过协商找到一些双方可以共同努力控制的事情。&lt;/p>
+&lt;p>作者还有一些小建议：&lt;/p>
+&lt;ul>
+&lt;li>注重礼貌&lt;/li>
+&lt;li>警惕讽刺性语言&lt;/li>
+&lt;li>多表达感谢、问候、歉意&lt;/li>
+&lt;li>避免在公开场合提出批评&lt;/li>
+&lt;/ul>
+&lt;h3 id="社交对话">社交对话&lt;/h3>
+&lt;p>社交类型对话，是在对话过程中寻找身份认同，关注社会影响的一类对话。当一名医生用专业知识向患者解释治疗的必要性时，往往效果不如将自己带入到父亲、家人、朋友的角色时效果更好。因为患者担忧的问题往往是对家人的影响。所以如果能在这类谈话中，找到与对方深层次顾虑相匹配的角色，从而进行交流，就能事半功倍。&lt;/p>
+&lt;p>社交对话的难点是找到对方内心深处的恐惧、疑惑、顾虑等。我们每个人都有多重身份，当与他人对话时，要时刻意识到身份的多样性和复杂性，从而识别出什么情况要切换身份与对方在同一个频道交流。&lt;/p>
+&lt;p>在多元化的社会中，人们习惯把他人按出身、地域、性别等特征笼统归类，冲破隔阂的关键就是察觉身份的多样性，认识到我们与他们同为父亲、儿子等社会和家庭角色，避免对他人进行模糊的分类，泛泛地夸大某个身份特征的影响。&lt;/p>
+&lt;p>对于不同主张、不同信仰的人，交流的目的更多是互相理解，分享经历和观点，而不是说服他人改变想法。&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>我最近在与朋友闲聊时有个体会，一个成熟的人，不能止步于「尊重但不理解」或是「谁好谁坏」的讨论中，即使我们不能解决大部分矛盾和误解，仍然可以做到「我不完全认同，但是我能理解你为什么这样做」。理解观点不同的人，也会让我们自己避免内耗，更加开朗。&lt;/p>
+&lt;p>回顾上面三种类型的对话，日常交流我们可以通过区分对话类型，切换不同的思维模式，从开放性话题渐进地进入到感受层面的交流，和他人建立更深层次的连接。善加实践，我们的生活和工作都必将获益。&lt;/p></description></item><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p>最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p>
 &lt;p>我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/">Go 内存泄漏常见模式&lt;/a>中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p>
 &lt;p>在上一次教训之后，我们对代码单元测试层面做了 goruntine 内存泄漏的检测——使用&lt;code>go.uber.org/goleak&lt;/code>。只需要在单元测试开头加上一句:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">TestXXX&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">T&lt;/span>) {
@@ -250,95 +310,4 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;h2 id="the-problem-of-windows-shortcuts">The Problem of Windows&amp;rsquo; Shortcuts&lt;/h2>
 &lt;p>As we know, the Windows shortcut is very limited when switching between apps and desktops. For users who are not English native speakers, switching input method when typing is also not a good experience.&lt;/p>
 &lt;p>Comparing with Windows, MacOS has a very powerful shortcut system. You can always use &lt;code>cmd + q&lt;/code> to close a window, &lt;code>caplock&lt;/code> to switch between input methods.&lt;/p>
-&lt;p>DHH moved the MacOS&amp;rsquo; advantages to Linux. The Windows users can also refer to the Omakub project and build a more powerful development environment.&lt;/p></description></item><item><title>RESTful Web Service Cookbook 笔记</title><link>https://sund.site/posts/2024/restful-api-cookbook/</link><pubDate>Sat, 13 Jul 2024 16:12:34 +0800</pubDate><guid>https://sund.site/posts/2024/restful-api-cookbook/</guid><description>&lt;p>&lt;a href="https://www.oreilly.com/library/view/restful-web-services/9780596809140/">RESTful Web Service Cookbook&lt;/a> 是一本简短、精炼的 RESTful 接口设计指南。这篇文章（笔记）用来记录这本书中提到的重点。&lt;/p>
-&lt;blockquote>
-&lt;p>因为 RESTful 对后端开发来说实在太熟悉不过，所以我会省略掉那些习以为常的约定，只记录书中提到的、大多数开发者没有注意到的细节。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="http-method">HTTP Method&lt;/h2>
-&lt;h3 id="get">GET&lt;/h3>
-&lt;p>进行&lt;strong>安全&lt;/strong>与&lt;strong>幂等&lt;/strong>的信息获取。&lt;/p>
-&lt;h3 id="post">POST&lt;/h3>
-&lt;p>执行的目标是一个资源集合（工厂），而不是具体的 URI。&lt;/p>
-&lt;p>适用场景：&lt;/p>
-&lt;ul>
-&lt;li>创建新的资源,把资源作为一个工厂。&lt;/li>
-&lt;li>通过一个控制器资源来修改一个或多个资源。&lt;/li>
-&lt;li>执行需要大数据输入（参数较多）的查询。&lt;/li>
-&lt;li>&lt;strong>在其他 HTTP 方法看上去不合适时，执行不安全或非幂等的操作&lt;/strong>。&lt;/li>
-&lt;/ul>
-&lt;p>解决方案：&lt;/p>
-&lt;ul>
-&lt;li>将一个已存在的资源标识为创建新资源的工厂。虽然您可以把任意资源用做工厂,但常见的做法是使用一个集合资源。&lt;/li>
-&lt;li>让客户端向工厂资源提交附有需要创建资源的表述的 POST 请求。通过可选支持的 &lt;strong>Slug&lt;/strong> 头, 客户端可以向服务器建议一个名字,作为被创建资源的 URI 的一部分。&lt;/li>
-&lt;li>资源创建之后,返回响应码 &lt;strong>201(Created)&lt;/strong>,并在 &lt;strong>Location&lt;/strong> 头中包含新创建资源的 URI。&lt;/li>
-&lt;li>如果响应正文包含了新创建资源的完整表述,那么在 &lt;strong>Content-Location&lt;/strong> 头中包含新创建资源的 URI。&lt;/li>
-&lt;/ul>
-&lt;h3 id="put">PUT&lt;/h3>
-&lt;p>仅在客户端可以控制 URI 的构成时,才使用 PUT 方法创建新资源。&lt;strong>（换句话说，PUT 也可以创建资源，但是仅限于客户端可以指定 URI）&lt;/strong>&lt;/p>
-&lt;h2 id="确定资源对象的粒度">确定资源对象的粒度&lt;/h2>
-&lt;p>应该以适合客户端使用模式的方式来设计资源,而不是基于现有的数据库或对象模型。&lt;/p>
-&lt;ul>
-&lt;li>可缓存性&lt;/li>
-&lt;li>减小修改频率&lt;/li>
-&lt;li>可变性——分离可变和不可变数据&lt;/li>
-&lt;/ul>
-&lt;h3 id="如何设计复合资源">如何设计复合资源?&lt;/h3>
-&lt;p>&lt;strong>复合资源&lt;/strong>降低了统一接口的可见性,因为它们的表述中包含了和其他资源相重叠的数据。&lt;/p>
-&lt;ul>
-&lt;li>如果符合资源使用&lt;strong>频率不高&lt;/strong>，可以考虑用&lt;strong>缓存&lt;/strong>替代。&lt;/li>
-&lt;li>考虑网络开销，复合资源会不会降低服务端吞吐量，增大延时。&lt;/li>
-&lt;/ul>
-&lt;h2 id="http-body">HTTP Body&lt;/h2>
-&lt;p>以 JSON 格式的 Body 为例：&lt;/p>
-&lt;ol>
-&lt;li>最好包含一个指向 self 的链接&lt;/li>
-&lt;li>如果分页，最好包含下一页的链接&lt;/li>
-&lt;li>如果分页，要指示集合的大小（总数）&lt;/li>
-&lt;li>如果查询对象是本地化的，添加一个属性来表示本地化内容的语言&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;John&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;urn:example:user:1234&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;link&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;rel&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;self&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;href&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;http://www.example.org/person/john&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;address&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;urn:example:address:4567&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;link&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;rel&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;self&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;href&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;http://www.example.org/person/john/address&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="http-response">HTTP Response&lt;/h2>
-&lt;ol>
-&lt;li>对于客户端错误，返回 4xx 状态码 + Date （错误发生的时间）。&lt;/li>
-&lt;li>对于服务端错误，返回 5xx 状态码 + Date （错误发生的时间）。&lt;/li>
-&lt;li>Body 中要描述错误，如果有外部文档和链接可参考，在 Header 提供一个 Link 头或直接把链接写在 Body 里。&lt;/li>
-&lt;li>为了后期追踪或分析，在服务器上记录了错误日志，应该提供一个可以找到该错误的标识符或链接。&lt;/li>
-&lt;/ol>
-&lt;h2 id="设计查询结构">设计查询结构&lt;/h2>
-&lt;h3 id="设计查询请求">设计查询请求&lt;/h3>
-&lt;ol>
-&lt;li>为了缓存和性能，尽量避免范围查询。解决方法包括：
-&lt;ul>
-&lt;li>使用预定义查询&lt;/li>
-&lt;li>也可以使用 HTTP Header： Range&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>避免使用通用语言（SQL、XPATH）的查询。&lt;/li>
-&lt;li>避免 URI 和数据存储方式的紧耦合（前端把后端当作数据库）。&lt;/li>
-&lt;li>对于参数较多，可以考虑使用 POST（因为 URI 长度有最大限制）
-&lt;ul>
-&lt;li>POST 接口的缺点是丧失了缓存能力&lt;/li>
-&lt;li>POST 请求是不可缓存的，所以 Cache-Control 和 Expires 头无济于事&lt;/li>
-&lt;li>解决缓存问题，可以让 POST 创建一个临时资源，把 link 返回前端，前端下次用 GET 获取该资源&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="设计查询响应结果">设计查询响应结果&lt;/h3>
-&lt;ol>
-&lt;li>返回集合。添加合理的缓存过期头。&lt;/li>
-&lt;li>如果没有结果，应该返回&lt;strong>空集合&lt;/strong>。&lt;/li>
-&lt;/ol></description></item></channel></rss>
+&lt;p>DHH moved the MacOS&amp;rsquo; advantages to Linux. The Windows users can also refer to the Omakub project and build a more powerful development environment.&lt;/p></description></item></channel></rss>

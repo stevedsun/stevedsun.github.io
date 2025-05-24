@@ -1,4 +1,76 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Tue, 13 May 2025 13:49:37 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>读完这本书，沟通将是一个有迹可循的过程</title><link>https://sund.site/posts/2025/super-communicator/</link><pubDate>Tue, 13 May 2025 13:49:37 +0800</pubDate><guid>https://sund.site/posts/2025/super-communicator/</guid><description>&lt;p>沟通能力能够决定了一个人是否幸福。在与周围人相处融洽的环境下，能让我们觉得被包容，被理解。反之会让我们苦恼：明明抱有善意的交流，为什么总是导致冲突和分歧。到底问题出在哪里？&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sat, 24 May 2025 12:50:40 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p>&lt;a href="https://deepwiki.com">DeepWIKI&lt;/a> 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p>
+&lt;p>我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p>
+&lt;p>##　生成代码结构地图&lt;/p>
+&lt;p>首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong>代表语法结构和文件结构的元数据&lt;/strong>和&lt;strong>代表代码描述和片段的向量数据&lt;/strong>两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p>
+&lt;h2 id="生成-wiki-页面">生成 WIKI 页面&lt;/h2>
+&lt;p>生成 WIKI 页面的过程，就是 RAG 系统 query 的过程：&lt;/p>
+&lt;ol>
+&lt;li>程序递归读取项目结构。&lt;/li>
+&lt;li>从元数据库中查询当前文件的元数据，再从向量数据库中查找相关性最强的代码和描述信息的 id。&lt;/li>
+&lt;li>用这些 id 再去元数据库里查询到描述信息，从工程文件中查询对应代码片段。&lt;/li>
+&lt;li>将上面的所有内容作为 context，根据元数据类型（架构、组件等）组合适当的 prompt，输入给 LLM。&lt;/li>
+&lt;li>最后由一个前端渲染引擎把 LLM 的输出渲染成文档页面。&lt;/li>
+&lt;li>重复步骤 1。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/">&lt;/p>
+&lt;h2 id="难点-1分块策略">难点 1：分块策略&lt;/h2>
+&lt;p>上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p>
+&lt;p>但是代码的拆分不同，比如一个函数体由&lt;code>{&lt;/code> &lt;code>}&lt;/code>包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p>
+&lt;p>目前的解决办法有两种，一种是基于整个文件的分块，这种情况文件大小不能超过分块大小的上限，而且分块数据缺少真实的调用关系上下文。我们知道，代码的组织单元并不是文件（文件树只是方便人类阅读的组织形式），而是以类和函数为单元的网状依赖关系图。&lt;/p>
+&lt;p>第二种方式就是先用语法工具对代码文件做静态分析，再根据分析结果将代码以语法结构进行拆分。这种方式实现复杂，网上并没有找到相关的资料，幸而读到这篇&lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/">RAG for a Codebase with 10k Repos&lt;/a>，它介绍了如何利用语法静态分析来给代码分块，构建高效的代码仓库 RAG 系统。 但是文章也没有提供开源实现，考虑到作为商业项目的核心技术，这部分内容非常值得深入。我会持续跟进这部分内容的研究。&lt;/p>
+&lt;h2 id="难点-2-解析语法结构">难点 2: 解析语法结构&lt;/h2>
+&lt;p>元数据的语法解析要比向量数据简单一些，我从另一个开源项目&lt;a href="https://github.com/ozyyshr/RepoGraph">Repo Graph&lt;/a>中找到一些线索。&lt;/p>
+&lt;p>这个项目使用了 &lt;code>tree-sitter&lt;/code> 来分析项目语法结构，从而得到三类元数据文件：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>tag.json&lt;/code>：代表一个文件、函数、类的路径、行号、描述等基础信息。&lt;/li>
+&lt;li>&lt;code>tree_structure.json&lt;/code>: 项目的文件树结构信息。&lt;/li>
+&lt;li>&lt;code>*.pkl&lt;/code>: 对象依赖关系图。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>*.pkl&lt;/code>是语法分析器扫描项目文件之后得到的一个网状的对象关系图，它使用 python 的 pickle 库把 python 网状对象序列化成文件。&lt;/p>
+&lt;p>从这个项目的实现来看，难点 1 中嵌入向量的过程似乎也可以用 &lt;code>tree-sitter&lt;/code> 生成的代码元信息对代码按行分块。&lt;/p>
+&lt;h2 id="提示词工程">提示词工程&lt;/h2>
+&lt;p>在 RAG 查询阶段，要根据当前元信息的类型，组装不同的提示词。&lt;/p>
+&lt;p>这个项目&lt;a href="https://github.com/metauto-ai/agent-as-a-judge">Agent as a Judge&lt;/a> 里有不少提示词可供参考：&lt;/p>
+&lt;p>生成概述的提示词&lt;/p>
+&lt;pre tabindex="0">&lt;code>Provide a concise overview of this repository focused primarily on:
+* Purpose and Scope: What is this project&amp;#39;s main purpose?
+* Core Features: What are the key features and capabilities?
+* Target audience/users
+* Main technologies or frameworks used
+&lt;/code>&lt;/pre>&lt;p>生成架构文档的提示词&lt;/p>
+&lt;pre tabindex="0">&lt;code>Create a comprehensive architecture overview for this repository. Include:
+* A high-level description of the system architecture
+* Main components and their roles
+* Data flow between components
+* External dependencies and integrations
+&lt;/code>&lt;/pre>&lt;p>生成组件文档的提示词&lt;/p>
+&lt;pre tabindex="0">&lt;code>Provide a comprehensive analysis of all key components in this codebase. For each component:
+* Name of the component
+* Purpose and main responsibility
+* How it interacts with other components
+* Design patterns or techniques used
+* Key characteristics
+* File paths that implement this component
+&lt;/code>&lt;/pre>&lt;p>其余请参考项目文件，就不一一列举了。&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>DeepWIKI 是一个基于 RAG 系统的代码文档生成工具，它通过以下步骤工作：&lt;/p>
+&lt;ol>
+&lt;li>对代码仓库进行语法分析，生成元数据和向量数据&lt;/li>
+&lt;li>然后通过 RAG 系统查询这些数据来生成文档&lt;/li>
+&lt;li>最后用前端引擎渲染成可读的文档页面&lt;/li>
+&lt;/ol>
+&lt;p>实现过程中有两个主要难点：&lt;/p>
+&lt;ul>
+&lt;li>代码分块策略：需要考虑代码的语法结构，不能像自然语言那样简单分割&lt;/li>
+&lt;li>语法结构解析：可以使用 tree-sitter 等工具来解析代码结构&lt;/li>
+&lt;/ul>
+&lt;p>虽然目前有一些开源项目可以参考，但核心的分块策略实现仍然需要深入研究。&lt;/p>
+&lt;h2 id="参考项目">参考项目&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/metauto-ai/agent-as-a-judge">Agent as a Judge&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/ozyyshr/RepoGraph">Repo Graph&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open">DeepWiki Open&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>读完这本书，沟通将是一个有迹可循的过程</title><link>https://sund.site/posts/2025/super-communicator/</link><pubDate>Tue, 13 May 2025 13:49:37 +0800</pubDate><guid>https://sund.site/posts/2025/super-communicator/</guid><description>&lt;p>沟通能力能够决定了一个人是否幸福。在与周围人相处融洽的环境下，能让我们觉得被包容，被理解。反之会让我们苦恼：明明抱有善意的交流，为什么总是导致冲突和分歧。到底问题出在哪里？&lt;/p>
 &lt;p>《超级沟通者》这本书最近给我很多启发，我希望和你分享一些沟通技巧。这和那些强调同理心，强调谈判方法的书籍不同，它提出了一个更深层次的观点：&lt;strong>对话的目的，是了解身边人如何看待世界的同时，帮助他们理解我们的想法&lt;/strong>。&lt;/p>
 &lt;h2 id="当对话进入到个人感受层面的交流时人与人才能建立起深度的连接">当对话进入到个人感受层面的交流时，人与人才能建立起深度的连接&lt;/h2>
 &lt;p>哈佛大学进行过一项调查，为什么有些会议能够缓和参与各方的冲突并达成共识，为什么有些谈话的参与者能够建立起深层次的连接。研究者发现，这类沟通中往往存在一个高中心度参与者，也就是标题中的「超级沟通者」，他具有这些特点：&lt;/p>
@@ -268,46 +340,4 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;p>与某物共生，前提是它必须足够复杂。需要你认真去理解，去体会。简单就意味着「参数」太少，它无法向你拟合，你只能傻傻地向它拟合，适应它。&lt;/p>
 &lt;p>为了让某物达到你预期的状态，你要经过漫长的、名为磨合的旅程。这期间，你看到了和预期中不同的风景，最初预设的目标不那么重要了，无尽的可能性在前方等着你。&lt;/p>
 &lt;p>这就是最佳状态，不用纠结于完美，完美是平衡，旅程本身就是目的地。&lt;/p>
-&lt;p>朋友们，像车手训练自己耐力那样，不断去和你周遭的一切磨合吧，因为磨合就是人生的全部意义。&lt;/p></description></item><item><title>Windows Efficient Setup</title><link>https://sund.site/posts/2024/windows-efficient-setup/</link><pubDate>Sat, 31 Aug 2024 00:23:37 +0800</pubDate><guid>https://sund.site/posts/2024/windows-efficient-setup/</guid><description>&lt;p>Last month I read DHH&amp;rsquo;s blog post &lt;a href="https://world.hey.com/dhh/introducing-omakub-354db366">Introducing Omakub&lt;/a>. Omakub is a project that helps you to setup your Ubuntu machine by running a single command. DHH composed a list of tools he uses on his Ubuntu.&lt;/p>
-&lt;p>In spirit of the post, I decided to setup my Windows machine efficiently like Omakub.&lt;/p>
-&lt;p>You can find the full setup script &lt;a href="https://gist.github.com/stevedsun/319f0c05b02e739207743dd441b6239a">here&lt;/a>.&lt;/p>
-&lt;p>Following is the keyboard Layout I am using.&lt;/p>
-&lt;h2 id="keyboard-layout">Keyboard Layout&lt;/h2>
-&lt;p>&lt;strong>Tool&lt;/strong>: AutoHotKey, PowerToys&lt;/p>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>Shortcut&lt;/th>
- &lt;th>Description&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>Alt + Number&lt;/td>
- &lt;td>Switch between Apps&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Win + Number&lt;/td>
- &lt;td>Switch between Desktops&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Caplock&lt;/td>
- &lt;td>Switch between Input Methods&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Caplock(hold)&lt;/td>
- &lt;td>Switch between Upper/Lower&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;ol>
-&lt;li>Download &lt;a href="https://github.com/Ciantic/VirtualDesktopAccessor/releases/tag/2024-01-25-windows11">VirtualDesktopAccessor.dll&lt;/a>&lt;/li>
-&lt;li>Put the &lt;code>.dll&lt;/code> and &lt;code>.ahk&lt;/code> files in one folder, create a shortcut for &lt;code>Config.ahk&lt;/code>.&lt;/li>
-&lt;li>Copy the shortcut to path &lt;code>C:\Users\&amp;lt;YourName&amp;gt;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup&lt;/code> to make it auto startup.&lt;/li>
-&lt;li>Install &lt;code>PowerToys&lt;/code>, remap &lt;code>LWin&lt;/code> and &lt;code>LAlt&lt;/code>.&lt;/li>
-&lt;li>(Optional) Turn off window animation in windows settings.&lt;/li>
-&lt;/ol>
-&lt;h2 id="the-problem-of-windows-shortcuts">The Problem of Windows&amp;rsquo; Shortcuts&lt;/h2>
-&lt;p>As we know, the Windows shortcut is very limited when switching between apps and desktops. For users who are not English native speakers, switching input method when typing is also not a good experience.&lt;/p>
-&lt;p>Comparing with Windows, MacOS has a very powerful shortcut system. You can always use &lt;code>cmd + q&lt;/code> to close a window, &lt;code>caplock&lt;/code> to switch between input methods.&lt;/p>
-&lt;p>DHH moved the MacOS&amp;rsquo; advantages to Linux. The Windows users can also refer to the Omakub project and build a more powerful development environment.&lt;/p></description></item></channel></rss>
+&lt;p>朋友们，像车手训练自己耐力那样，不断去和你周遭的一切磨合吧，因为磨合就是人生的全部意义。&lt;/p></description></item></channel></rss>

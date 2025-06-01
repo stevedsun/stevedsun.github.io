@@ -2,15 +2,23 @@
 title: "Steve Sun"
 ---
 
-(｡･ω･)ﾉﾞ
+我是一个热爱构建系统、也热衷于思考产品的软件从业者。
 
-你好，我叫 Steve Sun，是一名在成都的软件架构师，喜爱书籍、电影，平时在这里分享软件开发的知识和日常见闻。目前关注 AI，边缘计算。
+过去十几年，我在 ThoughtWorks、Siemens 等企业中担任架构师、技术负责人等工作，使用 Java / Python / Go 构建过从 toB 业务后台到边缘设备日志监控等各类系统。
+
+我不仅关注技术本身，更在意技术背后的系统性思考，信息技术对社会和个人的影响。
+
+我擅长将复杂问题拆解为结构清晰、易于理解的「模型」，同时乐于将我的所闻所感，与君分享。
 
 ---
 
-Hi, I'm **Steve Sun**, a software architect based in **Chengdu, China**.
+I am a software professional who is passionate about building systems and equally enthusiastic about product thinking.
 
-I used to be a Tech Lead at [ThoughtWorks](https://www.thoughtworks.com/) and now an Architect in Industrial Edge Computing. On this site, I share my views and findings on Software Architecture design, reviews of best-selling books and movies.
+Over the past decade, I have worked as an architect and technical lead at companies like ThoughtWorks and Siemens, using Java, Python, and Go to build various systems—from B2B business backends to edge device log monitoring.
+
+Beyond just the technology itself, I care deeply about the systemic thinking behind it and the impact of information technology on society and individuals.
+
+I excel at breaking down complex problems into structured, easy-to-understand "models," and I take great pleasure in sharing my insights and experiences with others.
 
 ---
 

@@ -1,4 +1,66 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>随笔 on Steve Sun</title><link>https://sund.site/categories/%E9%9A%8F%E7%AC%94/</link><description>Recent content in 随笔 on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sun, 13 Jul 2025 12:40:24 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml"/><item><title>如何与「老登」相处</title><link>https://sund.site/posts/2025/how-to-deal-with-elders/</link><pubDate>Sun, 13 Jul 2025 12:40:24 +0800</pubDate><guid>https://sund.site/posts/2025/how-to-deal-with-elders/</guid><description>&lt;p>&lt;img src="https://sund.site/images/how-to-deal-with-elders/HollywoodVices.jpg" alt="Thou Shalt Not">&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>随笔 on Steve Sun</title><link>https://sund.site/categories/%E9%9A%8F%E7%AC%94/</link><description>Recent content in 随笔 on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sat, 19 Jul 2025 01:06:32 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml"/><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p>晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p>
+&lt;p>&lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt="">&lt;/p>
+&lt;p>这时候很多人就慌了，其实完全不必慌。只需要用一个 Live USB 启动盘修复一下。&lt;/p>
+&lt;p>不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 Live USB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 Live USB。&lt;/p>
+&lt;p>下面是从 Live USB 启动后进入 Try Ubuntu ，用 Terminal 排错的过程，供大家参考。&lt;/p>
+&lt;h2 id="1-找到根分区和-efi-分区">1. 找到根分区和 EFI 分区&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>lsblk -f
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>会返回类似如下结果，其中&lt;code>vfat&lt;/code>格式是efi分区，&lt;code>ext4&lt;/code>是系统根分区。&lt;/p>
+&lt;pre tabindex="0">&lt;code>NAME FSTYPE LABEL UUID MOUNTPOINT
+nvme0n1 
+├─nvme0n1p1 vfat 1234-5678 /boot/efi
+└─nvme0n1p2 ext4 955b06a9-983d-4e04-b2ef-60b559db46e6 
+&lt;/code>&lt;/pre>&lt;h2 id="2-用fsck修复分区错误">2. 用&lt;code>fsck&lt;/code>修复分区错误&lt;/h2>
+&lt;p>注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。&lt;/p>
+&lt;p>先修复根分区：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>出现提示输入&lt;code>y&lt;/code>允许，或者&lt;code>a&lt;/code>全部允许。这一步我发现了一些错误并成功修复了。&lt;/p>
+&lt;p>接下来检查修复efi分区：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>我在这一步出现提示：&lt;/p>
+&lt;pre tabindex="0">&lt;code>there are different between boot sector and it&amp;#39;s backup：
+1) Copy original to backup
+2) Copy backup to original
+3) No action
+&lt;/code>&lt;/pre>&lt;p>根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 &lt;code>1) Copy original to backup&lt;/code> 复制原始引导扇区到备份扇区。&lt;/p>
+&lt;h2 id="3-挂载原系统并重建-initramfs">3. 挂载原系统并重建 initramfs&lt;/h2>
+&lt;p>为了方便在当前临时系统里修改原系统的配置，需要把原系统必要的运行时环境挂载到当前系统。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo mkdir -p /mnt/ubuntu
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount /dev/nvme0n1p2 /mnt/ubuntu
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /dev /mnt/ubuntu/dev
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /proc /mnt/ubuntu/proc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /sys /mnt/ubuntu/sys
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /run /mnt/ubuntu/run
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount /dev/nvme0n1p1 /mnt/ubuntu/boot/efi
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>一顿操作后，就可以切换到原系统 root shell 了。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo chroot /mnt/ubuntu
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后是安装 grub 并重新为系统内核生成 initramfs 启动镜像。&lt;code>grub-install&lt;/code>命令的参数要根据自己的系统设置。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>grub-install --target&lt;span style="color:#f92672">=&lt;/span>x86_64-efi --efi-directory&lt;span style="color:#f92672">=&lt;/span>/boot/efi --bootloader-id&lt;span style="color:#f92672">=&lt;/span>ubuntu
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-initramfs -c -k all
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-grub
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后，退出原系统 root shell，重启。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>exit
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo reboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>拔掉U盘进入原系统，我这时就可以正常登录了。&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>不要慌&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>家中常备 Live USB&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>用 &lt;code>fsck&lt;/code> 命令修复分区错误&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>用&lt;code>mount&lt;/code>挂载原系统必要文件，进入原系统并重建 initramfs&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>如何与「老登」相处</title><link>https://sund.site/posts/2025/how-to-deal-with-elders/</link><pubDate>Sun, 13 Jul 2025 12:40:24 +0800</pubDate><guid>https://sund.site/posts/2025/how-to-deal-with-elders/</guid><description>&lt;p>&lt;img src="https://sund.site/images/how-to-deal-with-elders/HollywoodVices.jpg" alt="Thou Shalt Not">&lt;/p>
 &lt;p>每一天，我们难免要和一些资历稍长（不一定指年龄）的「老登」打交道。大部分打工人在退休以前，都要活在一个由老登制定游戏规则的世界里。&lt;/p>
 &lt;p>如何应对这样的世界？下面是一个参考，不构成建议，请勿模仿。&lt;/p>
 &lt;p>1934年美国电影制片人与发行人协会出台了历史上最严格的电影制作守则──「Hays Code（海思法典）」。这部守则旨在&lt;strong>提高观众的道德水准&lt;/strong>。&lt;/p>
@@ -293,69 +355,4 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;p>回想我之前在 TW 工作时，同事关系是网状的，HR 会随时找我去面试，对于经常帮忙招聘的同事，HR 们也会回赠一些小礼物；每个人同时为不同的项目工作，既独立又联结。有时候会成为敏捷教练，有时会被临时拉去做咨询师。我翻看微信，200 多个好友里，有 104 个是 TW 的同事。
 这种关系是生态性的，每个人对工作环境都有一幅完整的图景。而另一些企业，总强调责任意识，但是工作中的功能性压倒性地占据了上风。同事之间是机械地组织起来，完成上级分配的任务。这种状态是无从谈起什么协作、效率的。&lt;/p>
 &lt;p>沈奕斐在她自己的播客节目里和她老公谈到工作时说，同事关系是要高于朋友的，因为一天里大部分时间你要和同事度过，要完成高效的协作必须建立在深层的互相认同之上。&lt;/p>
-&lt;p>所以，我们是不是要多去体察周围的人和事呢。完成工作和生活的目标固然重要，但正如徒步旅行，如果只是两点一线地直达目标，就只是一名过客，而主动探索小路和岔路，才能构建起一幅对周遭环境的完整图景。&lt;/p></description></item><item><title>渐进式地改变生活习惯——我对福格行为模型的理解</title><link>https://sund.site/posts/2022/fogg-behavior-model/</link><pubDate>Tue, 01 Nov 2022 20:23:55 +0800</pubDate><guid>https://sund.site/posts/2022/fogg-behavior-model/</guid><description>&lt;h2 id="我和失眠的斗争">我和失眠的斗争&lt;/h2>
-&lt;p>我经常被失眠折磨。也尝试过各种办法：睡前洗热水澡、手机定时关闭、每天跑步……我发现这些方法都或多或少发挥了作用，但是最终不是难以坚持，就是效果越来越差。我最近读到一本书——《福格行为模型》，让我重新审视这几年和失眠的斗争，从另一个角度认清&lt;strong>习惯&lt;/strong>，了解它是如何兴致勃勃地启动，又如何在挫折过后被放弃。我觉得《福格行为模型》是一本讲到了问题本质的书，它的道理非常凝练，甚至可以用一个公式概括。但是它却有非常强的指导性，按照书中的方法，我已经在最近一个月大大改善了睡眠质量。也希望读完这篇文章，你也有兴趣看一看这本书。&lt;/p>
-&lt;p>下面为了方便理解，我把书的内容分为理论和实践两部分。&lt;/p>
-&lt;h2 id="理论部分人的行为可以被设计">理论部分：人的行为可以被设计&lt;/h2>
-&lt;p>在这个由商业主导的世界里，有一个道理显而易见：人的行为可以被设计。如何让顾客多在广告前停留从而提高销售业绩；游戏公司如何引导玩家沉迷游戏；抖音如何用短视频杀死人们的业余时间……这种种的商业行为，都经过精密的设计。这些使人无法自拔的行为设计，能不能反过来让我们养成好的习惯呢？答案是肯定的。&lt;/p>
-&lt;p>福格教授给出了一个公式，它代表行为（&lt;strong>B&lt;/strong>ehavior）产生的三要素：动机（&lt;strong>M&lt;/strong>otivation）、能力（&lt;strong>A&lt;/strong>bility）、提示（&lt;strong>P&lt;/strong>rompt）。&lt;/p>
-&lt;blockquote>
-&lt;p>B = M A P&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;strong>动机 M 越强，行为越有可能发生；人自身达成行为的能力 A 越强，行为也越可能发生&lt;/strong>。即行为由动机和能力共同作用产生。此外，行为满足前边两种条件也不一定发生，&lt;strong>它需要一个触发开关，即提示 P&lt;/strong>。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/fogg-behavior-model/image-20221101210156089.png" alt="">&lt;/p>
-&lt;p>这张图展示了一条曲线，当（动机-能力）的坐标落在曲线上方，此时如果给行为一个提示，行为就会立刻发生。&lt;/p>
-&lt;p>比如，当一个母亲的孩子被熊攻击时，母亲会毅然去救孩子。此时，&lt;strong>孩子被攻击&lt;/strong>是&lt;strong>提示&lt;/strong>，母亲虽然&lt;strong>能力&lt;/strong>很弱，但是保护孩子的&lt;strong>动机&lt;/strong>极强，使得上图中母亲的坐标落在了曲线上方。这样&lt;strong>救孩子&lt;/strong>的行为就自然而然产生了。&lt;/p>
-&lt;blockquote>
-&lt;p>黄金行为有三个标准：&lt;/p>
-&lt;ol>
-&lt;li>这个行为能让你实现愿望（影响）&lt;/li>
-&lt;li>你想做这个行为（动机）&lt;/li>
-&lt;li>你可以做到（能力）&lt;/li>
-&lt;/ol>
-&lt;/blockquote>
-&lt;p>这也能解释习惯的产生和磨灭。当一个人意识到自己肥胖（提示），他决定开始减肥，他的动机很强，此时虽然他（减肥的）能力很弱，但是他减肥的行为却因强烈的动机而发生了。但是随着时间推移，动机变弱，使得他的坐标滑落到曲线下方。这时减肥的行为就可能终止。这就是大部分人从捡起习惯到放弃习惯的过程。这里引出了另一个重要理论。&lt;/p>
-&lt;p>&lt;strong>人的动机是不稳定的，主观改变动机非常困难&lt;/strong>。&lt;/p>
-&lt;blockquote>
-&lt;p>你不能直接从动机入手去解决问题。——福格&lt;/p>
-&lt;/blockquote>
-&lt;p>因为人心理状态这种不确定性，所以福格建议，最好按照提示 - 能力 - 动机的优先级，去打造（或是戒除）行为习惯。&lt;/p>
-&lt;p>首先是通过时间、空间、心情等条件，触发行为。&lt;strong>福格称其为锚点。锚点必须是明确、不含糊的最后行为&lt;/strong>。当这个锚点出现时，就自动提示你去完成你要做的事情。&lt;/p>
-&lt;p>其次是降低能力门槛。&lt;strong>如学习技能、购买工具、降低问题规模等，使能力满足行为触发的条件&lt;/strong>。其中降低问题规模的方法就是我们通常说的&lt;strong>微习惯&lt;/strong>，如果想要每天锻炼身体，那么就应该从每天做一个俯卧撑开始，一点点提高运动量。这个行为必须是即便阴天下雨，你心情不好，工作疲惫，也能轻易做到的。&lt;/p>
-&lt;p>另外，&lt;strong>重复做&lt;/strong>也是会降低行为的难度，作者鼓励大家用&lt;strong>高频率的小成功&lt;/strong>来养成习惯。&lt;/p>
-&lt;p>最后也是最难的是正确的动机，&lt;strong>动机必须出自你的真实意愿，你不能从网上或者成功人士那里获得动机&lt;/strong>。一个匹配我们行为的动机，必须能切实给我们带来好处。&lt;/p>
-&lt;h2 id="实践部分绘制地图重新设计我们的日常">实践部分：绘制地图，重新设计我们的日常&lt;/h2>
-&lt;p>讲完了理论，终于可以实操了。&lt;/p>
-&lt;h3 id="第一步围绕习惯找出行为">第一步，围绕习惯找出行为&lt;/h3>
-&lt;p>在一张白板或白纸中间写下你希望养成的习惯。以我自己为例，我希望保持固定节奏的健身习惯。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/fogg-behavior-model/image-20221101220730758.png" alt="">&lt;/p>
-&lt;p>然后是头脑风暴。通过发散思维，把影响这个习惯的因素全部写下来。福格在原书中描述的是找出影响习惯的&lt;strong>行为&lt;/strong>，但是直接写出行为很困难，所以我先把所有因素罗列出来，再一点点推导出行为。&lt;/p>
-&lt;p>比如，影响我保持健身频率的因素之一是天气冷容易感冒。我从这点入手分析了原因：一方面健身房人多导致换衣、器械使用需要长时间等待。另一方面衣服保暖做的不够。所以最后我得到两个影响健身的行为：&lt;/p>
-&lt;ol>
-&lt;li>在人相对少的时间段去健身房&lt;/li>
-&lt;li>购买轻薄但是保暖性较好的运动服（这是一次性任务）&lt;/li>
-&lt;/ol>
-&lt;p>同理，上班疲惫也是影响因素，我得到了两个行为：&lt;/p>
-&lt;ol>
-&lt;li>拆分不同训练方式到一周里的不同工作日，以避免过度运动&lt;/li>
-&lt;li>利用居家办公的那几天时间下班去健身&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="https://sund.site/images/fogg-behavior-model/image-20221101222608765.png" alt="">&lt;/p>
-&lt;p>请你结合自己的特点，找出所有影响的因素并对应到多个行为上去。&lt;strong>注意有些行为依赖于养成另外一些习惯&lt;/strong>， 比如要健身的前一天睡眠充足，就依赖好的睡眠习惯。作者建议最开始可以从三个最小的习惯开始培养，容易形成正反馈。我在训练这套方法的过程中发现，通常坏习惯都是由另外的坏习惯连锁产生的，所以从最小的习惯开始改变，慢慢会产生马太效应。&lt;/p>
-&lt;h3 id="第二步建立影响-容易程度坐标轴">第二步，建立【影响-容易程度】坐标轴&lt;/h3>
-&lt;p>把刚才拆分出来的行为，全部放在下图的坐标轴中。越容易做（执行的能力越强）、对你影响越大（动机越强）的行为，越靠近右上角。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/fogg-behavior-model/image-20221101222235671.png" alt="">&lt;/p>
-&lt;p>通常一次性的行为最容易执行（比如采购运动服）；那些需要多个步骤（比如用手机记录健身状态）比较难执行。&lt;/p>
-&lt;p>最后，我挑选了三件对我影响最大也最容易的行为来执行：采购健身装备、拆分不同训练到不同时间、居家办公时去健身。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/fogg-behavior-model/image-20221101223148524.png" alt="">&lt;/p>
-&lt;p>用同样的方法，我还制定了睡眠习惯的养成策略。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/fogg-behavior-model/image-20221101223333662.png" alt="">&lt;/p>
-&lt;p>经过最近一个多月的练习，我也渐入佳境。我在坚持了一段时间后还买了专门记录健身的手机 App 来跟踪训练效果（虽然我也没寄希望能保持长期记录，但是能给我非常好的正向激励）。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/fogg-behavior-model/image-20221101230558693.png" alt="训记App">&lt;/p>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;ul>
-&lt;li>《福格行为模型》指出了人类行为产生的公式，即 行为 = 动机 · 能力 · 提示。&lt;/li>
-&lt;li>从三要素入手，养成最小的微习惯，从而快速得到正向激励，能够帮我们快速建立好习惯。&lt;/li>
-&lt;li>制定习惯养成计划时，先从习惯拆解出具体的，可执行的行为。再按行为的优先级选择最容易、影响最大的执行。&lt;/li>
-&lt;li>某些行为依赖其他习惯，逐级拆解，同时养成三个微小的习惯，渐进式地改变生活状态吧。&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;p>所以，我们是不是要多去体察周围的人和事呢。完成工作和生活的目标固然重要，但正如徒步旅行，如果只是两点一线地直达目标，就只是一名过客，而主动探索小路和岔路，才能构建起一幅对周遭环境的完整图景。&lt;/p></description></item></channel></rss>

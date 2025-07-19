@@ -11,11 +11,11 @@ description: ""
 
 ![](https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png)
 
-这时候很多人就慌了，其实完全不必慌。只需要用一个 Live USB 启动盘修复一下。
+这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。
 
-不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 Live USB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 Live USB。
+不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。
 
-下面是从 Live USB 启动后进入 Try Ubuntu ，用 Terminal 排错的过程，供大家参考。
+下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。
 
 ## 1. 找到根分区和 EFI 分区
 
@@ -63,7 +63,7 @@ there are different between boot sector and it's backup：
 
 ## 3. 挂载原系统并重建 initramfs
 
-为了方便在当前临时系统里修改原系统的配置，需要把原系统必要的运行时环境挂载到当前系统。
+下面这一步，要把原系统根分区挂载到当前 LiveUSB 系统里，同时为了执行必要的命令，要把 LiveUSB 系统的四个关键目录挂到原系统。
 
 ```bash
 sudo mkdir -p /mnt/ubuntu

@@ -60,8 +60,8 @@
 &lt;ul>
 &lt;li>错误要有错误码&lt;/li>
 &lt;li>可以在错误信息结构里提供一个指向错误解释的 ID，如：
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;error&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Bad Request - Request is missing a required parameter: -collection_name. Update parameter and resubmit. Issue Reference Number BR0x0071&amp;#34;&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;error&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Bad Request - Request is missing a required parameter: -collection_name. Update parameter and resubmit. Issue Reference Number BR0x0071&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul></description></item><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><guid>https://sund.site/posts/2022/technical-writing/</guid><description>&lt;p>本文内容摘录自 &lt;a href="https://developers.google.com/tech-writing/overview">Technical Writing&lt;/a> （谷歌技术文档写作指南）的第一部分。&lt;/p>

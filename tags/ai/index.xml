@@ -5,8 +5,8 @@
 &lt;p>&lt;strong>Abstract Syntax Tree&lt;/strong>（&lt;strong>AST&lt;/strong>，抽象语法树）是源代码的树形表示，它反映了代码的语法结构。在代码分块时，AST 可以帮助我们更好地理解代码的语义边界。&lt;/p>
 &lt;p>AST 在各种编译、分析源代码工具中都广泛使用。例如前端的 Babel、TypeScript 编译器（TSC），就利用 AST 来将 es6 或者 TypeScript 代码转换成浏览器可理解的 js 代码。&lt;/p>
 &lt;p>下面是一个简单的例子，展示 AST 如何把 TypeScript 代码转换成树形结构，假设有一段 TypeScript 函数：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">greet&lt;/span>(&lt;span style="color:#a6e22e">name&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Hello, &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">name&lt;/span>;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">function&lt;/span> greet(name: &lt;span style="color:#fc5fa3">string&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc6a5d">&amp;#34;Hello, &amp;#34;&lt;/span> + name;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过 AST 工具的转换，它被抽象成下面的语法树结构：&lt;/p>
 &lt;ul>

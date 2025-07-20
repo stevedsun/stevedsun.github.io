@@ -4,7 +4,7 @@
 &lt;p>不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。&lt;/p>
 &lt;p>下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。&lt;/p>
 &lt;h2 id="1-找到根分区和-efi-分区">1. 找到根分区和 EFI 分区&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>lsblk -f
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>lsblk -f
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>会返回类似如下结果，其中&lt;code>vfat&lt;/code>格式是efi分区，&lt;code>ext4&lt;/code>是系统根分区。&lt;/p>
 &lt;pre tabindex="0">&lt;code>NAME FSTYPE LABEL UUID MOUNTPOINT
 nvme0n1 
@@ -13,10 +13,10 @@ nvme0n1
 &lt;/code>&lt;/pre>&lt;h2 id="2-用fsck修复分区错误">2. 用&lt;code>fsck&lt;/code>修复分区错误&lt;/h2>
 &lt;p>注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。&lt;/p>
 &lt;p>先修复根分区：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p2
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p2
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>出现提示输入&lt;code>y&lt;/code>允许，或者&lt;code>a&lt;/code>全部允许。这一步我发现了一些错误并成功修复了。&lt;/p>
 &lt;p>接下来检查修复efi分区：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p1
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p1
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>我在这一步出现提示：&lt;/p>
 &lt;pre tabindex="0">&lt;code>there are different between boot sector and it&amp;#39;s backup：
 1) Copy original to backup
@@ -25,7 +25,7 @@ nvme0n1
 &lt;/code>&lt;/pre>&lt;p>根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 &lt;code>1) Copy original to backup&lt;/code> 复制原始引导扇区到备份扇区。&lt;/p>
 &lt;h2 id="3-挂载原系统并重建-initramfs">3. 挂载原系统并重建 initramfs&lt;/h2>
 &lt;p>下面这一步，要把原系统根分区挂载到当前 LiveUSB 系统里，同时为了执行必要的命令，要把 LiveUSB 系统的四个关键目录挂到原系统。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo mkdir -p /mnt/ubuntu
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo mkdir -p /mnt/ubuntu
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount /dev/nvme0n1p2 /mnt/ubuntu
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -36,13 +36,13 @@ nvme0n1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount /dev/nvme0n1p1 /mnt/ubuntu/boot/efi
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>一顿操作后，就可以切换到原系统 root shell 了。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo chroot /mnt/ubuntu
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo chroot /mnt/ubuntu
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后是安装 grub 并重新为系统内核生成 initramfs 启动镜像。&lt;code>grub-install&lt;/code>命令的参数要根据自己的系统设置。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>grub-install --target&lt;span style="color:#f92672">=&lt;/span>x86_64-efi --efi-directory&lt;span style="color:#f92672">=&lt;/span>/boot/efi --bootloader-id&lt;span style="color:#f92672">=&lt;/span>ubuntu
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-initramfs -c -k all
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-grub
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后，退出原系统 root shell，重启。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>exit
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#d0a8ff">exit&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo reboot
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>拔掉U盘进入原系统，我这时就可以正常登录了。&lt;/p>

@@ -4,7 +4,7 @@
 &lt;p>不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。&lt;/p>
 &lt;p>下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。&lt;/p>
 &lt;h2 id="1-找到根分区和-efi-分区">1. 找到根分区和 EFI 分区&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>lsblk -f
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>lsblk -f
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>会返回类似如下结果，其中&lt;code>vfat&lt;/code>格式是efi分区，&lt;code>ext4&lt;/code>是系统根分区。&lt;/p>
 &lt;pre tabindex="0">&lt;code>NAME FSTYPE LABEL UUID MOUNTPOINT
 nvme0n1 
@@ -13,10 +13,10 @@ nvme0n1
 &lt;/code>&lt;/pre>&lt;h2 id="2-用fsck修复分区错误">2. 用&lt;code>fsck&lt;/code>修复分区错误&lt;/h2>
 &lt;p>注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。&lt;/p>
 &lt;p>先修复根分区：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p2
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p2
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>出现提示输入&lt;code>y&lt;/code>允许，或者&lt;code>a&lt;/code>全部允许。这一步我发现了一些错误并成功修复了。&lt;/p>
 &lt;p>接下来检查修复efi分区：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p1
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p1
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>我在这一步出现提示：&lt;/p>
 &lt;pre tabindex="0">&lt;code>there are different between boot sector and it&amp;#39;s backup：
 1) Copy original to backup
@@ -25,7 +25,7 @@ nvme0n1
 &lt;/code>&lt;/pre>&lt;p>根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 &lt;code>1) Copy original to backup&lt;/code> 复制原始引导扇区到备份扇区。&lt;/p>
 &lt;h2 id="3-挂载原系统并重建-initramfs">3. 挂载原系统并重建 initramfs&lt;/h2>
 &lt;p>下面这一步，要把原系统根分区挂载到当前 LiveUSB 系统里，同时为了执行必要的命令，要把 LiveUSB 系统的四个关键目录挂到原系统。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo mkdir -p /mnt/ubuntu
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo mkdir -p /mnt/ubuntu
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount /dev/nvme0n1p2 /mnt/ubuntu
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -36,13 +36,13 @@ nvme0n1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount /dev/nvme0n1p1 /mnt/ubuntu/boot/efi
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>一顿操作后，就可以切换到原系统 root shell 了。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo chroot /mnt/ubuntu
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo chroot /mnt/ubuntu
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后是安装 grub 并重新为系统内核生成 initramfs 启动镜像。&lt;code>grub-install&lt;/code>命令的参数要根据自己的系统设置。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>grub-install --target&lt;span style="color:#f92672">=&lt;/span>x86_64-efi --efi-directory&lt;span style="color:#f92672">=&lt;/span>/boot/efi --bootloader-id&lt;span style="color:#f92672">=&lt;/span>ubuntu
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-initramfs -c -k all
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-grub
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后，退出原系统 root shell，重启。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>exit
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#d0a8ff">exit&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo reboot
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>拔掉U盘进入原系统，我这时就可以正常登录了。&lt;/p>
@@ -100,8 +100,8 @@ nvme0n1
 &lt;p>&lt;strong>Abstract Syntax Tree&lt;/strong>（&lt;strong>AST&lt;/strong>，抽象语法树）是源代码的树形表示，它反映了代码的语法结构。在代码分块时，AST 可以帮助我们更好地理解代码的语义边界。&lt;/p>
 &lt;p>AST 在各种编译、分析源代码工具中都广泛使用。例如前端的 Babel、TypeScript 编译器（TSC），就利用 AST 来将 es6 或者 TypeScript 代码转换成浏览器可理解的 js 代码。&lt;/p>
 &lt;p>下面是一个简单的例子，展示 AST 如何把 TypeScript 代码转换成树形结构，假设有一段 TypeScript 函数：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">greet&lt;/span>(&lt;span style="color:#a6e22e">name&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Hello, &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">name&lt;/span>;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">function&lt;/span> greet(name: &lt;span style="color:#fc5fa3">string&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc6a5d">&amp;#34;Hello, &amp;#34;&lt;/span> + name;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过 AST 工具的转换，它被抽象成下面的语法树结构：&lt;/p>
 &lt;ul>
@@ -300,21 +300,21 @@ nvme0n1
 &lt;p>回顾上面三种类型的对话，日常交流我们可以通过区分对话类型，切换不同的思维模式，从开放性话题渐进地进入到感受层面的交流，和他人建立更深层次的连接。善加实践，我们的生活和工作都必将获益。&lt;/p></description></item><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p>最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p>
 &lt;p>我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/">Go 内存泄漏常见模式&lt;/a>中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p>
 &lt;p>在上一次教训之后，我们对代码单元测试层面做了 goruntine 内存泄漏的检测——使用&lt;code>go.uber.org/goleak&lt;/code>。只需要在单元测试开头加上一句:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">TestXXX&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">T&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#a6e22e">goleak&lt;/span>.&lt;span style="color:#a6e22e">VerifyNone&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>}
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">TestXXX&lt;/span>(t *testing.T) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">defer&lt;/span> goleak.&lt;span style="color:#41a1c0">VerifyNone&lt;/span>(t)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>它就会在测试结束后自动检查是否有残留的 goroutine 协程。对于一些延迟执行的后台 goroutine 可以在单元测试里用 wait 或者 sleep 等待后台释放再结束测试用例。&lt;/p>
 &lt;p>经过第一轮排查可以排除代码本身 goroutine 造成的问题。于是我把注意力转向了另一个地方：定时任务。&lt;/p>
 &lt;p>根据客户反馈，在无任何前台操作的情况下，内存也会缓慢上升。&lt;/p>
 &lt;p>在我们代码里，使用了&lt;code>github.com/robfig/cron/v3&lt;/code>这个第三方包，它的作用是编排定时任务。用法是&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">c&lt;/span> = &lt;span style="color:#a6e22e">cron&lt;/span>.&lt;span style="color:#a6e22e">New&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">c&lt;/span>.&lt;span style="color:#a6e22e">AddFunc&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;@every 10s&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">callbackFunc&lt;/span>)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>c = cron.&lt;span style="color:#41a1c0">New&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c.&lt;span style="color:#41a1c0">AddFunc&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;@every 10s&amp;#34;&lt;/span>, callbackFunc)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这种结构定义一个定时任务。它的实现也基于 goroutine，所以我把 go 自带的 pprof 加入到 main.go 的依赖中，重新编译了项目二进制文件并部署到测试环境上（使用跟用户相同的硬件配置）。这样启动项目后就可以在特定端口获取内存信息。（关于 pprof，你可以参考 &lt;a href="https://go.dev/blog/pprof">Profiling Go Programs&lt;/a>）&lt;/p>
 &lt;p>我使用 pprof 的接口获取了不同时间间隔的 heap 数据&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">curl&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#a6e22e">o&lt;/span> &lt;span style="color:#a6e22e">heap&lt;/span>&lt;span style="color:#ae81ff">.1&lt;/span>.&lt;span style="color:#a6e22e">out&lt;/span> &lt;span style="color:#a6e22e">http&lt;/span>:&lt;span style="color:#75715e">//127.0.0.1:6060/debug/pprof/heap
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>curl -o heap&lt;span style="color:#d0bf69">.1&lt;/span>.out http:&lt;span style="color:#6c7986">//127.0.0.1:6060/debug/pprof/heap
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">go&lt;/span> &lt;span style="color:#a6e22e">tool&lt;/span> &lt;span style="color:#a6e22e">pprof&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#a6e22e">http&lt;/span>=:&lt;span style="color:#ae81ff">8099&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#a6e22e">base&lt;/span> &lt;span style="color:#a6e22e">heap&lt;/span>&lt;span style="color:#ae81ff">.1&lt;/span>.&lt;span style="color:#a6e22e">out&lt;/span> &lt;span style="color:#a6e22e">heap&lt;/span>&lt;span style="color:#ae81ff">.2&lt;/span>.&lt;span style="color:#a6e22e">out&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">go&lt;/span> tool pprof -http=:&lt;span style="color:#d0bf69">8099&lt;/span> -base heap&lt;span style="color:#d0bf69">.1&lt;/span>.out heap&lt;span style="color:#d0bf69">.2&lt;/span>.out
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>比较两次结果的差异，在 Web UI 上选择 In Use Space 选项，可以查看到哪些内存没有释放。&lt;/p>
 &lt;p>虽然经过第二轮排查，依然没有发现内存泄漏。但这一次我注意到服务中的一个定时任务会每隔 10 秒执行一次，执行过程中 CPU 占用率明显上升。在这个任务的代码里，它使用了&lt;code>github.com/shirou/gopsutil/process&lt;/code>这个第三方库来查询系统进程 ID 和进程名等信息。&lt;/p>
 &lt;p>我查看它的源码后发现，这个库查询进程 ID 的方式，是把系统中所有的进程信息加载到内存中，然后匹配 ID 或者名称。因此，如果用户设备上的进程过多，就会每次查询时占用大量内存。&lt;/p>

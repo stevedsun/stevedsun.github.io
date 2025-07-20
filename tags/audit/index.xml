@@ -143,75 +143,75 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
  &lt;/tbody>
 &lt;/table>
 &lt;p>下面是 kubernetes apiserver 关于 Audit 消息格式定义的例子：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;apiVersion&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;audit.k8s.io/v1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;kind&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Event&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;level&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Metadata&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;auditID&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;12345678-1234-1234-1234-1234567890ab&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;stage&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;ResponseComplete&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;requestURI&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;/api/v1/namespaces/default/pods&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;verb&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;get&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;user&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;username&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;admin&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;uid&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;1234&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;groups&amp;#34;&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;system:masters&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;extra&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;someKey&amp;#34;&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;someValue&amp;#34;&lt;/span>]
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;audit.k8s.io/v1&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;kind&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Event&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;level&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Metadata&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;auditID&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345678-1234-1234-1234-1234567890ab&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;stage&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;ResponseComplete&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestURI&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;/api/v1/namespaces/default/pods&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;verb&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;get&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;user&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;username&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;admin&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;1234&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;groups&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;system:masters&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;extra&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;someKey&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;someValue&amp;#34;&lt;/span>]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;sourceIPs&amp;#34;&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;192.168.1.1&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;userAgent&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;kubectl/v1.20.0 (linux/amd64) kubernetes/abcdef&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;objectRef&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;resource&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pods&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;namespace&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;uid&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;abcdef12-3456-7890-abcd-ef1234567890&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;apiVersion&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;v1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;resourceVersion&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;12345&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;subresource&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;status&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;sourceIPs&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;192.168.1.1&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;userAgent&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;kubectl/v1.20.0 (linux/amd64) kubernetes/abcdef&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;objectRef&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resource&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;pods&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;abcdef12-3456-7890-abcd-ef1234567890&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;v1&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;subresource&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;status&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;responseStatus&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;metadata&amp;#34;&lt;/span>: {},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;status&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Success&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;code&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">200&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;responseStatus&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {},
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;status&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Success&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;code&amp;#34;: &lt;span style="color:#d0bf69">200&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;requestObject&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;metadata&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;namespace&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;default&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestObject&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;spec&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;containers&amp;#34;&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;spec&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;containers&amp;#34;: [
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-container&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;image&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-image&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-container&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-image&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;responseObject&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;metadata&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;namespace&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;resourceVersion&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;12345&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;responseObject&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;spec&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;containers&amp;#34;&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;spec&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;containers&amp;#34;: [
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-container&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;image&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-image&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-container&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-image&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;status&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;phase&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Running&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;status&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;phase&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Running&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;requestReceivedTimestamp&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2023-05-21T12:34:56Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;stageTimestamp&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2023-05-21T12:34:57Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;annotations&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;authorization.k8s.io/decision&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;allow&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;authorization.k8s.io/reason&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;RBAC: allowed by RoleBinding \&amp;#34;admin-binding\&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestReceivedTimestamp&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;2023-05-21T12:34:56Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;stageTimestamp&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;2023-05-21T12:34:57Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;annotations&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;authorization.k8s.io/decision&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;allow&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;authorization.k8s.io/reason&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;RBAC: allowed by RoleBinding \&amp;#34;admin-binding\&amp;#34;&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="对于安全性有哪些要求">对于安全性有哪些要求？&lt;/h2>

@@ -10,10 +10,10 @@
 &lt;p>Mac 版 UU 加速器目前还处于免费测试阶段，可以随意使用。按照提示配置 NS 上的 IP 和 DNS 即可。但是如果想让联机速度突破 A，甚至小于 30ms 延迟，就要结合第二部分「进阶方法」中的内容了。&lt;/p>
 &lt;h3 id="最方便的方法dns-优化">最方便的方法：DNS 优化&lt;/h3>
 &lt;p>这也是最多人的办法，以「Splatoon2」为例，四川电信在不使用任何加速器的情况下，单单设置了合适的 DNS，就可以流畅体验乌贼娘了。注意这种方法在晚上 8 ～ 10 点高峰期间有一定概率掉线。下面提供一些我常用的 DNS，不同地区效果不同，需要自己尝试。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>218.102.23.228 &lt;span style="color:#75715e"># 一般用作日本eshop下载游戏，速度提升明显&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>218.102.23.228 &lt;span style="color:#6c7986"># 一般用作日本eshop下载游戏，速度提升明显&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>203.198.7.66
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.1 &lt;span style="color:#75715e"># 著名韩国DNS节点，Splatoon2 联机常用&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.2 &lt;span style="color:#75715e"># 同上&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.1 &lt;span style="color:#6c7986"># 著名韩国DNS节点，Splatoon2 联机常用&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.2 &lt;span style="color:#6c7986"># 同上&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="进阶方法">进阶方法&lt;/h2>
 &lt;p>进阶方法可以最大限度的提升你的网络通信效率。&lt;/p>
 &lt;h3 id="路由器设置优化">路由器设置优化&lt;/h3>

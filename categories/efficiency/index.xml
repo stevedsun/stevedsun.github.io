@@ -285,31 +285,31 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;p>到 &lt;a href="https://comsysto.github.io/Display-Override-PropertyList-File-Parser-and-Generator-with-HiDPI-Support-For-Scaled-Resolutions/">这个网站&lt;/a> ，在左侧的空里分别输入显示器型号，DisplayProductID 和 DisplayVendorID，注意填 16 进制的数字，并且检查下后边 10 进制的数字是不是和你刚才命令查到的一致。如果需要添加自己额外的分辨率，直接在下边新建一条分辨率配置就行。最后，复制右边生成 XML 格式文本，粘贴到刚才新建的文件里。（也可以直接从网站下载文件，去掉文件名后缀 &lt;code>.plist&lt;/code> ）&lt;/p>
 &lt;!-- raw HTML omitted -->
 &lt;p>XML 文件类似下边这样：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-xml" data-lang="xml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;plist&lt;/span> &lt;span style="color:#a6e22e">version=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>DisplayProductID&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>41156&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>DisplayVendorID&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>4268&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>scale-resolutions&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAKAAAABaAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAFAAAAAtAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAPAAAACHAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAHgAAABDgAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAMgAAABwgAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAGQAAAA4QAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAKAgAABaAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAKrAAABgAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;data&amp;gt;&lt;/span>AAAFVgAAAwAAAAABACAAAA==&lt;span style="color:#f92672">&amp;lt;/data&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/plist&amp;gt;&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-xml" data-lang="xml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fd8f3f">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fd8f3f">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;plist version=&lt;span style="color:#fc6a5d">&amp;#34;1.0&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;dict&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;key&amp;gt;DisplayProductID&amp;lt;/key&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;integer&amp;gt;41156&amp;lt;/integer&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;key&amp;gt;DisplayVendorID&amp;lt;/key&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;integer&amp;gt;4268&amp;lt;/integer&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;key&amp;gt;scale-resolutions&amp;lt;/key&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;array&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;data&amp;gt;AAAKAAAABaAAAAABACAAAA==&amp;lt;/data&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;data&amp;gt;AAAFAAAAAtAAAAABACAAAA==&amp;lt;/data&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;data&amp;gt;AAAPAAAACHAAAAABACAAAA==&amp;lt;/data&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;data&amp;gt;AAAHgAAABDgAAAABACAAAA==&amp;lt;/data&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;data&amp;gt;AAAMgAAABwgAAAABACAAAA==&amp;lt;/data&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;data&amp;gt;AAAGQAAAA4QAAAABACAAAA==&amp;lt;/data&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;data&amp;gt;AAAKAgAABaAAAAABACAAAA==&amp;lt;/data&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;data&amp;gt;AAAKrAAABgAAAAABACAAAA==&amp;lt;/data&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;data&amp;gt;AAAFVgAAAwAAAAABACAAAA==&amp;lt;/data&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/array&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/dict&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/plist&amp;gt;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-复制-plist-配置文件到系统配置目录">4. 复制 plist 配置文件到系统配置目录&lt;/h3>
 &lt;p>这一步就是把刚才新建的配置文件复制到你系统目录里，你直接复制通常会提示你系统目录是「只读」的，不允许你胡作非为。所以你先要在终端执行下面的命令：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo mount -uw /
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo mount -uw /
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样，你就可以复制到系统的文件夹了。（这个命令重启后失效）&lt;/p>
 &lt;p>接下来打开系统文件夹&lt;code>/System/Library/Displays/Contents/Resources/Overrides/&lt;/code>，你会发现一大堆跟你刚才文件夹命名相似的目录。把你新建的文件夹丢进去，和它们混在一起，假装它原来就是其中一员。重启。&lt;/p>
 &lt;h3 id="5-修改分辨率">5. 修改分辨率&lt;/h3>
@@ -391,10 +391,10 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;p>Mac 版 UU 加速器目前还处于免费测试阶段，可以随意使用。按照提示配置 NS 上的 IP 和 DNS 即可。但是如果想让联机速度突破 A，甚至小于 30ms 延迟，就要结合第二部分「进阶方法」中的内容了。&lt;/p>
 &lt;h3 id="最方便的方法dns-优化">最方便的方法：DNS 优化&lt;/h3>
 &lt;p>这也是最多人的办法，以「Splatoon2」为例，四川电信在不使用任何加速器的情况下，单单设置了合适的 DNS，就可以流畅体验乌贼娘了。注意这种方法在晚上 8 ～ 10 点高峰期间有一定概率掉线。下面提供一些我常用的 DNS，不同地区效果不同，需要自己尝试。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>218.102.23.228 &lt;span style="color:#75715e"># 一般用作日本eshop下载游戏，速度提升明显&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>218.102.23.228 &lt;span style="color:#6c7986"># 一般用作日本eshop下载游戏，速度提升明显&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>203.198.7.66
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.1 &lt;span style="color:#75715e"># 著名韩国DNS节点，Splatoon2 联机常用&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.2 &lt;span style="color:#75715e"># 同上&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.1 &lt;span style="color:#6c7986"># 著名韩国DNS节点，Splatoon2 联机常用&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>168.126.63.2 &lt;span style="color:#6c7986"># 同上&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="进阶方法">进阶方法&lt;/h2>
 &lt;p>进阶方法可以最大限度的提升你的网络通信效率。&lt;/p>
 &lt;h3 id="路由器设置优化">路由器设置优化&lt;/h3>

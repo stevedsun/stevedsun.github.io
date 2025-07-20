@@ -5,8 +5,8 @@
 &lt;p>&lt;strong>Abstract Syntax Tree&lt;/strong>（&lt;strong>AST&lt;/strong>，抽象语法树）是源代码的树形表示，它反映了代码的语法结构。在代码分块时，AST 可以帮助我们更好地理解代码的语义边界。&lt;/p>
 &lt;p>AST 在各种编译、分析源代码工具中都广泛使用。例如前端的 Babel、TypeScript 编译器（TSC），就利用 AST 来将 es6 或者 TypeScript 代码转换成浏览器可理解的 js 代码。&lt;/p>
 &lt;p>下面是一个简单的例子，展示 AST 如何把 TypeScript 代码转换成树形结构，假设有一段 TypeScript 函数：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">greet&lt;/span>(&lt;span style="color:#a6e22e">name&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Hello, &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">name&lt;/span>;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">function&lt;/span> greet(name: &lt;span style="color:#fc5fa3">string&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc6a5d">&amp;#34;Hello, &amp;#34;&lt;/span> + name;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过 AST 工具的转换，它被抽象成下面的语法树结构：&lt;/p>
 &lt;ul>
@@ -145,21 +145,21 @@
 &lt;/ul></description></item><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p>最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p>
 &lt;p>我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/">Go 内存泄漏常见模式&lt;/a>中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p>
 &lt;p>在上一次教训之后，我们对代码单元测试层面做了 goruntine 内存泄漏的检测——使用&lt;code>go.uber.org/goleak&lt;/code>。只需要在单元测试开头加上一句:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">TestXXX&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">T&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#a6e22e">goleak&lt;/span>.&lt;span style="color:#a6e22e">VerifyNone&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>}
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">TestXXX&lt;/span>(t *testing.T) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">defer&lt;/span> goleak.&lt;span style="color:#41a1c0">VerifyNone&lt;/span>(t)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>它就会在测试结束后自动检查是否有残留的 goroutine 协程。对于一些延迟执行的后台 goroutine 可以在单元测试里用 wait 或者 sleep 等待后台释放再结束测试用例。&lt;/p>
 &lt;p>经过第一轮排查可以排除代码本身 goroutine 造成的问题。于是我把注意力转向了另一个地方：定时任务。&lt;/p>
 &lt;p>根据客户反馈，在无任何前台操作的情况下，内存也会缓慢上升。&lt;/p>
 &lt;p>在我们代码里，使用了&lt;code>github.com/robfig/cron/v3&lt;/code>这个第三方包，它的作用是编排定时任务。用法是&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">c&lt;/span> = &lt;span style="color:#a6e22e">cron&lt;/span>.&lt;span style="color:#a6e22e">New&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">c&lt;/span>.&lt;span style="color:#a6e22e">AddFunc&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;@every 10s&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">callbackFunc&lt;/span>)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>c = cron.&lt;span style="color:#41a1c0">New&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c.&lt;span style="color:#41a1c0">AddFunc&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;@every 10s&amp;#34;&lt;/span>, callbackFunc)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这种结构定义一个定时任务。它的实现也基于 goroutine，所以我把 go 自带的 pprof 加入到 main.go 的依赖中，重新编译了项目二进制文件并部署到测试环境上（使用跟用户相同的硬件配置）。这样启动项目后就可以在特定端口获取内存信息。（关于 pprof，你可以参考 &lt;a href="https://go.dev/blog/pprof">Profiling Go Programs&lt;/a>）&lt;/p>
 &lt;p>我使用 pprof 的接口获取了不同时间间隔的 heap 数据&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">curl&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#a6e22e">o&lt;/span> &lt;span style="color:#a6e22e">heap&lt;/span>&lt;span style="color:#ae81ff">.1&lt;/span>.&lt;span style="color:#a6e22e">out&lt;/span> &lt;span style="color:#a6e22e">http&lt;/span>:&lt;span style="color:#75715e">//127.0.0.1:6060/debug/pprof/heap
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>curl -o heap&lt;span style="color:#d0bf69">.1&lt;/span>.out http:&lt;span style="color:#6c7986">//127.0.0.1:6060/debug/pprof/heap
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">go&lt;/span> &lt;span style="color:#a6e22e">tool&lt;/span> &lt;span style="color:#a6e22e">pprof&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#a6e22e">http&lt;/span>=:&lt;span style="color:#ae81ff">8099&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#a6e22e">base&lt;/span> &lt;span style="color:#a6e22e">heap&lt;/span>&lt;span style="color:#ae81ff">.1&lt;/span>.&lt;span style="color:#a6e22e">out&lt;/span> &lt;span style="color:#a6e22e">heap&lt;/span>&lt;span style="color:#ae81ff">.2&lt;/span>.&lt;span style="color:#a6e22e">out&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">go&lt;/span> tool pprof -http=:&lt;span style="color:#d0bf69">8099&lt;/span> -base heap&lt;span style="color:#d0bf69">.1&lt;/span>.out heap&lt;span style="color:#d0bf69">.2&lt;/span>.out
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>比较两次结果的差异，在 Web UI 上选择 In Use Space 选项，可以查看到哪些内存没有释放。&lt;/p>
 &lt;p>虽然经过第二轮排查，依然没有发现内存泄漏。但这一次我注意到服务中的一个定时任务会每隔 10 秒执行一次，执行过程中 CPU 占用率明显上升。在这个任务的代码里，它使用了&lt;code>github.com/shirou/gopsutil/process&lt;/code>这个第三方库来查询系统进程 ID 和进程名等信息。&lt;/p>
 &lt;p>我查看它的源码后发现，这个库查询进程 ID 的方式，是把系统中所有的进程信息加载到内存中，然后匹配 ID 或者名称。因此，如果用户设备上的进程过多，就会每次查询时占用大量内存。&lt;/p>
@@ -246,39 +246,39 @@
 &lt;p>假设现在要从一个用户的服务中查询用户的信息。有两个接口，UserRepository 作为数据层负责查询数据库， UserService 负责业务逻辑，它依赖 UserRepository。同时为了方便测试，我们还要写一个 Mock 的数据层实现。 整个结构如下图。&lt;/p>
 &lt;p>&lt;img src="https://sund.site/images/go-dependency-inject/example.png" alt="Go example">&lt;/p>
 &lt;p>接下来非常轻松地，我们实现两个接口，并写了他们的实现类。同时我们还在 UserService 的实现类里写了一个 NewUserService，来把它依赖的 UserRepository 实现注入进来。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 在 user_repository.go 中实现具体的接口
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">UserRepository&lt;/span> &lt;span style="color:#66d9ef">interface&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">GetByID&lt;/span>(&lt;span style="color:#a6e22e">id&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>) (&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">User&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Save&lt;/span>(&lt;span style="color:#a6e22e">user&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">User&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// 在 user_repository.go 中实现具体的接口
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">type&lt;/span> UserRepository &lt;span style="color:#fc5fa3">interface&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#41a1c0">GetByID&lt;/span>(id &lt;span style="color:#fc5fa3">int&lt;/span>) (*User, &lt;span style="color:#fc5fa3">error&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#41a1c0">Save&lt;/span>(user *User) &lt;span style="color:#fc5fa3">error&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ... 具体实现 UserRepository，略
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// user_service.go 中实现
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">UserService&lt;/span> &lt;span style="color:#66d9ef">interface&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">GetUser&lt;/span>(&lt;span style="color:#a6e22e">id&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>) (&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">User&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">CreateUser&lt;/span>(&lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>, &lt;span style="color:#a6e22e">age&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// ... 具体实现 UserRepository，略
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// user_service.go 中实现
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">type&lt;/span> UserService &lt;span style="color:#fc5fa3">interface&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#41a1c0">GetUser&lt;/span>(id &lt;span style="color:#fc5fa3">int&lt;/span>) (*User, &lt;span style="color:#fc5fa3">error&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#41a1c0">CreateUser&lt;/span>(name &lt;span style="color:#fc5fa3">string&lt;/span>, age &lt;span style="color:#fc5fa3">int&lt;/span>) &lt;span style="color:#fc5fa3">error&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ... 具体实现 UserService，略
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">NewUserService&lt;/span>(&lt;span style="color:#a6e22e">repo&lt;/span> &lt;span style="color:#a6e22e">UserRepository&lt;/span>) &lt;span style="color:#a6e22e">UserService&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">UserServiceImpl&lt;/span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">repo&lt;/span>: &lt;span style="color:#a6e22e">repo&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// ... 具体实现 UserService，略
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">NewUserService&lt;/span>(repo UserRepository) UserService {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span> &amp;amp;UserServiceImpl{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> repo: repo,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>那么问题来了，可不可以直接在 &lt;code>user_service.go&lt;/code> 中直接把 repository 引用进来呢？显然不行，因为这样，两个模块就形成了依赖关系。&lt;/p>
 &lt;p>这一点是依赖反转的核心，上层模块不直接引用下层模块，而是由执行的类来初始化 Service 并将依赖的下层服务注入进来。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 在main.go 中
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">repo&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">MySQLUserRepository&lt;/span>{}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">userService&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">NewUserService&lt;/span>(&lt;span style="color:#a6e22e">repo&lt;/span>)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// 在main.go 中
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> repo := &amp;amp;MySQLUserRepository{}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> userService := &lt;span style="color:#41a1c0">NewUserService&lt;/span>(repo)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样，当编写测试 Mock 代码时，不需要修改任何代码逻辑，直接在测试中将&lt;code>NewUserService&lt;/code> 的参数替换成测试的假实例即可。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 在 user_service_test.go 中
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">TestUserService&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">repo&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">MockTestUserRepository&lt;/span>{}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">userService&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">NewUserService&lt;/span>(&lt;span style="color:#a6e22e">repo&lt;/span>)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// 在 user_service_test.go 中
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">TestUserService&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> repo := &amp;amp;MockTestUserRepository{}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> userService := &lt;span style="color:#41a1c0">NewUserService&lt;/span>(repo)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>另外，如果数据层修改了实现，或者迁移到另外的数据库，你只需要修改两个地方：数据层的实现者和依赖注入者。对于调用者 &lt;code>UserService&lt;/code> 则完全不受到影响。整个项目也不会形成依赖陷阱。&lt;/p>
 &lt;h2 id="总结">总结&lt;/h2>
@@ -358,18 +358,18 @@
 &lt;li>如果分页，要指示集合的大小（总数）&lt;/li>
 &lt;li>如果查询对象是本地化的，添加一个属性来表示本地化内容的语言&lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;John&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;urn:example:user:1234&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;link&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;rel&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;self&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;href&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;http://www.example.org/person/john&amp;#34;&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;John&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;id&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;urn:example:user:1234&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;link&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;rel&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;self&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;href&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;http://www.example.org/person/john&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;address&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;urn:example:address:4567&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;link&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;rel&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;self&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;href&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;http://www.example.org/person/john/address&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;address&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;id&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;urn:example:address:4567&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;link&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;rel&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;self&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;href&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;http://www.example.org/person/john/address&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
@@ -548,75 +548,75 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
  &lt;/tbody>
 &lt;/table>
 &lt;p>下面是 kubernetes apiserver 关于 Audit 消息格式定义的例子：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;apiVersion&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;audit.k8s.io/v1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;kind&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Event&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;level&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Metadata&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;auditID&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;12345678-1234-1234-1234-1234567890ab&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;stage&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;ResponseComplete&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;requestURI&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;/api/v1/namespaces/default/pods&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;verb&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;get&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;user&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;username&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;admin&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;uid&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;1234&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;groups&amp;#34;&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;system:masters&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;extra&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;someKey&amp;#34;&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;someValue&amp;#34;&lt;/span>]
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;audit.k8s.io/v1&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;kind&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Event&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;level&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Metadata&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;auditID&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345678-1234-1234-1234-1234567890ab&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;stage&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;ResponseComplete&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestURI&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;/api/v1/namespaces/default/pods&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;verb&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;get&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;user&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;username&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;admin&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;1234&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;groups&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;system:masters&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;extra&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;someKey&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;someValue&amp;#34;&lt;/span>]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;sourceIPs&amp;#34;&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;192.168.1.1&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;userAgent&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;kubectl/v1.20.0 (linux/amd64) kubernetes/abcdef&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;objectRef&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;resource&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pods&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;namespace&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;uid&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;abcdef12-3456-7890-abcd-ef1234567890&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;apiVersion&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;v1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;resourceVersion&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;12345&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;subresource&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;status&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;sourceIPs&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;192.168.1.1&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;userAgent&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;kubectl/v1.20.0 (linux/amd64) kubernetes/abcdef&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;objectRef&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resource&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;pods&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;abcdef12-3456-7890-abcd-ef1234567890&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;v1&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;subresource&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;status&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;responseStatus&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;metadata&amp;#34;&lt;/span>: {},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;status&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Success&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;code&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">200&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;responseStatus&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {},
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;status&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Success&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;code&amp;#34;: &lt;span style="color:#d0bf69">200&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;requestObject&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;metadata&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;namespace&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;default&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestObject&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;spec&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;containers&amp;#34;&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;spec&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;containers&amp;#34;: [
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-container&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;image&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-image&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-container&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-image&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;responseObject&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;metadata&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;namespace&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;resourceVersion&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;12345&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;responseObject&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;spec&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;containers&amp;#34;&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;spec&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;containers&amp;#34;: [
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-container&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;image&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-image&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-container&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-image&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;status&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;phase&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Running&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;status&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;phase&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Running&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;requestReceivedTimestamp&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2023-05-21T12:34:56Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;stageTimestamp&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2023-05-21T12:34:57Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;annotations&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;authorization.k8s.io/decision&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;allow&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;authorization.k8s.io/reason&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;RBAC: allowed by RoleBinding \&amp;#34;admin-binding\&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestReceivedTimestamp&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;2023-05-21T12:34:56Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;stageTimestamp&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;2023-05-21T12:34:57Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;annotations&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;authorization.k8s.io/decision&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;allow&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;authorization.k8s.io/reason&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;RBAC: allowed by RoleBinding \&amp;#34;admin-binding\&amp;#34;&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="对于安全性有哪些要求">对于安全性有哪些要求？&lt;/h2>

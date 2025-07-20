@@ -95,6 +95,8 @@ name = "Steve Sun"
 email = ""
 
 [markup]
+  [markup.highlight]
+    style = 'xcode-dark'
 # 配置 TOC 渲染规则
 # Configure TOC rendering rules.
 [markup.tableOfContents]

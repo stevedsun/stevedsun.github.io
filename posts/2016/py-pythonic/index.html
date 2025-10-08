@@ -1,5 +1,4 @@
-<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>Python 巧妙地将rpc接口封装成pythonic的链式调用 | Steve Sun</title>
-<meta name=title content="Python 巧妙地将rpc接口封装成pythonic的链式调用"><meta name=description content="这是一个外国人实现的 Zabbix(一个开源监控工具)的 Python Client——pyzabbix 里的代码片段。
+<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>Python 巧妙地将rpc接口封装成pythonic的链式调用 | Steve Sun</title><meta name=title content="Python 巧妙地将rpc接口封装成pythonic的链式调用"><meta name=description content="这是一个外国人实现的 Zabbix(一个开源监控工具)的 Python Client——pyzabbix 里的代码片段。
 RPC 调用
 Rpc 调用的流程是向 rpc 服务端指定的 uri(如http://www.abc.com/jsonrpc.php) 发送 json(或其他双方约定格式)数据包，数据包里有 rpc 版本信息、方法名、参数等。下面Zabbix类里的do_request方法就完成了将方法名和方法参数打包 json 后发送请求的过程。
 class Zabbix(object):
@@ -108,18 +107,18 @@ class Zabbix(object): # ... skip other class methods def do_request(self, method
 </span></span><span style=display:flex><span>        )
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#6c7986># python内建方法，当获取某个对象的属性时，调用该对象的该方法</span>
-</span></span><span style=display:flex><span>    <span style=color:#fc5fa3>def</span> __getattr__(<span style=color:#a167e6>self</span>, attr):
+</span></span><span style=display:flex><span>    <span style=color:#fc5fa3>def</span> <span style=color:#41a1c0>__getattr__</span>(<span style=color:#a167e6>self</span>, attr):
 </span></span><span style=display:flex><span>        <span style=color:#fc6a5d>&#34;&#34;&#34;Dynamically create an object class (ie: host)&#34;&#34;&#34;</span>
 </span></span><span style=display:flex><span>        <span style=color:#6c7986># 此处把self传给ZabbixAPIObjectClass的self.parent</span>
 </span></span><span style=display:flex><span>        <span style=color:#fc5fa3>return</span> ZabbixAPIObjectClass(attr, <span style=color:#a167e6>self</span>)
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#fc5fa3>class</span> <span style=color:#5dd8ff>ZabbixAPIObjectClass</span>(<span style=color:#d0a8ff>object</span>):
-</span></span><span style=display:flex><span>    <span style=color:#fc5fa3>def</span> __init__(<span style=color:#a167e6>self</span>, name, parent):
+</span></span><span style=display:flex><span>    <span style=color:#fc5fa3>def</span> <span style=color:#41a1c0>__init__</span>(<span style=color:#a167e6>self</span>, name, parent):
 </span></span><span style=display:flex><span>        <span style=color:#a167e6>self</span>.name = name
 </span></span><span style=display:flex><span>        <span style=color:#a167e6>self</span>.parent = parent
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#fc5fa3>def</span> __getattr__(<span style=color:#a167e6>self</span>, attr):
+</span></span><span style=display:flex><span>    <span style=color:#fc5fa3>def</span> <span style=color:#41a1c0>__getattr__</span>(<span style=color:#a167e6>self</span>, attr):
 </span></span><span style=display:flex><span>        <span style=color:#fc6a5d>&#34;&#34;&#34;Dynamically create a method (ie: get)&#34;&#34;&#34;</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>        <span style=color:#fc5fa3>def</span> <span style=color:#41a1c0>fn</span>(*args, **kwargs):

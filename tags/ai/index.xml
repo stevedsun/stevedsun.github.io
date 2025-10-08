@@ -1,198 +1,225 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/tags/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 02 Jun 2025 07:58:17 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p>在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki">DeepWIKI 是如何工作的&lt;/a>我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p>
-&lt;p>这个问题的答案就是 AST 分块。&lt;/p>
-&lt;p>这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p>
-&lt;h2 id="ast">AST&lt;/h2>
-&lt;p>&lt;strong>Abstract Syntax Tree&lt;/strong>（&lt;strong>AST&lt;/strong>，抽象语法树）是源代码的树形表示，它反映了代码的语法结构。在代码分块时，AST 可以帮助我们更好地理解代码的语义边界。&lt;/p>
-&lt;p>AST 在各种编译、分析源代码工具中都广泛使用。例如前端的 Babel、TypeScript 编译器（TSC），就利用 AST 来将 es6 或者 TypeScript 代码转换成浏览器可理解的 js 代码。&lt;/p>
-&lt;p>下面是一个简单的例子，展示 AST 如何把 TypeScript 代码转换成树形结构，假设有一段 TypeScript 函数：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">function&lt;/span> greet(name: &lt;span style="color:#fc5fa3">string&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc6a5d">&amp;#34;Hello, &amp;#34;&lt;/span> + name;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过 AST 工具的转换，它被抽象成下面的语法树结构：&lt;/p>
-&lt;ul>
-&lt;li>SourceFile：
-&lt;ul>
-&lt;li>FunctionDeclaration
-&lt;ul>
-&lt;li>Identifier：&amp;ldquo;greet&amp;rdquo;&lt;/li>
-&lt;li>Parameter：
-&lt;ul>
-&lt;li>Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Block：
-&lt;ul>
-&lt;li>ReturnStatement：
-&lt;ul>
-&lt;li>BinaryExpression：
-&lt;ul>
-&lt;li>StringLiteral：&amp;ldquo;Hello, &amp;quot;&lt;/li>
-&lt;li>Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>后续编译器就可以遍历这个语法树，按节点转换成 Javascript 代码。&lt;/p>
-&lt;p>理解了 AST，就大致可以理解 DeepWIKI、甚至是 Cursor 这种代码编辑器如何构建代码索引的。&lt;/p>
-&lt;h2 id="cursor">Cursor&lt;/h2>
-&lt;p>在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing">Cursor 的官方文档&lt;/a>中，可以看到关于它如何索引用户代码的相关描述。&lt;/p>
-&lt;p>Cursor 会扫描用户代码仓库，计算文件哈希值并构建 Merkle 树，类似 Git 比较文件差异的原理，Cursor 用 Merkle 树来比较用户空间文件的差异，并且将用户修改过的文件以增量的方式上传到 Cursor 的服务器。&lt;/p>
-&lt;p>被上传的文件，会被分块并嵌入，存储在 Turbopuffer 数据库中。这就是将源代码构建成 RAG 的过程。&lt;/p>
-&lt;p>这里的分块使用了 AST 工具将代码先结构化成语法树，然后将序列化后的语法树节点切成小块，最后嵌入成向量存储起来。&lt;/p>
-&lt;p>Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p>
-&lt;p>当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p>
-&lt;p>有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934">网友&lt;/a>整理了这张流程图：&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt="">&lt;/p>
-&lt;h2 id="cline">Cline&lt;/h2>
-&lt;p>&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing">Cline 的官方博客&lt;/a> 可以让我们窥见它的实现思路。&lt;/p>
-&lt;p>Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p>
-&lt;p>下面是开发者对 Cline 原理的介绍：&lt;/p>
-&lt;blockquote>
-&lt;p>When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p>
-&lt;/blockquote>
-&lt;p>Cline 会使用它们的 &lt;code>list_code_definition_names&lt;/code>工具将源代码转换成 AST。Cline 把这个 AST 当作整个源代码的「地图」。&lt;/p>
-&lt;p>当 Cline 自动执行任务时，它会分析当前要修改的文件，从文件构建 AST，从 AST 生成自然语言上下文（类似 DeepWIKI 把代码转换成文档）。并将上下文传给 LLM，让 LLM 决定下一步是该修改文件，还是需要查看另一个文件补充更多上下文。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/ast-chunk/cline.png" alt="">&lt;/p>
-&lt;p>如果说 Cursor 比较的是向量空间代码片段的相似度，Cline 就是将代码片段转换成自然语言的描述，然后让 LLM 通过语义的理解，在源代码仓库中搜寻线索，比较代码片段之间的语义相似度。&lt;/p>
-&lt;p>Cline 这种实现方式，显然更安全，企业用户不用担心 Cline 滥用源代码。但是副作用就是消耗了更多 Token。不断在不同文件之间获取上下文也花费更多时间。对于一些特殊情况，它甚至会在两个文件之间循环跳转，陷入死循环。&lt;/p>
-&lt;p>从我自身感受来说，Cline 在一些模型（Deepseek-r1, OpenAI-4o）的表现上比 Cursor 的 Agent 模式更好，因为 Cline 的语义理解比向量相似度更充分利用这些模型的自然语言能力。&lt;/p>
-&lt;p>但是对于专门为编程优化过的 Claude-Sonnet，则没有明显差异，这时就要看用户希望更高的安全性还是更快的响应速度。&lt;/p>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>本文主要介绍了代码编辑器如何利用抽象语法树（AST）来构建代码索引和实现代码补全功能。&lt;/p>
-&lt;p>总的来说，AST 是理解代码语法结构的重要工具,不同的实现方式各有优劣。&lt;/p>
-&lt;h2 id="扩展阅读">扩展阅读&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/">http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p>&lt;a href="https://deepwiki.com">DeepWIKI&lt;/a> 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p>
-&lt;p>我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p>
-&lt;h2 id="生成代码结构地图">生成代码结构地图&lt;/h2>
-&lt;p>首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong>代表语法结构和文件结构的元数据&lt;/strong>和&lt;strong>代表代码描述和片段的向量数据&lt;/strong>两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p>
-&lt;h2 id="生成-wiki-页面">生成 WIKI 页面&lt;/h2>
-&lt;p>生成 WIKI 页面的过程，就是 RAG 系统 query 的过程：&lt;/p>
-&lt;ol>
-&lt;li>程序递归读取项目结构。&lt;/li>
-&lt;li>从元数据库中查询当前文件的元数据，再从向量数据库中查找相关性最强的代码和描述信息的 id。&lt;/li>
-&lt;li>用这些 id 再去元数据库里查询到描述信息，从工程文件中查询对应代码片段。&lt;/li>
-&lt;li>将上面的所有内容作为 context，根据元数据类型（架构、组件等）组合适当的 prompt，输入给 LLM。&lt;/li>
-&lt;li>最后由一个前端渲染引擎把 LLM 的输出渲染成文档页面。&lt;/li>
-&lt;li>重复步骤 1。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/">&lt;/p>
-&lt;h2 id="难点-1分块策略">难点 1：分块策略&lt;/h2>
-&lt;p>上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p>
-&lt;p>但是代码的拆分不同，比如一个函数体由&lt;code>{&lt;/code> &lt;code>}&lt;/code>包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p>
-&lt;p>目前的解决办法有两种，一种是基于整个文件的分块，这种情况文件大小不能超过分块大小的上限，而且分块数据缺少真实的调用关系上下文。我们知道，代码的组织单元并不是文件（文件树只是方便人类阅读的组织形式），而是以类和函数为单元的网状依赖关系图。&lt;/p>
-&lt;p>第二种方式就是先用语法工具对代码文件做静态分析，再根据分析结果将代码以语法结构进行拆分。这种方式实现复杂，网上并没有找到相关的资料，幸而读到这篇&lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/">RAG for a Codebase with 10k Repos&lt;/a>，它介绍了如何利用语法静态分析来给代码分块，构建高效的代码仓库 RAG 系统。 但是文章也没有提供开源实现，考虑到作为商业项目的核心技术，这部分内容非常值得深入。我会持续跟进这部分内容的研究。&lt;/p>
-&lt;h2 id="难点-2-解析语法结构">难点 2: 解析语法结构&lt;/h2>
-&lt;p>元数据的语法解析要比向量数据简单一些，我从另一个开源项目&lt;a href="https://github.com/ozyyshr/RepoGraph">Repo Graph&lt;/a>中找到一些线索。&lt;/p>
-&lt;p>这个项目使用了 &lt;code>tree-sitter&lt;/code> 来分析项目语法结构，从而得到三类元数据文件：&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>tag.json&lt;/code>：代表一个文件、函数、类的路径、行号、描述等基础信息。&lt;/li>
-&lt;li>&lt;code>tree_structure.json&lt;/code>: 项目的文件树结构信息。&lt;/li>
-&lt;li>&lt;code>*.pkl&lt;/code>: 对象依赖关系图。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;code>*.pkl&lt;/code>是语法分析器扫描项目文件之后得到的一个网状的对象关系图，它使用 python 的 pickle 库把 python 网状对象序列化成文件。&lt;/p>
-&lt;p>从这个项目的实现来看，难点 1 中嵌入向量的过程似乎也可以用 &lt;code>tree-sitter&lt;/code> 生成的代码元信息对代码按行分块。&lt;/p>
-&lt;h2 id="提示词工程">提示词工程&lt;/h2>
-&lt;p>在 RAG 查询阶段，要根据当前元信息的类型，组装不同的提示词。&lt;/p>
-&lt;p>这个项目&lt;a href="https://github.com/metauto-ai/agent-as-a-judge">Agent as a Judge&lt;/a> 里有不少提示词可供参考：&lt;/p>
-&lt;p>生成概述的提示词&lt;/p>
-&lt;pre tabindex="0">&lt;code>Provide a concise overview of this repository focused primarily on:
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/tags/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 08 Oct 2025 20:39:15 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-e2e-testing/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-e2e-testing/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
+&lt;p&gt;用 OpenCode 而没有选其他 AI Agent 框架（如 Claude Code）是因为它可以集成公司的企业版 Github Copilot 账号，这样我们在公司内网可以无限量调用 GPT-4 和 Claude Sonnet 等大语言模型。&lt;/p&gt;
+&lt;p&gt;其次微软做的 Playwright 是一个可以调用浏览器 API 的自动化测试框架。相比于 Selenium 更轻量，社区维护更积极，和大模型结合也更好（有官方的 MCP Server）。Playwright 还内置了 webdriver，免去了很多环境配置的麻烦。&lt;/p&gt;
+&lt;p&gt;基于 OpenCode 和 Playwright-MCP-Server，稍加少量提示词模板，就可以不写一行测试代码，完整跑通一组 Web UI 的 E2E 测试用例。这在过去简直无法想象。&lt;/p&gt;
+&lt;p&gt;一直以来我都认为，让程序员去编写 E2E 测试代码费事费力，实属弊大于利的行为。对于边界情况和性能，单元测试和 API 测试可以满足90%以上的需求。E2E 测试的价值主要在于发现UI交互和集成方面的问题。用自动化 E2E 测试代码去覆盖集成测试和 UI 测试场景，不但维护成本极其高昂，每个微小的 UI 调整，都可能破坏测试代码，而且统计下来，测试组合中失败的用例有一半以上并不是功能异常引起，而是 UI 加载延迟、前端修改了变量名称、测试环境网速慢等原因。而对于一些真正威胁集成环境的特殊情况，比如网络中断造成的请求重试、接口修改造成的参数越界，编写 E2E 测试的效率都不如 UT 和 API 测试。因此我一直鼓励团队招聘一名全职的测试开发工程师，而不是让开发每个迭代都留出一部分时间去维护 E2E 测试用例。&lt;/p&gt;
+&lt;p&gt;另一方面，站在团队项目负责人的角度，我更关心需求是否真正被理解和落地，如何去验证程开发工程师实现的结果。&lt;/p&gt;
+&lt;p&gt;AI Agent 的出现让敏捷开发的工作流程有了变化。如上文提到的 OpenCode + Playwright-MCP-Server 的组合，AI 只需要阅读用户文档了解一些 UI 操作的基础知识，就能根据测试用例的自然语言描述，自动打开浏览器，根据提示词的要求一步步点击页面元素完成整个业务功能的操作，如果稍加指导，还能给出具体的执行步骤、结果、遇到的问题，生成完整的测试报告。这并不亚于聘请了一名初级测试工程师。&lt;/p&gt;
+&lt;p&gt;因为维护成本的极大降低（只需要维护一组测试用例的 markdown 描述文件），过去很多细节的 UI 测试场景可以用 AI Agent 来覆盖。最重要的是，这种工作完全不依赖研发人员，作为产品经理或者 PO、BA，都可以直接用自然语言编写测试用例，使编写用户故事 - 验证功能形成闭环，消除了业务 - 研发 - 测试三者之间互相转述需求带来的歧义。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://zh.wikipedia.org/wiki/%E4%B8%B0%E7%94%B0%E6%A8%A1%E5%BC%8F"&gt;丰田模式&lt;/a&gt;的原则中提到生产中造成浪费的几种情况：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;过度生产&lt;/li&gt;
+&lt;li&gt;等待&lt;/li&gt;
+&lt;li&gt;不必要的运输&lt;/li&gt;
+&lt;li&gt;过度加工&lt;/li&gt;
+&lt;li&gt;过多的库存&lt;/li&gt;
+&lt;li&gt;不必要的移动&lt;/li&gt;
+&lt;li&gt;缺陷&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AI Agent 一定程度上解决了“过度生产（要重复编写测试代码）”，“等待（从需求实现到测试用例实现，最后才能验证功能）”，“不必要的运输（业务需求在不同人员之间的传递）”三个方面的浪费。&lt;/p&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
+&lt;p&gt;这个问题的答案就是 AST 分块。&lt;/p&gt;
+&lt;p&gt;这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p&gt;
+&lt;h2 id="ast"&gt;AST&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Abstract Syntax Tree&lt;/strong&gt;（&lt;strong&gt;AST&lt;/strong&gt;，抽象语法树）是源代码的树形表示，它反映了代码的语法结构。在代码分块时，AST 可以帮助我们更好地理解代码的语义边界。&lt;/p&gt;
+&lt;p&gt;AST 在各种编译、分析源代码工具中都广泛使用。例如前端的 Babel、TypeScript 编译器（TSC），就利用 AST 来将 es6 或者 TypeScript 代码转换成浏览器可理解的 js 代码。&lt;/p&gt;
+&lt;p&gt;下面是一个简单的例子，展示 AST 如何把 TypeScript 代码转换成树形结构，假设有一段 TypeScript 函数：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;function&lt;/span&gt; greet(name: &lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc6a5d"&gt;&amp;#34;Hello, &amp;#34;&lt;/span&gt; + name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;经过 AST 工具的转换，它被抽象成下面的语法树结构：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SourceFile：
+&lt;ul&gt;
+&lt;li&gt;FunctionDeclaration
+&lt;ul&gt;
+&lt;li&gt;Identifier：&amp;ldquo;greet&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Parameter：
+&lt;ul&gt;
+&lt;li&gt;Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Block：
+&lt;ul&gt;
+&lt;li&gt;ReturnStatement：
+&lt;ul&gt;
+&lt;li&gt;BinaryExpression：
+&lt;ul&gt;
+&lt;li&gt;StringLiteral：&amp;ldquo;Hello, &amp;quot;&lt;/li&gt;
+&lt;li&gt;Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;后续编译器就可以遍历这个语法树，按节点转换成 Javascript 代码。&lt;/p&gt;
+&lt;p&gt;理解了 AST，就大致可以理解 DeepWIKI、甚至是 Cursor 这种代码编辑器如何构建代码索引的。&lt;/p&gt;
+&lt;h2 id="cursor"&gt;Cursor&lt;/h2&gt;
+&lt;p&gt;在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing"&gt;Cursor 的官方文档&lt;/a&gt;中，可以看到关于它如何索引用户代码的相关描述。&lt;/p&gt;
+&lt;p&gt;Cursor 会扫描用户代码仓库，计算文件哈希值并构建 Merkle 树，类似 Git 比较文件差异的原理，Cursor 用 Merkle 树来比较用户空间文件的差异，并且将用户修改过的文件以增量的方式上传到 Cursor 的服务器。&lt;/p&gt;
+&lt;p&gt;被上传的文件，会被分块并嵌入，存储在 Turbopuffer 数据库中。这就是将源代码构建成 RAG 的过程。&lt;/p&gt;
+&lt;p&gt;这里的分块使用了 AST 工具将代码先结构化成语法树，然后将序列化后的语法树节点切成小块，最后嵌入成向量存储起来。&lt;/p&gt;
+&lt;p&gt;Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p&gt;
+&lt;p&gt;当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p&gt;
+&lt;p&gt;有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;网友&lt;/a&gt;整理了这张流程图：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline 的官方博客&lt;/a&gt; 可以让我们窥见它的实现思路。&lt;/p&gt;
+&lt;p&gt;Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p&gt;
+&lt;p&gt;下面是开发者对 Cline 原理的介绍：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Cline 会使用它们的 &lt;code&gt;list_code_definition_names&lt;/code&gt;工具将源代码转换成 AST。Cline 把这个 AST 当作整个源代码的「地图」。&lt;/p&gt;
+&lt;p&gt;当 Cline 自动执行任务时，它会分析当前要修改的文件，从文件构建 AST，从 AST 生成自然语言上下文（类似 DeepWIKI 把代码转换成文档）。并将上下文传给 LLM，让 LLM 决定下一步是该修改文件，还是需要查看另一个文件补充更多上下文。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/ast-chunk/cline.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;如果说 Cursor 比较的是向量空间代码片段的相似度，Cline 就是将代码片段转换成自然语言的描述，然后让 LLM 通过语义的理解，在源代码仓库中搜寻线索，比较代码片段之间的语义相似度。&lt;/p&gt;
+&lt;p&gt;Cline 这种实现方式，显然更安全，企业用户不用担心 Cline 滥用源代码。但是副作用就是消耗了更多 Token。不断在不同文件之间获取上下文也花费更多时间。对于一些特殊情况，它甚至会在两个文件之间循环跳转，陷入死循环。&lt;/p&gt;
+&lt;p&gt;从我自身感受来说，Cline 在一些模型（Deepseek-r1, OpenAI-4o）的表现上比 Cursor 的 Agent 模式更好，因为 Cline 的语义理解比向量相似度更充分利用这些模型的自然语言能力。&lt;/p&gt;
+&lt;p&gt;但是对于专门为编程优化过的 Claude-Sonnet，则没有明显差异，这时就要看用户希望更高的安全性还是更快的响应速度。&lt;/p&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;本文主要介绍了代码编辑器如何利用抽象语法树（AST）来构建代码索引和实现代码补全功能。&lt;/p&gt;
+&lt;p&gt;总的来说，AST 是理解代码语法结构的重要工具,不同的实现方式各有优劣。&lt;/p&gt;
+&lt;h2 id="扩展阅读"&gt;扩展阅读&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWIKI&lt;/a&gt; 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p&gt;
+&lt;p&gt;我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p&gt;
+&lt;h2 id="生成代码结构地图"&gt;生成代码结构地图&lt;/h2&gt;
+&lt;p&gt;首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong&gt;代表语法结构和文件结构的元数据&lt;/strong&gt;和&lt;strong&gt;代表代码描述和片段的向量数据&lt;/strong&gt;两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p&gt;
+&lt;h2 id="生成-wiki-页面"&gt;生成 WIKI 页面&lt;/h2&gt;
+&lt;p&gt;生成 WIKI 页面的过程，就是 RAG 系统 query 的过程：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;程序递归读取项目结构。&lt;/li&gt;
+&lt;li&gt;从元数据库中查询当前文件的元数据，再从向量数据库中查找相关性最强的代码和描述信息的 id。&lt;/li&gt;
+&lt;li&gt;用这些 id 再去元数据库里查询到描述信息，从工程文件中查询对应代码片段。&lt;/li&gt;
+&lt;li&gt;将上面的所有内容作为 context，根据元数据类型（架构、组件等）组合适当的 prompt，输入给 LLM。&lt;/li&gt;
+&lt;li&gt;最后由一个前端渲染引擎把 LLM 的输出渲染成文档页面。&lt;/li&gt;
+&lt;li&gt;重复步骤 1。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/"&gt;&lt;/p&gt;
+&lt;h2 id="难点-1分块策略"&gt;难点 1：分块策略&lt;/h2&gt;
+&lt;p&gt;上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p&gt;
+&lt;p&gt;但是代码的拆分不同，比如一个函数体由&lt;code&gt;{&lt;/code&gt; &lt;code&gt;}&lt;/code&gt;包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p&gt;
+&lt;p&gt;目前的解决办法有两种，一种是基于整个文件的分块，这种情况文件大小不能超过分块大小的上限，而且分块数据缺少真实的调用关系上下文。我们知道，代码的组织单元并不是文件（文件树只是方便人类阅读的组织形式），而是以类和函数为单元的网状依赖关系图。&lt;/p&gt;
+&lt;p&gt;第二种方式就是先用语法工具对代码文件做静态分析，再根据分析结果将代码以语法结构进行拆分。这种方式实现复杂，网上并没有找到相关的资料，幸而读到这篇&lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;，它介绍了如何利用语法静态分析来给代码分块，构建高效的代码仓库 RAG 系统。 但是文章也没有提供开源实现，考虑到作为商业项目的核心技术，这部分内容非常值得深入。我会持续跟进这部分内容的研究。&lt;/p&gt;
+&lt;h2 id="难点-2-解析语法结构"&gt;难点 2: 解析语法结构&lt;/h2&gt;
+&lt;p&gt;元数据的语法解析要比向量数据简单一些，我从另一个开源项目&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;中找到一些线索。&lt;/p&gt;
+&lt;p&gt;这个项目使用了 &lt;code&gt;tree-sitter&lt;/code&gt; 来分析项目语法结构，从而得到三类元数据文件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tag.json&lt;/code&gt;：代表一个文件、函数、类的路径、行号、描述等基础信息。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tree_structure.json&lt;/code&gt;: 项目的文件树结构信息。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;*.pkl&lt;/code&gt;: 对象依赖关系图。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;*.pkl&lt;/code&gt;是语法分析器扫描项目文件之后得到的一个网状的对象关系图，它使用 python 的 pickle 库把 python 网状对象序列化成文件。&lt;/p&gt;
+&lt;p&gt;从这个项目的实现来看，难点 1 中嵌入向量的过程似乎也可以用 &lt;code&gt;tree-sitter&lt;/code&gt; 生成的代码元信息对代码按行分块。&lt;/p&gt;
+&lt;h2 id="提示词工程"&gt;提示词工程&lt;/h2&gt;
+&lt;p&gt;在 RAG 查询阶段，要根据当前元信息的类型，组装不同的提示词。&lt;/p&gt;
+&lt;p&gt;这个项目&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt; 里有不少提示词可供参考：&lt;/p&gt;
+&lt;p&gt;生成概述的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a concise overview of this repository focused primarily on:
 * Purpose and Scope: What is this project&amp;#39;s main purpose?
 * Core Features: What are the key features and capabilities?
 * Target audience/users
 * Main technologies or frameworks used
-&lt;/code>&lt;/pre>&lt;p>生成架构文档的提示词&lt;/p>
-&lt;pre tabindex="0">&lt;code>Create a comprehensive architecture overview for this repository. Include:
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成架构文档的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Create a comprehensive architecture overview for this repository. Include:
 * A high-level description of the system architecture
 * Main components and their roles
 * Data flow between components
 * External dependencies and integrations
-&lt;/code>&lt;/pre>&lt;p>生成组件文档的提示词&lt;/p>
-&lt;pre tabindex="0">&lt;code>Provide a comprehensive analysis of all key components in this codebase. For each component:
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成组件文档的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a comprehensive analysis of all key components in this codebase. For each component:
 * Name of the component
 * Purpose and main responsibility
 * How it interacts with other components
 * Design patterns or techniques used
 * Key characteristics
 * File paths that implement this component
-&lt;/code>&lt;/pre>&lt;p>其余请参考项目文件，就不一一列举了。&lt;/p>
-&lt;h2 id="总结">总结&lt;/h2>
-&lt;p>DeepWIKI 是一个基于 RAG 系统的代码文档生成工具，它通过以下步骤工作：&lt;/p>
-&lt;ol>
-&lt;li>对代码仓库进行语法分析，生成元数据和向量数据&lt;/li>
-&lt;li>然后通过 RAG 系统查询这些数据来生成文档&lt;/li>
-&lt;li>最后用前端引擎渲染成可读的文档页面&lt;/li>
-&lt;/ol>
-&lt;p>实现过程中有两个主要难点：&lt;/p>
-&lt;ul>
-&lt;li>代码分块策略：需要考虑代码的语法结构，不能像自然语言那样简单分割&lt;/li>
-&lt;li>语法结构解析：可以使用 tree-sitter 等工具来解析代码结构&lt;/li>
-&lt;/ul>
-&lt;p>虽然目前有一些开源项目可以参考，但核心的分块策略实现仍然需要深入研究。&lt;/p>
-&lt;h2 id="参考项目">参考项目&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="https://github.com/metauto-ai/agent-as-a-judge">Agent as a Judge&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://github.com/ozyyshr/RepoGraph">Repo Graph&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open">DeepWiki Open&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/pairing-with-ai-02/</guid><description>&lt;p>在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p>
-&lt;ul>
-&lt;li>任务死循环&lt;/li>
-&lt;li>模型无法修复环境问题&lt;/li>
-&lt;li>模型执行长任务后半段忘记上下文&lt;/li>
-&lt;/ul>
-&lt;h2 id="一些使用经验">一些使用经验&lt;/h2>
-&lt;p>以我自己为例，我经常使用 Cline + Github Copilot 的组合。我很喜欢 Cline 的功能是 &lt;code>Checkpoint restore&lt;/code>，它可以在执行错误的位置重新编辑提示词执行。这让我可以在相同的任务中调用不同的模型，观察他们处理问题的能力。&lt;/p>
-&lt;p>用作规划（Plan）的模型通常用 Deepseek-R1，Gemini 2.0 Flash Thinking，Claude 3.7。这里除了 Claude 3.7 能够比较准确给出计划外，其他模型多少都容易走「歪路」， 比如 Deepseek-R1 喜欢做一些多余的事情，让它翻译中文，它会调用 MCP 的翻译服务而不是自己翻译。&lt;/p>
-&lt;p>从经济角度考虑，解决简单问题 Gemini 2.0 Flash Thinking 是比较快速、经济的模型。复杂问题直接上 Claude 3.7 可能更容易控制成本。&lt;/p>
-&lt;p>用作执行任务（Act）的模型里，Deepseek-V3 表现非常不稳定，经常死循环或丢失上下文。Claude 太贵，而 Gemini 2.0 Flash 是相对准确且划算的模型。置于国产的 Qwen 系列模型不完全支持 Function Calling，Cline 也没有适配，所以暂时无法测试。&lt;/p>
-&lt;h2 id="ai-编程疑难杂症的应对方法">AI 编程疑难杂症的应对方法&lt;/h2>
-&lt;p>最近读到&lt;a href="https://ezyang.github.io/ai-blindspots/">AI Blindspots&lt;/a>这篇文章，作者系统性整理了 AI 编程中遇到的问题和他的思路。对我非常有启发。我用 Agent 把它翻译成了中文并人工做了润色，你可以在这里读到：&lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5">AI 编程的盲点&lt;/a>。&lt;/p>
-&lt;p>概括起来，解决 AI 问题的核心要领还是三点：更准确的提示词、更完整的上下文、缩小问题规模。&lt;/p>
-&lt;p>相信随着技术的发展，编程范式会发生翻天覆地的变化。如果重构变得如此容易，那么马丁福勒的《重构》是否应该出一套 AI 时代下的新范式。如果文档不再是被人读，而是喂给模型当作上下文，那么文档的形态应该是什么样？是否提供一个向量化的文档接口供大模型调用，将是未来编程框架的新常态？&lt;/p>
-&lt;p>我对未来充满期待。&lt;/p></description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p>未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p>
-&lt;p>我试图浅显地讨论一下哪些软件开发的手段更适合在 AI 时代提高 AI 编写代码的可观测性和维护性。接下来所有以「与 AI 协作编程」为标题的文章都只是抛砖引玉，并未形成系统化方法论。期望任何错误之处，读者不吝赐教。&lt;/p>
-&lt;h2 id="使用-ai-编写代码有哪些常见问题">使用 AI 编写代码有哪些常见问题？&lt;/h2>
-&lt;p>&lt;strong>可观测性问题：AI 实现的功能不完备，经常要手动修改片段&lt;/strong>&lt;/p>
-&lt;p>AI 生成代码最大的问题在于，它经常引起人类不易察觉的隐蔽错误。当人类使用 prompt 修改代码时，由于 AI 行为的不易观测性，即便修复了一个 bug，也可能导致其他回归问题（引起已有逻辑的错误）。&lt;/p>
-&lt;p>&lt;strong>上下文问题：缺少全局上下文，碎片代码之间缺少联系&lt;/strong>&lt;/p>
-&lt;p>由于 Token 数限制或经济上的考虑，很多编辑器会优化输入的内容，这就容易造成大模型错误地理解局部上下文。没有办法处理跨功能模块的业务逻辑。尤其项目变得庞大后，复杂的模块经常依赖其他模块，调整业务逻辑需要重构若干个代码文件。&lt;/p>
-&lt;h2 id="解决思路">解决思路&lt;/h2>
-&lt;p>AI 编写代码的核心问题，可以归纳为不可观测性和缺少上下文造成的低维护性。为了解决这两个问题，我们需要先回顾一下传统软件工序如何让代码更易观测和维护。&lt;/p>
-&lt;h3 id="人类主导的单元测试">人类主导的单元测试&lt;/h3>
-&lt;p>单元测试是代码的说明书。复杂的业务逻辑通常需要阅读大量代码才能看懂。但是熟练的程序员会先看单元测试。好的单元测试会把模块的预期输入、输出完整地写进 Case 里。在 &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279">Unit Testing Principles, Practices, and Patterns&lt;/a> 里，作者认为好的单元测试应该具备：&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>保护回归&lt;/strong>。即测试能够防止出现已经修复的问题在回归测试中复现的情况。&lt;/li>
-&lt;li>&lt;strong>抵抗重构&lt;/strong>。即代码重构后，测试能正确识别出重构是否对已有功能造成影响。&lt;/li>
-&lt;li>&lt;strong>快速反馈&lt;/strong>。即单元测试容易运行，发现问题能及时定位到错误。&lt;/li>
-&lt;li>&lt;strong>易于维护&lt;/strong>。 测试不同于业务代码，它的可维护体现在正确处理依赖关系和共享代码。&lt;/li>
-&lt;/ul>
-&lt;p>这些原则最终目的，都是保证被测系统按预期行为运行。&lt;/p>
-&lt;p>当 AI 和人类合作完成代码时，我个人认为，在编写单元测试这件事上，人类应该主导（80%），AI 辅助（20%），因为单元测试定义了「我期望的行为」。&lt;/p>
-&lt;p>当单元测试完善后，又反过来指导 AI 实现的真正的业务代码。这时人类占比下降，AI 占据主导。人类反复运行单元测试，同时将测试结果和 prompt 一起传递给 AI，帮助 AI 修正程序的问题。&lt;/p>
-&lt;h3 id="编写对-ai-友好的测试离不开好的模块设计">编写对 AI 友好的测试离不开好的模块设计&lt;/h3>
-&lt;p>在编写好的测试时，也要关注正确的拆分模块。一个好的测试通常是给定输入，验证是否输出预期的结果。而模块如果依赖过多外部环境做分支判断，就会造成测试的输出严重依赖外部状态。这会降低模块的可观测性。&lt;/p>
-&lt;p>下面两条经验，可以帮助你写出好的代码：&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>写测试时要测试行为的结果，而不是步骤。写业务代码时，要 AI 写清步骤。&lt;/p>
-&lt;p>单元测试的「单元」可以不是一个类或函数。而是一组完成一个原子业务逻辑的操作。（当然也有不同的流派支持以类为单位测试，但这不是本文的重点）。为了让 AI 生成的业务代码具有抗重构特性，要验证 AI 的行为结果，而不是验证每一个实现步骤。耦合测试代码和实现步骤会导致业务的修改破坏已有的测试，使得「期望的行为」要不断随着「具体的实现」来修改。&lt;/p>
-&lt;p>当 AI 开始写业务逻辑后，应该以步骤驱动的方式逐步实现，期间，人类可以针对某一步骤修正 AI 的代码逻辑。但切忌破坏测试的逻辑。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>无状态的代码（函数式）最容易测试&lt;/p>
-&lt;p>因为它的输出具有不变性。应该让核心代码尽量无状态，将状态、外部系统依赖放在应用服务层。而把深且不易理解的核心逻辑，放在领域服务层。这里的细节可以参考 DDD（Domain Driven Design）的思想。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/pairing-with-ai-01/functional_core.png" alt="functional_core.png">&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>这篇文章作为一系列人类与 AI 协作编程话题的开头，从测试角度试图缓解 AI 生成代码的可观测性问题。&lt;/p>
-&lt;p>在后边的文章里，我希望从架构设计角度，讨论一下如何设计 AI 友好的、易于维护上下文的架构。&lt;/p>
-&lt;p>文章内容会随着时间的推移，持续更新，欢迎讨论。&lt;/p></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其余请参考项目文件，就不一一列举了。&lt;/p&gt;
+&lt;h2 id="总结"&gt;总结&lt;/h2&gt;
+&lt;p&gt;DeepWIKI 是一个基于 RAG 系统的代码文档生成工具，它通过以下步骤工作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;对代码仓库进行语法分析，生成元数据和向量数据&lt;/li&gt;
+&lt;li&gt;然后通过 RAG 系统查询这些数据来生成文档&lt;/li&gt;
+&lt;li&gt;最后用前端引擎渲染成可读的文档页面&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;实现过程中有两个主要难点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;代码分块策略：需要考虑代码的语法结构，不能像自然语言那样简单分割&lt;/li&gt;
+&lt;li&gt;语法结构解析：可以使用 tree-sitter 等工具来解析代码结构&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虽然目前有一些开源项目可以参考，但核心的分块策略实现仍然需要深入研究。&lt;/p&gt;
+&lt;h2 id="参考项目"&gt;参考项目&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>为什么不应该让AI生成单元测试</title><link>https://sund.site/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/posts/2025/do-not-vibe-testing/</guid><description>&lt;p&gt;最近听到 Gru.ai 创始人张海龙老师在一档&lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9"&gt;播客节目&lt;/a&gt;中提到自动生成 Unit Testing 是他们在做 AI Coding 的主要方向。&lt;/p&gt;
+&lt;p&gt;Gru.ai 官网上有这么两句话：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Forget about unit testing – get covered automatically (忘记单元测试 - 自动覆盖)
+Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing efficiency while reducing costs and ensuring top-notch quality. (利用 AI 工程师的专业知识来提高团队的测试效率，同时降低成本并确保一流的质量。)&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;张海龙老师在 AI Coding 方向的洞见让我很有启发。我只是对用 AI 写测试降本增效这种说法，持怀疑态度。我想他们在写第二句话时还有点不自信，最后还要画蛇添足补充一句 ensuring top-notch quality（确保一流质量）。&lt;/p&gt;
+&lt;p&gt;单元测试是需求的具象化。是整个测试体系中最小粒度、最贴近代码实现的约束工具。单元测试不仅被用来检查代码是否满足需求，更多时候，被用来检测边界条件（Corner Case），因为一段程序是否可靠，最重要的是在边界条件下它不会出错。这也是有经验的人类工程师区别于初级工程师的特点。&lt;/p&gt;
+&lt;p&gt;但是 Gru.ai 在做的，是用&lt;strong&gt;AI 提高单元测试覆盖率， 众所周知，覆盖率提高不等价于测试效率提高，更不等于质量提高&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;用一句提示词让 AI 自动帮你写出可以运行的单元测试。这对初级程序员来说非常具有诱惑力。好比一个射击运动员为了提高射击准确度，每次先开枪，然后在子弹坑附近画上靶子。&lt;/p&gt;
+&lt;p&gt;提升测试覆盖率的目的，是让人类工程师充分考虑边界条件。AI 辅助人类生成测试是一种节省时间的做法，这无可厚非，而 Gru.ai 却让我们「忘记单元测试，自动覆盖」。但 AI 大多时候不清楚边界条件，除非人类显式地告诉它。那么 AI 如何自动推断边界条件？我们又如何确信 AI 推断的边界条件是正确的？AI 测试了代码，谁来测试 AI ？&lt;/p&gt;
+&lt;p&gt;如果说 Cursor 这类 AI Coding 产品凝聚了硅谷程序员们对 Vibe Coding 的想象，那么 Gru.ai 就是中国程序员们对 Vibe Testing 的「美好期望」。&lt;/p&gt;</description></item><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/pairing-with-ai-02/</guid><description>&lt;p&gt;在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;任务死循环&lt;/li&gt;
+&lt;li&gt;模型无法修复环境问题&lt;/li&gt;
+&lt;li&gt;模型执行长任务后半段忘记上下文&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="一些使用经验"&gt;一些使用经验&lt;/h2&gt;
+&lt;p&gt;以我自己为例，我经常使用 Cline + Github Copilot 的组合。我很喜欢 Cline 的功能是 &lt;code&gt;Checkpoint restore&lt;/code&gt;，它可以在执行错误的位置重新编辑提示词执行。这让我可以在相同的任务中调用不同的模型，观察他们处理问题的能力。&lt;/p&gt;
+&lt;p&gt;用作规划（Plan）的模型通常用 Deepseek-R1，Gemini 2.0 Flash Thinking，Claude 3.7。这里除了 Claude 3.7 能够比较准确给出计划外，其他模型多少都容易走「歪路」， 比如 Deepseek-R1 喜欢做一些多余的事情，让它翻译中文，它会调用 MCP 的翻译服务而不是自己翻译。&lt;/p&gt;
+&lt;p&gt;从经济角度考虑，解决简单问题 Gemini 2.0 Flash Thinking 是比较快速、经济的模型。复杂问题直接上 Claude 3.7 可能更容易控制成本。&lt;/p&gt;
+&lt;p&gt;用作执行任务（Act）的模型里，Deepseek-V3 表现非常不稳定，经常死循环或丢失上下文。Claude 太贵，而 Gemini 2.0 Flash 是相对准确且划算的模型。置于国产的 Qwen 系列模型不完全支持 Function Calling，Cline 也没有适配，所以暂时无法测试。&lt;/p&gt;
+&lt;h2 id="ai-编程疑难杂症的应对方法"&gt;AI 编程疑难杂症的应对方法&lt;/h2&gt;
+&lt;p&gt;最近读到&lt;a href="https://ezyang.github.io/ai-blindspots/"&gt;AI Blindspots&lt;/a&gt;这篇文章，作者系统性整理了 AI 编程中遇到的问题和他的思路。对我非常有启发。我用 Agent 把它翻译成了中文并人工做了润色，你可以在这里读到：&lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5"&gt;AI 编程的盲点&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;概括起来，解决 AI 问题的核心要领还是三点：更准确的提示词、更完整的上下文、缩小问题规模。&lt;/p&gt;
+&lt;p&gt;相信随着技术的发展，编程范式会发生翻天覆地的变化。如果重构变得如此容易，那么马丁福勒的《重构》是否应该出一套 AI 时代下的新范式。如果文档不再是被人读，而是喂给模型当作上下文，那么文档的形态应该是什么样？是否提供一个向量化的文档接口供大模型调用，将是未来编程框架的新常态？&lt;/p&gt;
+&lt;p&gt;我对未来充满期待。&lt;/p&gt;</description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p&gt;未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p&gt;
+&lt;p&gt;我试图浅显地讨论一下哪些软件开发的手段更适合在 AI 时代提高 AI 编写代码的可观测性和维护性。接下来所有以「与 AI 协作编程」为标题的文章都只是抛砖引玉，并未形成系统化方法论。期望任何错误之处，读者不吝赐教。&lt;/p&gt;
+&lt;h2 id="使用-ai-编写代码有哪些常见问题"&gt;使用 AI 编写代码有哪些常见问题？&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;可观测性问题：AI 实现的功能不完备，经常要手动修改片段&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;AI 生成代码最大的问题在于，它经常引起人类不易察觉的隐蔽错误。当人类使用 prompt 修改代码时，由于 AI 行为的不易观测性，即便修复了一个 bug，也可能导致其他回归问题（引起已有逻辑的错误）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;上下文问题：缺少全局上下文，碎片代码之间缺少联系&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;由于 Token 数限制或经济上的考虑，很多编辑器会优化输入的内容，这就容易造成大模型错误地理解局部上下文。没有办法处理跨功能模块的业务逻辑。尤其项目变得庞大后，复杂的模块经常依赖其他模块，调整业务逻辑需要重构若干个代码文件。&lt;/p&gt;
+&lt;h2 id="解决思路"&gt;解决思路&lt;/h2&gt;
+&lt;p&gt;AI 编写代码的核心问题，可以归纳为不可观测性和缺少上下文造成的低维护性。为了解决这两个问题，我们需要先回顾一下传统软件工序如何让代码更易观测和维护。&lt;/p&gt;
+&lt;h3 id="人类主导的单元测试"&gt;人类主导的单元测试&lt;/h3&gt;
+&lt;p&gt;单元测试是代码的说明书。复杂的业务逻辑通常需要阅读大量代码才能看懂。但是熟练的程序员会先看单元测试。好的单元测试会把模块的预期输入、输出完整地写进 Case 里。在 &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt; 里，作者认为好的单元测试应该具备：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;保护回归&lt;/strong&gt;。即测试能够防止出现已经修复的问题在回归测试中复现的情况。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;抵抗重构&lt;/strong&gt;。即代码重构后，测试能正确识别出重构是否对已有功能造成影响。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;快速反馈&lt;/strong&gt;。即单元测试容易运行，发现问题能及时定位到错误。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;易于维护&lt;/strong&gt;。 测试不同于业务代码，它的可维护体现在正确处理依赖关系和共享代码。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这些原则最终目的，都是保证被测系统按预期行为运行。&lt;/p&gt;
+&lt;p&gt;当 AI 和人类合作完成代码时，我个人认为，在编写单元测试这件事上，人类应该主导（80%），AI 辅助（20%），因为单元测试定义了「我期望的行为」。&lt;/p&gt;
+&lt;p&gt;当单元测试完善后，又反过来指导 AI 实现的真正的业务代码。这时人类占比下降，AI 占据主导。人类反复运行单元测试，同时将测试结果和 prompt 一起传递给 AI，帮助 AI 修正程序的问题。&lt;/p&gt;
+&lt;h3 id="编写对-ai-友好的测试离不开好的模块设计"&gt;编写对 AI 友好的测试离不开好的模块设计&lt;/h3&gt;
+&lt;p&gt;在编写好的测试时，也要关注正确的拆分模块。一个好的测试通常是给定输入，验证是否输出预期的结果。而模块如果依赖过多外部环境做分支判断，就会造成测试的输出严重依赖外部状态。这会降低模块的可观测性。&lt;/p&gt;
+&lt;p&gt;下面两条经验，可以帮助你写出好的代码：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;写测试时要测试行为的结果，而不是步骤。写业务代码时，要 AI 写清步骤。&lt;/p&gt;
+&lt;p&gt;单元测试的「单元」可以不是一个类或函数。而是一组完成一个原子业务逻辑的操作。（当然也有不同的流派支持以类为单位测试，但这不是本文的重点）。为了让 AI 生成的业务代码具有抗重构特性，要验证 AI 的行为结果，而不是验证每一个实现步骤。耦合测试代码和实现步骤会导致业务的修改破坏已有的测试，使得「期望的行为」要不断随着「具体的实现」来修改。&lt;/p&gt;
+&lt;p&gt;当 AI 开始写业务逻辑后，应该以步骤驱动的方式逐步实现，期间，人类可以针对某一步骤修正 AI 的代码逻辑。但切忌破坏测试的逻辑。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;无状态的代码（函数式）最容易测试&lt;/p&gt;
+&lt;p&gt;因为它的输出具有不变性。应该让核心代码尽量无状态，将状态、外部系统依赖放在应用服务层。而把深且不易理解的核心逻辑，放在领域服务层。这里的细节可以参考 DDD（Domain Driven Design）的思想。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/pairing-with-ai-01/functional_core.png" alt="functional_core.png"&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;这篇文章作为一系列人类与 AI 协作编程话题的开头，从测试角度试图缓解 AI 生成代码的可观测性问题。&lt;/p&gt;
+&lt;p&gt;在后边的文章里，我希望从架构设计角度，讨论一下如何设计 AI 友好的、易于维护上下文的架构。&lt;/p&gt;
+&lt;p&gt;文章内容会随着时间的推移，持续更新，欢迎讨论。&lt;/p&gt;</description></item></channel></rss>

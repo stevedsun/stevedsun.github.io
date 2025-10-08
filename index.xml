@@ -1,404 +1,379 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sat, 19 Jul 2025 01:06:32 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p>晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p>
-&lt;p>&lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt="">&lt;/p>
-&lt;p>这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。&lt;/p>
-&lt;p>不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。&lt;/p>
-&lt;p>下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。&lt;/p>
-&lt;h2 id="1-找到根分区和-efi-分区">1. 找到根分区和 EFI 分区&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>lsblk -f
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>会返回类似如下结果，其中&lt;code>vfat&lt;/code>格式是efi分区，&lt;code>ext4&lt;/code>是系统根分区。&lt;/p>
-&lt;pre tabindex="0">&lt;code>NAME FSTYPE LABEL UUID MOUNTPOINT
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 08 Oct 2025 20:39:15 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-e2e-testing/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-e2e-testing/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
+&lt;p&gt;用 OpenCode 而没有选其他 AI Agent 框架（如 Claude Code）是因为它可以集成公司的企业版 Github Copilot 账号，这样我们在公司内网可以无限量调用 GPT-4 和 Claude Sonnet 等大语言模型。&lt;/p&gt;
+&lt;p&gt;其次微软做的 Playwright 是一个可以调用浏览器 API 的自动化测试框架。相比于 Selenium 更轻量，社区维护更积极，和大模型结合也更好（有官方的 MCP Server）。Playwright 还内置了 webdriver，免去了很多环境配置的麻烦。&lt;/p&gt;
+&lt;p&gt;基于 OpenCode 和 Playwright-MCP-Server，稍加少量提示词模板，就可以不写一行测试代码，完整跑通一组 Web UI 的 E2E 测试用例。这在过去简直无法想象。&lt;/p&gt;
+&lt;p&gt;一直以来我都认为，让程序员去编写 E2E 测试代码费事费力，实属弊大于利的行为。对于边界情况和性能，单元测试和 API 测试可以满足90%以上的需求。E2E 测试的价值主要在于发现UI交互和集成方面的问题。用自动化 E2E 测试代码去覆盖集成测试和 UI 测试场景，不但维护成本极其高昂，每个微小的 UI 调整，都可能破坏测试代码，而且统计下来，测试组合中失败的用例有一半以上并不是功能异常引起，而是 UI 加载延迟、前端修改了变量名称、测试环境网速慢等原因。而对于一些真正威胁集成环境的特殊情况，比如网络中断造成的请求重试、接口修改造成的参数越界，编写 E2E 测试的效率都不如 UT 和 API 测试。因此我一直鼓励团队招聘一名全职的测试开发工程师，而不是让开发每个迭代都留出一部分时间去维护 E2E 测试用例。&lt;/p&gt;
+&lt;p&gt;另一方面，站在团队项目负责人的角度，我更关心需求是否真正被理解和落地，如何去验证程开发工程师实现的结果。&lt;/p&gt;
+&lt;p&gt;AI Agent 的出现让敏捷开发的工作流程有了变化。如上文提到的 OpenCode + Playwright-MCP-Server 的组合，AI 只需要阅读用户文档了解一些 UI 操作的基础知识，就能根据测试用例的自然语言描述，自动打开浏览器，根据提示词的要求一步步点击页面元素完成整个业务功能的操作，如果稍加指导，还能给出具体的执行步骤、结果、遇到的问题，生成完整的测试报告。这并不亚于聘请了一名初级测试工程师。&lt;/p&gt;
+&lt;p&gt;因为维护成本的极大降低（只需要维护一组测试用例的 markdown 描述文件），过去很多细节的 UI 测试场景可以用 AI Agent 来覆盖。最重要的是，这种工作完全不依赖研发人员，作为产品经理或者 PO、BA，都可以直接用自然语言编写测试用例，使编写用户故事 - 验证功能形成闭环，消除了业务 - 研发 - 测试三者之间互相转述需求带来的歧义。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://zh.wikipedia.org/wiki/%E4%B8%B0%E7%94%B0%E6%A8%A1%E5%BC%8F"&gt;丰田模式&lt;/a&gt;的原则中提到生产中造成浪费的几种情况：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;过度生产&lt;/li&gt;
+&lt;li&gt;等待&lt;/li&gt;
+&lt;li&gt;不必要的运输&lt;/li&gt;
+&lt;li&gt;过度加工&lt;/li&gt;
+&lt;li&gt;过多的库存&lt;/li&gt;
+&lt;li&gt;不必要的移动&lt;/li&gt;
+&lt;li&gt;缺陷&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AI Agent 一定程度上解决了“过度生产（要重复编写测试代码）”，“等待（从需求实现到测试用例实现，最后才能验证功能）”，“不必要的运输（业务需求在不同人员之间的传递）”三个方面的浪费。&lt;/p&gt;</description></item><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。&lt;/p&gt;
+&lt;p&gt;不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。&lt;/p&gt;
+&lt;p&gt;下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。&lt;/p&gt;
+&lt;h2 id="1-找到根分区和-efi-分区"&gt;1. 找到根分区和 EFI 分区&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lsblk -f
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;会返回类似如下结果，其中&lt;code&gt;vfat&lt;/code&gt;格式是efi分区，&lt;code&gt;ext4&lt;/code&gt;是系统根分区。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;NAME FSTYPE LABEL UUID MOUNTPOINT
 nvme0n1 
 ├─nvme0n1p1 vfat 1234-5678 /boot/efi
 └─nvme0n1p2 ext4 955b06a9-983d-4e04-b2ef-60b559db46e6 
-&lt;/code>&lt;/pre>&lt;h2 id="2-用fsck修复分区错误">2. 用&lt;code>fsck&lt;/code>修复分区错误&lt;/h2>
-&lt;p>注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。&lt;/p>
-&lt;p>先修复根分区：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p2
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>出现提示输入&lt;code>y&lt;/code>允许，或者&lt;code>a&lt;/code>全部允许。这一步我发现了一些错误并成功修复了。&lt;/p>
-&lt;p>接下来检查修复efi分区：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p1
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>我在这一步出现提示：&lt;/p>
-&lt;pre tabindex="0">&lt;code>there are different between boot sector and it&amp;#39;s backup：
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="2-用fsck修复分区错误"&gt;2. 用&lt;code&gt;fsck&lt;/code&gt;修复分区错误&lt;/h2&gt;
+&lt;p&gt;注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。&lt;/p&gt;
+&lt;p&gt;先修复根分区：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo fsck -f /dev/nvme0n1p2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;出现提示输入&lt;code&gt;y&lt;/code&gt;允许，或者&lt;code&gt;a&lt;/code&gt;全部允许。这一步我发现了一些错误并成功修复了。&lt;/p&gt;
+&lt;p&gt;接下来检查修复efi分区：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo fsck -f /dev/nvme0n1p1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;我在这一步出现提示：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;there are different between boot sector and it&amp;#39;s backup：
 1) Copy original to backup
 2) Copy backup to original
 3) No action
-&lt;/code>&lt;/pre>&lt;p>根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 &lt;code>1) Copy original to backup&lt;/code> 复制原始引导扇区到备份扇区。&lt;/p>
-&lt;h2 id="3-挂载原系统并重建-initramfs">3. 挂载原系统并重建 initramfs&lt;/h2>
-&lt;p>下面这一步，要把原系统根分区挂载到当前 LiveUSB 系统里，同时为了执行必要的命令，要把 LiveUSB 系统的四个关键目录挂到原系统。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo mkdir -p /mnt/ubuntu
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount /dev/nvme0n1p2 /mnt/ubuntu
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /dev /mnt/ubuntu/dev
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /proc /mnt/ubuntu/proc
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /sys /mnt/ubuntu/sys
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /run /mnt/ubuntu/run
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount /dev/nvme0n1p1 /mnt/ubuntu/boot/efi
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>一顿操作后，就可以切换到原系统 root shell 了。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo chroot /mnt/ubuntu
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后是安装 grub 并重新为系统内核生成 initramfs 启动镜像。&lt;code>grub-install&lt;/code>命令的参数要根据自己的系统设置。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-initramfs -c -k all
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-grub
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后，退出原系统 root shell，重启。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#d0a8ff">exit&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo reboot
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>拔掉U盘进入原系统，我这时就可以正常登录了。&lt;/p>
-&lt;h2 id="总结">总结&lt;/h2>
-&lt;ol>
-&lt;li>
-&lt;p>不要慌&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>家中常备 Live USB&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>用 &lt;code>fsck&lt;/code> 命令修复分区错误&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>用&lt;code>mount&lt;/code>挂载原系统必要文件，进入原系统并重建 initramfs&lt;/p>
-&lt;/li>
-&lt;/ol></description></item><item><title>如何与「老登」相处</title><link>https://sund.site/posts/2025/how-to-deal-with-elders/</link><pubDate>Sun, 13 Jul 2025 12:40:24 +0800</pubDate><guid>https://sund.site/posts/2025/how-to-deal-with-elders/</guid><description>&lt;p>&lt;img src="https://sund.site/images/how-to-deal-with-elders/HollywoodVices.jpg" alt="Thou Shalt Not">&lt;/p>
-&lt;p>每一天，我们难免要和一些资历稍长（不一定指年龄）的「老登」打交道。大部分打工人在退休以前，都要活在一个由老登制定游戏规则的世界里。&lt;/p>
-&lt;p>如何应对这样的世界？下面是一个参考，不构成建议，请勿模仿。&lt;/p>
-&lt;p>1934年美国电影制片人与发行人协会出台了历史上最严格的电影制作守则──「Hays Code（海思法典）」。这部守则旨在&lt;strong>提高观众的道德水准&lt;/strong>。&lt;/p>
-&lt;p>「禁止画面出现裸露、挑逗和情欲接吻。禁止描绘宗教、吸毒、跨种族恋，不准出现复仇情节。」&lt;/p>
-&lt;p>就像它的初衷那样，这部法典促进了好莱坞电影业的发展……以另一种形式。&lt;/p>
-&lt;p>很快啊，好莱坞导演发现，&lt;strong>这些严苛的禁令能帮助他们票房大卖，只要他们巧妙地规避掉那些字面上的要求&lt;/strong>。&lt;/p>
-&lt;p>事实证明，观众确实还是喜欢看脏的。好莱坞小将们在遵守和违背之间，选择了擦边。&lt;/p>
-&lt;blockquote>
-&lt;p>Observe its letter and violate its spirit as much as possible.&lt;/p>
-&lt;/blockquote>
-&lt;blockquote>
-&lt;p>&lt;strong>形式上遵守规则，并极力背离其初衷&lt;/strong>。&lt;/p>
-&lt;/blockquote>
-&lt;p>这是一种与现实妥协，又不完全妥协的哲学。&lt;/p>
-&lt;p>派拉蒙摄影师 Whitey Schafer 拍摄一张巨幅讽刺性摄影作品（本文标题配图）, 名为「你不可」，内容是「制片人绝对不能做的十件事」，并在画面中将这十件事全部展现出来。&lt;/p>
-&lt;ul>
-&lt;li>Law Defeated（正义被击败）&lt;/li>
-&lt;li>Inside of Thigh（大腿内侧）&lt;/li>
-&lt;li>Lace Lingerie（蕾丝内衣）&lt;/li>
-&lt;li>Dead Man（死人）&lt;/li>
-&lt;li>Narcotics（毒品）&lt;/li>
-&lt;li>Drinking（饮酒）&lt;/li>
-&lt;li>Exposed Bosom（裸露胸部）&lt;/li>
-&lt;li>Gambling（赌博）&lt;/li>
-&lt;li>Pointing Gun（枪口指人）&lt;/li>
-&lt;li>Tommy Gun（汤普森冲锋枪）&lt;/li>
-&lt;/ul>
-&lt;p>数年后好莱坞取消了这些规定，取而代之的是更宽松的电影分级制度。这幅照片也成了讽刺那个时代的经典艺术作品。&lt;/p>
-&lt;p>回到开头的问题，在一个老登们制定规则的世界里，如何自处？&lt;/p>
-&lt;p>答案就是玩一个&lt;a href="https://book.douban.com/subject/25742296/">无限的游戏&lt;/a>（？）。&lt;/p>
-&lt;blockquote>
-&lt;p>有限的游戏在边界内玩，无限的游戏玩的就是边界。&lt;/p>
-&lt;/blockquote></description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p>在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki">DeepWIKI 是如何工作的&lt;/a>我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p>
-&lt;p>这个问题的答案就是 AST 分块。&lt;/p>
-&lt;p>这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p>
-&lt;h2 id="ast">AST&lt;/h2>
-&lt;p>&lt;strong>Abstract Syntax Tree&lt;/strong>（&lt;strong>AST&lt;/strong>，抽象语法树）是源代码的树形表示，它反映了代码的语法结构。在代码分块时，AST 可以帮助我们更好地理解代码的语义边界。&lt;/p>
-&lt;p>AST 在各种编译、分析源代码工具中都广泛使用。例如前端的 Babel、TypeScript 编译器（TSC），就利用 AST 来将 es6 或者 TypeScript 代码转换成浏览器可理解的 js 代码。&lt;/p>
-&lt;p>下面是一个简单的例子，展示 AST 如何把 TypeScript 代码转换成树形结构，假设有一段 TypeScript 函数：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">function&lt;/span> greet(name: &lt;span style="color:#fc5fa3">string&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc6a5d">&amp;#34;Hello, &amp;#34;&lt;/span> + name;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过 AST 工具的转换，它被抽象成下面的语法树结构：&lt;/p>
-&lt;ul>
-&lt;li>SourceFile：
-&lt;ul>
-&lt;li>FunctionDeclaration
-&lt;ul>
-&lt;li>Identifier：&amp;ldquo;greet&amp;rdquo;&lt;/li>
-&lt;li>Parameter：
-&lt;ul>
-&lt;li>Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Block：
-&lt;ul>
-&lt;li>ReturnStatement：
-&lt;ul>
-&lt;li>BinaryExpression：
-&lt;ul>
-&lt;li>StringLiteral：&amp;ldquo;Hello, &amp;quot;&lt;/li>
-&lt;li>Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>后续编译器就可以遍历这个语法树，按节点转换成 Javascript 代码。&lt;/p>
-&lt;p>理解了 AST，就大致可以理解 DeepWIKI、甚至是 Cursor 这种代码编辑器如何构建代码索引的。&lt;/p>
-&lt;h2 id="cursor">Cursor&lt;/h2>
-&lt;p>在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing">Cursor 的官方文档&lt;/a>中，可以看到关于它如何索引用户代码的相关描述。&lt;/p>
-&lt;p>Cursor 会扫描用户代码仓库，计算文件哈希值并构建 Merkle 树，类似 Git 比较文件差异的原理，Cursor 用 Merkle 树来比较用户空间文件的差异，并且将用户修改过的文件以增量的方式上传到 Cursor 的服务器。&lt;/p>
-&lt;p>被上传的文件，会被分块并嵌入，存储在 Turbopuffer 数据库中。这就是将源代码构建成 RAG 的过程。&lt;/p>
-&lt;p>这里的分块使用了 AST 工具将代码先结构化成语法树，然后将序列化后的语法树节点切成小块，最后嵌入成向量存储起来。&lt;/p>
-&lt;p>Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p>
-&lt;p>当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p>
-&lt;p>有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934">网友&lt;/a>整理了这张流程图：&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt="">&lt;/p>
-&lt;h2 id="cline">Cline&lt;/h2>
-&lt;p>&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing">Cline 的官方博客&lt;/a> 可以让我们窥见它的实现思路。&lt;/p>
-&lt;p>Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p>
-&lt;p>下面是开发者对 Cline 原理的介绍：&lt;/p>
-&lt;blockquote>
-&lt;p>When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p>
-&lt;/blockquote>
-&lt;p>Cline 会使用它们的 &lt;code>list_code_definition_names&lt;/code>工具将源代码转换成 AST。Cline 把这个 AST 当作整个源代码的「地图」。&lt;/p>
-&lt;p>当 Cline 自动执行任务时，它会分析当前要修改的文件，从文件构建 AST，从 AST 生成自然语言上下文（类似 DeepWIKI 把代码转换成文档）。并将上下文传给 LLM，让 LLM 决定下一步是该修改文件，还是需要查看另一个文件补充更多上下文。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/ast-chunk/cline.png" alt="">&lt;/p>
-&lt;p>如果说 Cursor 比较的是向量空间代码片段的相似度，Cline 就是将代码片段转换成自然语言的描述，然后让 LLM 通过语义的理解，在源代码仓库中搜寻线索，比较代码片段之间的语义相似度。&lt;/p>
-&lt;p>Cline 这种实现方式，显然更安全，企业用户不用担心 Cline 滥用源代码。但是副作用就是消耗了更多 Token。不断在不同文件之间获取上下文也花费更多时间。对于一些特殊情况，它甚至会在两个文件之间循环跳转，陷入死循环。&lt;/p>
-&lt;p>从我自身感受来说，Cline 在一些模型（Deepseek-r1, OpenAI-4o）的表现上比 Cursor 的 Agent 模式更好，因为 Cline 的语义理解比向量相似度更充分利用这些模型的自然语言能力。&lt;/p>
-&lt;p>但是对于专门为编程优化过的 Claude-Sonnet，则没有明显差异，这时就要看用户希望更高的安全性还是更快的响应速度。&lt;/p>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>本文主要介绍了代码编辑器如何利用抽象语法树（AST）来构建代码索引和实现代码补全功能。&lt;/p>
-&lt;p>总的来说，AST 是理解代码语法结构的重要工具,不同的实现方式各有优劣。&lt;/p>
-&lt;h2 id="扩展阅读">扩展阅读&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/">http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p>&lt;a href="https://deepwiki.com">DeepWIKI&lt;/a> 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p>
-&lt;p>我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p>
-&lt;h2 id="生成代码结构地图">生成代码结构地图&lt;/h2>
-&lt;p>首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong>代表语法结构和文件结构的元数据&lt;/strong>和&lt;strong>代表代码描述和片段的向量数据&lt;/strong>两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p>
-&lt;h2 id="生成-wiki-页面">生成 WIKI 页面&lt;/h2>
-&lt;p>生成 WIKI 页面的过程，就是 RAG 系统 query 的过程：&lt;/p>
-&lt;ol>
-&lt;li>程序递归读取项目结构。&lt;/li>
-&lt;li>从元数据库中查询当前文件的元数据，再从向量数据库中查找相关性最强的代码和描述信息的 id。&lt;/li>
-&lt;li>用这些 id 再去元数据库里查询到描述信息，从工程文件中查询对应代码片段。&lt;/li>
-&lt;li>将上面的所有内容作为 context，根据元数据类型（架构、组件等）组合适当的 prompt，输入给 LLM。&lt;/li>
-&lt;li>最后由一个前端渲染引擎把 LLM 的输出渲染成文档页面。&lt;/li>
-&lt;li>重复步骤 1。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/">&lt;/p>
-&lt;h2 id="难点-1分块策略">难点 1：分块策略&lt;/h2>
-&lt;p>上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p>
-&lt;p>但是代码的拆分不同，比如一个函数体由&lt;code>{&lt;/code> &lt;code>}&lt;/code>包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p>
-&lt;p>目前的解决办法有两种，一种是基于整个文件的分块，这种情况文件大小不能超过分块大小的上限，而且分块数据缺少真实的调用关系上下文。我们知道，代码的组织单元并不是文件（文件树只是方便人类阅读的组织形式），而是以类和函数为单元的网状依赖关系图。&lt;/p>
-&lt;p>第二种方式就是先用语法工具对代码文件做静态分析，再根据分析结果将代码以语法结构进行拆分。这种方式实现复杂，网上并没有找到相关的资料，幸而读到这篇&lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/">RAG for a Codebase with 10k Repos&lt;/a>，它介绍了如何利用语法静态分析来给代码分块，构建高效的代码仓库 RAG 系统。 但是文章也没有提供开源实现，考虑到作为商业项目的核心技术，这部分内容非常值得深入。我会持续跟进这部分内容的研究。&lt;/p>
-&lt;h2 id="难点-2-解析语法结构">难点 2: 解析语法结构&lt;/h2>
-&lt;p>元数据的语法解析要比向量数据简单一些，我从另一个开源项目&lt;a href="https://github.com/ozyyshr/RepoGraph">Repo Graph&lt;/a>中找到一些线索。&lt;/p>
-&lt;p>这个项目使用了 &lt;code>tree-sitter&lt;/code> 来分析项目语法结构，从而得到三类元数据文件：&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>tag.json&lt;/code>：代表一个文件、函数、类的路径、行号、描述等基础信息。&lt;/li>
-&lt;li>&lt;code>tree_structure.json&lt;/code>: 项目的文件树结构信息。&lt;/li>
-&lt;li>&lt;code>*.pkl&lt;/code>: 对象依赖关系图。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;code>*.pkl&lt;/code>是语法分析器扫描项目文件之后得到的一个网状的对象关系图，它使用 python 的 pickle 库把 python 网状对象序列化成文件。&lt;/p>
-&lt;p>从这个项目的实现来看，难点 1 中嵌入向量的过程似乎也可以用 &lt;code>tree-sitter&lt;/code> 生成的代码元信息对代码按行分块。&lt;/p>
-&lt;h2 id="提示词工程">提示词工程&lt;/h2>
-&lt;p>在 RAG 查询阶段，要根据当前元信息的类型，组装不同的提示词。&lt;/p>
-&lt;p>这个项目&lt;a href="https://github.com/metauto-ai/agent-as-a-judge">Agent as a Judge&lt;/a> 里有不少提示词可供参考：&lt;/p>
-&lt;p>生成概述的提示词&lt;/p>
-&lt;pre tabindex="0">&lt;code>Provide a concise overview of this repository focused primarily on:
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 &lt;code&gt;1) Copy original to backup&lt;/code&gt; 复制原始引导扇区到备份扇区。&lt;/p&gt;
+&lt;h2 id="3-挂载原系统并重建-initramfs"&gt;3. 挂载原系统并重建 initramfs&lt;/h2&gt;
+&lt;p&gt;下面这一步，要把原系统根分区挂载到当前 LiveUSB 系统里，同时为了执行必要的命令，要把 LiveUSB 系统的四个关键目录挂到原系统。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mkdir -p /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount /dev/nvme0n1p2 /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount --bind /dev /mnt/ubuntu/dev
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount --bind /proc /mnt/ubuntu/proc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount --bind /sys /mnt/ubuntu/sys
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount --bind /run /mnt/ubuntu/run
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount /dev/nvme0n1p1 /mnt/ubuntu/boot/efi
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;一顿操作后，就可以切换到原系统 root shell 了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo chroot /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后是安装 grub 并重新为系统内核生成 initramfs 启动镜像。&lt;code&gt;grub-install&lt;/code&gt;命令的参数要根据自己的系统设置。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;update-initramfs -c -k all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;update-grub
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;最后，退出原系统 root shell，重启。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#d0a8ff"&gt;exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo reboot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;拔掉U盘进入原系统，我这时就可以正常登录了。&lt;/p&gt;
+&lt;h2 id="总结"&gt;总结&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;不要慌&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;家中常备 Live USB&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;用 &lt;code&gt;fsck&lt;/code&gt; 命令修复分区错误&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;用&lt;code&gt;mount&lt;/code&gt;挂载原系统必要文件，进入原系统并重建 initramfs&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>如何与「老登」相处</title><link>https://sund.site/posts/2025/how-to-deal-with-elders/</link><pubDate>Sun, 13 Jul 2025 12:40:24 +0800</pubDate><guid>https://sund.site/posts/2025/how-to-deal-with-elders/</guid><description>&lt;p&gt;&lt;img src="https://sund.site/images/how-to-deal-with-elders/HollywoodVices.jpg" alt="Thou Shalt Not"&gt;&lt;/p&gt;
+&lt;p&gt;每一天，我们难免要和一些资历稍长（不一定指年龄）的「老登」打交道。大部分打工人在退休以前，都要活在一个由老登制定游戏规则的世界里。&lt;/p&gt;
+&lt;p&gt;如何应对这样的世界？下面是一个参考，不构成建议，请勿模仿。&lt;/p&gt;
+&lt;p&gt;1934年美国电影制片人与发行人协会出台了历史上最严格的电影制作守则──「Hays Code（海思法典）」。这部守则旨在&lt;strong&gt;提高观众的道德水准&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;「禁止画面出现裸露、挑逗和情欲接吻。禁止描绘宗教、吸毒、跨种族恋，不准出现复仇情节。」&lt;/p&gt;
+&lt;p&gt;就像它的初衷那样，这部法典促进了好莱坞电影业的发展……以另一种形式。&lt;/p&gt;
+&lt;p&gt;很快啊，好莱坞导演发现，&lt;strong&gt;这些严苛的禁令能帮助他们票房大卖，只要他们巧妙地规避掉那些字面上的要求&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;事实证明，观众确实还是喜欢看脏的。好莱坞小将们在遵守和违背之间，选择了擦边。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Observe its letter and violate its spirit as much as possible.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;形式上遵守规则，并极力背离其初衷&lt;/strong&gt;。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;这是一种与现实妥协，又不完全妥协的哲学。&lt;/p&gt;
+&lt;p&gt;派拉蒙摄影师 Whitey Schafer 拍摄一张巨幅讽刺性摄影作品（本文标题配图）, 名为「你不可」，内容是「制片人绝对不能做的十件事」，并在画面中将这十件事全部展现出来。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Law Defeated（正义被击败）&lt;/li&gt;
+&lt;li&gt;Inside of Thigh（大腿内侧）&lt;/li&gt;
+&lt;li&gt;Lace Lingerie（蕾丝内衣）&lt;/li&gt;
+&lt;li&gt;Dead Man（死人）&lt;/li&gt;
+&lt;li&gt;Narcotics（毒品）&lt;/li&gt;
+&lt;li&gt;Drinking（饮酒）&lt;/li&gt;
+&lt;li&gt;Exposed Bosom（裸露胸部）&lt;/li&gt;
+&lt;li&gt;Gambling（赌博）&lt;/li&gt;
+&lt;li&gt;Pointing Gun（枪口指人）&lt;/li&gt;
+&lt;li&gt;Tommy Gun（汤普森冲锋枪）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;数年后好莱坞取消了这些规定，取而代之的是更宽松的电影分级制度。这幅照片也成了讽刺那个时代的经典艺术作品。&lt;/p&gt;
+&lt;p&gt;回到开头的问题，在一个老登们制定规则的世界里，如何自处？&lt;/p&gt;
+&lt;p&gt;答案就是玩一个&lt;a href="https://book.douban.com/subject/25742296/"&gt;无限的游戏&lt;/a&gt;（？）。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;有限的游戏在边界内玩，无限的游戏玩的就是边界。&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
+&lt;p&gt;这个问题的答案就是 AST 分块。&lt;/p&gt;
+&lt;p&gt;这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p&gt;
+&lt;h2 id="ast"&gt;AST&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Abstract Syntax Tree&lt;/strong&gt;（&lt;strong&gt;AST&lt;/strong&gt;，抽象语法树）是源代码的树形表示，它反映了代码的语法结构。在代码分块时，AST 可以帮助我们更好地理解代码的语义边界。&lt;/p&gt;
+&lt;p&gt;AST 在各种编译、分析源代码工具中都广泛使用。例如前端的 Babel、TypeScript 编译器（TSC），就利用 AST 来将 es6 或者 TypeScript 代码转换成浏览器可理解的 js 代码。&lt;/p&gt;
+&lt;p&gt;下面是一个简单的例子，展示 AST 如何把 TypeScript 代码转换成树形结构，假设有一段 TypeScript 函数：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;function&lt;/span&gt; greet(name: &lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc6a5d"&gt;&amp;#34;Hello, &amp;#34;&lt;/span&gt; + name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;经过 AST 工具的转换，它被抽象成下面的语法树结构：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SourceFile：
+&lt;ul&gt;
+&lt;li&gt;FunctionDeclaration
+&lt;ul&gt;
+&lt;li&gt;Identifier：&amp;ldquo;greet&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Parameter：
+&lt;ul&gt;
+&lt;li&gt;Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Block：
+&lt;ul&gt;
+&lt;li&gt;ReturnStatement：
+&lt;ul&gt;
+&lt;li&gt;BinaryExpression：
+&lt;ul&gt;
+&lt;li&gt;StringLiteral：&amp;ldquo;Hello, &amp;quot;&lt;/li&gt;
+&lt;li&gt;Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;后续编译器就可以遍历这个语法树，按节点转换成 Javascript 代码。&lt;/p&gt;
+&lt;p&gt;理解了 AST，就大致可以理解 DeepWIKI、甚至是 Cursor 这种代码编辑器如何构建代码索引的。&lt;/p&gt;
+&lt;h2 id="cursor"&gt;Cursor&lt;/h2&gt;
+&lt;p&gt;在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing"&gt;Cursor 的官方文档&lt;/a&gt;中，可以看到关于它如何索引用户代码的相关描述。&lt;/p&gt;
+&lt;p&gt;Cursor 会扫描用户代码仓库，计算文件哈希值并构建 Merkle 树，类似 Git 比较文件差异的原理，Cursor 用 Merkle 树来比较用户空间文件的差异，并且将用户修改过的文件以增量的方式上传到 Cursor 的服务器。&lt;/p&gt;
+&lt;p&gt;被上传的文件，会被分块并嵌入，存储在 Turbopuffer 数据库中。这就是将源代码构建成 RAG 的过程。&lt;/p&gt;
+&lt;p&gt;这里的分块使用了 AST 工具将代码先结构化成语法树，然后将序列化后的语法树节点切成小块，最后嵌入成向量存储起来。&lt;/p&gt;
+&lt;p&gt;Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p&gt;
+&lt;p&gt;当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p&gt;
+&lt;p&gt;有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;网友&lt;/a&gt;整理了这张流程图：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline 的官方博客&lt;/a&gt; 可以让我们窥见它的实现思路。&lt;/p&gt;
+&lt;p&gt;Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p&gt;
+&lt;p&gt;下面是开发者对 Cline 原理的介绍：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Cline 会使用它们的 &lt;code&gt;list_code_definition_names&lt;/code&gt;工具将源代码转换成 AST。Cline 把这个 AST 当作整个源代码的「地图」。&lt;/p&gt;
+&lt;p&gt;当 Cline 自动执行任务时，它会分析当前要修改的文件，从文件构建 AST，从 AST 生成自然语言上下文（类似 DeepWIKI 把代码转换成文档）。并将上下文传给 LLM，让 LLM 决定下一步是该修改文件，还是需要查看另一个文件补充更多上下文。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/ast-chunk/cline.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;如果说 Cursor 比较的是向量空间代码片段的相似度，Cline 就是将代码片段转换成自然语言的描述，然后让 LLM 通过语义的理解，在源代码仓库中搜寻线索，比较代码片段之间的语义相似度。&lt;/p&gt;
+&lt;p&gt;Cline 这种实现方式，显然更安全，企业用户不用担心 Cline 滥用源代码。但是副作用就是消耗了更多 Token。不断在不同文件之间获取上下文也花费更多时间。对于一些特殊情况，它甚至会在两个文件之间循环跳转，陷入死循环。&lt;/p&gt;
+&lt;p&gt;从我自身感受来说，Cline 在一些模型（Deepseek-r1, OpenAI-4o）的表现上比 Cursor 的 Agent 模式更好，因为 Cline 的语义理解比向量相似度更充分利用这些模型的自然语言能力。&lt;/p&gt;
+&lt;p&gt;但是对于专门为编程优化过的 Claude-Sonnet，则没有明显差异，这时就要看用户希望更高的安全性还是更快的响应速度。&lt;/p&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;本文主要介绍了代码编辑器如何利用抽象语法树（AST）来构建代码索引和实现代码补全功能。&lt;/p&gt;
+&lt;p&gt;总的来说，AST 是理解代码语法结构的重要工具,不同的实现方式各有优劣。&lt;/p&gt;
+&lt;h2 id="扩展阅读"&gt;扩展阅读&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWIKI&lt;/a&gt; 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p&gt;
+&lt;p&gt;我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p&gt;
+&lt;h2 id="生成代码结构地图"&gt;生成代码结构地图&lt;/h2&gt;
+&lt;p&gt;首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong&gt;代表语法结构和文件结构的元数据&lt;/strong&gt;和&lt;strong&gt;代表代码描述和片段的向量数据&lt;/strong&gt;两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p&gt;
+&lt;h2 id="生成-wiki-页面"&gt;生成 WIKI 页面&lt;/h2&gt;
+&lt;p&gt;生成 WIKI 页面的过程，就是 RAG 系统 query 的过程：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;程序递归读取项目结构。&lt;/li&gt;
+&lt;li&gt;从元数据库中查询当前文件的元数据，再从向量数据库中查找相关性最强的代码和描述信息的 id。&lt;/li&gt;
+&lt;li&gt;用这些 id 再去元数据库里查询到描述信息，从工程文件中查询对应代码片段。&lt;/li&gt;
+&lt;li&gt;将上面的所有内容作为 context，根据元数据类型（架构、组件等）组合适当的 prompt，输入给 LLM。&lt;/li&gt;
+&lt;li&gt;最后由一个前端渲染引擎把 LLM 的输出渲染成文档页面。&lt;/li&gt;
+&lt;li&gt;重复步骤 1。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/"&gt;&lt;/p&gt;
+&lt;h2 id="难点-1分块策略"&gt;难点 1：分块策略&lt;/h2&gt;
+&lt;p&gt;上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p&gt;
+&lt;p&gt;但是代码的拆分不同，比如一个函数体由&lt;code&gt;{&lt;/code&gt; &lt;code&gt;}&lt;/code&gt;包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p&gt;
+&lt;p&gt;目前的解决办法有两种，一种是基于整个文件的分块，这种情况文件大小不能超过分块大小的上限，而且分块数据缺少真实的调用关系上下文。我们知道，代码的组织单元并不是文件（文件树只是方便人类阅读的组织形式），而是以类和函数为单元的网状依赖关系图。&lt;/p&gt;
+&lt;p&gt;第二种方式就是先用语法工具对代码文件做静态分析，再根据分析结果将代码以语法结构进行拆分。这种方式实现复杂，网上并没有找到相关的资料，幸而读到这篇&lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;，它介绍了如何利用语法静态分析来给代码分块，构建高效的代码仓库 RAG 系统。 但是文章也没有提供开源实现，考虑到作为商业项目的核心技术，这部分内容非常值得深入。我会持续跟进这部分内容的研究。&lt;/p&gt;
+&lt;h2 id="难点-2-解析语法结构"&gt;难点 2: 解析语法结构&lt;/h2&gt;
+&lt;p&gt;元数据的语法解析要比向量数据简单一些，我从另一个开源项目&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;中找到一些线索。&lt;/p&gt;
+&lt;p&gt;这个项目使用了 &lt;code&gt;tree-sitter&lt;/code&gt; 来分析项目语法结构，从而得到三类元数据文件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tag.json&lt;/code&gt;：代表一个文件、函数、类的路径、行号、描述等基础信息。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tree_structure.json&lt;/code&gt;: 项目的文件树结构信息。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;*.pkl&lt;/code&gt;: 对象依赖关系图。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;*.pkl&lt;/code&gt;是语法分析器扫描项目文件之后得到的一个网状的对象关系图，它使用 python 的 pickle 库把 python 网状对象序列化成文件。&lt;/p&gt;
+&lt;p&gt;从这个项目的实现来看，难点 1 中嵌入向量的过程似乎也可以用 &lt;code&gt;tree-sitter&lt;/code&gt; 生成的代码元信息对代码按行分块。&lt;/p&gt;
+&lt;h2 id="提示词工程"&gt;提示词工程&lt;/h2&gt;
+&lt;p&gt;在 RAG 查询阶段，要根据当前元信息的类型，组装不同的提示词。&lt;/p&gt;
+&lt;p&gt;这个项目&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt; 里有不少提示词可供参考：&lt;/p&gt;
+&lt;p&gt;生成概述的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a concise overview of this repository focused primarily on:
 * Purpose and Scope: What is this project&amp;#39;s main purpose?
 * Core Features: What are the key features and capabilities?
 * Target audience/users
 * Main technologies or frameworks used
-&lt;/code>&lt;/pre>&lt;p>生成架构文档的提示词&lt;/p>
-&lt;pre tabindex="0">&lt;code>Create a comprehensive architecture overview for this repository. Include:
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成架构文档的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Create a comprehensive architecture overview for this repository. Include:
 * A high-level description of the system architecture
 * Main components and their roles
 * Data flow between components
 * External dependencies and integrations
-&lt;/code>&lt;/pre>&lt;p>生成组件文档的提示词&lt;/p>
-&lt;pre tabindex="0">&lt;code>Provide a comprehensive analysis of all key components in this codebase. For each component:
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成组件文档的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a comprehensive analysis of all key components in this codebase. For each component:
 * Name of the component
 * Purpose and main responsibility
 * How it interacts with other components
 * Design patterns or techniques used
 * Key characteristics
 * File paths that implement this component
-&lt;/code>&lt;/pre>&lt;p>其余请参考项目文件，就不一一列举了。&lt;/p>
-&lt;h2 id="总结">总结&lt;/h2>
-&lt;p>DeepWIKI 是一个基于 RAG 系统的代码文档生成工具，它通过以下步骤工作：&lt;/p>
-&lt;ol>
-&lt;li>对代码仓库进行语法分析，生成元数据和向量数据&lt;/li>
-&lt;li>然后通过 RAG 系统查询这些数据来生成文档&lt;/li>
-&lt;li>最后用前端引擎渲染成可读的文档页面&lt;/li>
-&lt;/ol>
-&lt;p>实现过程中有两个主要难点：&lt;/p>
-&lt;ul>
-&lt;li>代码分块策略：需要考虑代码的语法结构，不能像自然语言那样简单分割&lt;/li>
-&lt;li>语法结构解析：可以使用 tree-sitter 等工具来解析代码结构&lt;/li>
-&lt;/ul>
-&lt;p>虽然目前有一些开源项目可以参考，但核心的分块策略实现仍然需要深入研究。&lt;/p>
-&lt;h2 id="参考项目">参考项目&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="https://github.com/metauto-ai/agent-as-a-judge">Agent as a Judge&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://github.com/ozyyshr/RepoGraph">Repo Graph&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open">DeepWiki Open&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>读完这本书，沟通将是一个有迹可循的过程</title><link>https://sund.site/posts/2025/super-communicator/</link><pubDate>Tue, 13 May 2025 13:49:37 +0800</pubDate><guid>https://sund.site/posts/2025/super-communicator/</guid><description>&lt;p>沟通能力能够决定了一个人是否幸福。在与周围人相处融洽的环境下，能让我们觉得被包容，被理解。反之会让我们苦恼：明明抱有善意的交流，为什么总是导致冲突和分歧。到底问题出在哪里？&lt;/p>
-&lt;p>《超级沟通者》这本书最近给我很多启发，我希望和你分享一些沟通技巧。这和那些强调同理心，强调谈判方法的书籍不同，它提出了一个更深层次的观点：&lt;strong>对话的目的，是了解身边人如何看待世界的同时，帮助他们理解我们的想法&lt;/strong>。&lt;/p>
-&lt;h2 id="当对话进入到个人感受层面的交流时人与人才能建立起深度的连接">当对话进入到个人感受层面的交流时，人与人才能建立起深度的连接&lt;/h2>
-&lt;p>哈佛大学进行过一项调查，为什么有些会议能够缓和参与各方的冲突并达成共识，为什么有些谈话的参与者能够建立起深层次的连接。研究者发现，这类沟通中往往存在一个高中心度参与者，也就是标题中的「超级沟通者」，他具有这些特点：&lt;/p>
-&lt;ul>
-&lt;li>能够仔细倾听对方的表达和言外之意&lt;/li>
-&lt;li>能够识别并回应对方的情绪&lt;/li>
-&lt;li>能够提出问题并引导对方交流内心的感受&lt;/li>
-&lt;/ul>
-&lt;p>进一步地，研究发现人与人的不信任和不理解，往往出于以下一些原因：&lt;/p>
-&lt;ul>
-&lt;li>沟通浮于表面，谈话的目的模糊，或者内心真实想法没有表露&lt;/li>
-&lt;li>情绪没有得到回应&lt;/li>
-&lt;li>身份没有获得认同&lt;/li>
-&lt;/ul>
-&lt;p>因此，为了进行深入的沟通，人们通常要从一些表面的事实性问题，进入到更关注内心感受、观点、人生经历、价值观、信仰等层面的交流。也就是作者认为的，学习型对话。&lt;/p>
-&lt;h2 id="学习型对话">学习型对话&lt;/h2>
-&lt;p>作者提出学习型对话这个概念，认为一个深度的沟通过程，围绕着三种类型的对话展开：&lt;/p>
-&lt;p>务实对话、情感对话，以及社交对话。&lt;/p>
-&lt;h3 id="务实对话">务实对话&lt;/h3>
-&lt;p>务实对话是指那些为了协商做出决策，或者各方为了达成共识而参与的对话。&lt;/p>
-&lt;p>这一类对话通常遵循理性的态度，按照「成本-收益」的逻辑进行。这是很多职场会议、谈判、家庭决策场景最常见的对话。这一类对话有个难点：虽然大家都知道要理性客观，但是往往分歧出现在一些价值观问题上。&lt;/p>
-&lt;p>比如你明知道父母是为你好，但是有些他们的期望就是无法满足。再比如工作中，你给同事提了一个建议，但是对方因为过往工作经历的原因不愿意采纳，即使没有正当的理由。&lt;/p>
-&lt;p>这种时候，谈话的思维方式就要从「成本-收益逻辑」，切换到「相似性逻辑」。即我们要从生活经验和价值观出发，找到双方具有的相似性，从而跨越鸿沟。&lt;/p>
-&lt;p>&lt;strong>改变一个人的想法，要触及他的自我认知，让他明白改变观点带来的价值，感受到因做出正确决定而带来的自尊心&lt;/strong>。&lt;/p>
-&lt;p>价值观是从长期的个人经历中建立起来的东西，很难被改变。人们会觉得信仰崩塌、自尊心受挫。沟通的关键是让从对方的底层价值观出发，让他认可改变带来的价值，并把做决定的权力交给对方。&lt;/p>
-&lt;p>下面是一些作者分享的，谈话中可以参考的方法：&lt;/p>
-&lt;ul>
-&lt;li>可以提前准备一个话题库，在聊天陷入沉默时抛出一些话题，增强你谈话的自信心。&lt;/li>
-&lt;li>当识别出谈话是一个务实谈话时，先通过开放性问题让对方谈谈自己的感受、价值观和信念。&lt;/li>
-&lt;li>邀请对方做出判断，询问对方的经历。&lt;/li>
-&lt;li>如果对方转移话题，这代表对方希望扩展谈话的范围，你可以鼓励并留心他的言外之意。&lt;/li>
-&lt;/ul>
-&lt;p>想象关于家庭决策的冲突，当父母的价值观无法被你接受，你可以询问他们的经历，信念（过去遇到类似的事情会怎么办），分享我们的经历和感受，找到相似的部分（比如初衷都希望让家人过得更好）。然后突破屏障（如果父母处在我们的经历中，他们会怎么做）。&lt;/p>
-&lt;p>退一步讲，即使无法一次性彻底解决分歧，也可以在这次深度交流中获得更多理解，加深双方的感情。&lt;/p>
-&lt;h3 id="情感对话">情感对话&lt;/h3>
-&lt;p>情感类型的对话，通常源于谈话的一方希望自己的情绪得到回应。&lt;/p>
-&lt;p>生活中经常发生的一类思维错位：女朋友跟你表达情绪，你跟她分析问题。&lt;/p>
-&lt;p>情感对话不是为了找到解决方案或者达成一致。情感对话的目的是触发情绪传染。一方感受到对方的脆弱，并以自身的脆弱作为回应，从而建立起信任、理解以及情感连接。&lt;/p>
-&lt;p>&lt;strong>情感对话的难点是通过对方点滴的情绪流动，识别出这是一场情感对话，并给予恰当的回应&lt;/strong>。&lt;/p>
-&lt;p>我们总听到别人谈共情和换位思考。其实这很难做到，当我们和对方有不同的人生经历、处于不同的情境时，很难真正地与对方换位思考。所以，进入情感对话第一步，是要询问对方，用问题打开对方的心扉，&lt;strong>先试探性地提出表面的、安全的事实性问题，逐步询问到对方的信仰、价值观、意义、体验等等&lt;/strong>。&lt;/p>
-&lt;p>当对方愿意分享内心真实想法时，就到了第二步，给予足够的回应。什么叫足够呢？回应的情绪能量要和对方的情绪能量匹配，不要太过也不要太少。让双方进入到一场情绪表达的共振中。要避免单向输出，尽量轮流表达，互相回应。有一个经典的错误是，当对方讲述了一个过往悲伤的经历后，我们为了表达理解，滔滔不绝讲述自己的个人经历并把谈话的注意力引向自己。这就会让对方的情绪无法着陆。一定要&lt;strong>持续的、双向的、深入的个性化表达&lt;/strong>。&lt;/p>
-&lt;p>最后一步，建立「理解循环」。在倾听之后，询问对方自己理解的是否正确。不要试图掌控对话的走向和论调，不要试图控制对方。&lt;/p>
-&lt;p>在亲密关系中，关于控制权的争夺屡见不鲜。一方意识到自己无法掌控某件对自己重要的事情时，就会发怒甚至责难对方。而往往这种内心对控制欲的渴望存在于生活各个细节中，处理不好就会令双方互不相让，引发的连锁反应被称为「数怨并诉」(kitchen-sinking)，演变成破坏性争吵。&lt;/p>
-&lt;p>书中分享了一个调查，那些幸福的家庭和不幸福的家庭一样，都经常发生关于内部控制权的争吵，但是幸福家庭总能把冲突控制在一个合理的范围内。这些家庭成员不会试图控制对方，而是控制自己，控制自己所处的环境或是控制冲突的界限。然后通过对话，让双方找到可以共同控制的事情。&lt;/p>
-&lt;p>比如在一个关于「谁该做家务」的争吵中，我们可以控制自己（不要发怒或者指责对方），控制环境（在一个双方情绪愉悦的情况下讨论这个话题），控制冲突的界限（不去指责对方的生活习惯等），再通过协商找到一些双方可以共同努力控制的事情。&lt;/p>
-&lt;p>作者还有一些小建议：&lt;/p>
-&lt;ul>
-&lt;li>注重礼貌&lt;/li>
-&lt;li>警惕讽刺性语言&lt;/li>
-&lt;li>多表达感谢、问候、歉意&lt;/li>
-&lt;li>避免在公开场合提出批评&lt;/li>
-&lt;/ul>
-&lt;h3 id="社交对话">社交对话&lt;/h3>
-&lt;p>社交类型对话，是在对话过程中寻找身份认同，关注社会影响的一类对话。当一名医生用专业知识向患者解释治疗的必要性时，往往效果不如将自己带入到父亲、家人、朋友的角色时效果更好。因为患者担忧的问题往往是对家人的影响。所以如果能在这类谈话中，找到与对方深层次顾虑相匹配的角色，从而进行交流，就能事半功倍。&lt;/p>
-&lt;p>社交对话的难点是找到对方内心深处的恐惧、疑惑、顾虑等。我们每个人都有多重身份，当与他人对话时，要时刻意识到身份的多样性和复杂性，从而识别出什么情况要切换身份与对方在同一个频道交流。&lt;/p>
-&lt;p>在多元化的社会中，人们习惯把他人按出身、地域、性别等特征笼统归类，冲破隔阂的关键就是察觉身份的多样性，认识到我们与他们同为父亲、儿子等社会和家庭角色，避免对他人进行模糊的分类，泛泛地夸大某个身份特征的影响。&lt;/p>
-&lt;p>对于不同主张、不同信仰的人，交流的目的更多是互相理解，分享经历和观点，而不是说服他人改变想法。&lt;/p>
-&lt;h2 id="总结">总结&lt;/h2>
-&lt;p>我最近在与朋友闲聊时有个体会，一个成熟的人，不能止步于「尊重但不理解」或是「谁好谁坏」的讨论中，即使我们不能解决大部分矛盾和误解，仍然可以做到「我不完全认同，但是我能理解你为什么这样做」。理解观点不同的人，也会让我们自己避免内耗，更加开朗。&lt;/p>
-&lt;p>回顾上面三种类型的对话，日常交流我们可以通过区分对话类型，切换不同的思维模式，从开放性话题渐进地进入到感受层面的交流，和他人建立更深层次的连接。善加实践，我们的生活和工作都必将获益。&lt;/p></description></item><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p>最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p>
-&lt;p>我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/">Go 内存泄漏常见模式&lt;/a>中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p>
-&lt;p>在上一次教训之后，我们对代码单元测试层面做了 goruntine 内存泄漏的检测——使用&lt;code>go.uber.org/goleak&lt;/code>。只需要在单元测试开头加上一句:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">TestXXX&lt;/span>(t *testing.T) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">defer&lt;/span> goleak.&lt;span style="color:#41a1c0">VerifyNone&lt;/span>(t)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// ...
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>它就会在测试结束后自动检查是否有残留的 goroutine 协程。对于一些延迟执行的后台 goroutine 可以在单元测试里用 wait 或者 sleep 等待后台释放再结束测试用例。&lt;/p>
-&lt;p>经过第一轮排查可以排除代码本身 goroutine 造成的问题。于是我把注意力转向了另一个地方：定时任务。&lt;/p>
-&lt;p>根据客户反馈，在无任何前台操作的情况下，内存也会缓慢上升。&lt;/p>
-&lt;p>在我们代码里，使用了&lt;code>github.com/robfig/cron/v3&lt;/code>这个第三方包，它的作用是编排定时任务。用法是&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>c = cron.&lt;span style="color:#41a1c0">New&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c.&lt;span style="color:#41a1c0">AddFunc&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;@every 10s&amp;#34;&lt;/span>, callbackFunc)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这种结构定义一个定时任务。它的实现也基于 goroutine，所以我把 go 自带的 pprof 加入到 main.go 的依赖中，重新编译了项目二进制文件并部署到测试环境上（使用跟用户相同的硬件配置）。这样启动项目后就可以在特定端口获取内存信息。（关于 pprof，你可以参考 &lt;a href="https://go.dev/blog/pprof">Profiling Go Programs&lt;/a>）&lt;/p>
-&lt;p>我使用 pprof 的接口获取了不同时间间隔的 heap 数据&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>curl -o heap&lt;span style="color:#d0bf69">.1&lt;/span>.out http:&lt;span style="color:#6c7986">//127.0.0.1:6060/debug/pprof/heap
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">go&lt;/span> tool pprof -http=:&lt;span style="color:#d0bf69">8099&lt;/span> -base heap&lt;span style="color:#d0bf69">.1&lt;/span>.out heap&lt;span style="color:#d0bf69">.2&lt;/span>.out
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>比较两次结果的差异，在 Web UI 上选择 In Use Space 选项，可以查看到哪些内存没有释放。&lt;/p>
-&lt;p>虽然经过第二轮排查，依然没有发现内存泄漏。但这一次我注意到服务中的一个定时任务会每隔 10 秒执行一次，执行过程中 CPU 占用率明显上升。在这个任务的代码里，它使用了&lt;code>github.com/shirou/gopsutil/process&lt;/code>这个第三方库来查询系统进程 ID 和进程名等信息。&lt;/p>
-&lt;p>我查看它的源码后发现，这个库查询进程 ID 的方式，是把系统中所有的进程信息加载到内存中，然后匹配 ID 或者名称。因此，如果用户设备上的进程过多，就会每次查询时占用大量内存。&lt;/p>
-&lt;p>在一个 10 秒执行一次的定时任务中调用这个库，显然是非常低效的。&lt;/p>
-&lt;p>经过与客户进一步沟通，我们发现出现内存过高的两个进程中，另一个进程也有 CPU 占用过高的现象。于是我们让客户把 &lt;code>top&lt;/code> 命令的截图发给我们。在看到截图的一瞬间，问题的真相就浮出水面了:&lt;/p>
-&lt;p>客户使用的 IPC 设备是性能比较低的版本，虽然内存较大，但 CPU 性能捉急。如果有多个进程同时执行后台任务，CPU 就会周期性打满，造成任务阻塞。而我们使用的第三方库基于 goroutine 来实现定时任务。在上一个任务被阻塞时，下一个任务依然会继续创建新的后台 goroutine，导致内存中的 goroutine 协程堆积地越来越多。&lt;/p>
-&lt;p>这是一个定时任务的 CPU 占用过高，间隔过短，造成的 goroutine 阻塞问题。&lt;/p>
-&lt;p>知道了原因，剩下的工作就是优化代码逻辑、更新版本、跟客户解释原因……&lt;/p>
-&lt;p>以上就是这次排查 Go 服务性能问题的过程，如果你也遇到类似情况，希望对你有所帮助。&lt;/p></description></item><item><title>为什么不应该让AI生成单元测试</title><link>https://sund.site/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/posts/2025/do-not-vibe-testing/</guid><description>&lt;p>最近听到 Gru.ai 创始人张海龙老师在一档&lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9">播客节目&lt;/a>中提到自动生成 Unit Testing 是他们在做 AI Coding 的主要方向。&lt;/p>
-&lt;p>Gru.ai 官网上有这么两句话：&lt;/p>
-&lt;blockquote>
-&lt;p>Forget about unit testing – get covered automatically (忘记单元测试 - 自动覆盖)
-Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing efficiency while reducing costs and ensuring top-notch quality. (利用 AI 工程师的专业知识来提高团队的测试效率，同时降低成本并确保一流的质量。)&lt;/p>
-&lt;/blockquote>
-&lt;p>张海龙老师在 AI Coding 方向的洞见让我很有启发。我只是对用 AI 写测试降本增效这种说法，持怀疑态度。我想他们在写第二句话时还有点不自信，最后还要画蛇添足补充一句 ensuring top-notch quality（确保一流质量）。&lt;/p>
-&lt;p>单元测试是需求的具象化。是整个测试体系中最小粒度、最贴近代码实现的约束工具。单元测试不仅被用来检查代码是否满足需求，更多时候，被用来检测边界条件（Corner Case），因为一段程序是否可靠，最重要的是在边界条件下它不会出错。这也是有经验的人类工程师区别于初级工程师的特点。&lt;/p>
-&lt;p>但是 Gru.ai 在做的，是用&lt;strong>AI 提高单元测试覆盖率， 众所周知，覆盖率提高不等价于测试效率提高，更不等于质量提高&lt;/strong>。&lt;/p>
-&lt;p>用一句提示词让 AI 自动帮你写出可以运行的单元测试。这对初级程序员来说非常具有诱惑力。好比一个射击运动员为了提高射击准确度，每次先开枪，然后在子弹坑附近画上靶子。&lt;/p>
-&lt;p>提升测试覆盖率的目的，是让人类工程师充分考虑边界条件。AI 辅助人类生成测试是一种节省时间的做法，这无可厚非，而 Gru.ai 却让我们「忘记单元测试，自动覆盖」。但 AI 大多时候不清楚边界条件，除非人类显式地告诉它。那么 AI 如何自动推断边界条件？我们又如何确信 AI 推断的边界条件是正确的？AI 测试了代码，谁来测试 AI ？&lt;/p>
-&lt;p>如果说 Cursor 这类 AI Coding 产品凝聚了硅谷程序员们对 Vibe Coding 的想象，那么 Gru.ai 就是中国程序员们对 Vibe Testing 的「美好期望」。&lt;/p></description></item><item><title>Hand on Enablement</title><link>https://sund.site/posts/2025/hand-on-enablement/</link><pubDate>Tue, 29 Apr 2025 10:49:39 +0800</pubDate><guid>https://sund.site/posts/2025/hand-on-enablement/</guid><description>&lt;p>最近在读《沃顿商学院最受欢迎的谈判课》这本书。有两个可以快速上手的实用技巧：&lt;/p>
-&lt;ol>
-&lt;li>在做没有把握的事之前，找人一起模拟演练一下&lt;/li>
-&lt;li>快速行动，避免焦虑&lt;/li>
-&lt;/ol>
-&lt;h2 id="提前模拟的重要性">提前模拟的重要性&lt;/h2>
-&lt;p>和朋友或者同事，在面试、谈判之前提前演练，可以从不同视角对人际沟通场景进行演习，大概能排除掉因为个人认知盲点带来的 20%失误。&lt;/p>
-&lt;p>&lt;strong>和人打交道最重要的不是专业知识，而是视角&lt;/strong>。越是在某些领域经验丰富的人，越是会忽略视角的重要性。调查显出，经验丰富的人，尤其不喜欢倾听别人的观点。那些习惯放低身段的人，在社交场合更容易获得机会，他们往往更愿意倾听，从而更加了解对方的需求。&lt;/p>
-&lt;h2 id="跳进信息流里学习游泳">跳进信息流里学习游泳&lt;/h2>
-&lt;p>站在岸上观察不会让你学会游泳，有时候要勇敢跳进水里。很多时候你缺少的不是信息，而是跳进信息流里的行动。&lt;/p>
-&lt;p>例如，大企业只喜欢招有工作经验的人，一家企业的工作方式是一套复杂的人与人的信息流，了解它最好的方式是参与。对于一个毕业生，首要任务是利用各种实习、外包机会参与进去，而不是找课程培训。&lt;/p>
-&lt;p>要 Hand on enablement，有些焦虑的本质，是缺少行动。互联网的发达让人习惯性地收集信息，而不是采取行动。&lt;/p>
-&lt;p>我最近在犹豫是否需要买一辆车做代步工具，我发现我无法决策的原因是缺少开车的机会，不了解自己的需求。所以「是否买车」的问题对我来说可以转换成「创造条件开车」。下一步就是租车先了解自己的需求。&lt;/p>
-&lt;p>快速行动，也可以获得一种全新的视角，你会发现这和前边强调模拟演练的共通之处：&lt;strong>多种视角下的得到的浅显认识，往往能胜过单一视角下的深入研究&lt;/strong>。&lt;/p>
-&lt;p>Let&amp;rsquo;s do it.&lt;/p></description></item><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/pairing-with-ai-02/</guid><description>&lt;p>在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p>
-&lt;ul>
-&lt;li>任务死循环&lt;/li>
-&lt;li>模型无法修复环境问题&lt;/li>
-&lt;li>模型执行长任务后半段忘记上下文&lt;/li>
-&lt;/ul>
-&lt;h2 id="一些使用经验">一些使用经验&lt;/h2>
-&lt;p>以我自己为例，我经常使用 Cline + Github Copilot 的组合。我很喜欢 Cline 的功能是 &lt;code>Checkpoint restore&lt;/code>，它可以在执行错误的位置重新编辑提示词执行。这让我可以在相同的任务中调用不同的模型，观察他们处理问题的能力。&lt;/p>
-&lt;p>用作规划（Plan）的模型通常用 Deepseek-R1，Gemini 2.0 Flash Thinking，Claude 3.7。这里除了 Claude 3.7 能够比较准确给出计划外，其他模型多少都容易走「歪路」， 比如 Deepseek-R1 喜欢做一些多余的事情，让它翻译中文，它会调用 MCP 的翻译服务而不是自己翻译。&lt;/p>
-&lt;p>从经济角度考虑，解决简单问题 Gemini 2.0 Flash Thinking 是比较快速、经济的模型。复杂问题直接上 Claude 3.7 可能更容易控制成本。&lt;/p>
-&lt;p>用作执行任务（Act）的模型里，Deepseek-V3 表现非常不稳定，经常死循环或丢失上下文。Claude 太贵，而 Gemini 2.0 Flash 是相对准确且划算的模型。置于国产的 Qwen 系列模型不完全支持 Function Calling，Cline 也没有适配，所以暂时无法测试。&lt;/p>
-&lt;h2 id="ai-编程疑难杂症的应对方法">AI 编程疑难杂症的应对方法&lt;/h2>
-&lt;p>最近读到&lt;a href="https://ezyang.github.io/ai-blindspots/">AI Blindspots&lt;/a>这篇文章，作者系统性整理了 AI 编程中遇到的问题和他的思路。对我非常有启发。我用 Agent 把它翻译成了中文并人工做了润色，你可以在这里读到：&lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5">AI 编程的盲点&lt;/a>。&lt;/p>
-&lt;p>概括起来，解决 AI 问题的核心要领还是三点：更准确的提示词、更完整的上下文、缩小问题规模。&lt;/p>
-&lt;p>相信随着技术的发展，编程范式会发生翻天覆地的变化。如果重构变得如此容易，那么马丁福勒的《重构》是否应该出一套 AI 时代下的新范式。如果文档不再是被人读，而是喂给模型当作上下文，那么文档的形态应该是什么样？是否提供一个向量化的文档接口供大模型调用，将是未来编程框架的新常态？&lt;/p>
-&lt;p>我对未来充满期待。&lt;/p></description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p>未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p>
-&lt;p>我试图浅显地讨论一下哪些软件开发的手段更适合在 AI 时代提高 AI 编写代码的可观测性和维护性。接下来所有以「与 AI 协作编程」为标题的文章都只是抛砖引玉，并未形成系统化方法论。期望任何错误之处，读者不吝赐教。&lt;/p>
-&lt;h2 id="使用-ai-编写代码有哪些常见问题">使用 AI 编写代码有哪些常见问题？&lt;/h2>
-&lt;p>&lt;strong>可观测性问题：AI 实现的功能不完备，经常要手动修改片段&lt;/strong>&lt;/p>
-&lt;p>AI 生成代码最大的问题在于，它经常引起人类不易察觉的隐蔽错误。当人类使用 prompt 修改代码时，由于 AI 行为的不易观测性，即便修复了一个 bug，也可能导致其他回归问题（引起已有逻辑的错误）。&lt;/p>
-&lt;p>&lt;strong>上下文问题：缺少全局上下文，碎片代码之间缺少联系&lt;/strong>&lt;/p>
-&lt;p>由于 Token 数限制或经济上的考虑，很多编辑器会优化输入的内容，这就容易造成大模型错误地理解局部上下文。没有办法处理跨功能模块的业务逻辑。尤其项目变得庞大后，复杂的模块经常依赖其他模块，调整业务逻辑需要重构若干个代码文件。&lt;/p>
-&lt;h2 id="解决思路">解决思路&lt;/h2>
-&lt;p>AI 编写代码的核心问题，可以归纳为不可观测性和缺少上下文造成的低维护性。为了解决这两个问题，我们需要先回顾一下传统软件工序如何让代码更易观测和维护。&lt;/p>
-&lt;h3 id="人类主导的单元测试">人类主导的单元测试&lt;/h3>
-&lt;p>单元测试是代码的说明书。复杂的业务逻辑通常需要阅读大量代码才能看懂。但是熟练的程序员会先看单元测试。好的单元测试会把模块的预期输入、输出完整地写进 Case 里。在 &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279">Unit Testing Principles, Practices, and Patterns&lt;/a> 里，作者认为好的单元测试应该具备：&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>保护回归&lt;/strong>。即测试能够防止出现已经修复的问题在回归测试中复现的情况。&lt;/li>
-&lt;li>&lt;strong>抵抗重构&lt;/strong>。即代码重构后，测试能正确识别出重构是否对已有功能造成影响。&lt;/li>
-&lt;li>&lt;strong>快速反馈&lt;/strong>。即单元测试容易运行，发现问题能及时定位到错误。&lt;/li>
-&lt;li>&lt;strong>易于维护&lt;/strong>。 测试不同于业务代码，它的可维护体现在正确处理依赖关系和共享代码。&lt;/li>
-&lt;/ul>
-&lt;p>这些原则最终目的，都是保证被测系统按预期行为运行。&lt;/p>
-&lt;p>当 AI 和人类合作完成代码时，我个人认为，在编写单元测试这件事上，人类应该主导（80%），AI 辅助（20%），因为单元测试定义了「我期望的行为」。&lt;/p>
-&lt;p>当单元测试完善后，又反过来指导 AI 实现的真正的业务代码。这时人类占比下降，AI 占据主导。人类反复运行单元测试，同时将测试结果和 prompt 一起传递给 AI，帮助 AI 修正程序的问题。&lt;/p>
-&lt;h3 id="编写对-ai-友好的测试离不开好的模块设计">编写对 AI 友好的测试离不开好的模块设计&lt;/h3>
-&lt;p>在编写好的测试时，也要关注正确的拆分模块。一个好的测试通常是给定输入，验证是否输出预期的结果。而模块如果依赖过多外部环境做分支判断，就会造成测试的输出严重依赖外部状态。这会降低模块的可观测性。&lt;/p>
-&lt;p>下面两条经验，可以帮助你写出好的代码：&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>写测试时要测试行为的结果，而不是步骤。写业务代码时，要 AI 写清步骤。&lt;/p>
-&lt;p>单元测试的「单元」可以不是一个类或函数。而是一组完成一个原子业务逻辑的操作。（当然也有不同的流派支持以类为单位测试，但这不是本文的重点）。为了让 AI 生成的业务代码具有抗重构特性，要验证 AI 的行为结果，而不是验证每一个实现步骤。耦合测试代码和实现步骤会导致业务的修改破坏已有的测试，使得「期望的行为」要不断随着「具体的实现」来修改。&lt;/p>
-&lt;p>当 AI 开始写业务逻辑后，应该以步骤驱动的方式逐步实现，期间，人类可以针对某一步骤修正 AI 的代码逻辑。但切忌破坏测试的逻辑。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>无状态的代码（函数式）最容易测试&lt;/p>
-&lt;p>因为它的输出具有不变性。应该让核心代码尽量无状态，将状态、外部系统依赖放在应用服务层。而把深且不易理解的核心逻辑，放在领域服务层。这里的细节可以参考 DDD（Domain Driven Design）的思想。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/pairing-with-ai-01/functional_core.png" alt="functional_core.png">&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>这篇文章作为一系列人类与 AI 协作编程话题的开头，从测试角度试图缓解 AI 生成代码的可观测性问题。&lt;/p>
-&lt;p>在后边的文章里，我希望从架构设计角度，讨论一下如何设计 AI 友好的、易于维护上下文的架构。&lt;/p>
-&lt;p>文章内容会随着时间的推移，持续更新，欢迎讨论。&lt;/p></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其余请参考项目文件，就不一一列举了。&lt;/p&gt;
+&lt;h2 id="总结"&gt;总结&lt;/h2&gt;
+&lt;p&gt;DeepWIKI 是一个基于 RAG 系统的代码文档生成工具，它通过以下步骤工作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;对代码仓库进行语法分析，生成元数据和向量数据&lt;/li&gt;
+&lt;li&gt;然后通过 RAG 系统查询这些数据来生成文档&lt;/li&gt;
+&lt;li&gt;最后用前端引擎渲染成可读的文档页面&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;实现过程中有两个主要难点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;代码分块策略：需要考虑代码的语法结构，不能像自然语言那样简单分割&lt;/li&gt;
+&lt;li&gt;语法结构解析：可以使用 tree-sitter 等工具来解析代码结构&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虽然目前有一些开源项目可以参考，但核心的分块策略实现仍然需要深入研究。&lt;/p&gt;
+&lt;h2 id="参考项目"&gt;参考项目&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>读完这本书，沟通将是一个有迹可循的过程</title><link>https://sund.site/posts/2025/super-communicator/</link><pubDate>Tue, 13 May 2025 13:49:37 +0800</pubDate><guid>https://sund.site/posts/2025/super-communicator/</guid><description>&lt;p&gt;沟通能力能够决定了一个人是否幸福。在与周围人相处融洽的环境下，能让我们觉得被包容，被理解。反之会让我们苦恼：明明抱有善意的交流，为什么总是导致冲突和分歧。到底问题出在哪里？&lt;/p&gt;
+&lt;p&gt;《超级沟通者》这本书最近给我很多启发，我希望和你分享一些沟通技巧。这和那些强调同理心，强调谈判方法的书籍不同，它提出了一个更深层次的观点：&lt;strong&gt;对话的目的，是了解身边人如何看待世界的同时，帮助他们理解我们的想法&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id="当对话进入到个人感受层面的交流时人与人才能建立起深度的连接"&gt;当对话进入到个人感受层面的交流时，人与人才能建立起深度的连接&lt;/h2&gt;
+&lt;p&gt;哈佛大学进行过一项调查，为什么有些会议能够缓和参与各方的冲突并达成共识，为什么有些谈话的参与者能够建立起深层次的连接。研究者发现，这类沟通中往往存在一个高中心度参与者，也就是标题中的「超级沟通者」，他具有这些特点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;能够仔细倾听对方的表达和言外之意&lt;/li&gt;
+&lt;li&gt;能够识别并回应对方的情绪&lt;/li&gt;
+&lt;li&gt;能够提出问题并引导对方交流内心的感受&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;进一步地，研究发现人与人的不信任和不理解，往往出于以下一些原因：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;沟通浮于表面，谈话的目的模糊，或者内心真实想法没有表露&lt;/li&gt;
+&lt;li&gt;情绪没有得到回应&lt;/li&gt;
+&lt;li&gt;身份没有获得认同&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因此，为了进行深入的沟通，人们通常要从一些表面的事实性问题，进入到更关注内心感受、观点、人生经历、价值观、信仰等层面的交流。也就是作者认为的，学习型对话。&lt;/p&gt;
+&lt;h2 id="学习型对话"&gt;学习型对话&lt;/h2&gt;
+&lt;p&gt;作者提出学习型对话这个概念，认为一个深度的沟通过程，围绕着三种类型的对话展开：&lt;/p&gt;
+&lt;p&gt;务实对话、情感对话，以及社交对话。&lt;/p&gt;
+&lt;h3 id="务实对话"&gt;务实对话&lt;/h3&gt;
+&lt;p&gt;务实对话是指那些为了协商做出决策，或者各方为了达成共识而参与的对话。&lt;/p&gt;
+&lt;p&gt;这一类对话通常遵循理性的态度，按照「成本-收益」的逻辑进行。这是很多职场会议、谈判、家庭决策场景最常见的对话。这一类对话有个难点：虽然大家都知道要理性客观，但是往往分歧出现在一些价值观问题上。&lt;/p&gt;
+&lt;p&gt;比如你明知道父母是为你好，但是有些他们的期望就是无法满足。再比如工作中，你给同事提了一个建议，但是对方因为过往工作经历的原因不愿意采纳，即使没有正当的理由。&lt;/p&gt;
+&lt;p&gt;这种时候，谈话的思维方式就要从「成本-收益逻辑」，切换到「相似性逻辑」。即我们要从生活经验和价值观出发，找到双方具有的相似性，从而跨越鸿沟。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;改变一个人的想法，要触及他的自我认知，让他明白改变观点带来的价值，感受到因做出正确决定而带来的自尊心&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;价值观是从长期的个人经历中建立起来的东西，很难被改变。人们会觉得信仰崩塌、自尊心受挫。沟通的关键是让从对方的底层价值观出发，让他认可改变带来的价值，并把做决定的权力交给对方。&lt;/p&gt;
+&lt;p&gt;下面是一些作者分享的，谈话中可以参考的方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可以提前准备一个话题库，在聊天陷入沉默时抛出一些话题，增强你谈话的自信心。&lt;/li&gt;
+&lt;li&gt;当识别出谈话是一个务实谈话时，先通过开放性问题让对方谈谈自己的感受、价值观和信念。&lt;/li&gt;
+&lt;li&gt;邀请对方做出判断，询问对方的经历。&lt;/li&gt;
+&lt;li&gt;如果对方转移话题，这代表对方希望扩展谈话的范围，你可以鼓励并留心他的言外之意。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;想象关于家庭决策的冲突，当父母的价值观无法被你接受，你可以询问他们的经历，信念（过去遇到类似的事情会怎么办），分享我们的经历和感受，找到相似的部分（比如初衷都希望让家人过得更好）。然后突破屏障（如果父母处在我们的经历中，他们会怎么做）。&lt;/p&gt;
+&lt;p&gt;退一步讲，即使无法一次性彻底解决分歧，也可以在这次深度交流中获得更多理解，加深双方的感情。&lt;/p&gt;
+&lt;h3 id="情感对话"&gt;情感对话&lt;/h3&gt;
+&lt;p&gt;情感类型的对话，通常源于谈话的一方希望自己的情绪得到回应。&lt;/p&gt;
+&lt;p&gt;生活中经常发生的一类思维错位：女朋友跟你表达情绪，你跟她分析问题。&lt;/p&gt;
+&lt;p&gt;情感对话不是为了找到解决方案或者达成一致。情感对话的目的是触发情绪传染。一方感受到对方的脆弱，并以自身的脆弱作为回应，从而建立起信任、理解以及情感连接。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;情感对话的难点是通过对方点滴的情绪流动，识别出这是一场情感对话，并给予恰当的回应&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;我们总听到别人谈共情和换位思考。其实这很难做到，当我们和对方有不同的人生经历、处于不同的情境时，很难真正地与对方换位思考。所以，进入情感对话第一步，是要询问对方，用问题打开对方的心扉，&lt;strong&gt;先试探性地提出表面的、安全的事实性问题，逐步询问到对方的信仰、价值观、意义、体验等等&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;当对方愿意分享内心真实想法时，就到了第二步，给予足够的回应。什么叫足够呢？回应的情绪能量要和对方的情绪能量匹配，不要太过也不要太少。让双方进入到一场情绪表达的共振中。要避免单向输出，尽量轮流表达，互相回应。有一个经典的错误是，当对方讲述了一个过往悲伤的经历后，我们为了表达理解，滔滔不绝讲述自己的个人经历并把谈话的注意力引向自己。这就会让对方的情绪无法着陆。一定要&lt;strong&gt;持续的、双向的、深入的个性化表达&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;最后一步，建立「理解循环」。在倾听之后，询问对方自己理解的是否正确。不要试图掌控对话的走向和论调，不要试图控制对方。&lt;/p&gt;
+&lt;p&gt;在亲密关系中，关于控制权的争夺屡见不鲜。一方意识到自己无法掌控某件对自己重要的事情时，就会发怒甚至责难对方。而往往这种内心对控制欲的渴望存在于生活各个细节中，处理不好就会令双方互不相让，引发的连锁反应被称为「数怨并诉」(kitchen-sinking)，演变成破坏性争吵。&lt;/p&gt;
+&lt;p&gt;书中分享了一个调查，那些幸福的家庭和不幸福的家庭一样，都经常发生关于内部控制权的争吵，但是幸福家庭总能把冲突控制在一个合理的范围内。这些家庭成员不会试图控制对方，而是控制自己，控制自己所处的环境或是控制冲突的界限。然后通过对话，让双方找到可以共同控制的事情。&lt;/p&gt;
+&lt;p&gt;比如在一个关于「谁该做家务」的争吵中，我们可以控制自己（不要发怒或者指责对方），控制环境（在一个双方情绪愉悦的情况下讨论这个话题），控制冲突的界限（不去指责对方的生活习惯等），再通过协商找到一些双方可以共同努力控制的事情。&lt;/p&gt;
+&lt;p&gt;作者还有一些小建议：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;注重礼貌&lt;/li&gt;
+&lt;li&gt;警惕讽刺性语言&lt;/li&gt;
+&lt;li&gt;多表达感谢、问候、歉意&lt;/li&gt;
+&lt;li&gt;避免在公开场合提出批评&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="社交对话"&gt;社交对话&lt;/h3&gt;
+&lt;p&gt;社交类型对话，是在对话过程中寻找身份认同，关注社会影响的一类对话。当一名医生用专业知识向患者解释治疗的必要性时，往往效果不如将自己带入到父亲、家人、朋友的角色时效果更好。因为患者担忧的问题往往是对家人的影响。所以如果能在这类谈话中，找到与对方深层次顾虑相匹配的角色，从而进行交流，就能事半功倍。&lt;/p&gt;
+&lt;p&gt;社交对话的难点是找到对方内心深处的恐惧、疑惑、顾虑等。我们每个人都有多重身份，当与他人对话时，要时刻意识到身份的多样性和复杂性，从而识别出什么情况要切换身份与对方在同一个频道交流。&lt;/p&gt;
+&lt;p&gt;在多元化的社会中，人们习惯把他人按出身、地域、性别等特征笼统归类，冲破隔阂的关键就是察觉身份的多样性，认识到我们与他们同为父亲、儿子等社会和家庭角色，避免对他人进行模糊的分类，泛泛地夸大某个身份特征的影响。&lt;/p&gt;
+&lt;p&gt;对于不同主张、不同信仰的人，交流的目的更多是互相理解，分享经历和观点，而不是说服他人改变想法。&lt;/p&gt;
+&lt;h2 id="总结"&gt;总结&lt;/h2&gt;
+&lt;p&gt;我最近在与朋友闲聊时有个体会，一个成熟的人，不能止步于「尊重但不理解」或是「谁好谁坏」的讨论中，即使我们不能解决大部分矛盾和误解，仍然可以做到「我不完全认同，但是我能理解你为什么这样做」。理解观点不同的人，也会让我们自己避免内耗，更加开朗。&lt;/p&gt;
+&lt;p&gt;回顾上面三种类型的对话，日常交流我们可以通过区分对话类型，切换不同的思维模式，从开放性话题渐进地进入到感受层面的交流，和他人建立更深层次的连接。善加实践，我们的生活和工作都必将获益。&lt;/p&gt;</description></item><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p&gt;最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p&gt;
+&lt;p&gt;我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/"&gt;Go 内存泄漏常见模式&lt;/a&gt;中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p&gt;
+&lt;p&gt;在上一次教训之后，我们对代码单元测试层面做了 goruntine 内存泄漏的检测——使用&lt;code&gt;go.uber.org/goleak&lt;/code&gt;。只需要在单元测试开头加上一句:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;TestXXX&lt;/span&gt;(t *testing.T) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;defer&lt;/span&gt; goleak.&lt;span style="color:#41a1c0"&gt;VerifyNone&lt;/span&gt;(t)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;它就会在测试结束后自动检查是否有残留的 goroutine 协程。对于一些延迟执行的后台 goroutine 可以在单元测试里用 wait 或者 sleep 等待后台释放再结束测试用例。&lt;/p&gt;
+&lt;p&gt;经过第一轮排查可以排除代码本身 goroutine 造成的问题。于是我把注意力转向了另一个地方：定时任务。&lt;/p&gt;
+&lt;p&gt;根据客户反馈，在无任何前台操作的情况下，内存也会缓慢上升。&lt;/p&gt;
+&lt;p&gt;在我们代码里，使用了&lt;code&gt;github.com/robfig/cron/v3&lt;/code&gt;这个第三方包，它的作用是编排定时任务。用法是&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;c = cron.&lt;span style="color:#41a1c0"&gt;New&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;c.&lt;span style="color:#41a1c0"&gt;AddFunc&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;@every 10s&amp;#34;&lt;/span&gt;, callbackFunc)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这种结构定义一个定时任务。它的实现也基于 goroutine，所以我把 go 自带的 pprof 加入到 main.go 的依赖中，重新编译了项目二进制文件并部署到测试环境上（使用跟用户相同的硬件配置）。这样启动项目后就可以在特定端口获取内存信息。（关于 pprof，你可以参考 &lt;a href="https://go.dev/blog/pprof"&gt;Profiling Go Programs&lt;/a&gt;）&lt;/p&gt;
+&lt;p&gt;我使用 pprof 的接口获取了不同时间间隔的 heap 数据&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -o heap&lt;span style="color:#d0bf69"&gt;.1&lt;/span&gt;.out http:&lt;span style="color:#fd8f3f"&gt;//127.0.0.1:6060/debug/pprof/heap&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; tool pprof -http=:&lt;span style="color:#d0bf69"&gt;8099&lt;/span&gt; -base heap&lt;span style="color:#d0bf69"&gt;.1&lt;/span&gt;.out heap&lt;span style="color:#d0bf69"&gt;.2&lt;/span&gt;.out
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;比较两次结果的差异，在 Web UI 上选择 In Use Space 选项，可以查看到哪些内存没有释放。&lt;/p&gt;
+&lt;p&gt;虽然经过第二轮排查，依然没有发现内存泄漏。但这一次我注意到服务中的一个定时任务会每隔 10 秒执行一次，执行过程中 CPU 占用率明显上升。在这个任务的代码里，它使用了&lt;code&gt;github.com/shirou/gopsutil/process&lt;/code&gt;这个第三方库来查询系统进程 ID 和进程名等信息。&lt;/p&gt;
+&lt;p&gt;我查看它的源码后发现，这个库查询进程 ID 的方式，是把系统中所有的进程信息加载到内存中，然后匹配 ID 或者名称。因此，如果用户设备上的进程过多，就会每次查询时占用大量内存。&lt;/p&gt;
+&lt;p&gt;在一个 10 秒执行一次的定时任务中调用这个库，显然是非常低效的。&lt;/p&gt;
+&lt;p&gt;经过与客户进一步沟通，我们发现出现内存过高的两个进程中，另一个进程也有 CPU 占用过高的现象。于是我们让客户把 &lt;code&gt;top&lt;/code&gt; 命令的截图发给我们。在看到截图的一瞬间，问题的真相就浮出水面了:&lt;/p&gt;
+&lt;p&gt;客户使用的 IPC 设备是性能比较低的版本，虽然内存较大，但 CPU 性能捉急。如果有多个进程同时执行后台任务，CPU 就会周期性打满，造成任务阻塞。而我们使用的第三方库基于 goroutine 来实现定时任务。在上一个任务被阻塞时，下一个任务依然会继续创建新的后台 goroutine，导致内存中的 goroutine 协程堆积地越来越多。&lt;/p&gt;
+&lt;p&gt;这是一个定时任务的 CPU 占用过高，间隔过短，造成的 goroutine 阻塞问题。&lt;/p&gt;
+&lt;p&gt;知道了原因，剩下的工作就是优化代码逻辑、更新版本、跟客户解释原因……&lt;/p&gt;
+&lt;p&gt;以上就是这次排查 Go 服务性能问题的过程，如果你也遇到类似情况，希望对你有所帮助。&lt;/p&gt;</description></item><item><title>为什么不应该让AI生成单元测试</title><link>https://sund.site/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/posts/2025/do-not-vibe-testing/</guid><description>&lt;p&gt;最近听到 Gru.ai 创始人张海龙老师在一档&lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9"&gt;播客节目&lt;/a&gt;中提到自动生成 Unit Testing 是他们在做 AI Coding 的主要方向。&lt;/p&gt;
+&lt;p&gt;Gru.ai 官网上有这么两句话：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Forget about unit testing – get covered automatically (忘记单元测试 - 自动覆盖)
+Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing efficiency while reducing costs and ensuring top-notch quality. (利用 AI 工程师的专业知识来提高团队的测试效率，同时降低成本并确保一流的质量。)&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;张海龙老师在 AI Coding 方向的洞见让我很有启发。我只是对用 AI 写测试降本增效这种说法，持怀疑态度。我想他们在写第二句话时还有点不自信，最后还要画蛇添足补充一句 ensuring top-notch quality（确保一流质量）。&lt;/p&gt;
+&lt;p&gt;单元测试是需求的具象化。是整个测试体系中最小粒度、最贴近代码实现的约束工具。单元测试不仅被用来检查代码是否满足需求，更多时候，被用来检测边界条件（Corner Case），因为一段程序是否可靠，最重要的是在边界条件下它不会出错。这也是有经验的人类工程师区别于初级工程师的特点。&lt;/p&gt;
+&lt;p&gt;但是 Gru.ai 在做的，是用&lt;strong&gt;AI 提高单元测试覆盖率， 众所周知，覆盖率提高不等价于测试效率提高，更不等于质量提高&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;用一句提示词让 AI 自动帮你写出可以运行的单元测试。这对初级程序员来说非常具有诱惑力。好比一个射击运动员为了提高射击准确度，每次先开枪，然后在子弹坑附近画上靶子。&lt;/p&gt;
+&lt;p&gt;提升测试覆盖率的目的，是让人类工程师充分考虑边界条件。AI 辅助人类生成测试是一种节省时间的做法，这无可厚非，而 Gru.ai 却让我们「忘记单元测试，自动覆盖」。但 AI 大多时候不清楚边界条件，除非人类显式地告诉它。那么 AI 如何自动推断边界条件？我们又如何确信 AI 推断的边界条件是正确的？AI 测试了代码，谁来测试 AI ？&lt;/p&gt;
+&lt;p&gt;如果说 Cursor 这类 AI Coding 产品凝聚了硅谷程序员们对 Vibe Coding 的想象，那么 Gru.ai 就是中国程序员们对 Vibe Testing 的「美好期望」。&lt;/p&gt;</description></item><item><title>Hand on Enablement</title><link>https://sund.site/posts/2025/hand-on-enablement/</link><pubDate>Tue, 29 Apr 2025 10:49:39 +0800</pubDate><guid>https://sund.site/posts/2025/hand-on-enablement/</guid><description>&lt;p&gt;最近在读《沃顿商学院最受欢迎的谈判课》这本书。有两个可以快速上手的实用技巧：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在做没有把握的事之前，找人一起模拟演练一下&lt;/li&gt;
+&lt;li&gt;快速行动，避免焦虑&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="提前模拟的重要性"&gt;提前模拟的重要性&lt;/h2&gt;
+&lt;p&gt;和朋友或者同事，在面试、谈判之前提前演练，可以从不同视角对人际沟通场景进行演习，大概能排除掉因为个人认知盲点带来的 20%失误。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;和人打交道最重要的不是专业知识，而是视角&lt;/strong&gt;。越是在某些领域经验丰富的人，越是会忽略视角的重要性。调查显出，经验丰富的人，尤其不喜欢倾听别人的观点。那些习惯放低身段的人，在社交场合更容易获得机会，他们往往更愿意倾听，从而更加了解对方的需求。&lt;/p&gt;
+&lt;h2 id="跳进信息流里学习游泳"&gt;跳进信息流里学习游泳&lt;/h2&gt;
+&lt;p&gt;站在岸上观察不会让你学会游泳，有时候要勇敢跳进水里。很多时候你缺少的不是信息，而是跳进信息流里的行动。&lt;/p&gt;
+&lt;p&gt;例如，大企业只喜欢招有工作经验的人，一家企业的工作方式是一套复杂的人与人的信息流，了解它最好的方式是参与。对于一个毕业生，首要任务是利用各种实习、外包机会参与进去，而不是找课程培训。&lt;/p&gt;
+&lt;p&gt;要 Hand on enablement，有些焦虑的本质，是缺少行动。互联网的发达让人习惯性地收集信息，而不是采取行动。&lt;/p&gt;
+&lt;p&gt;我最近在犹豫是否需要买一辆车做代步工具，我发现我无法决策的原因是缺少开车的机会，不了解自己的需求。所以「是否买车」的问题对我来说可以转换成「创造条件开车」。下一步就是租车先了解自己的需求。&lt;/p&gt;
+&lt;p&gt;快速行动，也可以获得一种全新的视角，你会发现这和前边强调模拟演练的共通之处：&lt;strong&gt;多种视角下的得到的浅显认识，往往能胜过单一视角下的深入研究&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s do it.&lt;/p&gt;</description></item><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/pairing-with-ai-02/</guid><description>&lt;p&gt;在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;任务死循环&lt;/li&gt;
+&lt;li&gt;模型无法修复环境问题&lt;/li&gt;
+&lt;li&gt;模型执行长任务后半段忘记上下文&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="一些使用经验"&gt;一些使用经验&lt;/h2&gt;
+&lt;p&gt;以我自己为例，我经常使用 Cline + Github Copilot 的组合。我很喜欢 Cline 的功能是 &lt;code&gt;Checkpoint restore&lt;/code&gt;，它可以在执行错误的位置重新编辑提示词执行。这让我可以在相同的任务中调用不同的模型，观察他们处理问题的能力。&lt;/p&gt;
+&lt;p&gt;用作规划（Plan）的模型通常用 Deepseek-R1，Gemini 2.0 Flash Thinking，Claude 3.7。这里除了 Claude 3.7 能够比较准确给出计划外，其他模型多少都容易走「歪路」， 比如 Deepseek-R1 喜欢做一些多余的事情，让它翻译中文，它会调用 MCP 的翻译服务而不是自己翻译。&lt;/p&gt;
+&lt;p&gt;从经济角度考虑，解决简单问题 Gemini 2.0 Flash Thinking 是比较快速、经济的模型。复杂问题直接上 Claude 3.7 可能更容易控制成本。&lt;/p&gt;
+&lt;p&gt;用作执行任务（Act）的模型里，Deepseek-V3 表现非常不稳定，经常死循环或丢失上下文。Claude 太贵，而 Gemini 2.0 Flash 是相对准确且划算的模型。置于国产的 Qwen 系列模型不完全支持 Function Calling，Cline 也没有适配，所以暂时无法测试。&lt;/p&gt;
+&lt;h2 id="ai-编程疑难杂症的应对方法"&gt;AI 编程疑难杂症的应对方法&lt;/h2&gt;
+&lt;p&gt;最近读到&lt;a href="https://ezyang.github.io/ai-blindspots/"&gt;AI Blindspots&lt;/a&gt;这篇文章，作者系统性整理了 AI 编程中遇到的问题和他的思路。对我非常有启发。我用 Agent 把它翻译成了中文并人工做了润色，你可以在这里读到：&lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5"&gt;AI 编程的盲点&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;概括起来，解决 AI 问题的核心要领还是三点：更准确的提示词、更完整的上下文、缩小问题规模。&lt;/p&gt;
+&lt;p&gt;相信随着技术的发展，编程范式会发生翻天覆地的变化。如果重构变得如此容易，那么马丁福勒的《重构》是否应该出一套 AI 时代下的新范式。如果文档不再是被人读，而是喂给模型当作上下文，那么文档的形态应该是什么样？是否提供一个向量化的文档接口供大模型调用，将是未来编程框架的新常态？&lt;/p&gt;
+&lt;p&gt;我对未来充满期待。&lt;/p&gt;</description></item></channel></rss>

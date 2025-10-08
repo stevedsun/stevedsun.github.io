@@ -1,5 +1,4 @@
-<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>DeepWIKI 是如何工作的 | Steve Sun</title>
-<meta name=title content="DeepWIKI 是如何工作的"><meta name=description content="DeepWIKI 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。
+<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>DeepWIKI 是如何工作的 | Steve Sun</title><meta name=title content="DeepWIKI 是如何工作的"><meta name=description content="DeepWIKI 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。
 我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。
 生成代码结构地图
 首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成代表语法结构和文件结构的元数据和代表代码描述和片段的向量数据两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。

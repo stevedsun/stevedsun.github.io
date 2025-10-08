@@ -1,5 +1,4 @@
-<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>Go 内存泄漏常见模式 | Steve Sun</title>
-<meta name=title content="Go 内存泄漏常见模式"><meta name=description content="最近在工作中排查 Go 语言内存泄漏问题时，发现这篇 Uber 写的博客，其中分享了几种常见的 goroutine 内存泄漏模式，于是把整理了 goroutine 的相关问题，希望更多人搜索到到这篇文章，帮助大家快速定位内存泄漏问题。
+<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>Go 内存泄漏常见模式 | Steve Sun</title><meta name=title content="Go 内存泄漏常见模式"><meta name=description content="最近在工作中排查 Go 语言内存泄漏问题时，发现这篇 Uber 写的博客，其中分享了几种常见的 goroutine 内存泄漏模式，于是把整理了 goroutine 的相关问题，希望更多人搜索到到这篇文章，帮助大家快速定位内存泄漏问题。
 Goroutine 内存泄漏的原因
 Go 语言的内存泄漏通常因为错误地使用 goroutine 和 channel。例如以下几种情况：
 
@@ -53,20 +52,20 @@ func Example() { a := 1 c := make(chan error) go func() { c <- err return }() //
 </span></span><span style=display:flex><span>        <span style=color:#fc5fa3>return</span>
 </span></span><span style=display:flex><span>    }()
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#6c7986>// do something
-</span></span></span><span style=display:flex><span><span style=color:#6c7986></span>
+</span></span><span style=display:flex><span>    <span style=color:#6c7986>// do something</span>
+</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#fc5fa3>if</span> a &gt; <span style=color:#d0bf69>0</span> {
 </span></span><span style=display:flex><span>        <span style=color:#fc5fa3>return</span>
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#6c7986>// do something
-</span></span></span><span style=display:flex><span><span style=color:#6c7986></span>
+</span></span><span style=display:flex><span>    <span style=color:#6c7986>// do something</span>
+</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    err := &lt;-c
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>代码中主进程在<code>if a > 0</code> 处 return，导致 channel 无法写入而被阻塞。</p><p>解决这种问题的一个思路是把无缓冲 channel 转化为缓冲大小为 1 的 channel。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>c := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> <span style=color:#fc5fa3>error</span>, <span style=color:#d0bf69>1</span>)
 </span></span></code></pre></div><p>有缓冲 channel 即使没有读取操作，也不会阻塞。</p><h3 id=the-timeout-leak-超时泄漏>The Timeout Leak /超时泄漏</h3><p>这是我们工作中遇到的问题，经常需要执行一个可能超时的异步操作时被使用。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#fc5fa3>func</span> <span style=color:#41a1c0>Example</span>() {
 </span></span><span style=display:flex><span>    timeoutOption := <span style=color:#41a1c0>SomeTimeoutOption</span>()
-</span></span><span style=display:flex><span>    done := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> any)
+</span></span><span style=display:flex><span>    done := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> <span style=color:#fc5fa3>any</span>)
 </span></span><span style=display:flex><span>    <span style=color:#fc5fa3>go</span> <span style=color:#fc5fa3>func</span>() {
 </span></span><span style=display:flex><span>        done &lt;- result
 </span></span><span style=display:flex><span>    }()
@@ -79,19 +78,19 @@ func Example() { a := 1 c := make(chan error) go func() { c <- err return }() //
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>在这段代码里，一旦 timeoutOption 操作超时，就会通知 select，接着程序退出，于是 goroutine 写入 done 的操作被阻塞而无法退出。</p><p>解决思路同上一个模式，用有缓冲 channel 替代无缓冲 channel。</p><h3 id=the-ncast-leak-多端读写泄漏>The NCast Leak /多端读写泄漏</h3><p>如果 channel 的读端只有一个，但是写端有多个，就会发生这种情况。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#fc5fa3>func</span> <span style=color:#41a1c0>Example</span>() {
-</span></span><span style=display:flex><span>    c := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> any)
+</span></span><span style=display:flex><span>    c := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> <span style=color:#fc5fa3>any</span>)
 </span></span><span style=display:flex><span>    <span style=color:#fc5fa3>for</span> _, i := <span style=color:#fc5fa3>range</span> items {
-</span></span><span style=display:flex><span>        <span style=color:#fc5fa3>go</span> <span style=color:#fc5fa3>func</span>(c <span style=color:#fc5fa3>chan</span> any) {
+</span></span><span style=display:flex><span>        <span style=color:#fc5fa3>go</span> <span style=color:#fc5fa3>func</span>(c <span style=color:#fc5fa3>chan</span> <span style=color:#fc5fa3>any</span>) {
 </span></span><span style=display:flex><span>            c &lt;- result
 </span></span><span style=display:flex><span>        }(c)
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>    data := &lt;- c
 </span></span><span style=display:flex><span>    <span style=color:#fc5fa3>return</span>
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>这种情况也适用于“多个写端一个读端”的情况，解决方法是把 channel 设置成和写或读数量一致的缓冲数。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>c := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> any, <span style=color:#d0a8ff>len</span>(items))
+</span></span></code></pre></div><p>这种情况也适用于“多个写端一个读端”的情况，解决方法是把 channel 设置成和写或读数量一致的缓冲数。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>c := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> <span style=color:#fc5fa3>any</span>, <span style=color:#d0a8ff>len</span>(items))
 </span></span></code></pre></div><h3 id=channel-iteration-misuse-通道迭代误用>Channel Iteration Misuse /通道迭代误用</h3><p>Go 支持一种特性 <a href=https://gobyexample.com/range-over-channels>&ldquo;Range over channels&rdquo;</a>, 可以用 range 来循环读取 channel 的内容。</p><p>但是一旦读取不到内容，range 就会等待 channel 的写入，而 range 如果正好在 goroutine 内部，这个 goroutine 就会被阻塞。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#fc5fa3>func</span> <span style=color:#41a1c0>Example</span>() {
 </span></span><span style=display:flex><span>    wg := &amp;sync.WaitGroup{}
-</span></span><span style=display:flex><span>    c := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> any, <span style=color:#d0bf69>1</span>)
+</span></span><span style=display:flex><span>    c := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> <span style=color:#fc5fa3>any</span>, <span style=color:#d0bf69>1</span>)
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#fc5fa3>for</span> _, i := items {
 </span></span><span style=display:flex><span>        wg.<span style=color:#41a1c0>Add</span>(<span style=color:#d0bf69>1</span>)
@@ -109,10 +108,10 @@ func Example() { a := 1 c := make(chan error) go func() { c <- err return }() //
 </span></span><span style=display:flex><span>    wg.<span style=color:#41a1c0>Wait</span>()
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>解决这个问题的方式手动定义关闭 channel。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>wg := &amp;sync.WaitGroup{}
-</span></span><span style=display:flex><span>c := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> any, <span style=color:#d0bf69>1</span>)
+</span></span><span style=display:flex><span>c := <span style=color:#d0a8ff>make</span>(<span style=color:#fc5fa3>chan</span> <span style=color:#fc5fa3>any</span>, <span style=color:#d0bf69>1</span>)
 </span></span><span style=display:flex><span><span style=color:#fc5fa3>defer</span> <span style=color:#d0a8ff>close</span>(c)
-</span></span><span style=display:flex><span><span style=color:#6c7986>//...
-</span></span></span></code></pre></div><p>这样在 WaitGroup 全部结束后，主程序会关闭 channel，从而让异步的 goroutine 内部的 range 退出循环等待。</p><h2 id=小结>小结</h2><p>Goroutine 内存泄漏是 Go 语言最容易发生的内存泄漏情况，它通常伴随着错误地使用 goroutine 和 channel。而 channel 的特殊用法如 select 和 range 又让 channel 阻塞变得更加隐蔽不易发现，进而增加排查内存泄漏的难度。</p><p>在写 goroutine 和调试内存泄漏问题时，要重点关注 channel 相关的操作，尤其涉及到文中列举的四类模式：功能过早返回、超时泄漏、多端读写泄漏、通道迭代误用。</p></content><p><a href=https://sund.site/tags/go/>#Go</a>
+</span></span><span style=display:flex><span><span style=color:#fd8f3f>//...</span>
+</span></span></code></pre></div><p>这样在 WaitGroup 全部结束后，主程序会关闭 channel，从而让异步的 goroutine 内部的 range 退出循环等待。</p><h2 id=小结>小结</h2><p>Goroutine 内存泄漏是 Go 语言最容易发生的内存泄漏情况，它通常伴随着错误地使用 goroutine 和 channel。而 channel 的特殊用法如 select 和 range 又让 channel 阻塞变得更加隐蔽不易发现，进而增加排查内存泄漏的难度。</p><p>在写 goroutine 和调试内存泄漏问题时，要重点关注 channel 相关的操作，尤其涉及到文中列举的四类模式：功能过早返回、超时泄漏、多端读写泄漏、通道迭代误用。</p></content><p><a href=https://sund.site/tags/go/>#Go</a>
 <a href=https://sund.site/tags/memory-leak/>#Memory Leak</a></p><div class=toc><nav id=TableOfContents><ul><li><a href=#goroutine-内存泄漏的原因>Goroutine 内存泄漏的原因</a></li><li><a href=#常见-goroutine-内存泄漏模式>常见 Goroutine 内存泄漏模式</a><ul><li><a href=#premature-function-return-功能过早返回>Premature Function Return /功能过早返回</a></li><li><a href=#the-timeout-leak-超时泄漏>The Timeout Leak /超时泄漏</a></li><li><a href=#the-ncast-leak-多端读写泄漏>The NCast Leak /多端读写泄漏</a></li><li><a href=#channel-iteration-misuse-通道迭代误用>Channel Iteration Misuse /通道迭代误用</a></li></ul></li><li><a href=#小结>小结</a></li></ul></nav></div></main><footer>Subscribe via <a href=/index.xml>RSS</a>.<br>Made with
 <a href=https://github.com/rokcso/hugo-bearblog-neo/>Hugo Bear Neo</a>.<br>Copyright © 2013-2025, Steve Sun.
 🗺️ <a href=/sitemap.xml>Sitemap</a>.</footer></body></html>

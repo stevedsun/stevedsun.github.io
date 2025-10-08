@@ -1,85 +1,84 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Redis on Steve Sun</title><link>https://sund.site/tags/redis/</link><description>Recent content in Redis on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Thu, 18 Mar 2021 15:32:57 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/redis/index.xml" rel="self" type="application/rss+xml"/><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/2021/distributed-cache/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/2021/distributed-cache/</guid><description>&lt;p>很久不写技术文章了。这是一篇关于 Redis 构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。&lt;/p>
-&lt;p>下面就以我做过的商品预约平台项目作为引子，引出分布式缓存设计的一些要点。&lt;/p>
-&lt;p>该商品预约平台的背景如下：&lt;/p>
-&lt;ul>
-&lt;li>该系统由多个微服务组成&lt;/li>
-&lt;li>预约的过程：用户可以选择指定门店，指定日期到店提领商品，如果对应门店和日期没有库存，则不能预约&lt;/li>
-&lt;li>因为“预约”的是未来时刻的库存，所以门店的未来某个时间剩余库存是通过一系列公式计算得出的。这个公式比较复杂，考虑到了用户指定的日期是否在配货周期内等因素，这里省略掉细节&lt;/li>
-&lt;li>每年节日高峰时期，用户会集中预约商品，导致服务压力骤增。又因为未来日期的库存需要动态计算的特点（比如 A 预约了 1 月 1 日的最后一件商品，B 就会无法在该日预约），不同用户的预约操作会互相影响，严重时导致数据库死锁、数据不一致等问题&lt;/li>
-&lt;/ul>
-&lt;p>基于以上背景，这个预约系统的设计必须将性能作为主要优化目标，而缓存作为性能优化的不二选择，就承担了重要职责。&lt;/p>
-&lt;h2 id="识别热点数据">识别热点数据&lt;/h2>
-&lt;p>并不是所有数据都有必要被缓存，往往缓存的数据具有以下几个特点：&lt;/p>
-&lt;ul>
-&lt;li>读写比很高。如果写操作比读操作还多，缓存系统频繁更新会大大降低可用性&lt;/li>
-&lt;li>是热点数据。因为内存的价格昂贵，所以按照 2-8 原则，20%热点数据才值得被缓存&lt;/li>
-&lt;li>能够容忍短时间的不一致&lt;/li>
-&lt;/ul>
-&lt;p>结合项目需要，排除掉一些不适合缓存的数据：&lt;/p>
-&lt;ul>
-&lt;li>对于那些只读的、配置相关的数据，只需要做进程缓存（使用 Guava Cache），在服务启动时加载数据到内存就可以了&lt;/li>
-&lt;li>尽量用 CDN 和 Nginx 静态缓存来解决大部分不常更新的资源&lt;/li>
-&lt;/ul>
-&lt;p>对于该预约项目，用户最频繁查询的数据是不同门店在不同日期下的库存数量。这类数据是缓存设计的重点照顾对象：&lt;/p>
-&lt;ul>
-&lt;li>用户选择了指定城市、指定门店后，系统会返回最近 30 天的库存信息，用户只可能修改其中一条信息。所以读写比很高&lt;/li>
-&lt;li>库存信息是预约订单流程的必备步骤，而且是跨服务调用（预约服务 -&amp;gt; 库存服务）的数据，所以涉及到大量网络请求、数据库查询。&lt;/li>
-&lt;/ul>
-&lt;h2 id="指定性能优化的指标">指定性能优化的指标&lt;/h2>
-&lt;p>在即将完成业务系统开发时，我们就根据 &lt;a href="https://sre.google/books/">Google SRE Books&lt;/a> 提到的四个黄金指标，制定了监控系统性能的四个维度：&lt;/p>
-&lt;ul>
-&lt;li>请求率&lt;/li>
-&lt;li>错误数，非 200 返回结果数量&lt;/li>
-&lt;li>响应时间&lt;/li>
-&lt;li>资源利用率（CPU、内存）&lt;/li>
-&lt;/ul>
-&lt;p>我们使用 Prometheus + Grafana 的组合实现监控可视化，这样每次测试人员进行压力测试时，都可以通过这些指标对系统进行调整。缓存影响最大的指标是&lt;strong>请求率&lt;/strong>（一般用 TPS 或者 QPS）和&lt;strong>响应时间&lt;/strong>。所以在设计缓存系统时，要不断参照这两个指标进行优化。&lt;/p>
-&lt;h2 id="缓存的设计的实践">缓存的设计的实践&lt;/h2>
-&lt;h3 id="分级缓存">分级缓存&lt;/h3>
-&lt;p>为了不让某一接口或者微服务的缓存失效导致其他接口或服务的并发量暴增，就要针对不同来源（数据库的表、接口等）的数据做分级缓存。比如用户在一次查询中涉及到“附近可预约门店”的查询、“活动期间不同日期剩余库存”的查询、“已预约数量“的查询，这三种查询逐层依赖后边的查询结果。&lt;/p>
-&lt;p>假设如果只针对库存数量做缓存，一旦这部分缓存失效，那么“附近可预约门店”的查询就会直接访问数据库查询全部门店的剩余库存来确定哪个门店可以预约。这样就导致查询库存的接口并发量骤增。所以&lt;strong>分级缓存一定程度上缓解了缓存雪崩的问题&lt;/strong>。&lt;/p>
-&lt;h3 id="自动化测试-api-参数合法性">自动化测试 API 参数合法性&lt;/h3>
-&lt;p>我们的 QA 通常会写自动化脚本对后端 API 做定期的扫描，检查哪些接口的数据输入、输出有不合法的类型或是数值范围。除了巩固系统的健壮性，还能帮助缓存系统抵御&lt;strong>缓存穿透&lt;/strong>的风险。&lt;/p>
-&lt;h3 id="缓存和数据库双写问题">缓存和数据库双写问题&lt;/h3>
-&lt;p>这是一个“先淘汰缓存&amp;quot;还是”先写数据库“的问题。通常没有明确的最佳方法。我们采用 &lt;a href="https://dzone.com/articles/cache-aside-pattern">&lt;strong>Cache-Aside Pattern&lt;/strong>&lt;/a> 的方式：&lt;/p>
-&lt;blockquote>
-&lt;ul>
-&lt;li>&lt;strong>失效&lt;/strong>：应用程序先从 cache 取数据，没有得到，则从数据库中取数据，成功后，放到缓存中。&lt;/li>
-&lt;li>&lt;strong>命中&lt;/strong>：应用程序从 cache 中取数据，取到后返回。&lt;/li>
-&lt;li>&lt;strong>更新&lt;/strong>：先把数据存到数据库中，成功后，再让缓存失效。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>缺点：可能有小概率脏数据&lt;/strong>。比如，一个是读操作，但是没有命中缓存，然后就到数据库中取数据，此时来了一个写操作，写完数据库后，让缓存失效，然后，之前的那个读操作再把老的数据放进去，所以，会造成脏数据。&lt;/p>
-&lt;/blockquote>
-&lt;p>考虑到写操作通常比读操作时间更长，所以 Cache-Aside Pattern 中的脏数据概率非常小，即便发生，用户在实际下单时系统仍然会去数据库里做数据校验，不会影响业务数据的正确性。&lt;/p>
-&lt;p>如果对缓存一致性有更高要求，可以采用&lt;a href="https://juejin.cn/post/6844903805641818120">延时双删策略或异步更新缓存&lt;/a>。不过这两种方式本质都是用一定程度的串行化操作来解决并发造成的问题。&lt;/p>
-&lt;h3 id="预热">预热&lt;/h3>
-&lt;p>预加载热点数据时需要注意的点是，要考虑好服务一旦重启或是生产环境发生事故，要避免服务重启后再次造成二次事故。&lt;/p>
-&lt;h2 id="缓存系统常见的问题和应对思路">缓存系统常见的问题和应对思路&lt;/h2>
-&lt;p>首先要保证应用服务能做好熔断、限流、降级的措施。然后再针对不同情况做应对处理。&lt;/p>
-&lt;h3 id="缓存雪崩">缓存雪崩&lt;/h3>
-&lt;p>原因：热点缓存数据批量过期，导致大量缓存失效。&lt;/p>
-&lt;p>解决思路：&lt;/p>
-&lt;ul>
-&lt;li>错开过期时间、随机过期时间&lt;/li>
-&lt;li>构建多级缓存&lt;/li>
-&lt;li>避免热点数据频繁淘汰（如修改 Redis 淘汰策略为 LRU）&lt;/li>
-&lt;li>必要时限流、降级&lt;/li>
-&lt;/ul>
-&lt;h3 id="缓存击穿">缓存击穿&lt;/h3>
-&lt;p>原因：热点 Key 突然过期。&lt;/p>
-&lt;p>解决思路：&lt;/p>
-&lt;ul>
-&lt;li>设计系统时针对性预防措施，比如热点 Key 的更新策略不依据时间，而是程序控制&lt;/li>
-&lt;li>配合监控和后台调整，保证高峰时段热点 key 可用&lt;/li>
-&lt;li>必要时限流、降级&lt;/li>
-&lt;/ul>
-&lt;h3 id="缓存穿透">缓存穿透&lt;/h3>
-&lt;p>原因：黑客通过访问缓存中不存在的数据，将大量请求直达数据库。&lt;/p>
-&lt;p>解决思路：&lt;/p>
-&lt;ul>
-&lt;li>监控报警&lt;/li>
-&lt;li>在服务层做好熔断&lt;/li>
-&lt;/ul>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>在设计缓存系统时优先排除掉大部分不需要缓存或者通过进程本地缓存的数据。搭建合理的监控手段，自动化测试框架，再结合预热、缓存淘汰策略、双写策略等最佳实践方法，不断优化缓存性能。&lt;/p>
-&lt;p>尤其要注意缓存的集中常见问题：雪崩、击穿和穿透。做好应用服务的熔断、降级、限流措施，保证在事故发生时针对每种情况都有预案。&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Redis on Steve Sun</title><link>https://sund.site/tags/redis/</link><description>Recent content in Redis on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Thu, 18 Mar 2021 15:32:57 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/redis/index.xml" rel="self" type="application/rss+xml"/><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/2021/distributed-cache/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/2021/distributed-cache/</guid><description>&lt;p&gt;很久不写技术文章了。这是一篇关于 Redis 构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。&lt;/p&gt;
+&lt;p&gt;下面就以我做过的商品预约平台项目作为引子，引出分布式缓存设计的一些要点。&lt;/p&gt;
+&lt;p&gt;该商品预约平台的背景如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;该系统由多个微服务组成&lt;/li&gt;
+&lt;li&gt;预约的过程：用户可以选择指定门店，指定日期到店提领商品，如果对应门店和日期没有库存，则不能预约&lt;/li&gt;
+&lt;li&gt;因为“预约”的是未来时刻的库存，所以门店的未来某个时间剩余库存是通过一系列公式计算得出的。这个公式比较复杂，考虑到了用户指定的日期是否在配货周期内等因素，这里省略掉细节&lt;/li&gt;
+&lt;li&gt;每年节日高峰时期，用户会集中预约商品，导致服务压力骤增。又因为未来日期的库存需要动态计算的特点（比如 A 预约了 1 月 1 日的最后一件商品，B 就会无法在该日预约），不同用户的预约操作会互相影响，严重时导致数据库死锁、数据不一致等问题&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;基于以上背景，这个预约系统的设计必须将性能作为主要优化目标，而缓存作为性能优化的不二选择，就承担了重要职责。&lt;/p&gt;
+&lt;h2 id="识别热点数据"&gt;识别热点数据&lt;/h2&gt;
+&lt;p&gt;并不是所有数据都有必要被缓存，往往缓存的数据具有以下几个特点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;读写比很高。如果写操作比读操作还多，缓存系统频繁更新会大大降低可用性&lt;/li&gt;
+&lt;li&gt;是热点数据。因为内存的价格昂贵，所以按照 2-8 原则，20%热点数据才值得被缓存&lt;/li&gt;
+&lt;li&gt;能够容忍短时间的不一致&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;结合项目需要，排除掉一些不适合缓存的数据：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;对于那些只读的、配置相关的数据，只需要做进程缓存（使用 Guava Cache），在服务启动时加载数据到内存就可以了&lt;/li&gt;
+&lt;li&gt;尽量用 CDN 和 Nginx 静态缓存来解决大部分不常更新的资源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;对于该预约项目，用户最频繁查询的数据是不同门店在不同日期下的库存数量。这类数据是缓存设计的重点照顾对象：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户选择了指定城市、指定门店后，系统会返回最近 30 天的库存信息，用户只可能修改其中一条信息。所以读写比很高&lt;/li&gt;
+&lt;li&gt;库存信息是预约订单流程的必备步骤，而且是跨服务调用（预约服务 -&amp;gt; 库存服务）的数据，所以涉及到大量网络请求、数据库查询。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="指定性能优化的指标"&gt;指定性能优化的指标&lt;/h2&gt;
+&lt;p&gt;在即将完成业务系统开发时，我们就根据 &lt;a href="https://sre.google/books/"&gt;Google SRE Books&lt;/a&gt; 提到的四个黄金指标，制定了监控系统性能的四个维度：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;请求率&lt;/li&gt;
+&lt;li&gt;错误数，非 200 返回结果数量&lt;/li&gt;
+&lt;li&gt;响应时间&lt;/li&gt;
+&lt;li&gt;资源利用率（CPU、内存）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我们使用 Prometheus + Grafana 的组合实现监控可视化，这样每次测试人员进行压力测试时，都可以通过这些指标对系统进行调整。缓存影响最大的指标是&lt;strong&gt;请求率&lt;/strong&gt;（一般用 TPS 或者 QPS）和&lt;strong&gt;响应时间&lt;/strong&gt;。所以在设计缓存系统时，要不断参照这两个指标进行优化。&lt;/p&gt;
+&lt;h2 id="缓存的设计的实践"&gt;缓存的设计的实践&lt;/h2&gt;
+&lt;h3 id="分级缓存"&gt;分级缓存&lt;/h3&gt;
+&lt;p&gt;为了不让某一接口或者微服务的缓存失效导致其他接口或服务的并发量暴增，就要针对不同来源（数据库的表、接口等）的数据做分级缓存。比如用户在一次查询中涉及到“附近可预约门店”的查询、“活动期间不同日期剩余库存”的查询、“已预约数量“的查询，这三种查询逐层依赖后边的查询结果。&lt;/p&gt;
+&lt;p&gt;假设如果只针对库存数量做缓存，一旦这部分缓存失效，那么“附近可预约门店”的查询就会直接访问数据库查询全部门店的剩余库存来确定哪个门店可以预约。这样就导致查询库存的接口并发量骤增。所以&lt;strong&gt;分级缓存一定程度上缓解了缓存雪崩的问题&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id="自动化测试-api-参数合法性"&gt;自动化测试 API 参数合法性&lt;/h3&gt;
+&lt;p&gt;我们的 QA 通常会写自动化脚本对后端 API 做定期的扫描，检查哪些接口的数据输入、输出有不合法的类型或是数值范围。除了巩固系统的健壮性，还能帮助缓存系统抵御&lt;strong&gt;缓存穿透&lt;/strong&gt;的风险。&lt;/p&gt;
+&lt;h3 id="缓存和数据库双写问题"&gt;缓存和数据库双写问题&lt;/h3&gt;
+&lt;p&gt;这是一个“先淘汰缓存&amp;quot;还是”先写数据库“的问题。通常没有明确的最佳方法。我们采用 &lt;a href="https://dzone.com/articles/cache-aside-pattern"&gt;&lt;strong&gt;Cache-Aside Pattern&lt;/strong&gt;&lt;/a&gt; 的方式：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;失效&lt;/strong&gt;：应用程序先从 cache 取数据，没有得到，则从数据库中取数据，成功后，放到缓存中。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;命中&lt;/strong&gt;：应用程序从 cache 中取数据，取到后返回。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;更新&lt;/strong&gt;：先把数据存到数据库中，成功后，再让缓存失效。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;缺点：可能有小概率脏数据&lt;/strong&gt;。比如，一个是读操作，但是没有命中缓存，然后就到数据库中取数据，此时来了一个写操作，写完数据库后，让缓存失效，然后，之前的那个读操作再把老的数据放进去，所以，会造成脏数据。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;考虑到写操作通常比读操作时间更长，所以 Cache-Aside Pattern 中的脏数据概率非常小，即便发生，用户在实际下单时系统仍然会去数据库里做数据校验，不会影响业务数据的正确性。&lt;/p&gt;
+&lt;p&gt;如果对缓存一致性有更高要求，可以采用&lt;a href="https://juejin.cn/post/6844903805641818120"&gt;延时双删策略或异步更新缓存&lt;/a&gt;。不过这两种方式本质都是用一定程度的串行化操作来解决并发造成的问题。&lt;/p&gt;
+&lt;h3 id="预热"&gt;预热&lt;/h3&gt;
+&lt;p&gt;预加载热点数据时需要注意的点是，要考虑好服务一旦重启或是生产环境发生事故，要避免服务重启后再次造成二次事故。&lt;/p&gt;
+&lt;h2 id="缓存系统常见的问题和应对思路"&gt;缓存系统常见的问题和应对思路&lt;/h2&gt;
+&lt;p&gt;首先要保证应用服务能做好熔断、限流、降级的措施。然后再针对不同情况做应对处理。&lt;/p&gt;
+&lt;h3 id="缓存雪崩"&gt;缓存雪崩&lt;/h3&gt;
+&lt;p&gt;原因：热点缓存数据批量过期，导致大量缓存失效。&lt;/p&gt;
+&lt;p&gt;解决思路：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;错开过期时间、随机过期时间&lt;/li&gt;
+&lt;li&gt;构建多级缓存&lt;/li&gt;
+&lt;li&gt;避免热点数据频繁淘汰（如修改 Redis 淘汰策略为 LRU）&lt;/li&gt;
+&lt;li&gt;必要时限流、降级&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="缓存击穿"&gt;缓存击穿&lt;/h3&gt;
+&lt;p&gt;原因：热点 Key 突然过期。&lt;/p&gt;
+&lt;p&gt;解决思路：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;设计系统时针对性预防措施，比如热点 Key 的更新策略不依据时间，而是程序控制&lt;/li&gt;
+&lt;li&gt;配合监控和后台调整，保证高峰时段热点 key 可用&lt;/li&gt;
+&lt;li&gt;必要时限流、降级&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="缓存穿透"&gt;缓存穿透&lt;/h3&gt;
+&lt;p&gt;原因：黑客通过访问缓存中不存在的数据，将大量请求直达数据库。&lt;/p&gt;
+&lt;p&gt;解决思路：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;监控报警&lt;/li&gt;
+&lt;li&gt;在服务层做好熔断&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;在设计缓存系统时优先排除掉大部分不需要缓存或者通过进程本地缓存的数据。搭建合理的监控手段，自动化测试框架，再结合预热、缓存淘汰策略、双写策略等最佳实践方法，不断优化缓存性能。&lt;/p&gt;
+&lt;p&gt;尤其要注意缓存的集中常见问题：雪崩、击穿和穿透。做好应用服务的熔断、降级、限流措施，保证在事故发生时针对每种情况都有预案。&lt;/p&gt;</description></item></channel></rss>

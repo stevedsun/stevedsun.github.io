@@ -1,324 +1,322 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Audit on Steve Sun</title><link>https://sund.site/tags/audit/</link><description>Recent content in Audit on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 15 Apr 2024 16:44:40 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/audit/index.xml" rel="self" type="application/rss+xml"/><item><title>如何设计一个符合工业标准的审计系统</title><link>https://sund.site/posts/2024/audit-system-design/</link><pubDate>Mon, 15 Apr 2024 16:44:40 +0800</pubDate><guid>https://sund.site/posts/2024/audit-system-design/</guid><description>&lt;p>审计追踪（Audit Trail）是指一个系统中用于记录用户行为日志、控制组件的活动日志等关键安全信息的服务。日志通常以时间顺序排列，记录了“谁在什么时间做了什么”。&lt;/p>
-&lt;p>下面是 kubernetes 官方文档对其审计服务的描述：&lt;/p>
-&lt;blockquote>
-&lt;p>Kubernetes 审计（Auditing） 功能提供了与安全相关的、按时间顺序排列的记录集，记录每个用户、使用 Kubernetes API 的应用以及控制面自身引发的活动。&lt;/p>
-&lt;p>审计功能使得集群管理员能够回答以下问题：&lt;/p>
-&lt;ul>
-&lt;li>发生了什么？&lt;/li>
-&lt;li>什么时候发生的？&lt;/li>
-&lt;li>谁触发的？&lt;/li>
-&lt;li>活动发生在哪个（些）对象上？&lt;/li>
-&lt;li>在哪观察到的？&lt;/li>
-&lt;li>它从哪触发的？&lt;/li>
-&lt;li>活动的后续处理行为是什么？&lt;/li>
-&lt;/ul>
-&lt;/blockquote>
-&lt;h2 id="审计系统应该具备哪些能力">审计系统应该具备哪些能力？&lt;/h2>
-&lt;ol>
-&lt;li>日志内容不可篡改。&lt;/li>
-&lt;li>日志链结构完整：不可任意添加或删除单独的日志条目。&lt;/li>
-&lt;li>兼容性：发送日志的客户端应该避免侵入式设计。&lt;/li>
-&lt;li>系统的加密服务应该尽早初始化，以减少未受保护的日志。&lt;/li>
-&lt;li>服务重启/关闭不应导致审核日志不一致。如果服务因紧急情况而关闭，审计日志应该是可验证的。&lt;/li>
-&lt;li>密钥安全性：加密密钥（用于计算完整性检查）应存储在专用密钥存储中，并在内存中驻留最短的时间。&lt;/li>
-&lt;li>性能：能够在几秒钟内验证受保护日志。&lt;/li>
-&lt;li>日志轮换友好性：审核日志应与分布式系统典型的日志轮换策略兼容。&lt;/li>
-&lt;li>可观测性：日志易于被解析（machine-readable）、人类可读（human-readable）。兼容主流日志处理程序的格式，维度设计便于日后做过滤筛选。&lt;/li>
-&lt;/ol>
-&lt;h2 id="涉及的行业标准">涉及的行业标准&lt;/h2>
-&lt;p>与审计相关的，常见的工业标准有 IEC62443、NIST SP 800-92。下面是 IEC 中涉及到审计相关的章节。&lt;/p>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>工业标准&lt;/th>
- &lt;th>章节&lt;/th>
- &lt;th>安全级别&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR2.8&lt;/td>
- &lt;td>SL-C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR6.1&lt;/td>
- &lt;td>SL-C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR6.2&lt;/td>
- &lt;td>SL_C 2&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR1.13&lt;/td>
- &lt;td>SL_C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR2.9&lt;/td>
- &lt;td>SL_C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR2.10&lt;/td>
- &lt;td>SL_C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR3.7&lt;/td>
- &lt;td>SL_C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR3.9&lt;/td>
- &lt;td>SL_C 2&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;h2 id="审计日志的格式应遵循哪些协议或标准">审计日志的格式应遵循哪些协议或标准？&lt;/h2>
-&lt;p>对于本地运行的软件，通常 Syslog 具有更好的系统兼容性。对于使用 ELK 采集日志的项目更适合用 CEF，其他情况建议使用自定义的 JSON。&lt;/p>
-&lt;p>下面是三种格式（协议）的对比。&lt;/p>
-&lt;h3 id="common-event-format-cefhttpsdocselasticcoenintegrationscef">&lt;a href="https://docs.elastic.co/en/integrations/cef">Common Event Format (CEF)&lt;/a>&lt;/h3>
-&lt;p>Elastic-Search 使用的、一种基于 Event-souring 思想设计的日志格式。优点是冗余信息少，适合配合 ELK 体系构建监控系统。 它的传输基于 Syslog 协议，同时扩展了可读性的 key-value，基于文本的设计也可以让 CEF 格式的日志写入到文件。总体来说，它是这几种格式中在可读性、效率和标准三方面最平衡的一个。&lt;/p>
-&lt;h3 id="sysloghttpsdatatrackerietforgdochtmlrfc5424">&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424">Syslog&lt;/a>&lt;/h3>
-&lt;p>Syslog 是 Linux 操作系统默认的审计日志格式，通常采用其 RFC5424 版本。大部分 SIEM&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> 系统都支持这种格式的导入。
-Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传统软件的同时，最大程度保证系统的安全性。但是对于微服务来说，实现和维护标准协议成本较高。所以如 AWS CloudTrail, OpenTelemetry 等都选择更简单的 HTTPS + JSON 格式。&lt;/p>
-&lt;h3 id="json-lineshttpsjsonlinesorg">&lt;a href="https://jsonlines.org/">JSON Lines&lt;/a>&lt;/h3>
-&lt;p>大部分 SaaS 产品都是用 JSON，简单高效。JSON 的特点是冗余信息多，结构容易解析。例如，下面是&lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/">OpenTelemetry 官方文档&lt;/a>提到的日志模型中的字段：&lt;/p>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>Field Name&lt;/th>
- &lt;th>Description&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>Timestamp&lt;/td>
- &lt;td>Time when the event occurred.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>ObservedTimestamp&lt;/td>
- &lt;td>Time when the event was observed.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>TraceId&lt;/td>
- &lt;td>Request trace id.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>SpanId&lt;/td>
- &lt;td>Request span id.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>TraceFlags&lt;/td>
- &lt;td>W3C trace flag.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>SeverityText&lt;/td>
- &lt;td>The severity text (also known as log level).&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>SeverityNumber&lt;/td>
- &lt;td>Numerical value of the severity.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Body&lt;/td>
- &lt;td>The body of the log record.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Resource&lt;/td>
- &lt;td>Describes the source of the log.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>InstrumentationScope&lt;/td>
- &lt;td>Describes the scope that emitted the log.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Attributes&lt;/td>
- &lt;td>Additional information about the event.&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;p>下面是 kubernetes apiserver 关于 Audit 消息格式定义的例子：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;audit.k8s.io/v1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;kind&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Event&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;level&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Metadata&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;auditID&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345678-1234-1234-1234-1234567890ab&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;stage&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;ResponseComplete&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestURI&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;/api/v1/namespaces/default/pods&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;verb&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;get&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;user&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;username&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;admin&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;1234&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;groups&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;system:masters&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;extra&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;someKey&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;someValue&amp;#34;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;sourceIPs&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;192.168.1.1&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;userAgent&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;kubectl/v1.20.0 (linux/amd64) kubernetes/abcdef&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;objectRef&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resource&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;pods&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;abcdef12-3456-7890-abcd-ef1234567890&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;v1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;subresource&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;status&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;responseStatus&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;status&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Success&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;code&amp;#34;: &lt;span style="color:#d0bf69">200&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestObject&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;spec&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;containers&amp;#34;: [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-container&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-image&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;responseObject&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;spec&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;containers&amp;#34;: [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-container&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-image&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;status&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;phase&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Running&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestReceivedTimestamp&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;2023-05-21T12:34:56Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;stageTimestamp&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;2023-05-21T12:34:57Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;annotations&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;authorization.k8s.io/decision&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;allow&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;authorization.k8s.io/reason&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;RBAC: allowed by RoleBinding \&amp;#34;admin-binding\&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="对于安全性有哪些要求">对于安全性有哪些要求？&lt;/h2>
-&lt;p>对于审计日志来说，安全性要求会被一般日志系统更高。&lt;/p>
-&lt;p>安全性，通常可以从机密性（Confidentiality），完整性（Integrity），可用性（Availability）三个维度来考量。&lt;/p>
-&lt;h3 id="机密性">机密性&lt;/h3>
-&lt;p>攻击者可以通过系统的安全漏洞，获取特殊权限，进而查看某些审计日志。&lt;/p>
-&lt;p>可以采取以下措施：&lt;/p>
-&lt;ul>
-&lt;li>加密日志：使用加密技术对日志进行保护，确保只有授权用户能够访问和修改日志。&lt;/li>
-&lt;li>访问控制：限制对发送、接收日志接口的访问权限。&lt;/li>
-&lt;li>敏感信息过滤：不应该在日志中记录用户敏感信息，如密码、证书等。&lt;/li>
-&lt;/ul>
-&lt;h3 id="完整性">完整性&lt;/h3>
-&lt;p>攻击者可以通过系统的安全漏洞，修改、删除某些审计日志。&lt;/p>
-&lt;p>除了上面提到的加密和权限控制，还可以采取以下措施：&lt;/p>
-&lt;ul>
-&lt;li>完整性检查&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>：在日志条目中添加哈希值，以便在验证日志时能够快速检测到任何篡改或截断。&lt;/li>
-&lt;li>定期备份：定期备份日志，以防止攻击者删除或修改所有的日志条目。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>日志文件的限制&lt;/strong>：通常要除了限制日志文件的大小，还要限制备份数量、最长备份天数等。下面是 kubernetes 中关于日志文件存储的参数：&lt;/p>
-&lt;ul>
-&lt;li>&amp;ndash;audit-log-path 指定用来写入审计事件的日志文件路径。不指定此标志会禁用日志后端。&lt;/li>
-&lt;li>&amp;ndash;audit-log-maxage 定义保留旧审计日志文件的最大天数&lt;/li>
-&lt;li>&amp;ndash;audit-log-maxbackup 定义要保留的审计日志文件的最大数量&lt;/li>
-&lt;li>&amp;ndash;audit-log-maxsize 定义审计日志文件轮转之前的最大大小（兆字节）&lt;/li>
-&lt;/ul>
-&lt;h3 id="可用性">可用性&lt;/h3>
-&lt;p>攻击者可以攻击审计追踪服务，导致审计追踪服务内存、磁盘空间不足等。&lt;/p>
-&lt;ul>
-&lt;li>设置最大用量限制：对内存、磁盘等服务器资源做出限制。&lt;/li>
-&lt;li>监测和响应：及时监测系统资源指标和日志的变化，并对异常活动进行响应。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>审计上下文&lt;/strong>：记录审计日志会显著增加系统内存和流量的使用。所以审计服务应该缓存审计相关的上下文，如服务名称和 ID 的映射关系、事件 ID 和描述等。不同服务向审计服务发送消息时应以最小长度为原则设计消息结构。审计服务的策略中应该允许用户配置日志级别，过滤规则等以减少系统负担。&lt;/p>
-&lt;h2 id="日志的导出">日志的导出&lt;/h2>
-&lt;p>审计服务除了导出文件格式的日志，通常也要支持第三方系统的导出。我们通常把分析、存储日志的第三方服务称为 SIEM （Security information and event management）。在 kubernetes 中，导出日志到第三方 web 服务的模块称为 webhook。&lt;/p>
-&lt;p>导出到第三方系统通常可以采用标准的 Syslog 格式或是 JSON Lines，支持范围最广。此外，需要考虑日志截断、第三方系统批处理和流处理的配置等，可以参考 kubernetes 的&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/#webhook-backend">这篇文档&lt;/a>。&lt;/p>
-&lt;h2 id="开源项目的架构设计">开源项目的架构设计&lt;/h2>
-&lt;p>由于设计侧重点不同，下面提供的每种开源项目都需要慎重考虑其优点和不足，其特性是否满足自身需要、系统的环境是分布式还是单体应用。&lt;/p>
-&lt;h3 id="auditd">Auditd&lt;/h3>
-&lt;p>&lt;img src="https://sund.site/images/audit-system-design/Linux-Auditd-Architecture.png" alt="auditd-architecture">&lt;/p>
-&lt;p>大部分 Linux 默认的审计服务，配合 rsyslog 等工具，可以解决本地设备的日志采集、查看、过滤。 rsyslog 基于字符串 template 的日志格式配置可以满足使用不同 SIEM 系统的用户集成的需要。&lt;/p>
-&lt;ul>
-&lt;li>优点：基于进程通信，标准日志格式，易于导出。性能优异。&lt;/li>
-&lt;li>不足：进程模型不适用于网络服务。&lt;/li>
-&lt;/ul>
-&lt;h3 id="aws-cloud-trail-和-kubernetes">AWS Cloud Trail 和 kubernetes&lt;/h3>
-&lt;p>&lt;img src="https://sund.site/images/audit-system-design/aws-audit.png" alt="aws log">&lt;/p>
-&lt;p>AWS 的 Cloud Trail 采用应用服务主动推送审计事件的模式，用户可以为设计追踪服务设置策略，收集到的日志会分别按需流入后续的批处理和流处理工具链中。&lt;/p>
-&lt;p>kubernetes 的日志收集与 AWS 实现类似，也是基于中心化的服务，但是这套架构设计并非只为审计日志一种情况设计。它遵循了很多 kubernetes 声明式设计的理念，非常值得学习。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/audit-system-design/k8s-audit.png" alt="kubernetes log">&lt;/p>
-&lt;p>例如 kubernetes 专门为审计设计的 stage：&lt;/p>
-&lt;blockquote>
-&lt;p>每个请求都可被记录其相关的阶段（stage）。已定义的阶段有：&lt;/p>
-&lt;ul>
-&lt;li>RequestReceived - 此阶段对应审计处理器接收到请求后， 并且在委托给其余处理器之前生成的事件。&lt;/li>
-&lt;li>ResponseStarted - 在响应消息的头部发送后，响应消息体发送前生成的事件。 只有长时间运行的请求（例如 watch）才会生成这个阶段。&lt;/li>
-&lt;li>ResponseComplete - 当响应消息体完成并且没有更多数据需要传输的时候。&lt;/li>
-&lt;li>Panic - 当 panic 发生时生成。&lt;/li>
-&lt;/ul>
-&lt;/blockquote>
-&lt;p>&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/">kubernetes 审计事件&lt;/a> 使用和 Event API 不同的消息结构&lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>。&lt;/p>
-&lt;p>综上，云平台的审计服务设计可以总结为：&lt;/p>
-&lt;ul>
-&lt;li>优点：微服务设计，JSON 格式日志更灵活，中心化的日志收集服务易于集成更多应用服务和导出到开源数据处理工具。&lt;/li>
-&lt;li>不足：分布式架构对存储、服务端加密、通信安全性和完整性要求更高。&lt;/li>
-&lt;/ul>
-&lt;h3 id="opentelemetry">OpenTelemetry&lt;/h3>
-&lt;p>&lt;img src="https://sund.site/images/audit-system-design/opentel.png" alt="OpenTel">&lt;/p>
-&lt;p>OpenTelemetry 是现在云原生最主流的日志框架。可以支持侵入式（SDK）、非侵入式（Agent）两种日志采集模式。Collector 的设计可以让一部分日志处理的工作放在日志发送端完成。&lt;/p>
-&lt;ul>
-&lt;li>优点：微服务设计，支持 kubernetes 等基础设施，多语言多平台提供了 SDK 和扩展能力。有完善的安全、完整性考虑。适合中小企业。&lt;/li>
-&lt;li>不足：大部分情况下日志采集依然需要侵入到 App 内部修改代码。日志收集工具对 Go 等语言支持不够好（截至本文编辑时）。&lt;/li>
-&lt;/ul>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>审计追踪（Audit Trail）是指系统记录下所有影响操作或事件的时间顺序记录,用于追踪系统活动，核查是否存在违规行为。&lt;/p>
-&lt;p>审计日志应具备以下特性:&lt;/p>
-&lt;ul>
-&lt;li>不可篡改(加密存储、完整性校验)&lt;/li>
-&lt;li>高性能(快速验证)&lt;/li>
-&lt;li>可观测性(机器/人类可读)&lt;/li>
-&lt;li>安全性(保密性、可用性、完整性)&lt;/li>
-&lt;/ul>
-&lt;p>常见的审计日志格式有 Syslog、CEF、JSON 等,主要区别在于冗余信息、可读性和与日志收集系统的兼容性。&lt;/p>
-&lt;p>审计日志具有较高的安全性要求：&lt;/p>
-&lt;ul>
-&lt;li>机密性：只有授权用户可访问,通过访问控制实现&lt;/li>
-&lt;li>可用性：防止被攻击者删除或破坏,通过限制资源使用、多副本存储等实现&lt;/li>
-&lt;li>完整性：防止被篡改或截断,通过加密、完整性校验等实现&lt;/li>
-&lt;/ul>
-&lt;p>一些典型的审计日志系统架构：&lt;/p>
-&lt;ul>
-&lt;li>Auditd、rsyslog 等 Linux 原生日志程序&lt;/li>
-&lt;li>AWS 等云产品&lt;/li>
-&lt;li>OpenTelemetry&lt;/li>
-&lt;/ul>
-&lt;div class="footnotes" role="doc-endnotes">
-&lt;hr>
-&lt;ol>
-&lt;li id="fn:1">
-&lt;p>SIEM 是安全信息和事件管理(Security Information and Event Management)的缩写。&lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem">https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:2">
-&lt;p>对于日志的加密，一般在服务端会对日志额外添加 checksum 链来校验。可以参考亚马逊的实现 &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html">server-side encryption (SSE-S3)&lt;/a>.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:3">
-&lt;p>&lt;a href="https://kubernetes.io/zh-cn/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event">kubernetes 审计事件结构定义&lt;/a>&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;/div></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Audit on Steve Sun</title><link>https://sund.site/tags/audit/</link><description>Recent content in Audit on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 15 Apr 2024 16:44:40 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/audit/index.xml" rel="self" type="application/rss+xml"/><item><title>如何设计一个符合工业标准的审计系统</title><link>https://sund.site/posts/2024/audit-system-design/</link><pubDate>Mon, 15 Apr 2024 16:44:40 +0800</pubDate><guid>https://sund.site/posts/2024/audit-system-design/</guid><description>&lt;p&gt;审计追踪（Audit Trail）是指一个系统中用于记录用户行为日志、控制组件的活动日志等关键安全信息的服务。日志通常以时间顺序排列，记录了“谁在什么时间做了什么”。&lt;/p&gt;
+&lt;p&gt;下面是 kubernetes 官方文档对其审计服务的描述：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Kubernetes 审计（Auditing） 功能提供了与安全相关的、按时间顺序排列的记录集，记录每个用户、使用 Kubernetes API 的应用以及控制面自身引发的活动。&lt;/p&gt;
+&lt;p&gt;审计功能使得集群管理员能够回答以下问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;发生了什么？&lt;/li&gt;
+&lt;li&gt;什么时候发生的？&lt;/li&gt;
+&lt;li&gt;谁触发的？&lt;/li&gt;
+&lt;li&gt;活动发生在哪个（些）对象上？&lt;/li&gt;
+&lt;li&gt;在哪观察到的？&lt;/li&gt;
+&lt;li&gt;它从哪触发的？&lt;/li&gt;
+&lt;li&gt;活动的后续处理行为是什么？&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;h2 id="审计系统应该具备哪些能力"&gt;审计系统应该具备哪些能力？&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;日志内容不可篡改。&lt;/li&gt;
+&lt;li&gt;日志链结构完整：不可任意添加或删除单独的日志条目。&lt;/li&gt;
+&lt;li&gt;兼容性：发送日志的客户端应该避免侵入式设计。&lt;/li&gt;
+&lt;li&gt;系统的加密服务应该尽早初始化，以减少未受保护的日志。&lt;/li&gt;
+&lt;li&gt;服务重启/关闭不应导致审核日志不一致。如果服务因紧急情况而关闭，审计日志应该是可验证的。&lt;/li&gt;
+&lt;li&gt;密钥安全性：加密密钥（用于计算完整性检查）应存储在专用密钥存储中，并在内存中驻留最短的时间。&lt;/li&gt;
+&lt;li&gt;性能：能够在几秒钟内验证受保护日志。&lt;/li&gt;
+&lt;li&gt;日志轮换友好性：审核日志应与分布式系统典型的日志轮换策略兼容。&lt;/li&gt;
+&lt;li&gt;可观测性：日志易于被解析（machine-readable）、人类可读（human-readable）。兼容主流日志处理程序的格式，维度设计便于日后做过滤筛选。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="涉及的行业标准"&gt;涉及的行业标准&lt;/h2&gt;
+&lt;p&gt;与审计相关的，常见的工业标准有 IEC62443、NIST SP 800-92。下面是 IEC 中涉及到审计相关的章节。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;工业标准&lt;/th&gt;
+ &lt;th&gt;章节&lt;/th&gt;
+ &lt;th&gt;安全级别&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR2.8&lt;/td&gt;
+ &lt;td&gt;SL-C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR6.1&lt;/td&gt;
+ &lt;td&gt;SL-C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR6.2&lt;/td&gt;
+ &lt;td&gt;SL_C 2&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR1.13&lt;/td&gt;
+ &lt;td&gt;SL_C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR2.9&lt;/td&gt;
+ &lt;td&gt;SL_C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR2.10&lt;/td&gt;
+ &lt;td&gt;SL_C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR3.7&lt;/td&gt;
+ &lt;td&gt;SL_C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR3.9&lt;/td&gt;
+ &lt;td&gt;SL_C 2&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="审计日志的格式应遵循哪些协议或标准"&gt;审计日志的格式应遵循哪些协议或标准？&lt;/h2&gt;
+&lt;p&gt;对于本地运行的软件，通常 Syslog 具有更好的系统兼容性。对于使用 ELK 采集日志的项目更适合用 CEF，其他情况建议使用自定义的 JSON。&lt;/p&gt;
+&lt;p&gt;下面是三种格式（协议）的对比。&lt;/p&gt;
+&lt;h3 id="common-event-format-cef"&gt;&lt;a href="https://docs.elastic.co/en/integrations/cef"&gt;Common Event Format (CEF)&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Elastic-Search 使用的、一种基于 Event-souring 思想设计的日志格式。优点是冗余信息少，适合配合 ELK 体系构建监控系统。 它的传输基于 Syslog 协议，同时扩展了可读性的 key-value，基于文本的设计也可以让 CEF 格式的日志写入到文件。总体来说，它是这几种格式中在可读性、效率和标准三方面最平衡的一个。&lt;/p&gt;
+&lt;h3 id="syslog"&gt;&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424"&gt;Syslog&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Syslog 是 Linux 操作系统默认的审计日志格式，通常采用其 RFC5424 版本。大部分 SIEM&lt;sup id="fnref:1"&gt;&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref"&gt;1&lt;/a&gt;&lt;/sup&gt; 系统都支持这种格式的导入。
+Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传统软件的同时，最大程度保证系统的安全性。但是对于微服务来说，实现和维护标准协议成本较高。所以如 AWS CloudTrail, OpenTelemetry 等都选择更简单的 HTTPS + JSON 格式。&lt;/p&gt;
+&lt;h3 id="json-lines"&gt;&lt;a href="https://jsonlines.org/"&gt;JSON Lines&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;大部分 SaaS 产品都是用 JSON，简单高效。JSON 的特点是冗余信息多，结构容易解析。例如，下面是&lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/"&gt;OpenTelemetry 官方文档&lt;/a&gt;提到的日志模型中的字段：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Field Name&lt;/th&gt;
+ &lt;th&gt;Description&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Timestamp&lt;/td&gt;
+ &lt;td&gt;Time when the event occurred.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ObservedTimestamp&lt;/td&gt;
+ &lt;td&gt;Time when the event was observed.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;TraceId&lt;/td&gt;
+ &lt;td&gt;Request trace id.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SpanId&lt;/td&gt;
+ &lt;td&gt;Request span id.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;TraceFlags&lt;/td&gt;
+ &lt;td&gt;W3C trace flag.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SeverityText&lt;/td&gt;
+ &lt;td&gt;The severity text (also known as log level).&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SeverityNumber&lt;/td&gt;
+ &lt;td&gt;Numerical value of the severity.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Body&lt;/td&gt;
+ &lt;td&gt;The body of the log record.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Resource&lt;/td&gt;
+ &lt;td&gt;Describes the source of the log.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;InstrumentationScope&lt;/td&gt;
+ &lt;td&gt;Describes the scope that emitted the log.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Attributes&lt;/td&gt;
+ &lt;td&gt;Additional information about the event.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;下面是 kubernetes apiserver 关于 Audit 消息格式定义的例子：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;audit.k8s.io/v1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;kind&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;Event&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;level&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;Metadata&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;auditID&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;12345678-1234-1234-1234-1234567890ab&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;stage&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;ResponseComplete&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;requestURI&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;/api/v1/namespaces/default/pods&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;verb&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;get&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;user&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;username&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;admin&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;1234&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;groups&amp;#34;: [&lt;span style="color:#fc6a5d"&gt;&amp;#34;system:masters&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;extra&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;someKey&amp;#34;: [&lt;span style="color:#fc6a5d"&gt;&amp;#34;someValue&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;sourceIPs&amp;#34;: [&lt;span style="color:#fc6a5d"&gt;&amp;#34;192.168.1.1&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;userAgent&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;kubectl/v1.20.0 (linux/amd64) kubernetes/abcdef&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;objectRef&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;resource&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;pods&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-pod&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;abcdef12-3456-7890-abcd-ef1234567890&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;v1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;12345&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;subresource&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;status&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;responseStatus&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;metadata&amp;#34;: {},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;status&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;Success&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;code&amp;#34;: &lt;span style="color:#d0bf69"&gt;200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;requestObject&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;metadata&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-pod&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;default&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;spec&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;containers&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-container&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-image&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;responseObject&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;metadata&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-pod&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;12345&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;spec&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;containers&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-container&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-image&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;status&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;phase&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;Running&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;requestReceivedTimestamp&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;2023-05-21T12:34:56Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;stageTimestamp&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;2023-05-21T12:34:57Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;annotations&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;authorization.k8s.io/decision&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;allow&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;authorization.k8s.io/reason&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;RBAC: allowed by RoleBinding \&amp;#34;admin-binding\&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="对于安全性有哪些要求"&gt;对于安全性有哪些要求？&lt;/h2&gt;
+&lt;p&gt;对于审计日志来说，安全性要求会被一般日志系统更高。&lt;/p&gt;
+&lt;p&gt;安全性，通常可以从机密性（Confidentiality），完整性（Integrity），可用性（Availability）三个维度来考量。&lt;/p&gt;
+&lt;h3 id="机密性"&gt;机密性&lt;/h3&gt;
+&lt;p&gt;攻击者可以通过系统的安全漏洞，获取特殊权限，进而查看某些审计日志。&lt;/p&gt;
+&lt;p&gt;可以采取以下措施：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;加密日志：使用加密技术对日志进行保护，确保只有授权用户能够访问和修改日志。&lt;/li&gt;
+&lt;li&gt;访问控制：限制对发送、接收日志接口的访问权限。&lt;/li&gt;
+&lt;li&gt;敏感信息过滤：不应该在日志中记录用户敏感信息，如密码、证书等。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="完整性"&gt;完整性&lt;/h3&gt;
+&lt;p&gt;攻击者可以通过系统的安全漏洞，修改、删除某些审计日志。&lt;/p&gt;
+&lt;p&gt;除了上面提到的加密和权限控制，还可以采取以下措施：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;完整性检查&lt;sup id="fnref:2"&gt;&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref"&gt;2&lt;/a&gt;&lt;/sup&gt;：在日志条目中添加哈希值，以便在验证日志时能够快速检测到任何篡改或截断。&lt;/li&gt;
+&lt;li&gt;定期备份：定期备份日志，以防止攻击者删除或修改所有的日志条目。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;日志文件的限制&lt;/strong&gt;：通常要除了限制日志文件的大小，还要限制备份数量、最长备份天数等。下面是 kubernetes 中关于日志文件存储的参数：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&amp;ndash;audit-log-path 指定用来写入审计事件的日志文件路径。不指定此标志会禁用日志后端。&lt;/li&gt;
+&lt;li&gt;&amp;ndash;audit-log-maxage 定义保留旧审计日志文件的最大天数&lt;/li&gt;
+&lt;li&gt;&amp;ndash;audit-log-maxbackup 定义要保留的审计日志文件的最大数量&lt;/li&gt;
+&lt;li&gt;&amp;ndash;audit-log-maxsize 定义审计日志文件轮转之前的最大大小（兆字节）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="可用性"&gt;可用性&lt;/h3&gt;
+&lt;p&gt;攻击者可以攻击审计追踪服务，导致审计追踪服务内存、磁盘空间不足等。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;设置最大用量限制：对内存、磁盘等服务器资源做出限制。&lt;/li&gt;
+&lt;li&gt;监测和响应：及时监测系统资源指标和日志的变化，并对异常活动进行响应。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;审计上下文&lt;/strong&gt;：记录审计日志会显著增加系统内存和流量的使用。所以审计服务应该缓存审计相关的上下文，如服务名称和 ID 的映射关系、事件 ID 和描述等。不同服务向审计服务发送消息时应以最小长度为原则设计消息结构。审计服务的策略中应该允许用户配置日志级别，过滤规则等以减少系统负担。&lt;/p&gt;
+&lt;h2 id="日志的导出"&gt;日志的导出&lt;/h2&gt;
+&lt;p&gt;审计服务除了导出文件格式的日志，通常也要支持第三方系统的导出。我们通常把分析、存储日志的第三方服务称为 SIEM （Security information and event management）。在 kubernetes 中，导出日志到第三方 web 服务的模块称为 webhook。&lt;/p&gt;
+&lt;p&gt;导出到第三方系统通常可以采用标准的 Syslog 格式或是 JSON Lines，支持范围最广。此外，需要考虑日志截断、第三方系统批处理和流处理的配置等，可以参考 kubernetes 的&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/#webhook-backend"&gt;这篇文档&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="开源项目的架构设计"&gt;开源项目的架构设计&lt;/h2&gt;
+&lt;p&gt;由于设计侧重点不同，下面提供的每种开源项目都需要慎重考虑其优点和不足，其特性是否满足自身需要、系统的环境是分布式还是单体应用。&lt;/p&gt;
+&lt;h3 id="auditd"&gt;Auditd&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/audit-system-design/Linux-Auditd-Architecture.png" alt="auditd-architecture"&gt;&lt;/p&gt;
+&lt;p&gt;大部分 Linux 默认的审计服务，配合 rsyslog 等工具，可以解决本地设备的日志采集、查看、过滤。 rsyslog 基于字符串 template 的日志格式配置可以满足使用不同 SIEM 系统的用户集成的需要。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;优点：基于进程通信，标准日志格式，易于导出。性能优异。&lt;/li&gt;
+&lt;li&gt;不足：进程模型不适用于网络服务。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="aws-cloud-trail-和-kubernetes"&gt;AWS Cloud Trail 和 kubernetes&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/audit-system-design/aws-audit.png" alt="aws log"&gt;&lt;/p&gt;
+&lt;p&gt;AWS 的 Cloud Trail 采用应用服务主动推送审计事件的模式，用户可以为设计追踪服务设置策略，收集到的日志会分别按需流入后续的批处理和流处理工具链中。&lt;/p&gt;
+&lt;p&gt;kubernetes 的日志收集与 AWS 实现类似，也是基于中心化的服务，但是这套架构设计并非只为审计日志一种情况设计。它遵循了很多 kubernetes 声明式设计的理念，非常值得学习。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/audit-system-design/k8s-audit.png" alt="kubernetes log"&gt;&lt;/p&gt;
+&lt;p&gt;例如 kubernetes 专门为审计设计的 stage：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;每个请求都可被记录其相关的阶段（stage）。已定义的阶段有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RequestReceived - 此阶段对应审计处理器接收到请求后， 并且在委托给其余处理器之前生成的事件。&lt;/li&gt;
+&lt;li&gt;ResponseStarted - 在响应消息的头部发送后，响应消息体发送前生成的事件。 只有长时间运行的请求（例如 watch）才会生成这个阶段。&lt;/li&gt;
+&lt;li&gt;ResponseComplete - 当响应消息体完成并且没有更多数据需要传输的时候。&lt;/li&gt;
+&lt;li&gt;Panic - 当 panic 发生时生成。&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/"&gt;kubernetes 审计事件&lt;/a&gt; 使用和 Event API 不同的消息结构&lt;sup id="fnref:3"&gt;&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref"&gt;3&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
+&lt;p&gt;综上，云平台的审计服务设计可以总结为：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;优点：微服务设计，JSON 格式日志更灵活，中心化的日志收集服务易于集成更多应用服务和导出到开源数据处理工具。&lt;/li&gt;
+&lt;li&gt;不足：分布式架构对存储、服务端加密、通信安全性和完整性要求更高。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="opentelemetry"&gt;OpenTelemetry&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/audit-system-design/opentel.png" alt="OpenTel"&gt;&lt;/p&gt;
+&lt;p&gt;OpenTelemetry 是现在云原生最主流的日志框架。可以支持侵入式（SDK）、非侵入式（Agent）两种日志采集模式。Collector 的设计可以让一部分日志处理的工作放在日志发送端完成。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;优点：微服务设计，支持 kubernetes 等基础设施，多语言多平台提供了 SDK 和扩展能力。有完善的安全、完整性考虑。适合中小企业。&lt;/li&gt;
+&lt;li&gt;不足：大部分情况下日志采集依然需要侵入到 App 内部修改代码。日志收集工具对 Go 等语言支持不够好（截至本文编辑时）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;审计追踪（Audit Trail）是指系统记录下所有影响操作或事件的时间顺序记录,用于追踪系统活动，核查是否存在违规行为。&lt;/p&gt;
+&lt;p&gt;审计日志应具备以下特性:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不可篡改(加密存储、完整性校验)&lt;/li&gt;
+&lt;li&gt;高性能(快速验证)&lt;/li&gt;
+&lt;li&gt;可观测性(机器/人类可读)&lt;/li&gt;
+&lt;li&gt;安全性(保密性、可用性、完整性)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;常见的审计日志格式有 Syslog、CEF、JSON 等,主要区别在于冗余信息、可读性和与日志收集系统的兼容性。&lt;/p&gt;
+&lt;p&gt;审计日志具有较高的安全性要求：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;机密性：只有授权用户可访问,通过访问控制实现&lt;/li&gt;
+&lt;li&gt;可用性：防止被攻击者删除或破坏,通过限制资源使用、多副本存储等实现&lt;/li&gt;
+&lt;li&gt;完整性：防止被篡改或截断,通过加密、完整性校验等实现&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一些典型的审计日志系统架构：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Auditd、rsyslog 等 Linux 原生日志程序&lt;/li&gt;
+&lt;li&gt;AWS 等云产品&lt;/li&gt;
+&lt;li&gt;OpenTelemetry&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="footnotes" role="doc-endnotes"&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;SIEM 是安全信息和事件管理(Security Information and Event Management)的缩写。&lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem"&gt;https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a&gt;&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;对于日志的加密，一般在服务端会对日志额外添加 checksum 链来校验。可以参考亚马逊的实现 &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html"&gt;server-side encryption (SSE-S3)&lt;/a&gt;.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:3"&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event"&gt;kubernetes 审计事件结构定义&lt;/a&gt;&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description></item></channel></rss>

@@ -1,8 +1,6 @@
-<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>《Python源码剖析》第一部分——Python对象基础 | Steve Sun</title>
-<meta name=title content="《Python源码剖析》第一部分——Python对象基础"><meta name=description content='Python 的对象初始化
+<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>《Python源码剖析》第一部分——Python对象基础 | Steve Sun</title><meta name=title content="《Python源码剖析》第一部分——Python对象基础"><meta name=description content='Python 的对象初始化
 
 在 Python 中，对象就是为 C 中的结构体在堆上申请的一块内存，一般来说，对象是不能被静态初始化的，并且也不能在栈空间上生存。唯一的例外就是类型对象，Python 中所有的内建的类型对象（如整数类型对象，字符串类型对象）都是被静态初始化的。
-
 python 的对象不像 C 是分配在栈、堆、data segment 等位置，而是全部分配在堆上！只有 python 内置类型在初始化时候才是被 C 语言层静态初始化。
 PyObject 内部就两样：引用计数器、类型对象指针。
 类型对象的定义：

@@ -1,813 +1,807 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Architecture on Steve Sun</title><link>https://sund.site/categories/software-architecture/</link><description>Recent content in Software Architecture on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 02 Jun 2025 07:58:17 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/software-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p>在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki">DeepWIKI 是如何工作的&lt;/a>我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p>
-&lt;p>这个问题的答案就是 AST 分块。&lt;/p>
-&lt;p>这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p>
-&lt;h2 id="ast">AST&lt;/h2>
-&lt;p>&lt;strong>Abstract Syntax Tree&lt;/strong>（&lt;strong>AST&lt;/strong>，抽象语法树）是源代码的树形表示，它反映了代码的语法结构。在代码分块时，AST 可以帮助我们更好地理解代码的语义边界。&lt;/p>
-&lt;p>AST 在各种编译、分析源代码工具中都广泛使用。例如前端的 Babel、TypeScript 编译器（TSC），就利用 AST 来将 es6 或者 TypeScript 代码转换成浏览器可理解的 js 代码。&lt;/p>
-&lt;p>下面是一个简单的例子，展示 AST 如何把 TypeScript 代码转换成树形结构，假设有一段 TypeScript 函数：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">function&lt;/span> greet(name: &lt;span style="color:#fc5fa3">string&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc6a5d">&amp;#34;Hello, &amp;#34;&lt;/span> + name;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过 AST 工具的转换，它被抽象成下面的语法树结构：&lt;/p>
-&lt;ul>
-&lt;li>SourceFile：
-&lt;ul>
-&lt;li>FunctionDeclaration
-&lt;ul>
-&lt;li>Identifier：&amp;ldquo;greet&amp;rdquo;&lt;/li>
-&lt;li>Parameter：
-&lt;ul>
-&lt;li>Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Block：
-&lt;ul>
-&lt;li>ReturnStatement：
-&lt;ul>
-&lt;li>BinaryExpression：
-&lt;ul>
-&lt;li>StringLiteral：&amp;ldquo;Hello, &amp;quot;&lt;/li>
-&lt;li>Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>后续编译器就可以遍历这个语法树，按节点转换成 Javascript 代码。&lt;/p>
-&lt;p>理解了 AST，就大致可以理解 DeepWIKI、甚至是 Cursor 这种代码编辑器如何构建代码索引的。&lt;/p>
-&lt;h2 id="cursor">Cursor&lt;/h2>
-&lt;p>在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing">Cursor 的官方文档&lt;/a>中，可以看到关于它如何索引用户代码的相关描述。&lt;/p>
-&lt;p>Cursor 会扫描用户代码仓库，计算文件哈希值并构建 Merkle 树，类似 Git 比较文件差异的原理，Cursor 用 Merkle 树来比较用户空间文件的差异，并且将用户修改过的文件以增量的方式上传到 Cursor 的服务器。&lt;/p>
-&lt;p>被上传的文件，会被分块并嵌入，存储在 Turbopuffer 数据库中。这就是将源代码构建成 RAG 的过程。&lt;/p>
-&lt;p>这里的分块使用了 AST 工具将代码先结构化成语法树，然后将序列化后的语法树节点切成小块，最后嵌入成向量存储起来。&lt;/p>
-&lt;p>Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p>
-&lt;p>当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p>
-&lt;p>有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934">网友&lt;/a>整理了这张流程图：&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt="">&lt;/p>
-&lt;h2 id="cline">Cline&lt;/h2>
-&lt;p>&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing">Cline 的官方博客&lt;/a> 可以让我们窥见它的实现思路。&lt;/p>
-&lt;p>Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p>
-&lt;p>下面是开发者对 Cline 原理的介绍：&lt;/p>
-&lt;blockquote>
-&lt;p>When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p>
-&lt;/blockquote>
-&lt;p>Cline 会使用它们的 &lt;code>list_code_definition_names&lt;/code>工具将源代码转换成 AST。Cline 把这个 AST 当作整个源代码的「地图」。&lt;/p>
-&lt;p>当 Cline 自动执行任务时，它会分析当前要修改的文件，从文件构建 AST，从 AST 生成自然语言上下文（类似 DeepWIKI 把代码转换成文档）。并将上下文传给 LLM，让 LLM 决定下一步是该修改文件，还是需要查看另一个文件补充更多上下文。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/ast-chunk/cline.png" alt="">&lt;/p>
-&lt;p>如果说 Cursor 比较的是向量空间代码片段的相似度，Cline 就是将代码片段转换成自然语言的描述，然后让 LLM 通过语义的理解，在源代码仓库中搜寻线索，比较代码片段之间的语义相似度。&lt;/p>
-&lt;p>Cline 这种实现方式，显然更安全，企业用户不用担心 Cline 滥用源代码。但是副作用就是消耗了更多 Token。不断在不同文件之间获取上下文也花费更多时间。对于一些特殊情况，它甚至会在两个文件之间循环跳转，陷入死循环。&lt;/p>
-&lt;p>从我自身感受来说，Cline 在一些模型（Deepseek-r1, OpenAI-4o）的表现上比 Cursor 的 Agent 模式更好，因为 Cline 的语义理解比向量相似度更充分利用这些模型的自然语言能力。&lt;/p>
-&lt;p>但是对于专门为编程优化过的 Claude-Sonnet，则没有明显差异，这时就要看用户希望更高的安全性还是更快的响应速度。&lt;/p>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>本文主要介绍了代码编辑器如何利用抽象语法树（AST）来构建代码索引和实现代码补全功能。&lt;/p>
-&lt;p>总的来说，AST 是理解代码语法结构的重要工具,不同的实现方式各有优劣。&lt;/p>
-&lt;h2 id="扩展阅读">扩展阅读&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/">http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p>&lt;a href="https://deepwiki.com">DeepWIKI&lt;/a> 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p>
-&lt;p>我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p>
-&lt;h2 id="生成代码结构地图">生成代码结构地图&lt;/h2>
-&lt;p>首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong>代表语法结构和文件结构的元数据&lt;/strong>和&lt;strong>代表代码描述和片段的向量数据&lt;/strong>两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p>
-&lt;h2 id="生成-wiki-页面">生成 WIKI 页面&lt;/h2>
-&lt;p>生成 WIKI 页面的过程，就是 RAG 系统 query 的过程：&lt;/p>
-&lt;ol>
-&lt;li>程序递归读取项目结构。&lt;/li>
-&lt;li>从元数据库中查询当前文件的元数据，再从向量数据库中查找相关性最强的代码和描述信息的 id。&lt;/li>
-&lt;li>用这些 id 再去元数据库里查询到描述信息，从工程文件中查询对应代码片段。&lt;/li>
-&lt;li>将上面的所有内容作为 context，根据元数据类型（架构、组件等）组合适当的 prompt，输入给 LLM。&lt;/li>
-&lt;li>最后由一个前端渲染引擎把 LLM 的输出渲染成文档页面。&lt;/li>
-&lt;li>重复步骤 1。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/">&lt;/p>
-&lt;h2 id="难点-1分块策略">难点 1：分块策略&lt;/h2>
-&lt;p>上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p>
-&lt;p>但是代码的拆分不同，比如一个函数体由&lt;code>{&lt;/code> &lt;code>}&lt;/code>包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p>
-&lt;p>目前的解决办法有两种，一种是基于整个文件的分块，这种情况文件大小不能超过分块大小的上限，而且分块数据缺少真实的调用关系上下文。我们知道，代码的组织单元并不是文件（文件树只是方便人类阅读的组织形式），而是以类和函数为单元的网状依赖关系图。&lt;/p>
-&lt;p>第二种方式就是先用语法工具对代码文件做静态分析，再根据分析结果将代码以语法结构进行拆分。这种方式实现复杂，网上并没有找到相关的资料，幸而读到这篇&lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/">RAG for a Codebase with 10k Repos&lt;/a>，它介绍了如何利用语法静态分析来给代码分块，构建高效的代码仓库 RAG 系统。 但是文章也没有提供开源实现，考虑到作为商业项目的核心技术，这部分内容非常值得深入。我会持续跟进这部分内容的研究。&lt;/p>
-&lt;h2 id="难点-2-解析语法结构">难点 2: 解析语法结构&lt;/h2>
-&lt;p>元数据的语法解析要比向量数据简单一些，我从另一个开源项目&lt;a href="https://github.com/ozyyshr/RepoGraph">Repo Graph&lt;/a>中找到一些线索。&lt;/p>
-&lt;p>这个项目使用了 &lt;code>tree-sitter&lt;/code> 来分析项目语法结构，从而得到三类元数据文件：&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>tag.json&lt;/code>：代表一个文件、函数、类的路径、行号、描述等基础信息。&lt;/li>
-&lt;li>&lt;code>tree_structure.json&lt;/code>: 项目的文件树结构信息。&lt;/li>
-&lt;li>&lt;code>*.pkl&lt;/code>: 对象依赖关系图。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;code>*.pkl&lt;/code>是语法分析器扫描项目文件之后得到的一个网状的对象关系图，它使用 python 的 pickle 库把 python 网状对象序列化成文件。&lt;/p>
-&lt;p>从这个项目的实现来看，难点 1 中嵌入向量的过程似乎也可以用 &lt;code>tree-sitter&lt;/code> 生成的代码元信息对代码按行分块。&lt;/p>
-&lt;h2 id="提示词工程">提示词工程&lt;/h2>
-&lt;p>在 RAG 查询阶段，要根据当前元信息的类型，组装不同的提示词。&lt;/p>
-&lt;p>这个项目&lt;a href="https://github.com/metauto-ai/agent-as-a-judge">Agent as a Judge&lt;/a> 里有不少提示词可供参考：&lt;/p>
-&lt;p>生成概述的提示词&lt;/p>
-&lt;pre tabindex="0">&lt;code>Provide a concise overview of this repository focused primarily on:
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Architecture on Steve Sun</title><link>https://sund.site/categories/software-architecture/</link><description>Recent content in Software Architecture on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 02 Jun 2025 07:58:17 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/software-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
+&lt;p&gt;这个问题的答案就是 AST 分块。&lt;/p&gt;
+&lt;p&gt;这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p&gt;
+&lt;h2 id="ast"&gt;AST&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Abstract Syntax Tree&lt;/strong&gt;（&lt;strong&gt;AST&lt;/strong&gt;，抽象语法树）是源代码的树形表示，它反映了代码的语法结构。在代码分块时，AST 可以帮助我们更好地理解代码的语义边界。&lt;/p&gt;
+&lt;p&gt;AST 在各种编译、分析源代码工具中都广泛使用。例如前端的 Babel、TypeScript 编译器（TSC），就利用 AST 来将 es6 或者 TypeScript 代码转换成浏览器可理解的 js 代码。&lt;/p&gt;
+&lt;p&gt;下面是一个简单的例子，展示 AST 如何把 TypeScript 代码转换成树形结构，假设有一段 TypeScript 函数：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;function&lt;/span&gt; greet(name: &lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc6a5d"&gt;&amp;#34;Hello, &amp;#34;&lt;/span&gt; + name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;经过 AST 工具的转换，它被抽象成下面的语法树结构：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SourceFile：
+&lt;ul&gt;
+&lt;li&gt;FunctionDeclaration
+&lt;ul&gt;
+&lt;li&gt;Identifier：&amp;ldquo;greet&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Parameter：
+&lt;ul&gt;
+&lt;li&gt;Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Block：
+&lt;ul&gt;
+&lt;li&gt;ReturnStatement：
+&lt;ul&gt;
+&lt;li&gt;BinaryExpression：
+&lt;ul&gt;
+&lt;li&gt;StringLiteral：&amp;ldquo;Hello, &amp;quot;&lt;/li&gt;
+&lt;li&gt;Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;后续编译器就可以遍历这个语法树，按节点转换成 Javascript 代码。&lt;/p&gt;
+&lt;p&gt;理解了 AST，就大致可以理解 DeepWIKI、甚至是 Cursor 这种代码编辑器如何构建代码索引的。&lt;/p&gt;
+&lt;h2 id="cursor"&gt;Cursor&lt;/h2&gt;
+&lt;p&gt;在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing"&gt;Cursor 的官方文档&lt;/a&gt;中，可以看到关于它如何索引用户代码的相关描述。&lt;/p&gt;
+&lt;p&gt;Cursor 会扫描用户代码仓库，计算文件哈希值并构建 Merkle 树，类似 Git 比较文件差异的原理，Cursor 用 Merkle 树来比较用户空间文件的差异，并且将用户修改过的文件以增量的方式上传到 Cursor 的服务器。&lt;/p&gt;
+&lt;p&gt;被上传的文件，会被分块并嵌入，存储在 Turbopuffer 数据库中。这就是将源代码构建成 RAG 的过程。&lt;/p&gt;
+&lt;p&gt;这里的分块使用了 AST 工具将代码先结构化成语法树，然后将序列化后的语法树节点切成小块，最后嵌入成向量存储起来。&lt;/p&gt;
+&lt;p&gt;Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p&gt;
+&lt;p&gt;当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p&gt;
+&lt;p&gt;有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;网友&lt;/a&gt;整理了这张流程图：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt=""&gt;&lt;/p&gt;
+&lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline 的官方博客&lt;/a&gt; 可以让我们窥见它的实现思路。&lt;/p&gt;
+&lt;p&gt;Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p&gt;
+&lt;p&gt;下面是开发者对 Cline 原理的介绍：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Cline 会使用它们的 &lt;code&gt;list_code_definition_names&lt;/code&gt;工具将源代码转换成 AST。Cline 把这个 AST 当作整个源代码的「地图」。&lt;/p&gt;
+&lt;p&gt;当 Cline 自动执行任务时，它会分析当前要修改的文件，从文件构建 AST，从 AST 生成自然语言上下文（类似 DeepWIKI 把代码转换成文档）。并将上下文传给 LLM，让 LLM 决定下一步是该修改文件，还是需要查看另一个文件补充更多上下文。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/ast-chunk/cline.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;如果说 Cursor 比较的是向量空间代码片段的相似度，Cline 就是将代码片段转换成自然语言的描述，然后让 LLM 通过语义的理解，在源代码仓库中搜寻线索，比较代码片段之间的语义相似度。&lt;/p&gt;
+&lt;p&gt;Cline 这种实现方式，显然更安全，企业用户不用担心 Cline 滥用源代码。但是副作用就是消耗了更多 Token。不断在不同文件之间获取上下文也花费更多时间。对于一些特殊情况，它甚至会在两个文件之间循环跳转，陷入死循环。&lt;/p&gt;
+&lt;p&gt;从我自身感受来说，Cline 在一些模型（Deepseek-r1, OpenAI-4o）的表现上比 Cursor 的 Agent 模式更好，因为 Cline 的语义理解比向量相似度更充分利用这些模型的自然语言能力。&lt;/p&gt;
+&lt;p&gt;但是对于专门为编程优化过的 Claude-Sonnet，则没有明显差异，这时就要看用户希望更高的安全性还是更快的响应速度。&lt;/p&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;本文主要介绍了代码编辑器如何利用抽象语法树（AST）来构建代码索引和实现代码补全功能。&lt;/p&gt;
+&lt;p&gt;总的来说，AST 是理解代码语法结构的重要工具,不同的实现方式各有优劣。&lt;/p&gt;
+&lt;h2 id="扩展阅读"&gt;扩展阅读&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWIKI&lt;/a&gt; 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p&gt;
+&lt;p&gt;我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p&gt;
+&lt;h2 id="生成代码结构地图"&gt;生成代码结构地图&lt;/h2&gt;
+&lt;p&gt;首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong&gt;代表语法结构和文件结构的元数据&lt;/strong&gt;和&lt;strong&gt;代表代码描述和片段的向量数据&lt;/strong&gt;两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p&gt;
+&lt;h2 id="生成-wiki-页面"&gt;生成 WIKI 页面&lt;/h2&gt;
+&lt;p&gt;生成 WIKI 页面的过程，就是 RAG 系统 query 的过程：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;程序递归读取项目结构。&lt;/li&gt;
+&lt;li&gt;从元数据库中查询当前文件的元数据，再从向量数据库中查找相关性最强的代码和描述信息的 id。&lt;/li&gt;
+&lt;li&gt;用这些 id 再去元数据库里查询到描述信息，从工程文件中查询对应代码片段。&lt;/li&gt;
+&lt;li&gt;将上面的所有内容作为 context，根据元数据类型（架构、组件等）组合适当的 prompt，输入给 LLM。&lt;/li&gt;
+&lt;li&gt;最后由一个前端渲染引擎把 LLM 的输出渲染成文档页面。&lt;/li&gt;
+&lt;li&gt;重复步骤 1。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/"&gt;&lt;/p&gt;
+&lt;h2 id="难点-1分块策略"&gt;难点 1：分块策略&lt;/h2&gt;
+&lt;p&gt;上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p&gt;
+&lt;p&gt;但是代码的拆分不同，比如一个函数体由&lt;code&gt;{&lt;/code&gt; &lt;code&gt;}&lt;/code&gt;包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p&gt;
+&lt;p&gt;目前的解决办法有两种，一种是基于整个文件的分块，这种情况文件大小不能超过分块大小的上限，而且分块数据缺少真实的调用关系上下文。我们知道，代码的组织单元并不是文件（文件树只是方便人类阅读的组织形式），而是以类和函数为单元的网状依赖关系图。&lt;/p&gt;
+&lt;p&gt;第二种方式就是先用语法工具对代码文件做静态分析，再根据分析结果将代码以语法结构进行拆分。这种方式实现复杂，网上并没有找到相关的资料，幸而读到这篇&lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;，它介绍了如何利用语法静态分析来给代码分块，构建高效的代码仓库 RAG 系统。 但是文章也没有提供开源实现，考虑到作为商业项目的核心技术，这部分内容非常值得深入。我会持续跟进这部分内容的研究。&lt;/p&gt;
+&lt;h2 id="难点-2-解析语法结构"&gt;难点 2: 解析语法结构&lt;/h2&gt;
+&lt;p&gt;元数据的语法解析要比向量数据简单一些，我从另一个开源项目&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;中找到一些线索。&lt;/p&gt;
+&lt;p&gt;这个项目使用了 &lt;code&gt;tree-sitter&lt;/code&gt; 来分析项目语法结构，从而得到三类元数据文件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tag.json&lt;/code&gt;：代表一个文件、函数、类的路径、行号、描述等基础信息。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tree_structure.json&lt;/code&gt;: 项目的文件树结构信息。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;*.pkl&lt;/code&gt;: 对象依赖关系图。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;*.pkl&lt;/code&gt;是语法分析器扫描项目文件之后得到的一个网状的对象关系图，它使用 python 的 pickle 库把 python 网状对象序列化成文件。&lt;/p&gt;
+&lt;p&gt;从这个项目的实现来看，难点 1 中嵌入向量的过程似乎也可以用 &lt;code&gt;tree-sitter&lt;/code&gt; 生成的代码元信息对代码按行分块。&lt;/p&gt;
+&lt;h2 id="提示词工程"&gt;提示词工程&lt;/h2&gt;
+&lt;p&gt;在 RAG 查询阶段，要根据当前元信息的类型，组装不同的提示词。&lt;/p&gt;
+&lt;p&gt;这个项目&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt; 里有不少提示词可供参考：&lt;/p&gt;
+&lt;p&gt;生成概述的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a concise overview of this repository focused primarily on:
 * Purpose and Scope: What is this project&amp;#39;s main purpose?
 * Core Features: What are the key features and capabilities?
 * Target audience/users
 * Main technologies or frameworks used
-&lt;/code>&lt;/pre>&lt;p>生成架构文档的提示词&lt;/p>
-&lt;pre tabindex="0">&lt;code>Create a comprehensive architecture overview for this repository. Include:
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成架构文档的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Create a comprehensive architecture overview for this repository. Include:
 * A high-level description of the system architecture
 * Main components and their roles
 * Data flow between components
 * External dependencies and integrations
-&lt;/code>&lt;/pre>&lt;p>生成组件文档的提示词&lt;/p>
-&lt;pre tabindex="0">&lt;code>Provide a comprehensive analysis of all key components in this codebase. For each component:
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成组件文档的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a comprehensive analysis of all key components in this codebase. For each component:
 * Name of the component
 * Purpose and main responsibility
 * How it interacts with other components
 * Design patterns or techniques used
 * Key characteristics
 * File paths that implement this component
-&lt;/code>&lt;/pre>&lt;p>其余请参考项目文件，就不一一列举了。&lt;/p>
-&lt;h2 id="总结">总结&lt;/h2>
-&lt;p>DeepWIKI 是一个基于 RAG 系统的代码文档生成工具，它通过以下步骤工作：&lt;/p>
-&lt;ol>
-&lt;li>对代码仓库进行语法分析，生成元数据和向量数据&lt;/li>
-&lt;li>然后通过 RAG 系统查询这些数据来生成文档&lt;/li>
-&lt;li>最后用前端引擎渲染成可读的文档页面&lt;/li>
-&lt;/ol>
-&lt;p>实现过程中有两个主要难点：&lt;/p>
-&lt;ul>
-&lt;li>代码分块策略：需要考虑代码的语法结构，不能像自然语言那样简单分割&lt;/li>
-&lt;li>语法结构解析：可以使用 tree-sitter 等工具来解析代码结构&lt;/li>
-&lt;/ul>
-&lt;p>虽然目前有一些开源项目可以参考，但核心的分块策略实现仍然需要深入研究。&lt;/p>
-&lt;h2 id="参考项目">参考项目&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="https://github.com/metauto-ai/agent-as-a-judge">Agent as a Judge&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://github.com/ozyyshr/RepoGraph">Repo Graph&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open">DeepWiki Open&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p>最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p>
-&lt;p>我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/">Go 内存泄漏常见模式&lt;/a>中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p>
-&lt;p>在上一次教训之后，我们对代码单元测试层面做了 goruntine 内存泄漏的检测——使用&lt;code>go.uber.org/goleak&lt;/code>。只需要在单元测试开头加上一句:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">TestXXX&lt;/span>(t *testing.T) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">defer&lt;/span> goleak.&lt;span style="color:#41a1c0">VerifyNone&lt;/span>(t)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// ...
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>它就会在测试结束后自动检查是否有残留的 goroutine 协程。对于一些延迟执行的后台 goroutine 可以在单元测试里用 wait 或者 sleep 等待后台释放再结束测试用例。&lt;/p>
-&lt;p>经过第一轮排查可以排除代码本身 goroutine 造成的问题。于是我把注意力转向了另一个地方：定时任务。&lt;/p>
-&lt;p>根据客户反馈，在无任何前台操作的情况下，内存也会缓慢上升。&lt;/p>
-&lt;p>在我们代码里，使用了&lt;code>github.com/robfig/cron/v3&lt;/code>这个第三方包，它的作用是编排定时任务。用法是&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>c = cron.&lt;span style="color:#41a1c0">New&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c.&lt;span style="color:#41a1c0">AddFunc&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;@every 10s&amp;#34;&lt;/span>, callbackFunc)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这种结构定义一个定时任务。它的实现也基于 goroutine，所以我把 go 自带的 pprof 加入到 main.go 的依赖中，重新编译了项目二进制文件并部署到测试环境上（使用跟用户相同的硬件配置）。这样启动项目后就可以在特定端口获取内存信息。（关于 pprof，你可以参考 &lt;a href="https://go.dev/blog/pprof">Profiling Go Programs&lt;/a>）&lt;/p>
-&lt;p>我使用 pprof 的接口获取了不同时间间隔的 heap 数据&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>curl -o heap&lt;span style="color:#d0bf69">.1&lt;/span>.out http:&lt;span style="color:#6c7986">//127.0.0.1:6060/debug/pprof/heap
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">go&lt;/span> tool pprof -http=:&lt;span style="color:#d0bf69">8099&lt;/span> -base heap&lt;span style="color:#d0bf69">.1&lt;/span>.out heap&lt;span style="color:#d0bf69">.2&lt;/span>.out
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>比较两次结果的差异，在 Web UI 上选择 In Use Space 选项，可以查看到哪些内存没有释放。&lt;/p>
-&lt;p>虽然经过第二轮排查，依然没有发现内存泄漏。但这一次我注意到服务中的一个定时任务会每隔 10 秒执行一次，执行过程中 CPU 占用率明显上升。在这个任务的代码里，它使用了&lt;code>github.com/shirou/gopsutil/process&lt;/code>这个第三方库来查询系统进程 ID 和进程名等信息。&lt;/p>
-&lt;p>我查看它的源码后发现，这个库查询进程 ID 的方式，是把系统中所有的进程信息加载到内存中，然后匹配 ID 或者名称。因此，如果用户设备上的进程过多，就会每次查询时占用大量内存。&lt;/p>
-&lt;p>在一个 10 秒执行一次的定时任务中调用这个库，显然是非常低效的。&lt;/p>
-&lt;p>经过与客户进一步沟通，我们发现出现内存过高的两个进程中，另一个进程也有 CPU 占用过高的现象。于是我们让客户把 &lt;code>top&lt;/code> 命令的截图发给我们。在看到截图的一瞬间，问题的真相就浮出水面了:&lt;/p>
-&lt;p>客户使用的 IPC 设备是性能比较低的版本，虽然内存较大，但 CPU 性能捉急。如果有多个进程同时执行后台任务，CPU 就会周期性打满，造成任务阻塞。而我们使用的第三方库基于 goroutine 来实现定时任务。在上一个任务被阻塞时，下一个任务依然会继续创建新的后台 goroutine，导致内存中的 goroutine 协程堆积地越来越多。&lt;/p>
-&lt;p>这是一个定时任务的 CPU 占用过高，间隔过短，造成的 goroutine 阻塞问题。&lt;/p>
-&lt;p>知道了原因，剩下的工作就是优化代码逻辑、更新版本、跟客户解释原因……&lt;/p>
-&lt;p>以上就是这次排查 Go 服务性能问题的过程，如果你也遇到类似情况，希望对你有所帮助。&lt;/p></description></item><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/pairing-with-ai-02/</guid><description>&lt;p>在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p>
-&lt;ul>
-&lt;li>任务死循环&lt;/li>
-&lt;li>模型无法修复环境问题&lt;/li>
-&lt;li>模型执行长任务后半段忘记上下文&lt;/li>
-&lt;/ul>
-&lt;h2 id="一些使用经验">一些使用经验&lt;/h2>
-&lt;p>以我自己为例，我经常使用 Cline + Github Copilot 的组合。我很喜欢 Cline 的功能是 &lt;code>Checkpoint restore&lt;/code>，它可以在执行错误的位置重新编辑提示词执行。这让我可以在相同的任务中调用不同的模型，观察他们处理问题的能力。&lt;/p>
-&lt;p>用作规划（Plan）的模型通常用 Deepseek-R1，Gemini 2.0 Flash Thinking，Claude 3.7。这里除了 Claude 3.7 能够比较准确给出计划外，其他模型多少都容易走「歪路」， 比如 Deepseek-R1 喜欢做一些多余的事情，让它翻译中文，它会调用 MCP 的翻译服务而不是自己翻译。&lt;/p>
-&lt;p>从经济角度考虑，解决简单问题 Gemini 2.0 Flash Thinking 是比较快速、经济的模型。复杂问题直接上 Claude 3.7 可能更容易控制成本。&lt;/p>
-&lt;p>用作执行任务（Act）的模型里，Deepseek-V3 表现非常不稳定，经常死循环或丢失上下文。Claude 太贵，而 Gemini 2.0 Flash 是相对准确且划算的模型。置于国产的 Qwen 系列模型不完全支持 Function Calling，Cline 也没有适配，所以暂时无法测试。&lt;/p>
-&lt;h2 id="ai-编程疑难杂症的应对方法">AI 编程疑难杂症的应对方法&lt;/h2>
-&lt;p>最近读到&lt;a href="https://ezyang.github.io/ai-blindspots/">AI Blindspots&lt;/a>这篇文章，作者系统性整理了 AI 编程中遇到的问题和他的思路。对我非常有启发。我用 Agent 把它翻译成了中文并人工做了润色，你可以在这里读到：&lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5">AI 编程的盲点&lt;/a>。&lt;/p>
-&lt;p>概括起来，解决 AI 问题的核心要领还是三点：更准确的提示词、更完整的上下文、缩小问题规模。&lt;/p>
-&lt;p>相信随着技术的发展，编程范式会发生翻天覆地的变化。如果重构变得如此容易，那么马丁福勒的《重构》是否应该出一套 AI 时代下的新范式。如果文档不再是被人读，而是喂给模型当作上下文，那么文档的形态应该是什么样？是否提供一个向量化的文档接口供大模型调用，将是未来编程框架的新常态？&lt;/p>
-&lt;p>我对未来充满期待。&lt;/p></description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p>未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p>
-&lt;p>我试图浅显地讨论一下哪些软件开发的手段更适合在 AI 时代提高 AI 编写代码的可观测性和维护性。接下来所有以「与 AI 协作编程」为标题的文章都只是抛砖引玉，并未形成系统化方法论。期望任何错误之处，读者不吝赐教。&lt;/p>
-&lt;h2 id="使用-ai-编写代码有哪些常见问题">使用 AI 编写代码有哪些常见问题？&lt;/h2>
-&lt;p>&lt;strong>可观测性问题：AI 实现的功能不完备，经常要手动修改片段&lt;/strong>&lt;/p>
-&lt;p>AI 生成代码最大的问题在于，它经常引起人类不易察觉的隐蔽错误。当人类使用 prompt 修改代码时，由于 AI 行为的不易观测性，即便修复了一个 bug，也可能导致其他回归问题（引起已有逻辑的错误）。&lt;/p>
-&lt;p>&lt;strong>上下文问题：缺少全局上下文，碎片代码之间缺少联系&lt;/strong>&lt;/p>
-&lt;p>由于 Token 数限制或经济上的考虑，很多编辑器会优化输入的内容，这就容易造成大模型错误地理解局部上下文。没有办法处理跨功能模块的业务逻辑。尤其项目变得庞大后，复杂的模块经常依赖其他模块，调整业务逻辑需要重构若干个代码文件。&lt;/p>
-&lt;h2 id="解决思路">解决思路&lt;/h2>
-&lt;p>AI 编写代码的核心问题，可以归纳为不可观测性和缺少上下文造成的低维护性。为了解决这两个问题，我们需要先回顾一下传统软件工序如何让代码更易观测和维护。&lt;/p>
-&lt;h3 id="人类主导的单元测试">人类主导的单元测试&lt;/h3>
-&lt;p>单元测试是代码的说明书。复杂的业务逻辑通常需要阅读大量代码才能看懂。但是熟练的程序员会先看单元测试。好的单元测试会把模块的预期输入、输出完整地写进 Case 里。在 &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279">Unit Testing Principles, Practices, and Patterns&lt;/a> 里，作者认为好的单元测试应该具备：&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>保护回归&lt;/strong>。即测试能够防止出现已经修复的问题在回归测试中复现的情况。&lt;/li>
-&lt;li>&lt;strong>抵抗重构&lt;/strong>。即代码重构后，测试能正确识别出重构是否对已有功能造成影响。&lt;/li>
-&lt;li>&lt;strong>快速反馈&lt;/strong>。即单元测试容易运行，发现问题能及时定位到错误。&lt;/li>
-&lt;li>&lt;strong>易于维护&lt;/strong>。 测试不同于业务代码，它的可维护体现在正确处理依赖关系和共享代码。&lt;/li>
-&lt;/ul>
-&lt;p>这些原则最终目的，都是保证被测系统按预期行为运行。&lt;/p>
-&lt;p>当 AI 和人类合作完成代码时，我个人认为，在编写单元测试这件事上，人类应该主导（80%），AI 辅助（20%），因为单元测试定义了「我期望的行为」。&lt;/p>
-&lt;p>当单元测试完善后，又反过来指导 AI 实现的真正的业务代码。这时人类占比下降，AI 占据主导。人类反复运行单元测试，同时将测试结果和 prompt 一起传递给 AI，帮助 AI 修正程序的问题。&lt;/p>
-&lt;h3 id="编写对-ai-友好的测试离不开好的模块设计">编写对 AI 友好的测试离不开好的模块设计&lt;/h3>
-&lt;p>在编写好的测试时，也要关注正确的拆分模块。一个好的测试通常是给定输入，验证是否输出预期的结果。而模块如果依赖过多外部环境做分支判断，就会造成测试的输出严重依赖外部状态。这会降低模块的可观测性。&lt;/p>
-&lt;p>下面两条经验，可以帮助你写出好的代码：&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>写测试时要测试行为的结果，而不是步骤。写业务代码时，要 AI 写清步骤。&lt;/p>
-&lt;p>单元测试的「单元」可以不是一个类或函数。而是一组完成一个原子业务逻辑的操作。（当然也有不同的流派支持以类为单位测试，但这不是本文的重点）。为了让 AI 生成的业务代码具有抗重构特性，要验证 AI 的行为结果，而不是验证每一个实现步骤。耦合测试代码和实现步骤会导致业务的修改破坏已有的测试，使得「期望的行为」要不断随着「具体的实现」来修改。&lt;/p>
-&lt;p>当 AI 开始写业务逻辑后，应该以步骤驱动的方式逐步实现，期间，人类可以针对某一步骤修正 AI 的代码逻辑。但切忌破坏测试的逻辑。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>无状态的代码（函数式）最容易测试&lt;/p>
-&lt;p>因为它的输出具有不变性。应该让核心代码尽量无状态，将状态、外部系统依赖放在应用服务层。而把深且不易理解的核心逻辑，放在领域服务层。这里的细节可以参考 DDD（Domain Driven Design）的思想。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/pairing-with-ai-01/functional_core.png" alt="functional_core.png">&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>这篇文章作为一系列人类与 AI 协作编程话题的开头，从测试角度试图缓解 AI 生成代码的可观测性问题。&lt;/p>
-&lt;p>在后边的文章里，我希望从架构设计角度，讨论一下如何设计 AI 友好的、易于维护上下文的架构。&lt;/p>
-&lt;p>文章内容会随着时间的推移，持续更新，欢迎讨论。&lt;/p></description></item><item><title>Go 语言的依赖倒置</title><link>https://sund.site/posts/2024/go-dependency-inject/</link><pubDate>Thu, 21 Nov 2024 11:26:22 +0800</pubDate><guid>https://sund.site/posts/2024/go-dependency-inject/</guid><description>&lt;blockquote>
-&lt;p>这篇文章比较基础，是我在给 Java 程序员做 go 语言培训时用到的。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="为什么要做依赖倒置dip">为什么要做依赖倒置（DIP）？&lt;/h2>
-&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle">依赖倒置&lt;/a>，或叫依赖反转、DIP，是软件开发非常重要的设计原则。很多程序员没有了解过相关知识，或者只从 Java Spring 知道大致思想。我今天想用一篇简短的文章，用 Go 语言做一个简单的例子，讲解一下怎么最简单地实现依赖倒置。&lt;/p>
-&lt;p>如果你还不知道它是什么，可以参考 wiki 中的描述，或者阅读&lt;a href="https://martinfowler.com/articles/dipInTheWild.html">马丁福勒关于 DIP 的文章&lt;/a>。&lt;/p>
-&lt;p>依赖倒置原则要解决一个软件开发中常见的风险：依赖。&lt;/p>
-&lt;p>尝试回忆一下：&lt;/p>
-&lt;ol>
-&lt;li>当你尝试通过 Mock 方式屏蔽底层细节做测试时，你发现你要测试的类引用了大量框架提供的接口，导致你需要 mock 大量底层的实现。&lt;/li>
-&lt;li>当你尝试修改一个旧的底层类，但是依赖该类的上层服务类太多，你一边担心造成副作用，一边在所有依赖的位置重构上层代码。&lt;/li>
-&lt;/ol>
-&lt;p>我们分析一下这两个场景：&lt;/p>
-&lt;p>场景 1 里，应用类依赖于框架提供的实现，导致应用类很难从框架上剥离出来，业内处理这种问题的方法叫&lt;strong>控制反转&lt;/strong>（IoC, Inversion of Control）。即应用类不应该依赖框架，而是框架提供插槽一样，把应用类注册给框架，由框架统一调度应用，执行对应的方法。&lt;/p>
-&lt;p>场景 2 里，服务类依赖底层类，导致底层修改难度越来越大。解决办法是&lt;strong>依赖注入&lt;/strong>（DI, Dependency Injection）。即上层类不直接引用底层类，而是在使用的地方把上层类依赖的底层类注入进来。&lt;/p>
-&lt;p>把这两个场景结合起来，就是依赖倒置原则的核心：&lt;/p>
-&lt;ul>
-&lt;li>高层次的模块不应该依赖于低层次的模块，两者都应该依赖于抽象接口。&lt;/li>
-&lt;li>抽象接口不应该依赖于具体实现。而具体实现则应该依赖于抽象接口。&lt;/li>
-&lt;/ul>
-&lt;p>这两个原则保证了代码中模块的高内聚、低耦合，同时给 Mock、迭代更新模块创造了条件。&lt;/p>
-&lt;h2 id="用-go-语言实现它">用 Go 语言实现它&lt;/h2>
-&lt;p>假设现在要从一个用户的服务中查询用户的信息。有两个接口，UserRepository 作为数据层负责查询数据库， UserService 负责业务逻辑，它依赖 UserRepository。同时为了方便测试，我们还要写一个 Mock 的数据层实现。 整个结构如下图。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/go-dependency-inject/example.png" alt="Go example">&lt;/p>
-&lt;p>接下来非常轻松地，我们实现两个接口，并写了他们的实现类。同时我们还在 UserService 的实现类里写了一个 NewUserService，来把它依赖的 UserRepository 实现注入进来。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// 在 user_repository.go 中实现具体的接口
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">type&lt;/span> UserRepository &lt;span style="color:#fc5fa3">interface&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#41a1c0">GetByID&lt;/span>(id &lt;span style="color:#fc5fa3">int&lt;/span>) (*User, &lt;span style="color:#fc5fa3">error&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#41a1c0">Save&lt;/span>(user *User) &lt;span style="color:#fc5fa3">error&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// ... 具体实现 UserRepository，略
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// user_service.go 中实现
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">type&lt;/span> UserService &lt;span style="color:#fc5fa3">interface&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#41a1c0">GetUser&lt;/span>(id &lt;span style="color:#fc5fa3">int&lt;/span>) (*User, &lt;span style="color:#fc5fa3">error&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#41a1c0">CreateUser&lt;/span>(name &lt;span style="color:#fc5fa3">string&lt;/span>, age &lt;span style="color:#fc5fa3">int&lt;/span>) &lt;span style="color:#fc5fa3">error&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// ... 具体实现 UserService，略
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">NewUserService&lt;/span>(repo UserRepository) UserService {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span> &amp;amp;UserServiceImpl{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> repo: repo,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>那么问题来了，可不可以直接在 &lt;code>user_service.go&lt;/code> 中直接把 repository 引用进来呢？显然不行，因为这样，两个模块就形成了依赖关系。&lt;/p>
-&lt;p>这一点是依赖反转的核心，上层模块不直接引用下层模块，而是由执行的类来初始化 Service 并将依赖的下层服务注入进来。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// 在main.go 中
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">main&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> repo := &amp;amp;MySQLUserRepository{}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> userService := &lt;span style="color:#41a1c0">NewUserService&lt;/span>(repo)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样，当编写测试 Mock 代码时，不需要修改任何代码逻辑，直接在测试中将&lt;code>NewUserService&lt;/code> 的参数替换成测试的假实例即可。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// 在 user_service_test.go 中
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">TestUserService&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> repo := &amp;amp;MockTestUserRepository{}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> userService := &lt;span style="color:#41a1c0">NewUserService&lt;/span>(repo)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>另外，如果数据层修改了实现，或者迁移到另外的数据库，你只需要修改两个地方：数据层的实现者和依赖注入者。对于调用者 &lt;code>UserService&lt;/code> 则完全不受到影响。整个项目也不会形成依赖陷阱。&lt;/p>
-&lt;h2 id="总结">总结&lt;/h2>
-&lt;p>依赖倒置原则的两个核心原则：&lt;/p>
-&lt;ul>
-&lt;li>模块不依赖于其他模块，而是都依赖于抽象接口&lt;/li>
-&lt;li>抽象接口不依赖于实现，而实现依赖于抽象接口&lt;/li>
-&lt;/ul>
-&lt;p>在 Go 语言中实现这两条原则并不麻烦，只要将原本的调用方-实现方，转换成注册方-调用方-实现方。在 Go 中也有一些库和框架实现依赖反转，其实核心思想并没有差异。&lt;/p></description></item><item><title>监控系统项目复盘</title><link>https://sund.site/posts/2024/metrics-project-retro/</link><pubDate>Thu, 24 Oct 2024 15:52:22 +0800</pubDate><guid>https://sund.site/posts/2024/metrics-project-retro/</guid><description>&lt;p>这篇文章对我过去 3 年的一大块工作内容进行复盘。我作为项目组的架构师，在下文中也对项目早期遗留的一些问题进行反思，并分享我个人的解决思路。&lt;/p>
-&lt;h2 id="项目核心依赖开源组件定制化过度">项目核心依赖开源组件，定制化过度&lt;/h2>
-&lt;p>我们的项目是一个运行在边缘设备上的日志、软硬件性能指标的采集/监控系统。考虑到边缘计算设备（IPC）的性能，选择开源组件时就侧重于轻量化、支持丰富的输出标准。早期部门架构师采用了 Fluent-Bit 作为项目的核心组件。Fluent-Bit 是 C 编写的开源、轻量、可轻度扩展的数据收集器。它最开始用作日志收集，后来逐渐发展成全功能的 Agent。对比流行的&lt;a href="https://github.com/open-telemetry">OpenTelemetry&lt;/a>，Fluent-Bit 更开箱即用、更轻量，但是不易于修改和扩展。&lt;/p>
-&lt;p>最开始整个团队都没接触过监控系统，所以在设计系统时挖了不少坑。首先，用户在 UI 上操作过度繁琐，需要依次配置输出的目标（地址、端口、协议、格式、加密方式等等）、采集的指标类型，最后还要手动点击 Apply （应用）一下。&lt;/p>
-&lt;p>经过几轮迭代，适当简化了操作逻辑。但是像大部分工业 PC 上运行的程序一样，用户在初始化配置过后，通常不会主动去 UI 上修改配置。终端用户更关心占用系统资源多少、稳定性如何。所以最开始团队把这个项目做成了一个重交互的 C 端产品，这是个教训。&lt;/p>
-&lt;p>第二，后端开发为了满足 UI 设计的流程（比如，用户可以创建多份不同的配置项到不同的目标地址），做了复杂的 Work-around。因为 Fluent-Bit 是单进程事件驱动模型，只有单一配置文件，每次修改配置文件都要重启 Fluent-bit 进程。这就造成了 UI 上用户添加一个配置项，后台就要重新生成整个配置文件并重启 Fluent-Bit。这对于一个稳定运行的监控系统来说，无疑增加了&lt;strong>重启过程中数据丢失&lt;/strong>的风险。另外，如果&lt;strong>新增的配置项出错，就会让整个生成的配置文件报错，导致 Fluent-Bit 进程假死&lt;/strong>等问题。&lt;/p>
-&lt;p>为了解决这些问题，后端工程师又对 Fluent-Bit 的各项参数玩出各种花活儿。比如利用不同 tag 来分流不同用户配置项，为每个配置项单独配置参数和过滤规则。再比如设定缓存数据包大小和缓存 timeout 时间为 0，这样 Fluent-Bit 重启之后会首先尝试重发缓存在文件系统里的数据，这样间接防止用户数据丢失。&lt;/p>
-&lt;p>这些花活儿不但提高了维护难度，从用户角度看，也并没有带来任何真正的价值提升。&lt;/p>
-&lt;p>回顾来看，&lt;strong>如果早期的 UI 设计改成单独的配置页面，不但简化的操作流程，还给业务代码降低的复杂度。&lt;/strong>&lt;/p>
-&lt;p>第三，核心项目依赖 Fluent-Bit 造成项目迁移到其他开源组件非常困难。加上 Fluent-Bit 更新频率高，公司对安全性合规要求使得我们团队每隔一段时间要对 Fluent-Bit 进行升级，同时对所有配置选项做回归测试。加上 Fluent-Bit 订制性很差，它虽然支持使用 Go 语言实现 Output 插件，但是只能用 C 语言编写 Input 插件。导致我们采集内部应用的数据，不得不用到它的 TCP 和 HTTP 插件来中转。部署多个 Agent 采集不同的内部服务。这让后期集成测试更添难度。&lt;/p>
-&lt;p>总体来说，Fluent-bit 的性能基本达到了预期，但是各种小 bug（比如 pgsql 插件在目标不可达时直接 Block 整个进程），开源社区维护者并没有引起重视，我们提交给开源社区的代码也被以各种理由驳回。如果让我重新选择，我更倾向于使用其他扩展性更强的开源组件。&lt;/p>
-&lt;h2 id="对-go-语言不熟悉项目结构混乱">对 Go 语言不熟悉，项目结构混乱&lt;/h2>
-&lt;p>团队遇到的第二个挑战是对 Go 语言不熟悉。大部分开发成员只有 Java 开发经验，所以顺理成章把 Go 写成了 Java。因为框架（Go-Gin）的限制，导致开发中问题频出。&lt;/p>
-&lt;p>第一个问题来自面向对象和依赖反转。依赖反转对于使用 Java Spring 的人来说不会陌生，但是用 Go 实现依赖反转，需要利用 Interface 封装，并结合 Go-Mock 库做单元测试。团队成员早期不熟悉语言特性，经常错误封装抽象，或者干脆直接函数套函数，写成&lt;a href="https://zh.wikipedia.org/zh-sg/%E9%9D%A2%E6%9D%A1%E5%BC%8F%E4%BB%A3%E7%A0%81">面条型代码&lt;/a>。这充分暴露了大部分国内 Java 程序员其实没有受过良好的 OOP 训练。对于单元测试、集成测试这些工程实践也是流于形式。软件质量在大部分企业里仍然靠测试人员手动验证。&lt;/p>
-&lt;p>第二个问题是 Go 语言不鼓励过度抽象。如泛型、异常处理，都要一步步重复琐碎的代码片段，这让 Sonar 静态检查经常 failed。没经验的同事就会用各种奇技淫巧逃避静态检查。这也说明开发团队定期 code review 的必要性。&lt;/p>
-&lt;p>第四，Go 语言其实是一个社区不那么完善的编程语言，它的很多框架（如最热门的 gorm 居然是个人开发项目），像 Flyway 这种 Java 工具链中很成熟的迁移工具，在 Go 里竟然需要组合多个开源项目来替代。所以 Go 只适合来开发中等以下规模的项目，或者对性能要求较高的平台核心组件。（在国内）不适合做复杂的业务场景。&lt;/p>
-&lt;h2 id="api-接口粒度过细没有对资源对象做好抽象">API 接口粒度过细，没有对资源对象做好抽象&lt;/h2>
-&lt;p>团队早期由于管理混乱：架构上，没有对业务模型做好抽象，资源对象拆分太碎；管理上，任务拆解太简单粗暴，给每个同事单独负责一个模块，导致每个业务流程都设计了专门的 API，维护压力大。好在业务场景少，用自动化测试能一定程度上保证了接口可靠性。&lt;/p>
-&lt;p>最开始做自动化集成测试时，我们仍然使用 BDD 的形式，以业务操作为基础编写，后来逐渐发现这种监控系统，其实真正的用户操作逻辑非常简单，复杂的部分是不同类型的数据、不同的 Input、Output 配置可能引起的异常。所以我们改成了数据驱动测试，用配置文件对不同类型的 Fluent-Bit 配置做全面的测试。&lt;/p>
-&lt;p>总结起来，Fluent-Bit 配置的修改，其实完全可以用 3~4 个宽泛的 API 来实现，除了前文提到流程过度设计原因，项目初期的不确定性，导致开发人员过度关注松耦合，而忽略了维护性。&lt;/p>
-&lt;h2 id="错误的流水线设计">错误的流水线设计&lt;/h2>
-&lt;p>最开始项目沿用的部门其他团队的集成测试、部署模式，把 Python 写的测试用例和项目部署脚本放在单独的 Gitlab Repo 里。结果是每次项目部署时，要人工去网页上修改版本号触发流水线。从持续集成的角度看，业务代码和测试用例分开，造成了每次 commit 都要到不同 repo 里去提交，且一旦冲突又要分别执行多次集成测试（时间长，反馈慢）。&lt;/p>
-&lt;p>后期我们做了一些调整，把多个小模块合并成一个&lt;a href="https://zh.wikipedia.org/wiki/Monorepo">Monorepo&lt;/a>，同时把部分 API 相关的集成测试放在后端代码里，减少提交次数，也让原子提交更容易。&lt;/p>
-&lt;p>不过部署问题依然没有被解决，原因是边缘平台上的模块太多，系统集成需要多个团队合作，部署、发布版本时间长，出错的环节太多。对于这种情况，部门技术负责人设定了严格的代码提交、测试、review、文档更新流程，但是根本问题还在于团队责任模糊、部门团队跨多个国家和时区，缺少统一的调度和沟通机制。这些问题只能留给管理层逐渐缓解，或者随着业务收敛，减少、分流项目组。&lt;/p>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>整体来看，我们团队遇到的很多问题出自项目早期，缺少项目和技术团队管理经验。对业务的愿景不了解，把做 C 端 Saas 产品的经验带到工业领域，用熟悉的开发范式套用到制造业。当然，不回避地说，在业务上，部门多流程长，业务负责人只能盲人摸象，用户反馈要先到达 Support 团队，再反馈给上层，最后才到开发团队。这让我们开发出来的产品要经过至少 3-6 个月才能得到有效的反馈。迭代周期太长，研发闭门造车。&lt;/p></description></item><item><title>RESTful Web Service Cookbook 笔记</title><link>https://sund.site/posts/2024/restful-api-cookbook/</link><pubDate>Sat, 13 Jul 2024 16:12:34 +0800</pubDate><guid>https://sund.site/posts/2024/restful-api-cookbook/</guid><description>&lt;p>&lt;a href="https://www.oreilly.com/library/view/restful-web-services/9780596809140/">RESTful Web Service Cookbook&lt;/a> 是一本简短、精炼的 RESTful 接口设计指南。这篇文章（笔记）用来记录这本书中提到的重点。&lt;/p>
-&lt;blockquote>
-&lt;p>因为 RESTful 对后端开发来说实在太熟悉不过，所以我会省略掉那些习以为常的约定，只记录书中提到的、大多数开发者没有注意到的细节。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="http-method">HTTP Method&lt;/h2>
-&lt;h3 id="get">GET&lt;/h3>
-&lt;p>进行&lt;strong>安全&lt;/strong>与&lt;strong>幂等&lt;/strong>的信息获取。&lt;/p>
-&lt;h3 id="post">POST&lt;/h3>
-&lt;p>执行的目标是一个资源集合（工厂），而不是具体的 URI。&lt;/p>
-&lt;p>适用场景：&lt;/p>
-&lt;ul>
-&lt;li>创建新的资源,把资源作为一个工厂。&lt;/li>
-&lt;li>通过一个控制器资源来修改一个或多个资源。&lt;/li>
-&lt;li>执行需要大数据输入（参数较多）的查询。&lt;/li>
-&lt;li>&lt;strong>在其他 HTTP 方法看上去不合适时，执行不安全或非幂等的操作&lt;/strong>。&lt;/li>
-&lt;/ul>
-&lt;p>解决方案：&lt;/p>
-&lt;ul>
-&lt;li>将一个已存在的资源标识为创建新资源的工厂。虽然您可以把任意资源用做工厂,但常见的做法是使用一个集合资源。&lt;/li>
-&lt;li>让客户端向工厂资源提交附有需要创建资源的表述的 POST 请求。通过可选支持的 &lt;strong>Slug&lt;/strong> 头, 客户端可以向服务器建议一个名字,作为被创建资源的 URI 的一部分。&lt;/li>
-&lt;li>资源创建之后,返回响应码 &lt;strong>201(Created)&lt;/strong>,并在 &lt;strong>Location&lt;/strong> 头中包含新创建资源的 URI。&lt;/li>
-&lt;li>如果响应正文包含了新创建资源的完整表述,那么在 &lt;strong>Content-Location&lt;/strong> 头中包含新创建资源的 URI。&lt;/li>
-&lt;/ul>
-&lt;h3 id="put">PUT&lt;/h3>
-&lt;p>仅在客户端可以控制 URI 的构成时,才使用 PUT 方法创建新资源。&lt;strong>（换句话说，PUT 也可以创建资源，但是仅限于客户端可以指定 URI）&lt;/strong>&lt;/p>
-&lt;h2 id="确定资源对象的粒度">确定资源对象的粒度&lt;/h2>
-&lt;p>应该以适合客户端使用模式的方式来设计资源,而不是基于现有的数据库或对象模型。&lt;/p>
-&lt;ul>
-&lt;li>可缓存性&lt;/li>
-&lt;li>减小修改频率&lt;/li>
-&lt;li>可变性——分离可变和不可变数据&lt;/li>
-&lt;/ul>
-&lt;h3 id="如何设计复合资源">如何设计复合资源?&lt;/h3>
-&lt;p>&lt;strong>复合资源&lt;/strong>降低了统一接口的可见性,因为它们的表述中包含了和其他资源相重叠的数据。&lt;/p>
-&lt;ul>
-&lt;li>如果符合资源使用&lt;strong>频率不高&lt;/strong>，可以考虑用&lt;strong>缓存&lt;/strong>替代。&lt;/li>
-&lt;li>考虑网络开销，复合资源会不会降低服务端吞吐量，增大延时。&lt;/li>
-&lt;/ul>
-&lt;h2 id="http-body">HTTP Body&lt;/h2>
-&lt;p>以 JSON 格式的 Body 为例：&lt;/p>
-&lt;ol>
-&lt;li>最好包含一个指向 self 的链接&lt;/li>
-&lt;li>如果分页，最好包含下一页的链接&lt;/li>
-&lt;li>如果分页，要指示集合的大小（总数）&lt;/li>
-&lt;li>如果查询对象是本地化的，添加一个属性来表示本地化内容的语言&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;John&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;id&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;urn:example:user:1234&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;link&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;rel&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;self&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;href&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;http://www.example.org/person/john&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;address&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;id&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;urn:example:address:4567&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;link&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;rel&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;self&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;href&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;http://www.example.org/person/john/address&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="http-response">HTTP Response&lt;/h2>
-&lt;ol>
-&lt;li>对于客户端错误，返回 4xx 状态码 + Date （错误发生的时间）。&lt;/li>
-&lt;li>对于服务端错误，返回 5xx 状态码 + Date （错误发生的时间）。&lt;/li>
-&lt;li>Body 中要描述错误，如果有外部文档和链接可参考，在 Header 提供一个 Link 头或直接把链接写在 Body 里。&lt;/li>
-&lt;li>为了后期追踪或分析，在服务器上记录了错误日志，应该提供一个可以找到该错误的标识符或链接。&lt;/li>
-&lt;/ol>
-&lt;h2 id="设计查询结构">设计查询结构&lt;/h2>
-&lt;h3 id="设计查询请求">设计查询请求&lt;/h3>
-&lt;ol>
-&lt;li>为了缓存和性能，尽量避免范围查询。解决方法包括：
-&lt;ul>
-&lt;li>使用预定义查询&lt;/li>
-&lt;li>也可以使用 HTTP Header： Range&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>避免使用通用语言（SQL、XPATH）的查询。&lt;/li>
-&lt;li>避免 URI 和数据存储方式的紧耦合（前端把后端当作数据库）。&lt;/li>
-&lt;li>对于参数较多，可以考虑使用 POST（因为 URI 长度有最大限制）
-&lt;ul>
-&lt;li>POST 接口的缺点是丧失了缓存能力&lt;/li>
-&lt;li>POST 请求是不可缓存的，所以 Cache-Control 和 Expires 头无济于事&lt;/li>
-&lt;li>解决缓存问题，可以让 POST 创建一个临时资源，把 link 返回前端，前端下次用 GET 获取该资源&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="设计查询响应结果">设计查询响应结果&lt;/h3>
-&lt;ol>
-&lt;li>返回集合。添加合理的缓存过期头。&lt;/li>
-&lt;li>如果没有结果，应该返回&lt;strong>空集合&lt;/strong>。&lt;/li>
-&lt;/ol></description></item><item><title>如何设计一个符合工业标准的审计系统</title><link>https://sund.site/posts/2024/audit-system-design/</link><pubDate>Mon, 15 Apr 2024 16:44:40 +0800</pubDate><guid>https://sund.site/posts/2024/audit-system-design/</guid><description>&lt;p>审计追踪（Audit Trail）是指一个系统中用于记录用户行为日志、控制组件的活动日志等关键安全信息的服务。日志通常以时间顺序排列，记录了“谁在什么时间做了什么”。&lt;/p>
-&lt;p>下面是 kubernetes 官方文档对其审计服务的描述：&lt;/p>
-&lt;blockquote>
-&lt;p>Kubernetes 审计（Auditing） 功能提供了与安全相关的、按时间顺序排列的记录集，记录每个用户、使用 Kubernetes API 的应用以及控制面自身引发的活动。&lt;/p>
-&lt;p>审计功能使得集群管理员能够回答以下问题：&lt;/p>
-&lt;ul>
-&lt;li>发生了什么？&lt;/li>
-&lt;li>什么时候发生的？&lt;/li>
-&lt;li>谁触发的？&lt;/li>
-&lt;li>活动发生在哪个（些）对象上？&lt;/li>
-&lt;li>在哪观察到的？&lt;/li>
-&lt;li>它从哪触发的？&lt;/li>
-&lt;li>活动的后续处理行为是什么？&lt;/li>
-&lt;/ul>
-&lt;/blockquote>
-&lt;h2 id="审计系统应该具备哪些能力">审计系统应该具备哪些能力？&lt;/h2>
-&lt;ol>
-&lt;li>日志内容不可篡改。&lt;/li>
-&lt;li>日志链结构完整：不可任意添加或删除单独的日志条目。&lt;/li>
-&lt;li>兼容性：发送日志的客户端应该避免侵入式设计。&lt;/li>
-&lt;li>系统的加密服务应该尽早初始化，以减少未受保护的日志。&lt;/li>
-&lt;li>服务重启/关闭不应导致审核日志不一致。如果服务因紧急情况而关闭，审计日志应该是可验证的。&lt;/li>
-&lt;li>密钥安全性：加密密钥（用于计算完整性检查）应存储在专用密钥存储中，并在内存中驻留最短的时间。&lt;/li>
-&lt;li>性能：能够在几秒钟内验证受保护日志。&lt;/li>
-&lt;li>日志轮换友好性：审核日志应与分布式系统典型的日志轮换策略兼容。&lt;/li>
-&lt;li>可观测性：日志易于被解析（machine-readable）、人类可读（human-readable）。兼容主流日志处理程序的格式，维度设计便于日后做过滤筛选。&lt;/li>
-&lt;/ol>
-&lt;h2 id="涉及的行业标准">涉及的行业标准&lt;/h2>
-&lt;p>与审计相关的，常见的工业标准有 IEC62443、NIST SP 800-92。下面是 IEC 中涉及到审计相关的章节。&lt;/p>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>工业标准&lt;/th>
- &lt;th>章节&lt;/th>
- &lt;th>安全级别&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR2.8&lt;/td>
- &lt;td>SL-C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR6.1&lt;/td>
- &lt;td>SL-C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR6.2&lt;/td>
- &lt;td>SL_C 2&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR1.13&lt;/td>
- &lt;td>SL_C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR2.9&lt;/td>
- &lt;td>SL_C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR2.10&lt;/td>
- &lt;td>SL_C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR3.7&lt;/td>
- &lt;td>SL_C 1&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>IEC 62443-4-2:2019&lt;/td>
- &lt;td>CR3.9&lt;/td>
- &lt;td>SL_C 2&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;h2 id="审计日志的格式应遵循哪些协议或标准">审计日志的格式应遵循哪些协议或标准？&lt;/h2>
-&lt;p>对于本地运行的软件，通常 Syslog 具有更好的系统兼容性。对于使用 ELK 采集日志的项目更适合用 CEF，其他情况建议使用自定义的 JSON。&lt;/p>
-&lt;p>下面是三种格式（协议）的对比。&lt;/p>
-&lt;h3 id="common-event-format-cefhttpsdocselasticcoenintegrationscef">&lt;a href="https://docs.elastic.co/en/integrations/cef">Common Event Format (CEF)&lt;/a>&lt;/h3>
-&lt;p>Elastic-Search 使用的、一种基于 Event-souring 思想设计的日志格式。优点是冗余信息少，适合配合 ELK 体系构建监控系统。 它的传输基于 Syslog 协议，同时扩展了可读性的 key-value，基于文本的设计也可以让 CEF 格式的日志写入到文件。总体来说，它是这几种格式中在可读性、效率和标准三方面最平衡的一个。&lt;/p>
-&lt;h3 id="sysloghttpsdatatrackerietforgdochtmlrfc5424">&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424">Syslog&lt;/a>&lt;/h3>
-&lt;p>Syslog 是 Linux 操作系统默认的审计日志格式，通常采用其 RFC5424 版本。大部分 SIEM&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> 系统都支持这种格式的导入。
-Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传统软件的同时，最大程度保证系统的安全性。但是对于微服务来说，实现和维护标准协议成本较高。所以如 AWS CloudTrail, OpenTelemetry 等都选择更简单的 HTTPS + JSON 格式。&lt;/p>
-&lt;h3 id="json-lineshttpsjsonlinesorg">&lt;a href="https://jsonlines.org/">JSON Lines&lt;/a>&lt;/h3>
-&lt;p>大部分 SaaS 产品都是用 JSON，简单高效。JSON 的特点是冗余信息多，结构容易解析。例如，下面是&lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/">OpenTelemetry 官方文档&lt;/a>提到的日志模型中的字段：&lt;/p>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>Field Name&lt;/th>
- &lt;th>Description&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>Timestamp&lt;/td>
- &lt;td>Time when the event occurred.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>ObservedTimestamp&lt;/td>
- &lt;td>Time when the event was observed.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>TraceId&lt;/td>
- &lt;td>Request trace id.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>SpanId&lt;/td>
- &lt;td>Request span id.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>TraceFlags&lt;/td>
- &lt;td>W3C trace flag.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>SeverityText&lt;/td>
- &lt;td>The severity text (also known as log level).&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>SeverityNumber&lt;/td>
- &lt;td>Numerical value of the severity.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Body&lt;/td>
- &lt;td>The body of the log record.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Resource&lt;/td>
- &lt;td>Describes the source of the log.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>InstrumentationScope&lt;/td>
- &lt;td>Describes the scope that emitted the log.&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Attributes&lt;/td>
- &lt;td>Additional information about the event.&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;p>下面是 kubernetes apiserver 关于 Audit 消息格式定义的例子：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;audit.k8s.io/v1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;kind&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Event&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;level&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Metadata&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;auditID&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345678-1234-1234-1234-1234567890ab&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;stage&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;ResponseComplete&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestURI&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;/api/v1/namespaces/default/pods&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;verb&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;get&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;user&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;username&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;admin&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;1234&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;groups&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;system:masters&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;extra&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;someKey&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;someValue&amp;#34;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;sourceIPs&amp;#34;: [&lt;span style="color:#fc6a5d">&amp;#34;192.168.1.1&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;userAgent&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;kubectl/v1.20.0 (linux/amd64) kubernetes/abcdef&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;objectRef&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resource&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;pods&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;abcdef12-3456-7890-abcd-ef1234567890&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;v1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;subresource&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;status&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;responseStatus&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;status&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Success&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;code&amp;#34;: &lt;span style="color:#d0bf69">200&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestObject&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;spec&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;containers&amp;#34;: [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-container&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-image&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;responseObject&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;metadata&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-pod&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;default&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;12345&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;spec&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;containers&amp;#34;: [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-container&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;my-image&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;status&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;phase&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;Running&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;requestReceivedTimestamp&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;2023-05-21T12:34:56Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;stageTimestamp&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;2023-05-21T12:34:57Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;annotations&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;authorization.k8s.io/decision&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;allow&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;authorization.k8s.io/reason&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;RBAC: allowed by RoleBinding \&amp;#34;admin-binding\&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="对于安全性有哪些要求">对于安全性有哪些要求？&lt;/h2>
-&lt;p>对于审计日志来说，安全性要求会被一般日志系统更高。&lt;/p>
-&lt;p>安全性，通常可以从机密性（Confidentiality），完整性（Integrity），可用性（Availability）三个维度来考量。&lt;/p>
-&lt;h3 id="机密性">机密性&lt;/h3>
-&lt;p>攻击者可以通过系统的安全漏洞，获取特殊权限，进而查看某些审计日志。&lt;/p>
-&lt;p>可以采取以下措施：&lt;/p>
-&lt;ul>
-&lt;li>加密日志：使用加密技术对日志进行保护，确保只有授权用户能够访问和修改日志。&lt;/li>
-&lt;li>访问控制：限制对发送、接收日志接口的访问权限。&lt;/li>
-&lt;li>敏感信息过滤：不应该在日志中记录用户敏感信息，如密码、证书等。&lt;/li>
-&lt;/ul>
-&lt;h3 id="完整性">完整性&lt;/h3>
-&lt;p>攻击者可以通过系统的安全漏洞，修改、删除某些审计日志。&lt;/p>
-&lt;p>除了上面提到的加密和权限控制，还可以采取以下措施：&lt;/p>
-&lt;ul>
-&lt;li>完整性检查&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>：在日志条目中添加哈希值，以便在验证日志时能够快速检测到任何篡改或截断。&lt;/li>
-&lt;li>定期备份：定期备份日志，以防止攻击者删除或修改所有的日志条目。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>日志文件的限制&lt;/strong>：通常要除了限制日志文件的大小，还要限制备份数量、最长备份天数等。下面是 kubernetes 中关于日志文件存储的参数：&lt;/p>
-&lt;ul>
-&lt;li>&amp;ndash;audit-log-path 指定用来写入审计事件的日志文件路径。不指定此标志会禁用日志后端。&lt;/li>
-&lt;li>&amp;ndash;audit-log-maxage 定义保留旧审计日志文件的最大天数&lt;/li>
-&lt;li>&amp;ndash;audit-log-maxbackup 定义要保留的审计日志文件的最大数量&lt;/li>
-&lt;li>&amp;ndash;audit-log-maxsize 定义审计日志文件轮转之前的最大大小（兆字节）&lt;/li>
-&lt;/ul>
-&lt;h3 id="可用性">可用性&lt;/h3>
-&lt;p>攻击者可以攻击审计追踪服务，导致审计追踪服务内存、磁盘空间不足等。&lt;/p>
-&lt;ul>
-&lt;li>设置最大用量限制：对内存、磁盘等服务器资源做出限制。&lt;/li>
-&lt;li>监测和响应：及时监测系统资源指标和日志的变化，并对异常活动进行响应。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>审计上下文&lt;/strong>：记录审计日志会显著增加系统内存和流量的使用。所以审计服务应该缓存审计相关的上下文，如服务名称和 ID 的映射关系、事件 ID 和描述等。不同服务向审计服务发送消息时应以最小长度为原则设计消息结构。审计服务的策略中应该允许用户配置日志级别，过滤规则等以减少系统负担。&lt;/p>
-&lt;h2 id="日志的导出">日志的导出&lt;/h2>
-&lt;p>审计服务除了导出文件格式的日志，通常也要支持第三方系统的导出。我们通常把分析、存储日志的第三方服务称为 SIEM （Security information and event management）。在 kubernetes 中，导出日志到第三方 web 服务的模块称为 webhook。&lt;/p>
-&lt;p>导出到第三方系统通常可以采用标准的 Syslog 格式或是 JSON Lines，支持范围最广。此外，需要考虑日志截断、第三方系统批处理和流处理的配置等，可以参考 kubernetes 的&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/#webhook-backend">这篇文档&lt;/a>。&lt;/p>
-&lt;h2 id="开源项目的架构设计">开源项目的架构设计&lt;/h2>
-&lt;p>由于设计侧重点不同，下面提供的每种开源项目都需要慎重考虑其优点和不足，其特性是否满足自身需要、系统的环境是分布式还是单体应用。&lt;/p>
-&lt;h3 id="auditd">Auditd&lt;/h3>
-&lt;p>&lt;img src="https://sund.site/images/audit-system-design/Linux-Auditd-Architecture.png" alt="auditd-architecture">&lt;/p>
-&lt;p>大部分 Linux 默认的审计服务，配合 rsyslog 等工具，可以解决本地设备的日志采集、查看、过滤。 rsyslog 基于字符串 template 的日志格式配置可以满足使用不同 SIEM 系统的用户集成的需要。&lt;/p>
-&lt;ul>
-&lt;li>优点：基于进程通信，标准日志格式，易于导出。性能优异。&lt;/li>
-&lt;li>不足：进程模型不适用于网络服务。&lt;/li>
-&lt;/ul>
-&lt;h3 id="aws-cloud-trail-和-kubernetes">AWS Cloud Trail 和 kubernetes&lt;/h3>
-&lt;p>&lt;img src="https://sund.site/images/audit-system-design/aws-audit.png" alt="aws log">&lt;/p>
-&lt;p>AWS 的 Cloud Trail 采用应用服务主动推送审计事件的模式，用户可以为设计追踪服务设置策略，收集到的日志会分别按需流入后续的批处理和流处理工具链中。&lt;/p>
-&lt;p>kubernetes 的日志收集与 AWS 实现类似，也是基于中心化的服务，但是这套架构设计并非只为审计日志一种情况设计。它遵循了很多 kubernetes 声明式设计的理念，非常值得学习。&lt;/p>
-&lt;p>&lt;img src="https://sund.site/images/audit-system-design/k8s-audit.png" alt="kubernetes log">&lt;/p>
-&lt;p>例如 kubernetes 专门为审计设计的 stage：&lt;/p>
-&lt;blockquote>
-&lt;p>每个请求都可被记录其相关的阶段（stage）。已定义的阶段有：&lt;/p>
-&lt;ul>
-&lt;li>RequestReceived - 此阶段对应审计处理器接收到请求后， 并且在委托给其余处理器之前生成的事件。&lt;/li>
-&lt;li>ResponseStarted - 在响应消息的头部发送后，响应消息体发送前生成的事件。 只有长时间运行的请求（例如 watch）才会生成这个阶段。&lt;/li>
-&lt;li>ResponseComplete - 当响应消息体完成并且没有更多数据需要传输的时候。&lt;/li>
-&lt;li>Panic - 当 panic 发生时生成。&lt;/li>
-&lt;/ul>
-&lt;/blockquote>
-&lt;p>&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/">kubernetes 审计事件&lt;/a> 使用和 Event API 不同的消息结构&lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>。&lt;/p>
-&lt;p>综上，云平台的审计服务设计可以总结为：&lt;/p>
-&lt;ul>
-&lt;li>优点：微服务设计，JSON 格式日志更灵活，中心化的日志收集服务易于集成更多应用服务和导出到开源数据处理工具。&lt;/li>
-&lt;li>不足：分布式架构对存储、服务端加密、通信安全性和完整性要求更高。&lt;/li>
-&lt;/ul>
-&lt;h3 id="opentelemetry">OpenTelemetry&lt;/h3>
-&lt;p>&lt;img src="https://sund.site/images/audit-system-design/opentel.png" alt="OpenTel">&lt;/p>
-&lt;p>OpenTelemetry 是现在云原生最主流的日志框架。可以支持侵入式（SDK）、非侵入式（Agent）两种日志采集模式。Collector 的设计可以让一部分日志处理的工作放在日志发送端完成。&lt;/p>
-&lt;ul>
-&lt;li>优点：微服务设计，支持 kubernetes 等基础设施，多语言多平台提供了 SDK 和扩展能力。有完善的安全、完整性考虑。适合中小企业。&lt;/li>
-&lt;li>不足：大部分情况下日志采集依然需要侵入到 App 内部修改代码。日志收集工具对 Go 等语言支持不够好（截至本文编辑时）。&lt;/li>
-&lt;/ul>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>审计追踪（Audit Trail）是指系统记录下所有影响操作或事件的时间顺序记录,用于追踪系统活动，核查是否存在违规行为。&lt;/p>
-&lt;p>审计日志应具备以下特性:&lt;/p>
-&lt;ul>
-&lt;li>不可篡改(加密存储、完整性校验)&lt;/li>
-&lt;li>高性能(快速验证)&lt;/li>
-&lt;li>可观测性(机器/人类可读)&lt;/li>
-&lt;li>安全性(保密性、可用性、完整性)&lt;/li>
-&lt;/ul>
-&lt;p>常见的审计日志格式有 Syslog、CEF、JSON 等,主要区别在于冗余信息、可读性和与日志收集系统的兼容性。&lt;/p>
-&lt;p>审计日志具有较高的安全性要求：&lt;/p>
-&lt;ul>
-&lt;li>机密性：只有授权用户可访问,通过访问控制实现&lt;/li>
-&lt;li>可用性：防止被攻击者删除或破坏,通过限制资源使用、多副本存储等实现&lt;/li>
-&lt;li>完整性：防止被篡改或截断,通过加密、完整性校验等实现&lt;/li>
-&lt;/ul>
-&lt;p>一些典型的审计日志系统架构：&lt;/p>
-&lt;ul>
-&lt;li>Auditd、rsyslog 等 Linux 原生日志程序&lt;/li>
-&lt;li>AWS 等云产品&lt;/li>
-&lt;li>OpenTelemetry&lt;/li>
-&lt;/ul>
-&lt;div class="footnotes" role="doc-endnotes">
-&lt;hr>
-&lt;ol>
-&lt;li id="fn:1">
-&lt;p>SIEM 是安全信息和事件管理(Security Information and Event Management)的缩写。&lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem">https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:2">
-&lt;p>对于日志的加密，一般在服务端会对日志额外添加 checksum 链来校验。可以参考亚马逊的实现 &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html">server-side encryption (SSE-S3)&lt;/a>.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li id="fn:3">
-&lt;p>&lt;a href="https://kubernetes.io/zh-cn/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event">kubernetes 审计事件结构定义&lt;/a>&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;/div></description></item><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/2021/distributed-cache/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/2021/distributed-cache/</guid><description>&lt;p>很久不写技术文章了。这是一篇关于 Redis 构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。&lt;/p>
-&lt;p>下面就以我做过的商品预约平台项目作为引子，引出分布式缓存设计的一些要点。&lt;/p>
-&lt;p>该商品预约平台的背景如下：&lt;/p>
-&lt;ul>
-&lt;li>该系统由多个微服务组成&lt;/li>
-&lt;li>预约的过程：用户可以选择指定门店，指定日期到店提领商品，如果对应门店和日期没有库存，则不能预约&lt;/li>
-&lt;li>因为“预约”的是未来时刻的库存，所以门店的未来某个时间剩余库存是通过一系列公式计算得出的。这个公式比较复杂，考虑到了用户指定的日期是否在配货周期内等因素，这里省略掉细节&lt;/li>
-&lt;li>每年节日高峰时期，用户会集中预约商品，导致服务压力骤增。又因为未来日期的库存需要动态计算的特点（比如 A 预约了 1 月 1 日的最后一件商品，B 就会无法在该日预约），不同用户的预约操作会互相影响，严重时导致数据库死锁、数据不一致等问题&lt;/li>
-&lt;/ul>
-&lt;p>基于以上背景，这个预约系统的设计必须将性能作为主要优化目标，而缓存作为性能优化的不二选择，就承担了重要职责。&lt;/p>
-&lt;h2 id="识别热点数据">识别热点数据&lt;/h2>
-&lt;p>并不是所有数据都有必要被缓存，往往缓存的数据具有以下几个特点：&lt;/p>
-&lt;ul>
-&lt;li>读写比很高。如果写操作比读操作还多，缓存系统频繁更新会大大降低可用性&lt;/li>
-&lt;li>是热点数据。因为内存的价格昂贵，所以按照 2-8 原则，20%热点数据才值得被缓存&lt;/li>
-&lt;li>能够容忍短时间的不一致&lt;/li>
-&lt;/ul>
-&lt;p>结合项目需要，排除掉一些不适合缓存的数据：&lt;/p>
-&lt;ul>
-&lt;li>对于那些只读的、配置相关的数据，只需要做进程缓存（使用 Guava Cache），在服务启动时加载数据到内存就可以了&lt;/li>
-&lt;li>尽量用 CDN 和 Nginx 静态缓存来解决大部分不常更新的资源&lt;/li>
-&lt;/ul>
-&lt;p>对于该预约项目，用户最频繁查询的数据是不同门店在不同日期下的库存数量。这类数据是缓存设计的重点照顾对象：&lt;/p>
-&lt;ul>
-&lt;li>用户选择了指定城市、指定门店后，系统会返回最近 30 天的库存信息，用户只可能修改其中一条信息。所以读写比很高&lt;/li>
-&lt;li>库存信息是预约订单流程的必备步骤，而且是跨服务调用（预约服务 -&amp;gt; 库存服务）的数据，所以涉及到大量网络请求、数据库查询。&lt;/li>
-&lt;/ul>
-&lt;h2 id="指定性能优化的指标">指定性能优化的指标&lt;/h2>
-&lt;p>在即将完成业务系统开发时，我们就根据 &lt;a href="https://sre.google/books/">Google SRE Books&lt;/a> 提到的四个黄金指标，制定了监控系统性能的四个维度：&lt;/p>
-&lt;ul>
-&lt;li>请求率&lt;/li>
-&lt;li>错误数，非 200 返回结果数量&lt;/li>
-&lt;li>响应时间&lt;/li>
-&lt;li>资源利用率（CPU、内存）&lt;/li>
-&lt;/ul>
-&lt;p>我们使用 Prometheus + Grafana 的组合实现监控可视化，这样每次测试人员进行压力测试时，都可以通过这些指标对系统进行调整。缓存影响最大的指标是&lt;strong>请求率&lt;/strong>（一般用 TPS 或者 QPS）和&lt;strong>响应时间&lt;/strong>。所以在设计缓存系统时，要不断参照这两个指标进行优化。&lt;/p>
-&lt;h2 id="缓存的设计的实践">缓存的设计的实践&lt;/h2>
-&lt;h3 id="分级缓存">分级缓存&lt;/h3>
-&lt;p>为了不让某一接口或者微服务的缓存失效导致其他接口或服务的并发量暴增，就要针对不同来源（数据库的表、接口等）的数据做分级缓存。比如用户在一次查询中涉及到“附近可预约门店”的查询、“活动期间不同日期剩余库存”的查询、“已预约数量“的查询，这三种查询逐层依赖后边的查询结果。&lt;/p>
-&lt;p>假设如果只针对库存数量做缓存，一旦这部分缓存失效，那么“附近可预约门店”的查询就会直接访问数据库查询全部门店的剩余库存来确定哪个门店可以预约。这样就导致查询库存的接口并发量骤增。所以&lt;strong>分级缓存一定程度上缓解了缓存雪崩的问题&lt;/strong>。&lt;/p>
-&lt;h3 id="自动化测试-api-参数合法性">自动化测试 API 参数合法性&lt;/h3>
-&lt;p>我们的 QA 通常会写自动化脚本对后端 API 做定期的扫描，检查哪些接口的数据输入、输出有不合法的类型或是数值范围。除了巩固系统的健壮性，还能帮助缓存系统抵御&lt;strong>缓存穿透&lt;/strong>的风险。&lt;/p>
-&lt;h3 id="缓存和数据库双写问题">缓存和数据库双写问题&lt;/h3>
-&lt;p>这是一个“先淘汰缓存&amp;quot;还是”先写数据库“的问题。通常没有明确的最佳方法。我们采用 &lt;a href="https://dzone.com/articles/cache-aside-pattern">&lt;strong>Cache-Aside Pattern&lt;/strong>&lt;/a> 的方式：&lt;/p>
-&lt;blockquote>
-&lt;ul>
-&lt;li>&lt;strong>失效&lt;/strong>：应用程序先从 cache 取数据，没有得到，则从数据库中取数据，成功后，放到缓存中。&lt;/li>
-&lt;li>&lt;strong>命中&lt;/strong>：应用程序从 cache 中取数据，取到后返回。&lt;/li>
-&lt;li>&lt;strong>更新&lt;/strong>：先把数据存到数据库中，成功后，再让缓存失效。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>缺点：可能有小概率脏数据&lt;/strong>。比如，一个是读操作，但是没有命中缓存，然后就到数据库中取数据，此时来了一个写操作，写完数据库后，让缓存失效，然后，之前的那个读操作再把老的数据放进去，所以，会造成脏数据。&lt;/p>
-&lt;/blockquote>
-&lt;p>考虑到写操作通常比读操作时间更长，所以 Cache-Aside Pattern 中的脏数据概率非常小，即便发生，用户在实际下单时系统仍然会去数据库里做数据校验，不会影响业务数据的正确性。&lt;/p>
-&lt;p>如果对缓存一致性有更高要求，可以采用&lt;a href="https://juejin.cn/post/6844903805641818120">延时双删策略或异步更新缓存&lt;/a>。不过这两种方式本质都是用一定程度的串行化操作来解决并发造成的问题。&lt;/p>
-&lt;h3 id="预热">预热&lt;/h3>
-&lt;p>预加载热点数据时需要注意的点是，要考虑好服务一旦重启或是生产环境发生事故，要避免服务重启后再次造成二次事故。&lt;/p>
-&lt;h2 id="缓存系统常见的问题和应对思路">缓存系统常见的问题和应对思路&lt;/h2>
-&lt;p>首先要保证应用服务能做好熔断、限流、降级的措施。然后再针对不同情况做应对处理。&lt;/p>
-&lt;h3 id="缓存雪崩">缓存雪崩&lt;/h3>
-&lt;p>原因：热点缓存数据批量过期，导致大量缓存失效。&lt;/p>
-&lt;p>解决思路：&lt;/p>
-&lt;ul>
-&lt;li>错开过期时间、随机过期时间&lt;/li>
-&lt;li>构建多级缓存&lt;/li>
-&lt;li>避免热点数据频繁淘汰（如修改 Redis 淘汰策略为 LRU）&lt;/li>
-&lt;li>必要时限流、降级&lt;/li>
-&lt;/ul>
-&lt;h3 id="缓存击穿">缓存击穿&lt;/h3>
-&lt;p>原因：热点 Key 突然过期。&lt;/p>
-&lt;p>解决思路：&lt;/p>
-&lt;ul>
-&lt;li>设计系统时针对性预防措施，比如热点 Key 的更新策略不依据时间，而是程序控制&lt;/li>
-&lt;li>配合监控和后台调整，保证高峰时段热点 key 可用&lt;/li>
-&lt;li>必要时限流、降级&lt;/li>
-&lt;/ul>
-&lt;h3 id="缓存穿透">缓存穿透&lt;/h3>
-&lt;p>原因：黑客通过访问缓存中不存在的数据，将大量请求直达数据库。&lt;/p>
-&lt;p>解决思路：&lt;/p>
-&lt;ul>
-&lt;li>监控报警&lt;/li>
-&lt;li>在服务层做好熔断&lt;/li>
-&lt;/ul>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>在设计缓存系统时优先排除掉大部分不需要缓存或者通过进程本地缓存的数据。搭建合理的监控手段，自动化测试框架，再结合预热、缓存淘汰策略、双写策略等最佳实践方法，不断优化缓存性能。&lt;/p>
-&lt;p>尤其要注意缓存的集中常见问题：雪崩、击穿和穿透。做好应用服务的熔断、降级、限流措施，保证在事故发生时针对每种情况都有预案。&lt;/p></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其余请参考项目文件，就不一一列举了。&lt;/p&gt;
+&lt;h2 id="总结"&gt;总结&lt;/h2&gt;
+&lt;p&gt;DeepWIKI 是一个基于 RAG 系统的代码文档生成工具，它通过以下步骤工作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;对代码仓库进行语法分析，生成元数据和向量数据&lt;/li&gt;
+&lt;li&gt;然后通过 RAG 系统查询这些数据来生成文档&lt;/li&gt;
+&lt;li&gt;最后用前端引擎渲染成可读的文档页面&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;实现过程中有两个主要难点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;代码分块策略：需要考虑代码的语法结构，不能像自然语言那样简单分割&lt;/li&gt;
+&lt;li&gt;语法结构解析：可以使用 tree-sitter 等工具来解析代码结构&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虽然目前有一些开源项目可以参考，但核心的分块策略实现仍然需要深入研究。&lt;/p&gt;
+&lt;h2 id="参考项目"&gt;参考项目&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p&gt;最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p&gt;
+&lt;p&gt;我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/"&gt;Go 内存泄漏常见模式&lt;/a&gt;中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p&gt;
+&lt;p&gt;在上一次教训之后，我们对代码单元测试层面做了 goruntine 内存泄漏的检测——使用&lt;code&gt;go.uber.org/goleak&lt;/code&gt;。只需要在单元测试开头加上一句:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;TestXXX&lt;/span&gt;(t *testing.T) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;defer&lt;/span&gt; goleak.&lt;span style="color:#41a1c0"&gt;VerifyNone&lt;/span&gt;(t)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;它就会在测试结束后自动检查是否有残留的 goroutine 协程。对于一些延迟执行的后台 goroutine 可以在单元测试里用 wait 或者 sleep 等待后台释放再结束测试用例。&lt;/p&gt;
+&lt;p&gt;经过第一轮排查可以排除代码本身 goroutine 造成的问题。于是我把注意力转向了另一个地方：定时任务。&lt;/p&gt;
+&lt;p&gt;根据客户反馈，在无任何前台操作的情况下，内存也会缓慢上升。&lt;/p&gt;
+&lt;p&gt;在我们代码里，使用了&lt;code&gt;github.com/robfig/cron/v3&lt;/code&gt;这个第三方包，它的作用是编排定时任务。用法是&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;c = cron.&lt;span style="color:#41a1c0"&gt;New&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;c.&lt;span style="color:#41a1c0"&gt;AddFunc&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;@every 10s&amp;#34;&lt;/span&gt;, callbackFunc)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这种结构定义一个定时任务。它的实现也基于 goroutine，所以我把 go 自带的 pprof 加入到 main.go 的依赖中，重新编译了项目二进制文件并部署到测试环境上（使用跟用户相同的硬件配置）。这样启动项目后就可以在特定端口获取内存信息。（关于 pprof，你可以参考 &lt;a href="https://go.dev/blog/pprof"&gt;Profiling Go Programs&lt;/a&gt;）&lt;/p&gt;
+&lt;p&gt;我使用 pprof 的接口获取了不同时间间隔的 heap 数据&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -o heap&lt;span style="color:#d0bf69"&gt;.1&lt;/span&gt;.out http:&lt;span style="color:#fd8f3f"&gt;//127.0.0.1:6060/debug/pprof/heap&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; tool pprof -http=:&lt;span style="color:#d0bf69"&gt;8099&lt;/span&gt; -base heap&lt;span style="color:#d0bf69"&gt;.1&lt;/span&gt;.out heap&lt;span style="color:#d0bf69"&gt;.2&lt;/span&gt;.out
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;比较两次结果的差异，在 Web UI 上选择 In Use Space 选项，可以查看到哪些内存没有释放。&lt;/p&gt;
+&lt;p&gt;虽然经过第二轮排查，依然没有发现内存泄漏。但这一次我注意到服务中的一个定时任务会每隔 10 秒执行一次，执行过程中 CPU 占用率明显上升。在这个任务的代码里，它使用了&lt;code&gt;github.com/shirou/gopsutil/process&lt;/code&gt;这个第三方库来查询系统进程 ID 和进程名等信息。&lt;/p&gt;
+&lt;p&gt;我查看它的源码后发现，这个库查询进程 ID 的方式，是把系统中所有的进程信息加载到内存中，然后匹配 ID 或者名称。因此，如果用户设备上的进程过多，就会每次查询时占用大量内存。&lt;/p&gt;
+&lt;p&gt;在一个 10 秒执行一次的定时任务中调用这个库，显然是非常低效的。&lt;/p&gt;
+&lt;p&gt;经过与客户进一步沟通，我们发现出现内存过高的两个进程中，另一个进程也有 CPU 占用过高的现象。于是我们让客户把 &lt;code&gt;top&lt;/code&gt; 命令的截图发给我们。在看到截图的一瞬间，问题的真相就浮出水面了:&lt;/p&gt;
+&lt;p&gt;客户使用的 IPC 设备是性能比较低的版本，虽然内存较大，但 CPU 性能捉急。如果有多个进程同时执行后台任务，CPU 就会周期性打满，造成任务阻塞。而我们使用的第三方库基于 goroutine 来实现定时任务。在上一个任务被阻塞时，下一个任务依然会继续创建新的后台 goroutine，导致内存中的 goroutine 协程堆积地越来越多。&lt;/p&gt;
+&lt;p&gt;这是一个定时任务的 CPU 占用过高，间隔过短，造成的 goroutine 阻塞问题。&lt;/p&gt;
+&lt;p&gt;知道了原因，剩下的工作就是优化代码逻辑、更新版本、跟客户解释原因……&lt;/p&gt;
+&lt;p&gt;以上就是这次排查 Go 服务性能问题的过程，如果你也遇到类似情况，希望对你有所帮助。&lt;/p&gt;</description></item><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/pairing-with-ai-02/</guid><description>&lt;p&gt;在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;任务死循环&lt;/li&gt;
+&lt;li&gt;模型无法修复环境问题&lt;/li&gt;
+&lt;li&gt;模型执行长任务后半段忘记上下文&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="一些使用经验"&gt;一些使用经验&lt;/h2&gt;
+&lt;p&gt;以我自己为例，我经常使用 Cline + Github Copilot 的组合。我很喜欢 Cline 的功能是 &lt;code&gt;Checkpoint restore&lt;/code&gt;，它可以在执行错误的位置重新编辑提示词执行。这让我可以在相同的任务中调用不同的模型，观察他们处理问题的能力。&lt;/p&gt;
+&lt;p&gt;用作规划（Plan）的模型通常用 Deepseek-R1，Gemini 2.0 Flash Thinking，Claude 3.7。这里除了 Claude 3.7 能够比较准确给出计划外，其他模型多少都容易走「歪路」， 比如 Deepseek-R1 喜欢做一些多余的事情，让它翻译中文，它会调用 MCP 的翻译服务而不是自己翻译。&lt;/p&gt;
+&lt;p&gt;从经济角度考虑，解决简单问题 Gemini 2.0 Flash Thinking 是比较快速、经济的模型。复杂问题直接上 Claude 3.7 可能更容易控制成本。&lt;/p&gt;
+&lt;p&gt;用作执行任务（Act）的模型里，Deepseek-V3 表现非常不稳定，经常死循环或丢失上下文。Claude 太贵，而 Gemini 2.0 Flash 是相对准确且划算的模型。置于国产的 Qwen 系列模型不完全支持 Function Calling，Cline 也没有适配，所以暂时无法测试。&lt;/p&gt;
+&lt;h2 id="ai-编程疑难杂症的应对方法"&gt;AI 编程疑难杂症的应对方法&lt;/h2&gt;
+&lt;p&gt;最近读到&lt;a href="https://ezyang.github.io/ai-blindspots/"&gt;AI Blindspots&lt;/a&gt;这篇文章，作者系统性整理了 AI 编程中遇到的问题和他的思路。对我非常有启发。我用 Agent 把它翻译成了中文并人工做了润色，你可以在这里读到：&lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5"&gt;AI 编程的盲点&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;概括起来，解决 AI 问题的核心要领还是三点：更准确的提示词、更完整的上下文、缩小问题规模。&lt;/p&gt;
+&lt;p&gt;相信随着技术的发展，编程范式会发生翻天覆地的变化。如果重构变得如此容易，那么马丁福勒的《重构》是否应该出一套 AI 时代下的新范式。如果文档不再是被人读，而是喂给模型当作上下文，那么文档的形态应该是什么样？是否提供一个向量化的文档接口供大模型调用，将是未来编程框架的新常态？&lt;/p&gt;
+&lt;p&gt;我对未来充满期待。&lt;/p&gt;</description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p&gt;未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p&gt;
+&lt;p&gt;我试图浅显地讨论一下哪些软件开发的手段更适合在 AI 时代提高 AI 编写代码的可观测性和维护性。接下来所有以「与 AI 协作编程」为标题的文章都只是抛砖引玉，并未形成系统化方法论。期望任何错误之处，读者不吝赐教。&lt;/p&gt;
+&lt;h2 id="使用-ai-编写代码有哪些常见问题"&gt;使用 AI 编写代码有哪些常见问题？&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;可观测性问题：AI 实现的功能不完备，经常要手动修改片段&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;AI 生成代码最大的问题在于，它经常引起人类不易察觉的隐蔽错误。当人类使用 prompt 修改代码时，由于 AI 行为的不易观测性，即便修复了一个 bug，也可能导致其他回归问题（引起已有逻辑的错误）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;上下文问题：缺少全局上下文，碎片代码之间缺少联系&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;由于 Token 数限制或经济上的考虑，很多编辑器会优化输入的内容，这就容易造成大模型错误地理解局部上下文。没有办法处理跨功能模块的业务逻辑。尤其项目变得庞大后，复杂的模块经常依赖其他模块，调整业务逻辑需要重构若干个代码文件。&lt;/p&gt;
+&lt;h2 id="解决思路"&gt;解决思路&lt;/h2&gt;
+&lt;p&gt;AI 编写代码的核心问题，可以归纳为不可观测性和缺少上下文造成的低维护性。为了解决这两个问题，我们需要先回顾一下传统软件工序如何让代码更易观测和维护。&lt;/p&gt;
+&lt;h3 id="人类主导的单元测试"&gt;人类主导的单元测试&lt;/h3&gt;
+&lt;p&gt;单元测试是代码的说明书。复杂的业务逻辑通常需要阅读大量代码才能看懂。但是熟练的程序员会先看单元测试。好的单元测试会把模块的预期输入、输出完整地写进 Case 里。在 &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt; 里，作者认为好的单元测试应该具备：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;保护回归&lt;/strong&gt;。即测试能够防止出现已经修复的问题在回归测试中复现的情况。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;抵抗重构&lt;/strong&gt;。即代码重构后，测试能正确识别出重构是否对已有功能造成影响。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;快速反馈&lt;/strong&gt;。即单元测试容易运行，发现问题能及时定位到错误。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;易于维护&lt;/strong&gt;。 测试不同于业务代码，它的可维护体现在正确处理依赖关系和共享代码。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这些原则最终目的，都是保证被测系统按预期行为运行。&lt;/p&gt;
+&lt;p&gt;当 AI 和人类合作完成代码时，我个人认为，在编写单元测试这件事上，人类应该主导（80%），AI 辅助（20%），因为单元测试定义了「我期望的行为」。&lt;/p&gt;
+&lt;p&gt;当单元测试完善后，又反过来指导 AI 实现的真正的业务代码。这时人类占比下降，AI 占据主导。人类反复运行单元测试，同时将测试结果和 prompt 一起传递给 AI，帮助 AI 修正程序的问题。&lt;/p&gt;
+&lt;h3 id="编写对-ai-友好的测试离不开好的模块设计"&gt;编写对 AI 友好的测试离不开好的模块设计&lt;/h3&gt;
+&lt;p&gt;在编写好的测试时，也要关注正确的拆分模块。一个好的测试通常是给定输入，验证是否输出预期的结果。而模块如果依赖过多外部环境做分支判断，就会造成测试的输出严重依赖外部状态。这会降低模块的可观测性。&lt;/p&gt;
+&lt;p&gt;下面两条经验，可以帮助你写出好的代码：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;写测试时要测试行为的结果，而不是步骤。写业务代码时，要 AI 写清步骤。&lt;/p&gt;
+&lt;p&gt;单元测试的「单元」可以不是一个类或函数。而是一组完成一个原子业务逻辑的操作。（当然也有不同的流派支持以类为单位测试，但这不是本文的重点）。为了让 AI 生成的业务代码具有抗重构特性，要验证 AI 的行为结果，而不是验证每一个实现步骤。耦合测试代码和实现步骤会导致业务的修改破坏已有的测试，使得「期望的行为」要不断随着「具体的实现」来修改。&lt;/p&gt;
+&lt;p&gt;当 AI 开始写业务逻辑后，应该以步骤驱动的方式逐步实现，期间，人类可以针对某一步骤修正 AI 的代码逻辑。但切忌破坏测试的逻辑。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;无状态的代码（函数式）最容易测试&lt;/p&gt;
+&lt;p&gt;因为它的输出具有不变性。应该让核心代码尽量无状态，将状态、外部系统依赖放在应用服务层。而把深且不易理解的核心逻辑，放在领域服务层。这里的细节可以参考 DDD（Domain Driven Design）的思想。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/pairing-with-ai-01/functional_core.png" alt="functional_core.png"&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;这篇文章作为一系列人类与 AI 协作编程话题的开头，从测试角度试图缓解 AI 生成代码的可观测性问题。&lt;/p&gt;
+&lt;p&gt;在后边的文章里，我希望从架构设计角度，讨论一下如何设计 AI 友好的、易于维护上下文的架构。&lt;/p&gt;
+&lt;p&gt;文章内容会随着时间的推移，持续更新，欢迎讨论。&lt;/p&gt;</description></item><item><title>Go 语言的依赖倒置</title><link>https://sund.site/posts/2024/go-dependency-inject/</link><pubDate>Thu, 21 Nov 2024 11:26:22 +0800</pubDate><guid>https://sund.site/posts/2024/go-dependency-inject/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;这篇文章比较基础，是我在给 Java 程序员做 go 语言培训时用到的。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id="为什么要做依赖倒置dip"&gt;为什么要做依赖倒置（DIP）？&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle"&gt;依赖倒置&lt;/a&gt;，或叫依赖反转、DIP，是软件开发非常重要的设计原则。很多程序员没有了解过相关知识，或者只从 Java Spring 知道大致思想。我今天想用一篇简短的文章，用 Go 语言做一个简单的例子，讲解一下怎么最简单地实现依赖倒置。&lt;/p&gt;
+&lt;p&gt;如果你还不知道它是什么，可以参考 wiki 中的描述，或者阅读&lt;a href="https://martinfowler.com/articles/dipInTheWild.html"&gt;马丁福勒关于 DIP 的文章&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;依赖倒置原则要解决一个软件开发中常见的风险：依赖。&lt;/p&gt;
+&lt;p&gt;尝试回忆一下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;当你尝试通过 Mock 方式屏蔽底层细节做测试时，你发现你要测试的类引用了大量框架提供的接口，导致你需要 mock 大量底层的实现。&lt;/li&gt;
+&lt;li&gt;当你尝试修改一个旧的底层类，但是依赖该类的上层服务类太多，你一边担心造成副作用，一边在所有依赖的位置重构上层代码。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;我们分析一下这两个场景：&lt;/p&gt;
+&lt;p&gt;场景 1 里，应用类依赖于框架提供的实现，导致应用类很难从框架上剥离出来，业内处理这种问题的方法叫&lt;strong&gt;控制反转&lt;/strong&gt;（IoC, Inversion of Control）。即应用类不应该依赖框架，而是框架提供插槽一样，把应用类注册给框架，由框架统一调度应用，执行对应的方法。&lt;/p&gt;
+&lt;p&gt;场景 2 里，服务类依赖底层类，导致底层修改难度越来越大。解决办法是&lt;strong&gt;依赖注入&lt;/strong&gt;（DI, Dependency Injection）。即上层类不直接引用底层类，而是在使用的地方把上层类依赖的底层类注入进来。&lt;/p&gt;
+&lt;p&gt;把这两个场景结合起来，就是依赖倒置原则的核心：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;高层次的模块不应该依赖于低层次的模块，两者都应该依赖于抽象接口。&lt;/li&gt;
+&lt;li&gt;抽象接口不应该依赖于具体实现。而具体实现则应该依赖于抽象接口。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这两个原则保证了代码中模块的高内聚、低耦合，同时给 Mock、迭代更新模块创造了条件。&lt;/p&gt;
+&lt;h2 id="用-go-语言实现它"&gt;用 Go 语言实现它&lt;/h2&gt;
+&lt;p&gt;假设现在要从一个用户的服务中查询用户的信息。有两个接口，UserRepository 作为数据层负责查询数据库， UserService 负责业务逻辑，它依赖 UserRepository。同时为了方便测试，我们还要写一个 Mock 的数据层实现。 整个结构如下图。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/go-dependency-inject/example.png" alt="Go example"&gt;&lt;/p&gt;
+&lt;p&gt;接下来非常轻松地，我们实现两个接口，并写了他们的实现类。同时我们还在 UserService 的实现类里写了一个 NewUserService，来把它依赖的 UserRepository 实现注入进来。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// 在 user_repository.go 中实现具体的接口&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;type&lt;/span&gt; UserRepository &lt;span style="color:#fc5fa3"&gt;interface&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#41a1c0"&gt;GetByID&lt;/span&gt;(id &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt;) (*User, &lt;span style="color:#fc5fa3"&gt;error&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#41a1c0"&gt;Save&lt;/span&gt;(user *User) &lt;span style="color:#fc5fa3"&gt;error&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// ... 具体实现 UserRepository，略&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// user_service.go 中实现&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;type&lt;/span&gt; UserService &lt;span style="color:#fc5fa3"&gt;interface&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#41a1c0"&gt;GetUser&lt;/span&gt;(id &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt;) (*User, &lt;span style="color:#fc5fa3"&gt;error&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#41a1c0"&gt;CreateUser&lt;/span&gt;(name &lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;, age &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt;) &lt;span style="color:#fc5fa3"&gt;error&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// ... 具体实现 UserService，略&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;NewUserService&lt;/span&gt;(repo UserRepository) UserService {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &amp;amp;UserServiceImpl{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; repo: repo,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;那么问题来了，可不可以直接在 &lt;code&gt;user_service.go&lt;/code&gt; 中直接把 repository 引用进来呢？显然不行，因为这样，两个模块就形成了依赖关系。&lt;/p&gt;
+&lt;p&gt;这一点是依赖反转的核心，上层模块不直接引用下层模块，而是由执行的类来初始化 Service 并将依赖的下层服务注入进来。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// 在main.go 中&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; repo := &amp;amp;MySQLUserRepository{}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; userService := &lt;span style="color:#41a1c0"&gt;NewUserService&lt;/span&gt;(repo)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这样，当编写测试 Mock 代码时，不需要修改任何代码逻辑，直接在测试中将&lt;code&gt;NewUserService&lt;/code&gt; 的参数替换成测试的假实例即可。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// 在 user_service_test.go 中&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;TestUserService&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; repo := &amp;amp;MockTestUserRepository{}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; userService := &lt;span style="color:#41a1c0"&gt;NewUserService&lt;/span&gt;(repo)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;另外，如果数据层修改了实现，或者迁移到另外的数据库，你只需要修改两个地方：数据层的实现者和依赖注入者。对于调用者 &lt;code&gt;UserService&lt;/code&gt; 则完全不受到影响。整个项目也不会形成依赖陷阱。&lt;/p&gt;
+&lt;h2 id="总结"&gt;总结&lt;/h2&gt;
+&lt;p&gt;依赖倒置原则的两个核心原则：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;模块不依赖于其他模块，而是都依赖于抽象接口&lt;/li&gt;
+&lt;li&gt;抽象接口不依赖于实现，而实现依赖于抽象接口&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在 Go 语言中实现这两条原则并不麻烦，只要将原本的调用方-实现方，转换成注册方-调用方-实现方。在 Go 中也有一些库和框架实现依赖反转，其实核心思想并没有差异。&lt;/p&gt;</description></item><item><title>监控系统项目复盘</title><link>https://sund.site/posts/2024/metrics-project-retro/</link><pubDate>Thu, 24 Oct 2024 15:52:22 +0800</pubDate><guid>https://sund.site/posts/2024/metrics-project-retro/</guid><description>&lt;p&gt;这篇文章对我过去 3 年的一大块工作内容进行复盘。我作为项目组的架构师，在下文中也对项目早期遗留的一些问题进行反思，并分享我个人的解决思路。&lt;/p&gt;
+&lt;h2 id="项目核心依赖开源组件定制化过度"&gt;项目核心依赖开源组件，定制化过度&lt;/h2&gt;
+&lt;p&gt;我们的项目是一个运行在边缘设备上的日志、软硬件性能指标的采集/监控系统。考虑到边缘计算设备（IPC）的性能，选择开源组件时就侧重于轻量化、支持丰富的输出标准。早期部门架构师采用了 Fluent-Bit 作为项目的核心组件。Fluent-Bit 是 C 编写的开源、轻量、可轻度扩展的数据收集器。它最开始用作日志收集，后来逐渐发展成全功能的 Agent。对比流行的&lt;a href="https://github.com/open-telemetry"&gt;OpenTelemetry&lt;/a&gt;，Fluent-Bit 更开箱即用、更轻量，但是不易于修改和扩展。&lt;/p&gt;
+&lt;p&gt;最开始整个团队都没接触过监控系统，所以在设计系统时挖了不少坑。首先，用户在 UI 上操作过度繁琐，需要依次配置输出的目标（地址、端口、协议、格式、加密方式等等）、采集的指标类型，最后还要手动点击 Apply （应用）一下。&lt;/p&gt;
+&lt;p&gt;经过几轮迭代，适当简化了操作逻辑。但是像大部分工业 PC 上运行的程序一样，用户在初始化配置过后，通常不会主动去 UI 上修改配置。终端用户更关心占用系统资源多少、稳定性如何。所以最开始团队把这个项目做成了一个重交互的 C 端产品，这是个教训。&lt;/p&gt;
+&lt;p&gt;第二，后端开发为了满足 UI 设计的流程（比如，用户可以创建多份不同的配置项到不同的目标地址），做了复杂的 Work-around。因为 Fluent-Bit 是单进程事件驱动模型，只有单一配置文件，每次修改配置文件都要重启 Fluent-bit 进程。这就造成了 UI 上用户添加一个配置项，后台就要重新生成整个配置文件并重启 Fluent-Bit。这对于一个稳定运行的监控系统来说，无疑增加了&lt;strong&gt;重启过程中数据丢失&lt;/strong&gt;的风险。另外，如果&lt;strong&gt;新增的配置项出错，就会让整个生成的配置文件报错，导致 Fluent-Bit 进程假死&lt;/strong&gt;等问题。&lt;/p&gt;
+&lt;p&gt;为了解决这些问题，后端工程师又对 Fluent-Bit 的各项参数玩出各种花活儿。比如利用不同 tag 来分流不同用户配置项，为每个配置项单独配置参数和过滤规则。再比如设定缓存数据包大小和缓存 timeout 时间为 0，这样 Fluent-Bit 重启之后会首先尝试重发缓存在文件系统里的数据，这样间接防止用户数据丢失。&lt;/p&gt;
+&lt;p&gt;这些花活儿不但提高了维护难度，从用户角度看，也并没有带来任何真正的价值提升。&lt;/p&gt;
+&lt;p&gt;回顾来看，&lt;strong&gt;如果早期的 UI 设计改成单独的配置页面，不但简化的操作流程，还给业务代码降低的复杂度。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;第三，核心项目依赖 Fluent-Bit 造成项目迁移到其他开源组件非常困难。加上 Fluent-Bit 更新频率高，公司对安全性合规要求使得我们团队每隔一段时间要对 Fluent-Bit 进行升级，同时对所有配置选项做回归测试。加上 Fluent-Bit 订制性很差，它虽然支持使用 Go 语言实现 Output 插件，但是只能用 C 语言编写 Input 插件。导致我们采集内部应用的数据，不得不用到它的 TCP 和 HTTP 插件来中转。部署多个 Agent 采集不同的内部服务。这让后期集成测试更添难度。&lt;/p&gt;
+&lt;p&gt;总体来说，Fluent-bit 的性能基本达到了预期，但是各种小 bug（比如 pgsql 插件在目标不可达时直接 Block 整个进程），开源社区维护者并没有引起重视，我们提交给开源社区的代码也被以各种理由驳回。如果让我重新选择，我更倾向于使用其他扩展性更强的开源组件。&lt;/p&gt;
+&lt;h2 id="对-go-语言不熟悉项目结构混乱"&gt;对 Go 语言不熟悉，项目结构混乱&lt;/h2&gt;
+&lt;p&gt;团队遇到的第二个挑战是对 Go 语言不熟悉。大部分开发成员只有 Java 开发经验，所以顺理成章把 Go 写成了 Java。因为框架（Go-Gin）的限制，导致开发中问题频出。&lt;/p&gt;
+&lt;p&gt;第一个问题来自面向对象和依赖反转。依赖反转对于使用 Java Spring 的人来说不会陌生，但是用 Go 实现依赖反转，需要利用 Interface 封装，并结合 Go-Mock 库做单元测试。团队成员早期不熟悉语言特性，经常错误封装抽象，或者干脆直接函数套函数，写成&lt;a href="https://zh.wikipedia.org/zh-sg/%E9%9D%A2%E6%9D%A1%E5%BC%8F%E4%BB%A3%E7%A0%81"&gt;面条型代码&lt;/a&gt;。这充分暴露了大部分国内 Java 程序员其实没有受过良好的 OOP 训练。对于单元测试、集成测试这些工程实践也是流于形式。软件质量在大部分企业里仍然靠测试人员手动验证。&lt;/p&gt;
+&lt;p&gt;第二个问题是 Go 语言不鼓励过度抽象。如泛型、异常处理，都要一步步重复琐碎的代码片段，这让 Sonar 静态检查经常 failed。没经验的同事就会用各种奇技淫巧逃避静态检查。这也说明开发团队定期 code review 的必要性。&lt;/p&gt;
+&lt;p&gt;第四，Go 语言其实是一个社区不那么完善的编程语言，它的很多框架（如最热门的 gorm 居然是个人开发项目），像 Flyway 这种 Java 工具链中很成熟的迁移工具，在 Go 里竟然需要组合多个开源项目来替代。所以 Go 只适合来开发中等以下规模的项目，或者对性能要求较高的平台核心组件。（在国内）不适合做复杂的业务场景。&lt;/p&gt;
+&lt;h2 id="api-接口粒度过细没有对资源对象做好抽象"&gt;API 接口粒度过细，没有对资源对象做好抽象&lt;/h2&gt;
+&lt;p&gt;团队早期由于管理混乱：架构上，没有对业务模型做好抽象，资源对象拆分太碎；管理上，任务拆解太简单粗暴，给每个同事单独负责一个模块，导致每个业务流程都设计了专门的 API，维护压力大。好在业务场景少，用自动化测试能一定程度上保证了接口可靠性。&lt;/p&gt;
+&lt;p&gt;最开始做自动化集成测试时，我们仍然使用 BDD 的形式，以业务操作为基础编写，后来逐渐发现这种监控系统，其实真正的用户操作逻辑非常简单，复杂的部分是不同类型的数据、不同的 Input、Output 配置可能引起的异常。所以我们改成了数据驱动测试，用配置文件对不同类型的 Fluent-Bit 配置做全面的测试。&lt;/p&gt;
+&lt;p&gt;总结起来，Fluent-Bit 配置的修改，其实完全可以用 3~4 个宽泛的 API 来实现，除了前文提到流程过度设计原因，项目初期的不确定性，导致开发人员过度关注松耦合，而忽略了维护性。&lt;/p&gt;
+&lt;h2 id="错误的流水线设计"&gt;错误的流水线设计&lt;/h2&gt;
+&lt;p&gt;最开始项目沿用的部门其他团队的集成测试、部署模式，把 Python 写的测试用例和项目部署脚本放在单独的 Gitlab Repo 里。结果是每次项目部署时，要人工去网页上修改版本号触发流水线。从持续集成的角度看，业务代码和测试用例分开，造成了每次 commit 都要到不同 repo 里去提交，且一旦冲突又要分别执行多次集成测试（时间长，反馈慢）。&lt;/p&gt;
+&lt;p&gt;后期我们做了一些调整，把多个小模块合并成一个&lt;a href="https://zh.wikipedia.org/wiki/Monorepo"&gt;Monorepo&lt;/a&gt;，同时把部分 API 相关的集成测试放在后端代码里，减少提交次数，也让原子提交更容易。&lt;/p&gt;
+&lt;p&gt;不过部署问题依然没有被解决，原因是边缘平台上的模块太多，系统集成需要多个团队合作，部署、发布版本时间长，出错的环节太多。对于这种情况，部门技术负责人设定了严格的代码提交、测试、review、文档更新流程，但是根本问题还在于团队责任模糊、部门团队跨多个国家和时区，缺少统一的调度和沟通机制。这些问题只能留给管理层逐渐缓解，或者随着业务收敛，减少、分流项目组。&lt;/p&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;整体来看，我们团队遇到的很多问题出自项目早期，缺少项目和技术团队管理经验。对业务的愿景不了解，把做 C 端 Saas 产品的经验带到工业领域，用熟悉的开发范式套用到制造业。当然，不回避地说，在业务上，部门多流程长，业务负责人只能盲人摸象，用户反馈要先到达 Support 团队，再反馈给上层，最后才到开发团队。这让我们开发出来的产品要经过至少 3-6 个月才能得到有效的反馈。迭代周期太长，研发闭门造车。&lt;/p&gt;</description></item><item><title>RESTful Web Service Cookbook 笔记</title><link>https://sund.site/posts/2024/restful-api-cookbook/</link><pubDate>Sat, 13 Jul 2024 16:12:34 +0800</pubDate><guid>https://sund.site/posts/2024/restful-api-cookbook/</guid><description>&lt;p&gt;&lt;a href="https://www.oreilly.com/library/view/restful-web-services/9780596809140/"&gt;RESTful Web Service Cookbook&lt;/a&gt; 是一本简短、精炼的 RESTful 接口设计指南。这篇文章（笔记）用来记录这本书中提到的重点。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因为 RESTful 对后端开发来说实在太熟悉不过，所以我会省略掉那些习以为常的约定，只记录书中提到的、大多数开发者没有注意到的细节。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id="http-method"&gt;HTTP Method&lt;/h2&gt;
+&lt;h3 id="get"&gt;GET&lt;/h3&gt;
+&lt;p&gt;进行&lt;strong&gt;安全&lt;/strong&gt;与&lt;strong&gt;幂等&lt;/strong&gt;的信息获取。&lt;/p&gt;
+&lt;h3 id="post"&gt;POST&lt;/h3&gt;
+&lt;p&gt;执行的目标是一个资源集合（工厂），而不是具体的 URI。&lt;/p&gt;
+&lt;p&gt;适用场景：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;创建新的资源,把资源作为一个工厂。&lt;/li&gt;
+&lt;li&gt;通过一个控制器资源来修改一个或多个资源。&lt;/li&gt;
+&lt;li&gt;执行需要大数据输入（参数较多）的查询。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;在其他 HTTP 方法看上去不合适时，执行不安全或非幂等的操作&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;解决方案：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;将一个已存在的资源标识为创建新资源的工厂。虽然您可以把任意资源用做工厂,但常见的做法是使用一个集合资源。&lt;/li&gt;
+&lt;li&gt;让客户端向工厂资源提交附有需要创建资源的表述的 POST 请求。通过可选支持的 &lt;strong&gt;Slug&lt;/strong&gt; 头, 客户端可以向服务器建议一个名字,作为被创建资源的 URI 的一部分。&lt;/li&gt;
+&lt;li&gt;资源创建之后,返回响应码 &lt;strong&gt;201(Created)&lt;/strong&gt;,并在 &lt;strong&gt;Location&lt;/strong&gt; 头中包含新创建资源的 URI。&lt;/li&gt;
+&lt;li&gt;如果响应正文包含了新创建资源的完整表述,那么在 &lt;strong&gt;Content-Location&lt;/strong&gt; 头中包含新创建资源的 URI。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="put"&gt;PUT&lt;/h3&gt;
+&lt;p&gt;仅在客户端可以控制 URI 的构成时,才使用 PUT 方法创建新资源。&lt;strong&gt;（换句话说，PUT 也可以创建资源，但是仅限于客户端可以指定 URI）&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="确定资源对象的粒度"&gt;确定资源对象的粒度&lt;/h2&gt;
+&lt;p&gt;应该以适合客户端使用模式的方式来设计资源,而不是基于现有的数据库或对象模型。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可缓存性&lt;/li&gt;
+&lt;li&gt;减小修改频率&lt;/li&gt;
+&lt;li&gt;可变性——分离可变和不可变数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="如何设计复合资源"&gt;如何设计复合资源?&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;复合资源&lt;/strong&gt;降低了统一接口的可见性,因为它们的表述中包含了和其他资源相重叠的数据。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果符合资源使用&lt;strong&gt;频率不高&lt;/strong&gt;，可以考虑用&lt;strong&gt;缓存&lt;/strong&gt;替代。&lt;/li&gt;
+&lt;li&gt;考虑网络开销，复合资源会不会降低服务端吞吐量，增大延时。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="http-body"&gt;HTTP Body&lt;/h2&gt;
+&lt;p&gt;以 JSON 格式的 Body 为例：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;最好包含一个指向 self 的链接&lt;/li&gt;
+&lt;li&gt;如果分页，最好包含下一页的链接&lt;/li&gt;
+&lt;li&gt;如果分页，要指示集合的大小（总数）&lt;/li&gt;
+&lt;li&gt;如果查询对象是本地化的，添加一个属性来表示本地化内容的语言&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;John&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;urn:example:user:1234&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;link&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;rel&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;self&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;href&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;http://www.example.org/person/john&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;address&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;urn:example:address:4567&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;link&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;rel&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;self&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;href&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;http://www.example.org/person/john/address&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="http-response"&gt;HTTP Response&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;对于客户端错误，返回 4xx 状态码 + Date （错误发生的时间）。&lt;/li&gt;
+&lt;li&gt;对于服务端错误，返回 5xx 状态码 + Date （错误发生的时间）。&lt;/li&gt;
+&lt;li&gt;Body 中要描述错误，如果有外部文档和链接可参考，在 Header 提供一个 Link 头或直接把链接写在 Body 里。&lt;/li&gt;
+&lt;li&gt;为了后期追踪或分析，在服务器上记录了错误日志，应该提供一个可以找到该错误的标识符或链接。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="设计查询结构"&gt;设计查询结构&lt;/h2&gt;
+&lt;h3 id="设计查询请求"&gt;设计查询请求&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;为了缓存和性能，尽量避免范围查询。解决方法包括：
+&lt;ul&gt;
+&lt;li&gt;使用预定义查询&lt;/li&gt;
+&lt;li&gt;也可以使用 HTTP Header： Range&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;避免使用通用语言（SQL、XPATH）的查询。&lt;/li&gt;
+&lt;li&gt;避免 URI 和数据存储方式的紧耦合（前端把后端当作数据库）。&lt;/li&gt;
+&lt;li&gt;对于参数较多，可以考虑使用 POST（因为 URI 长度有最大限制）
+&lt;ul&gt;
+&lt;li&gt;POST 接口的缺点是丧失了缓存能力&lt;/li&gt;
+&lt;li&gt;POST 请求是不可缓存的，所以 Cache-Control 和 Expires 头无济于事&lt;/li&gt;
+&lt;li&gt;解决缓存问题，可以让 POST 创建一个临时资源，把 link 返回前端，前端下次用 GET 获取该资源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="设计查询响应结果"&gt;设计查询响应结果&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;返回集合。添加合理的缓存过期头。&lt;/li&gt;
+&lt;li&gt;如果没有结果，应该返回&lt;strong&gt;空集合&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>如何设计一个符合工业标准的审计系统</title><link>https://sund.site/posts/2024/audit-system-design/</link><pubDate>Mon, 15 Apr 2024 16:44:40 +0800</pubDate><guid>https://sund.site/posts/2024/audit-system-design/</guid><description>&lt;p&gt;审计追踪（Audit Trail）是指一个系统中用于记录用户行为日志、控制组件的活动日志等关键安全信息的服务。日志通常以时间顺序排列，记录了“谁在什么时间做了什么”。&lt;/p&gt;
+&lt;p&gt;下面是 kubernetes 官方文档对其审计服务的描述：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Kubernetes 审计（Auditing） 功能提供了与安全相关的、按时间顺序排列的记录集，记录每个用户、使用 Kubernetes API 的应用以及控制面自身引发的活动。&lt;/p&gt;
+&lt;p&gt;审计功能使得集群管理员能够回答以下问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;发生了什么？&lt;/li&gt;
+&lt;li&gt;什么时候发生的？&lt;/li&gt;
+&lt;li&gt;谁触发的？&lt;/li&gt;
+&lt;li&gt;活动发生在哪个（些）对象上？&lt;/li&gt;
+&lt;li&gt;在哪观察到的？&lt;/li&gt;
+&lt;li&gt;它从哪触发的？&lt;/li&gt;
+&lt;li&gt;活动的后续处理行为是什么？&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;h2 id="审计系统应该具备哪些能力"&gt;审计系统应该具备哪些能力？&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;日志内容不可篡改。&lt;/li&gt;
+&lt;li&gt;日志链结构完整：不可任意添加或删除单独的日志条目。&lt;/li&gt;
+&lt;li&gt;兼容性：发送日志的客户端应该避免侵入式设计。&lt;/li&gt;
+&lt;li&gt;系统的加密服务应该尽早初始化，以减少未受保护的日志。&lt;/li&gt;
+&lt;li&gt;服务重启/关闭不应导致审核日志不一致。如果服务因紧急情况而关闭，审计日志应该是可验证的。&lt;/li&gt;
+&lt;li&gt;密钥安全性：加密密钥（用于计算完整性检查）应存储在专用密钥存储中，并在内存中驻留最短的时间。&lt;/li&gt;
+&lt;li&gt;性能：能够在几秒钟内验证受保护日志。&lt;/li&gt;
+&lt;li&gt;日志轮换友好性：审核日志应与分布式系统典型的日志轮换策略兼容。&lt;/li&gt;
+&lt;li&gt;可观测性：日志易于被解析（machine-readable）、人类可读（human-readable）。兼容主流日志处理程序的格式，维度设计便于日后做过滤筛选。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="涉及的行业标准"&gt;涉及的行业标准&lt;/h2&gt;
+&lt;p&gt;与审计相关的，常见的工业标准有 IEC62443、NIST SP 800-92。下面是 IEC 中涉及到审计相关的章节。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;工业标准&lt;/th&gt;
+ &lt;th&gt;章节&lt;/th&gt;
+ &lt;th&gt;安全级别&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR2.8&lt;/td&gt;
+ &lt;td&gt;SL-C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR6.1&lt;/td&gt;
+ &lt;td&gt;SL-C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR6.2&lt;/td&gt;
+ &lt;td&gt;SL_C 2&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR1.13&lt;/td&gt;
+ &lt;td&gt;SL_C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR2.9&lt;/td&gt;
+ &lt;td&gt;SL_C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR2.10&lt;/td&gt;
+ &lt;td&gt;SL_C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR3.7&lt;/td&gt;
+ &lt;td&gt;SL_C 1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;IEC 62443-4-2:2019&lt;/td&gt;
+ &lt;td&gt;CR3.9&lt;/td&gt;
+ &lt;td&gt;SL_C 2&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="审计日志的格式应遵循哪些协议或标准"&gt;审计日志的格式应遵循哪些协议或标准？&lt;/h2&gt;
+&lt;p&gt;对于本地运行的软件，通常 Syslog 具有更好的系统兼容性。对于使用 ELK 采集日志的项目更适合用 CEF，其他情况建议使用自定义的 JSON。&lt;/p&gt;
+&lt;p&gt;下面是三种格式（协议）的对比。&lt;/p&gt;
+&lt;h3 id="common-event-format-cef"&gt;&lt;a href="https://docs.elastic.co/en/integrations/cef"&gt;Common Event Format (CEF)&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Elastic-Search 使用的、一种基于 Event-souring 思想设计的日志格式。优点是冗余信息少，适合配合 ELK 体系构建监控系统。 它的传输基于 Syslog 协议，同时扩展了可读性的 key-value，基于文本的设计也可以让 CEF 格式的日志写入到文件。总体来说，它是这几种格式中在可读性、效率和标准三方面最平衡的一个。&lt;/p&gt;
+&lt;h3 id="syslog"&gt;&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424"&gt;Syslog&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Syslog 是 Linux 操作系统默认的审计日志格式，通常采用其 RFC5424 版本。大部分 SIEM&lt;sup id="fnref:1"&gt;&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref"&gt;1&lt;/a&gt;&lt;/sup&gt; 系统都支持这种格式的导入。
+Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传统软件的同时，最大程度保证系统的安全性。但是对于微服务来说，实现和维护标准协议成本较高。所以如 AWS CloudTrail, OpenTelemetry 等都选择更简单的 HTTPS + JSON 格式。&lt;/p&gt;
+&lt;h3 id="json-lines"&gt;&lt;a href="https://jsonlines.org/"&gt;JSON Lines&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;大部分 SaaS 产品都是用 JSON，简单高效。JSON 的特点是冗余信息多，结构容易解析。例如，下面是&lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/"&gt;OpenTelemetry 官方文档&lt;/a&gt;提到的日志模型中的字段：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Field Name&lt;/th&gt;
+ &lt;th&gt;Description&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Timestamp&lt;/td&gt;
+ &lt;td&gt;Time when the event occurred.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ObservedTimestamp&lt;/td&gt;
+ &lt;td&gt;Time when the event was observed.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;TraceId&lt;/td&gt;
+ &lt;td&gt;Request trace id.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SpanId&lt;/td&gt;
+ &lt;td&gt;Request span id.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;TraceFlags&lt;/td&gt;
+ &lt;td&gt;W3C trace flag.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SeverityText&lt;/td&gt;
+ &lt;td&gt;The severity text (also known as log level).&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SeverityNumber&lt;/td&gt;
+ &lt;td&gt;Numerical value of the severity.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Body&lt;/td&gt;
+ &lt;td&gt;The body of the log record.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Resource&lt;/td&gt;
+ &lt;td&gt;Describes the source of the log.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;InstrumentationScope&lt;/td&gt;
+ &lt;td&gt;Describes the scope that emitted the log.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Attributes&lt;/td&gt;
+ &lt;td&gt;Additional information about the event.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;下面是 kubernetes apiserver 关于 Audit 消息格式定义的例子：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;audit.k8s.io/v1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;kind&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;Event&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;level&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;Metadata&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;auditID&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;12345678-1234-1234-1234-1234567890ab&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;stage&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;ResponseComplete&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;requestURI&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;/api/v1/namespaces/default/pods&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;verb&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;get&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;user&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;username&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;admin&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;1234&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;groups&amp;#34;: [&lt;span style="color:#fc6a5d"&gt;&amp;#34;system:masters&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;extra&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;someKey&amp;#34;: [&lt;span style="color:#fc6a5d"&gt;&amp;#34;someValue&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;sourceIPs&amp;#34;: [&lt;span style="color:#fc6a5d"&gt;&amp;#34;192.168.1.1&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;userAgent&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;kubectl/v1.20.0 (linux/amd64) kubernetes/abcdef&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;objectRef&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;resource&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;pods&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-pod&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;uid&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;abcdef12-3456-7890-abcd-ef1234567890&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;apiVersion&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;v1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;12345&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;subresource&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;status&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;responseStatus&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;metadata&amp;#34;: {},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;status&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;Success&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;code&amp;#34;: &lt;span style="color:#d0bf69"&gt;200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;requestObject&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;metadata&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-pod&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;default&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;spec&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;containers&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-container&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-image&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;responseObject&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;metadata&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-pod&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;namespace&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;resourceVersion&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;12345&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;spec&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;containers&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-container&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;image&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;my-image&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;status&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;phase&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;Running&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;requestReceivedTimestamp&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;2023-05-21T12:34:56Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;stageTimestamp&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;2023-05-21T12:34:57Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;annotations&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;authorization.k8s.io/decision&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;allow&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;authorization.k8s.io/reason&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;RBAC: allowed by RoleBinding \&amp;#34;admin-binding\&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="对于安全性有哪些要求"&gt;对于安全性有哪些要求？&lt;/h2&gt;
+&lt;p&gt;对于审计日志来说，安全性要求会被一般日志系统更高。&lt;/p&gt;
+&lt;p&gt;安全性，通常可以从机密性（Confidentiality），完整性（Integrity），可用性（Availability）三个维度来考量。&lt;/p&gt;
+&lt;h3 id="机密性"&gt;机密性&lt;/h3&gt;
+&lt;p&gt;攻击者可以通过系统的安全漏洞，获取特殊权限，进而查看某些审计日志。&lt;/p&gt;
+&lt;p&gt;可以采取以下措施：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;加密日志：使用加密技术对日志进行保护，确保只有授权用户能够访问和修改日志。&lt;/li&gt;
+&lt;li&gt;访问控制：限制对发送、接收日志接口的访问权限。&lt;/li&gt;
+&lt;li&gt;敏感信息过滤：不应该在日志中记录用户敏感信息，如密码、证书等。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="完整性"&gt;完整性&lt;/h3&gt;
+&lt;p&gt;攻击者可以通过系统的安全漏洞，修改、删除某些审计日志。&lt;/p&gt;
+&lt;p&gt;除了上面提到的加密和权限控制，还可以采取以下措施：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;完整性检查&lt;sup id="fnref:2"&gt;&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref"&gt;2&lt;/a&gt;&lt;/sup&gt;：在日志条目中添加哈希值，以便在验证日志时能够快速检测到任何篡改或截断。&lt;/li&gt;
+&lt;li&gt;定期备份：定期备份日志，以防止攻击者删除或修改所有的日志条目。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;日志文件的限制&lt;/strong&gt;：通常要除了限制日志文件的大小，还要限制备份数量、最长备份天数等。下面是 kubernetes 中关于日志文件存储的参数：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&amp;ndash;audit-log-path 指定用来写入审计事件的日志文件路径。不指定此标志会禁用日志后端。&lt;/li&gt;
+&lt;li&gt;&amp;ndash;audit-log-maxage 定义保留旧审计日志文件的最大天数&lt;/li&gt;
+&lt;li&gt;&amp;ndash;audit-log-maxbackup 定义要保留的审计日志文件的最大数量&lt;/li&gt;
+&lt;li&gt;&amp;ndash;audit-log-maxsize 定义审计日志文件轮转之前的最大大小（兆字节）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="可用性"&gt;可用性&lt;/h3&gt;
+&lt;p&gt;攻击者可以攻击审计追踪服务，导致审计追踪服务内存、磁盘空间不足等。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;设置最大用量限制：对内存、磁盘等服务器资源做出限制。&lt;/li&gt;
+&lt;li&gt;监测和响应：及时监测系统资源指标和日志的变化，并对异常活动进行响应。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;审计上下文&lt;/strong&gt;：记录审计日志会显著增加系统内存和流量的使用。所以审计服务应该缓存审计相关的上下文，如服务名称和 ID 的映射关系、事件 ID 和描述等。不同服务向审计服务发送消息时应以最小长度为原则设计消息结构。审计服务的策略中应该允许用户配置日志级别，过滤规则等以减少系统负担。&lt;/p&gt;
+&lt;h2 id="日志的导出"&gt;日志的导出&lt;/h2&gt;
+&lt;p&gt;审计服务除了导出文件格式的日志，通常也要支持第三方系统的导出。我们通常把分析、存储日志的第三方服务称为 SIEM （Security information and event management）。在 kubernetes 中，导出日志到第三方 web 服务的模块称为 webhook。&lt;/p&gt;
+&lt;p&gt;导出到第三方系统通常可以采用标准的 Syslog 格式或是 JSON Lines，支持范围最广。此外，需要考虑日志截断、第三方系统批处理和流处理的配置等，可以参考 kubernetes 的&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/#webhook-backend"&gt;这篇文档&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="开源项目的架构设计"&gt;开源项目的架构设计&lt;/h2&gt;
+&lt;p&gt;由于设计侧重点不同，下面提供的每种开源项目都需要慎重考虑其优点和不足，其特性是否满足自身需要、系统的环境是分布式还是单体应用。&lt;/p&gt;
+&lt;h3 id="auditd"&gt;Auditd&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/audit-system-design/Linux-Auditd-Architecture.png" alt="auditd-architecture"&gt;&lt;/p&gt;
+&lt;p&gt;大部分 Linux 默认的审计服务，配合 rsyslog 等工具，可以解决本地设备的日志采集、查看、过滤。 rsyslog 基于字符串 template 的日志格式配置可以满足使用不同 SIEM 系统的用户集成的需要。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;优点：基于进程通信，标准日志格式，易于导出。性能优异。&lt;/li&gt;
+&lt;li&gt;不足：进程模型不适用于网络服务。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="aws-cloud-trail-和-kubernetes"&gt;AWS Cloud Trail 和 kubernetes&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/audit-system-design/aws-audit.png" alt="aws log"&gt;&lt;/p&gt;
+&lt;p&gt;AWS 的 Cloud Trail 采用应用服务主动推送审计事件的模式，用户可以为设计追踪服务设置策略，收集到的日志会分别按需流入后续的批处理和流处理工具链中。&lt;/p&gt;
+&lt;p&gt;kubernetes 的日志收集与 AWS 实现类似，也是基于中心化的服务，但是这套架构设计并非只为审计日志一种情况设计。它遵循了很多 kubernetes 声明式设计的理念，非常值得学习。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/audit-system-design/k8s-audit.png" alt="kubernetes log"&gt;&lt;/p&gt;
+&lt;p&gt;例如 kubernetes 专门为审计设计的 stage：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;每个请求都可被记录其相关的阶段（stage）。已定义的阶段有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RequestReceived - 此阶段对应审计处理器接收到请求后， 并且在委托给其余处理器之前生成的事件。&lt;/li&gt;
+&lt;li&gt;ResponseStarted - 在响应消息的头部发送后，响应消息体发送前生成的事件。 只有长时间运行的请求（例如 watch）才会生成这个阶段。&lt;/li&gt;
+&lt;li&gt;ResponseComplete - 当响应消息体完成并且没有更多数据需要传输的时候。&lt;/li&gt;
+&lt;li&gt;Panic - 当 panic 发生时生成。&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/"&gt;kubernetes 审计事件&lt;/a&gt; 使用和 Event API 不同的消息结构&lt;sup id="fnref:3"&gt;&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref"&gt;3&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
+&lt;p&gt;综上，云平台的审计服务设计可以总结为：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;优点：微服务设计，JSON 格式日志更灵活，中心化的日志收集服务易于集成更多应用服务和导出到开源数据处理工具。&lt;/li&gt;
+&lt;li&gt;不足：分布式架构对存储、服务端加密、通信安全性和完整性要求更高。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="opentelemetry"&gt;OpenTelemetry&lt;/h3&gt;
+&lt;p&gt;&lt;img src="https://sund.site/images/audit-system-design/opentel.png" alt="OpenTel"&gt;&lt;/p&gt;
+&lt;p&gt;OpenTelemetry 是现在云原生最主流的日志框架。可以支持侵入式（SDK）、非侵入式（Agent）两种日志采集模式。Collector 的设计可以让一部分日志处理的工作放在日志发送端完成。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;优点：微服务设计，支持 kubernetes 等基础设施，多语言多平台提供了 SDK 和扩展能力。有完善的安全、完整性考虑。适合中小企业。&lt;/li&gt;
+&lt;li&gt;不足：大部分情况下日志采集依然需要侵入到 App 内部修改代码。日志收集工具对 Go 等语言支持不够好（截至本文编辑时）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;审计追踪（Audit Trail）是指系统记录下所有影响操作或事件的时间顺序记录,用于追踪系统活动，核查是否存在违规行为。&lt;/p&gt;
+&lt;p&gt;审计日志应具备以下特性:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不可篡改(加密存储、完整性校验)&lt;/li&gt;
+&lt;li&gt;高性能(快速验证)&lt;/li&gt;
+&lt;li&gt;可观测性(机器/人类可读)&lt;/li&gt;
+&lt;li&gt;安全性(保密性、可用性、完整性)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;常见的审计日志格式有 Syslog、CEF、JSON 等,主要区别在于冗余信息、可读性和与日志收集系统的兼容性。&lt;/p&gt;
+&lt;p&gt;审计日志具有较高的安全性要求：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;机密性：只有授权用户可访问,通过访问控制实现&lt;/li&gt;
+&lt;li&gt;可用性：防止被攻击者删除或破坏,通过限制资源使用、多副本存储等实现&lt;/li&gt;
+&lt;li&gt;完整性：防止被篡改或截断,通过加密、完整性校验等实现&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一些典型的审计日志系统架构：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Auditd、rsyslog 等 Linux 原生日志程序&lt;/li&gt;
+&lt;li&gt;AWS 等云产品&lt;/li&gt;
+&lt;li&gt;OpenTelemetry&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="footnotes" role="doc-endnotes"&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;SIEM 是安全信息和事件管理(Security Information and Event Management)的缩写。&lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem"&gt;https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a&gt;&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;对于日志的加密，一般在服务端会对日志额外添加 checksum 链来校验。可以参考亚马逊的实现 &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html"&gt;server-side encryption (SSE-S3)&lt;/a&gt;.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:3"&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event"&gt;kubernetes 审计事件结构定义&lt;/a&gt;&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description></item><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/2021/distributed-cache/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/2021/distributed-cache/</guid><description>&lt;p&gt;很久不写技术文章了。这是一篇关于 Redis 构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。&lt;/p&gt;
+&lt;p&gt;下面就以我做过的商品预约平台项目作为引子，引出分布式缓存设计的一些要点。&lt;/p&gt;
+&lt;p&gt;该商品预约平台的背景如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;该系统由多个微服务组成&lt;/li&gt;
+&lt;li&gt;预约的过程：用户可以选择指定门店，指定日期到店提领商品，如果对应门店和日期没有库存，则不能预约&lt;/li&gt;
+&lt;li&gt;因为“预约”的是未来时刻的库存，所以门店的未来某个时间剩余库存是通过一系列公式计算得出的。这个公式比较复杂，考虑到了用户指定的日期是否在配货周期内等因素，这里省略掉细节&lt;/li&gt;
+&lt;li&gt;每年节日高峰时期，用户会集中预约商品，导致服务压力骤增。又因为未来日期的库存需要动态计算的特点（比如 A 预约了 1 月 1 日的最后一件商品，B 就会无法在该日预约），不同用户的预约操作会互相影响，严重时导致数据库死锁、数据不一致等问题&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;基于以上背景，这个预约系统的设计必须将性能作为主要优化目标，而缓存作为性能优化的不二选择，就承担了重要职责。&lt;/p&gt;
+&lt;h2 id="识别热点数据"&gt;识别热点数据&lt;/h2&gt;
+&lt;p&gt;并不是所有数据都有必要被缓存，往往缓存的数据具有以下几个特点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;读写比很高。如果写操作比读操作还多，缓存系统频繁更新会大大降低可用性&lt;/li&gt;
+&lt;li&gt;是热点数据。因为内存的价格昂贵，所以按照 2-8 原则，20%热点数据才值得被缓存&lt;/li&gt;
+&lt;li&gt;能够容忍短时间的不一致&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;结合项目需要，排除掉一些不适合缓存的数据：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;对于那些只读的、配置相关的数据，只需要做进程缓存（使用 Guava Cache），在服务启动时加载数据到内存就可以了&lt;/li&gt;
+&lt;li&gt;尽量用 CDN 和 Nginx 静态缓存来解决大部分不常更新的资源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;对于该预约项目，用户最频繁查询的数据是不同门店在不同日期下的库存数量。这类数据是缓存设计的重点照顾对象：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户选择了指定城市、指定门店后，系统会返回最近 30 天的库存信息，用户只可能修改其中一条信息。所以读写比很高&lt;/li&gt;
+&lt;li&gt;库存信息是预约订单流程的必备步骤，而且是跨服务调用（预约服务 -&amp;gt; 库存服务）的数据，所以涉及到大量网络请求、数据库查询。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="指定性能优化的指标"&gt;指定性能优化的指标&lt;/h2&gt;
+&lt;p&gt;在即将完成业务系统开发时，我们就根据 &lt;a href="https://sre.google/books/"&gt;Google SRE Books&lt;/a&gt; 提到的四个黄金指标，制定了监控系统性能的四个维度：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;请求率&lt;/li&gt;
+&lt;li&gt;错误数，非 200 返回结果数量&lt;/li&gt;
+&lt;li&gt;响应时间&lt;/li&gt;
+&lt;li&gt;资源利用率（CPU、内存）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我们使用 Prometheus + Grafana 的组合实现监控可视化，这样每次测试人员进行压力测试时，都可以通过这些指标对系统进行调整。缓存影响最大的指标是&lt;strong&gt;请求率&lt;/strong&gt;（一般用 TPS 或者 QPS）和&lt;strong&gt;响应时间&lt;/strong&gt;。所以在设计缓存系统时，要不断参照这两个指标进行优化。&lt;/p&gt;
+&lt;h2 id="缓存的设计的实践"&gt;缓存的设计的实践&lt;/h2&gt;
+&lt;h3 id="分级缓存"&gt;分级缓存&lt;/h3&gt;
+&lt;p&gt;为了不让某一接口或者微服务的缓存失效导致其他接口或服务的并发量暴增，就要针对不同来源（数据库的表、接口等）的数据做分级缓存。比如用户在一次查询中涉及到“附近可预约门店”的查询、“活动期间不同日期剩余库存”的查询、“已预约数量“的查询，这三种查询逐层依赖后边的查询结果。&lt;/p&gt;
+&lt;p&gt;假设如果只针对库存数量做缓存，一旦这部分缓存失效，那么“附近可预约门店”的查询就会直接访问数据库查询全部门店的剩余库存来确定哪个门店可以预约。这样就导致查询库存的接口并发量骤增。所以&lt;strong&gt;分级缓存一定程度上缓解了缓存雪崩的问题&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id="自动化测试-api-参数合法性"&gt;自动化测试 API 参数合法性&lt;/h3&gt;
+&lt;p&gt;我们的 QA 通常会写自动化脚本对后端 API 做定期的扫描，检查哪些接口的数据输入、输出有不合法的类型或是数值范围。除了巩固系统的健壮性，还能帮助缓存系统抵御&lt;strong&gt;缓存穿透&lt;/strong&gt;的风险。&lt;/p&gt;
+&lt;h3 id="缓存和数据库双写问题"&gt;缓存和数据库双写问题&lt;/h3&gt;
+&lt;p&gt;这是一个“先淘汰缓存&amp;quot;还是”先写数据库“的问题。通常没有明确的最佳方法。我们采用 &lt;a href="https://dzone.com/articles/cache-aside-pattern"&gt;&lt;strong&gt;Cache-Aside Pattern&lt;/strong&gt;&lt;/a&gt; 的方式：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;失效&lt;/strong&gt;：应用程序先从 cache 取数据，没有得到，则从数据库中取数据，成功后，放到缓存中。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;命中&lt;/strong&gt;：应用程序从 cache 中取数据，取到后返回。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;更新&lt;/strong&gt;：先把数据存到数据库中，成功后，再让缓存失效。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;缺点：可能有小概率脏数据&lt;/strong&gt;。比如，一个是读操作，但是没有命中缓存，然后就到数据库中取数据，此时来了一个写操作，写完数据库后，让缓存失效，然后，之前的那个读操作再把老的数据放进去，所以，会造成脏数据。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;考虑到写操作通常比读操作时间更长，所以 Cache-Aside Pattern 中的脏数据概率非常小，即便发生，用户在实际下单时系统仍然会去数据库里做数据校验，不会影响业务数据的正确性。&lt;/p&gt;
+&lt;p&gt;如果对缓存一致性有更高要求，可以采用&lt;a href="https://juejin.cn/post/6844903805641818120"&gt;延时双删策略或异步更新缓存&lt;/a&gt;。不过这两种方式本质都是用一定程度的串行化操作来解决并发造成的问题。&lt;/p&gt;
+&lt;h3 id="预热"&gt;预热&lt;/h3&gt;
+&lt;p&gt;预加载热点数据时需要注意的点是，要考虑好服务一旦重启或是生产环境发生事故，要避免服务重启后再次造成二次事故。&lt;/p&gt;
+&lt;h2 id="缓存系统常见的问题和应对思路"&gt;缓存系统常见的问题和应对思路&lt;/h2&gt;
+&lt;p&gt;首先要保证应用服务能做好熔断、限流、降级的措施。然后再针对不同情况做应对处理。&lt;/p&gt;
+&lt;h3 id="缓存雪崩"&gt;缓存雪崩&lt;/h3&gt;
+&lt;p&gt;原因：热点缓存数据批量过期，导致大量缓存失效。&lt;/p&gt;
+&lt;p&gt;解决思路：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;错开过期时间、随机过期时间&lt;/li&gt;
+&lt;li&gt;构建多级缓存&lt;/li&gt;
+&lt;li&gt;避免热点数据频繁淘汰（如修改 Redis 淘汰策略为 LRU）&lt;/li&gt;
+&lt;li&gt;必要时限流、降级&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="缓存击穿"&gt;缓存击穿&lt;/h3&gt;
+&lt;p&gt;原因：热点 Key 突然过期。&lt;/p&gt;
+&lt;p&gt;解决思路：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;设计系统时针对性预防措施，比如热点 Key 的更新策略不依据时间，而是程序控制&lt;/li&gt;
+&lt;li&gt;配合监控和后台调整，保证高峰时段热点 key 可用&lt;/li&gt;
+&lt;li&gt;必要时限流、降级&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="缓存穿透"&gt;缓存穿透&lt;/h3&gt;
+&lt;p&gt;原因：黑客通过访问缓存中不存在的数据，将大量请求直达数据库。&lt;/p&gt;
+&lt;p&gt;解决思路：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;监控报警&lt;/li&gt;
+&lt;li&gt;在服务层做好熔断&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;在设计缓存系统时优先排除掉大部分不需要缓存或者通过进程本地缓存的数据。搭建合理的监控手段，自动化测试框架，再结合预热、缓存淘汰策略、双写策略等最佳实践方法，不断优化缓存性能。&lt;/p&gt;
+&lt;p&gt;尤其要注意缓存的集中常见问题：雪崩、击穿和穿透。做好应用服务的熔断、降级、限流措施，保证在事故发生时针对每种情况都有预案。&lt;/p&gt;</description></item></channel></rss>

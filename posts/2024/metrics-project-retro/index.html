@@ -1,5 +1,4 @@
-<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>监控系统项目复盘 | Steve Sun</title>
-<meta name=title content="监控系统项目复盘"><meta name=description content="这篇文章对我过去 3 年的一大块工作内容进行复盘。我作为项目组的架构师，在下文中也对项目早期遗留的一些问题进行反思，并分享我个人的解决思路。
+<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>监控系统项目复盘 | Steve Sun</title><meta name=title content="监控系统项目复盘"><meta name=description content="这篇文章对我过去 3 年的一大块工作内容进行复盘。我作为项目组的架构师，在下文中也对项目早期遗留的一些问题进行反思，并分享我个人的解决思路。
 项目核心依赖开源组件，定制化过度
 我们的项目是一个运行在边缘设备上的日志、软硬件性能指标的采集/监控系统。考虑到边缘计算设备（IPC）的性能，选择开源组件时就侧重于轻量化、支持丰富的输出标准。早期部门架构师采用了 Fluent-Bit 作为项目的核心组件。Fluent-Bit 是 C 编写的开源、轻量、可轻度扩展的数据收集器。它最开始用作日志收集，后来逐渐发展成全功能的 Agent。对比流行的OpenTelemetry，Fluent-Bit 更开箱即用、更轻量，但是不易于修改和扩展。
 最开始整个团队都没接触过监控系统，所以在设计系统时挖了不少坑。首先，用户在 UI 上操作过度繁琐，需要依次配置输出的目标（地址、端口、协议、格式、加密方式等等）、采集的指标类型，最后还要手动点击 Apply （应用）一下。

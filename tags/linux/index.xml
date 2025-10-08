@@ -1,171 +1,171 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Steve Sun</title><link>https://sund.site/tags/linux/</link><description>Recent content in Linux on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sat, 19 Jul 2025 01:06:32 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p>晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p>
-&lt;p>&lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt="">&lt;/p>
-&lt;p>这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。&lt;/p>
-&lt;p>不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。&lt;/p>
-&lt;p>下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。&lt;/p>
-&lt;h2 id="1-找到根分区和-efi-分区">1. 找到根分区和 EFI 分区&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>lsblk -f
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>会返回类似如下结果，其中&lt;code>vfat&lt;/code>格式是efi分区，&lt;code>ext4&lt;/code>是系统根分区。&lt;/p>
-&lt;pre tabindex="0">&lt;code>NAME FSTYPE LABEL UUID MOUNTPOINT
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Steve Sun</title><link>https://sund.site/tags/linux/</link><description>Recent content in Linux on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sat, 19 Jul 2025 01:06:32 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。&lt;/p&gt;
+&lt;p&gt;不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。&lt;/p&gt;
+&lt;p&gt;下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。&lt;/p&gt;
+&lt;h2 id="1-找到根分区和-efi-分区"&gt;1. 找到根分区和 EFI 分区&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lsblk -f
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;会返回类似如下结果，其中&lt;code&gt;vfat&lt;/code&gt;格式是efi分区，&lt;code&gt;ext4&lt;/code&gt;是系统根分区。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;NAME FSTYPE LABEL UUID MOUNTPOINT
 nvme0n1 
 ├─nvme0n1p1 vfat 1234-5678 /boot/efi
 └─nvme0n1p2 ext4 955b06a9-983d-4e04-b2ef-60b559db46e6 
-&lt;/code>&lt;/pre>&lt;h2 id="2-用fsck修复分区错误">2. 用&lt;code>fsck&lt;/code>修复分区错误&lt;/h2>
-&lt;p>注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。&lt;/p>
-&lt;p>先修复根分区：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p2
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>出现提示输入&lt;code>y&lt;/code>允许，或者&lt;code>a&lt;/code>全部允许。这一步我发现了一些错误并成功修复了。&lt;/p>
-&lt;p>接下来检查修复efi分区：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo fsck -f /dev/nvme0n1p1
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>我在这一步出现提示：&lt;/p>
-&lt;pre tabindex="0">&lt;code>there are different between boot sector and it&amp;#39;s backup：
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="2-用fsck修复分区错误"&gt;2. 用&lt;code&gt;fsck&lt;/code&gt;修复分区错误&lt;/h2&gt;
+&lt;p&gt;注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。&lt;/p&gt;
+&lt;p&gt;先修复根分区：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo fsck -f /dev/nvme0n1p2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;出现提示输入&lt;code&gt;y&lt;/code&gt;允许，或者&lt;code&gt;a&lt;/code&gt;全部允许。这一步我发现了一些错误并成功修复了。&lt;/p&gt;
+&lt;p&gt;接下来检查修复efi分区：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo fsck -f /dev/nvme0n1p1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;我在这一步出现提示：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;there are different between boot sector and it&amp;#39;s backup：
 1) Copy original to backup
 2) Copy backup to original
 3) No action
-&lt;/code>&lt;/pre>&lt;p>根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 &lt;code>1) Copy original to backup&lt;/code> 复制原始引导扇区到备份扇区。&lt;/p>
-&lt;h2 id="3-挂载原系统并重建-initramfs">3. 挂载原系统并重建 initramfs&lt;/h2>
-&lt;p>下面这一步，要把原系统根分区挂载到当前 LiveUSB 系统里，同时为了执行必要的命令，要把 LiveUSB 系统的四个关键目录挂到原系统。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo mkdir -p /mnt/ubuntu
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount /dev/nvme0n1p2 /mnt/ubuntu
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /dev /mnt/ubuntu/dev
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /proc /mnt/ubuntu/proc
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /sys /mnt/ubuntu/sys
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount --bind /run /mnt/ubuntu/run
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mount /dev/nvme0n1p1 /mnt/ubuntu/boot/efi
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>一顿操作后，就可以切换到原系统 root shell 了。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo chroot /mnt/ubuntu
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后是安装 grub 并重新为系统内核生成 initramfs 启动镜像。&lt;code>grub-install&lt;/code>命令的参数要根据自己的系统设置。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-initramfs -c -k all
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-grub
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后，退出原系统 root shell，重启。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#d0a8ff">exit&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo reboot
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>拔掉U盘进入原系统，我这时就可以正常登录了。&lt;/p>
-&lt;h2 id="总结">总结&lt;/h2>
-&lt;ol>
-&lt;li>
-&lt;p>不要慌&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>家中常备 Live USB&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>用 &lt;code>fsck&lt;/code> 命令修复分区错误&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>用&lt;code>mount&lt;/code>挂载原系统必要文件，进入原系统并重建 initramfs&lt;/p>
-&lt;/li>
-&lt;/ol></description></item><item><title>macbook安装ubuntu</title><link>https://sund.site/posts/2013/macbook_ubuntu/</link><pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2013/macbook_ubuntu/</guid><description>&lt;p>&lt;strong>注意，ubuntu 和 xubuntu 安装上有一定差别，请严格按照你选择的系统版本流程安装&lt;/strong>&lt;/p>
-&lt;h3 id="ubuntu">ubuntu&lt;/h3>
-&lt;h3 id="准备工作">准备工作&lt;/h3>
-&lt;h5 id="分区">分区&lt;/h5>
-&lt;p>这一步可以用命令行实现，也可以在 mac 下直接用磁盘工具分区，初学者建议后者。有经验的朋友可以在网上查询 diskutils 的用法，这是 mac 提供的分区工具&lt;/p>
-&lt;p>使用磁盘工具，打开左侧最上边磁盘位置（不是 macosx，而是整个硬盘）的选项，右边会出现&lt;code>分区&lt;/code>标签。选择分区，你可以用鼠标拖动轻松将 macos 的一部分划分给 ubuntu 使用。分区格式可以选择 mac 日志文件。其实选什么都一样，等会还要重新格式化。&lt;/p>
-&lt;h4 id="把-iso-镜像转化为苹果电脑识别的-img-镜像">把 iso 镜像转化为苹果电脑识别的 img 镜像&lt;/h4>
-&lt;pre>&lt;code>hdiutil convert /path/to/ubuntu.iso -format UDRW -o /path/to/target.img
-&lt;/code>&lt;/pre>
-&lt;p>命令中&lt;code>path/to/ubuntu.iso&lt;/code>是你下载的 iso 路径，&lt;code>path/to/target.img&lt;/code>自然是你要保存成 img 的路径&lt;/p>
-&lt;h4 id="插入-u-盘刻录镜像">插入 U 盘，刻录镜像&lt;/h4>
-&lt;p>先运行如下命令查询你 U 盘的设备名&lt;/p>
-&lt;pre>&lt;code>diskutil list
-&lt;/code>&lt;/pre>
-&lt;p>这里假设 U 盘是 disk1，执行&lt;/p>
-&lt;pre>&lt;code>diskutil unmountDisk /dev/disk1
-&lt;/code>&lt;/pre>
-&lt;p>接下来执行命令刻录，&lt;/p>
-&lt;pre>&lt;code>sudo dd if=/path/to/downloaded.img of=/dev/disk1 bs=1m
-&lt;/code>&lt;/pre>
-&lt;p>ubuntu 官网针对上一条命令可能出现的两种错误提示给出了解决办法：&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>If you see the error dd: Invalid number &amp;lsquo;1m&amp;rsquo;, you are using GNU dd. Use the same command but replace bs=1m with bs=1M.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>If you see the error dd: /dev/disk1: Resource busy, make sure the disk is not in use. Start the &amp;lsquo;Disk Utility.app&amp;rsquo; and unmount (don&amp;rsquo;t eject) the drive.&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;p>好了，刻完就可以重启安装了。重启后按住&lt;code>option&lt;/code>会看到一个 refit 命名的移动设备图标，点进去就开始安装了。&lt;/p>
-&lt;h4 id="安装过程">安装过程&lt;/h4>
-&lt;p>安装过程可以参考网上其他人的帖子。一般有两种方式&lt;/p>
-&lt;ol>
-&lt;li>选择&lt;code>ubuntu和mac os x共存&lt;/code>，系统会自动被安装到空闲分区。&lt;/li>
-&lt;li>选择&lt;code>其他选项&lt;/code>，可以自己手动分区，我一般是选这个来手动分区。&lt;/li>
-&lt;/ol>
-&lt;p>假设你选了&lt;code>其他选项&lt;/code>就会进入分区的窗口，这时你就会看到所有磁盘分区的情况，刚才在 mac 下给 ubuntu 预先分好一块空闲分区也在其中，名字可能叫 disk02，或者 disk03 什么的。
-接下来要进行四次分区。这一段分区方法参考了百度经验上一个网友的教程，我进行了 2 处修改，原帖地址&lt;a href="http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html">http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html&lt;/a>&lt;/p>
-&lt;p>第一次分区：&lt;/p>
-&lt;pre>&lt;code>点你刚才留出来的“空闲”分区，点“+”，进行如下设置：
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 &lt;code&gt;1) Copy original to backup&lt;/code&gt; 复制原始引导扇区到备份扇区。&lt;/p&gt;
+&lt;h2 id="3-挂载原系统并重建-initramfs"&gt;3. 挂载原系统并重建 initramfs&lt;/h2&gt;
+&lt;p&gt;下面这一步，要把原系统根分区挂载到当前 LiveUSB 系统里，同时为了执行必要的命令，要把 LiveUSB 系统的四个关键目录挂到原系统。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mkdir -p /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount /dev/nvme0n1p2 /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount --bind /dev /mnt/ubuntu/dev
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount --bind /proc /mnt/ubuntu/proc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount --bind /sys /mnt/ubuntu/sys
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount --bind /run /mnt/ubuntu/run
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount /dev/nvme0n1p1 /mnt/ubuntu/boot/efi
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;一顿操作后，就可以切换到原系统 root shell 了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo chroot /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后是安装 grub 并重新为系统内核生成 initramfs 启动镜像。&lt;code&gt;grub-install&lt;/code&gt;命令的参数要根据自己的系统设置。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;update-initramfs -c -k all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;update-grub
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;最后，退出原系统 root shell，重启。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#d0a8ff"&gt;exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo reboot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;拔掉U盘进入原系统，我这时就可以正常登录了。&lt;/p&gt;
+&lt;h2 id="总结"&gt;总结&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;不要慌&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;家中常备 Live USB&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;用 &lt;code&gt;fsck&lt;/code&gt; 命令修复分区错误&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;用&lt;code&gt;mount&lt;/code&gt;挂载原系统必要文件，进入原系统并重建 initramfs&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>macbook安装ubuntu</title><link>https://sund.site/posts/2013/macbook_ubuntu/</link><pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2013/macbook_ubuntu/</guid><description>&lt;p&gt;&lt;strong&gt;注意，ubuntu 和 xubuntu 安装上有一定差别，请严格按照你选择的系统版本流程安装&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="ubuntu"&gt;ubuntu&lt;/h3&gt;
+&lt;h3 id="准备工作"&gt;准备工作&lt;/h3&gt;
+&lt;h5 id="分区"&gt;分区&lt;/h5&gt;
+&lt;p&gt;这一步可以用命令行实现，也可以在 mac 下直接用磁盘工具分区，初学者建议后者。有经验的朋友可以在网上查询 diskutils 的用法，这是 mac 提供的分区工具&lt;/p&gt;
+&lt;p&gt;使用磁盘工具，打开左侧最上边磁盘位置（不是 macosx，而是整个硬盘）的选项，右边会出现&lt;code&gt;分区&lt;/code&gt;标签。选择分区，你可以用鼠标拖动轻松将 macos 的一部分划分给 ubuntu 使用。分区格式可以选择 mac 日志文件。其实选什么都一样，等会还要重新格式化。&lt;/p&gt;
+&lt;h4 id="把-iso-镜像转化为苹果电脑识别的-img-镜像"&gt;把 iso 镜像转化为苹果电脑识别的 img 镜像&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;hdiutil convert /path/to/ubuntu.iso -format UDRW -o /path/to/target.img
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;命令中&lt;code&gt;path/to/ubuntu.iso&lt;/code&gt;是你下载的 iso 路径，&lt;code&gt;path/to/target.img&lt;/code&gt;自然是你要保存成 img 的路径&lt;/p&gt;
+&lt;h4 id="插入-u-盘刻录镜像"&gt;插入 U 盘，刻录镜像&lt;/h4&gt;
+&lt;p&gt;先运行如下命令查询你 U 盘的设备名&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;diskutil list
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里假设 U 盘是 disk1，执行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;diskutil unmountDisk /dev/disk1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;接下来执行命令刻录，&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo dd if=/path/to/downloaded.img of=/dev/disk1 bs=1m
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;ubuntu 官网针对上一条命令可能出现的两种错误提示给出了解决办法：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;If you see the error dd: Invalid number &amp;lsquo;1m&amp;rsquo;, you are using GNU dd. Use the same command but replace bs=1m with bs=1M.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you see the error dd: /dev/disk1: Resource busy, make sure the disk is not in use. Start the &amp;lsquo;Disk Utility.app&amp;rsquo; and unmount (don&amp;rsquo;t eject) the drive.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;好了，刻完就可以重启安装了。重启后按住&lt;code&gt;option&lt;/code&gt;会看到一个 refit 命名的移动设备图标，点进去就开始安装了。&lt;/p&gt;
+&lt;h4 id="安装过程"&gt;安装过程&lt;/h4&gt;
+&lt;p&gt;安装过程可以参考网上其他人的帖子。一般有两种方式&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;选择&lt;code&gt;ubuntu和mac os x共存&lt;/code&gt;，系统会自动被安装到空闲分区。&lt;/li&gt;
+&lt;li&gt;选择&lt;code&gt;其他选项&lt;/code&gt;，可以自己手动分区，我一般是选这个来手动分区。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;假设你选了&lt;code&gt;其他选项&lt;/code&gt;就会进入分区的窗口，这时你就会看到所有磁盘分区的情况，刚才在 mac 下给 ubuntu 预先分好一块空闲分区也在其中，名字可能叫 disk02，或者 disk03 什么的。
+接下来要进行四次分区。这一段分区方法参考了百度经验上一个网友的教程，我进行了 2 处修改，原帖地址&lt;a href="http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html"&gt;http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;第一次分区：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;点你刚才留出来的“空闲”分区，点“+”，进行如下设置：
 挂载点：“/”
 大小：22000MB
 新分区的类型：主分区
 新分区的位置：空间起始位置
 用于：EXT4日志文件系统
-&lt;/code>&lt;/pre>
-&lt;p>第二次分区：&lt;/p>
-&lt;pre>&lt;code>“空闲”处，继续点“+”，如下设置，
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第二次分区：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;“空闲”处，继续点“+”，如下设置，
 挂载点：（不设置）
 大小：4096MB
 新分区的类型：逻辑分区
 新分区的位置：空间起始位置
 用于：交换空间
-&lt;/code>&lt;/pre>
-&lt;p>第三次分区：&lt;/p>
-&lt;pre>&lt;code>“空闲”处，继续点“+”，如下设置，
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第三次分区：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;“空闲”处，继续点“+”，如下设置，
 挂载点：/boot
 大小：200MB
 新分区的类型：逻辑分区
 新分区的位置：空间起始位置
 用于：EXT4日志文件系统
-&lt;/code>&lt;/pre>
-&lt;p>第四次分区：&lt;/p>
-&lt;pre>&lt;code>“空闲”处，继续点“+”，如下设置，
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第四次分区：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;“空闲”处，继续点“+”，如下设置，
 挂载点：/home
 大小：（剩余全部空间，剩下显示多少，就多少）
 新分区的类型：逻辑分区
 新分区的位置：空间起始位置
 用于：EXT4日志文件系统
-&lt;/code>&lt;/pre>
-&lt;p>分区设置完毕后，下方还有一项“安装启动引导器的设备”，macbookpro 用户需要选择/boot 这个分区所在磁盘位置。&lt;/p>
-&lt;h3 id="开机引导程序-refit">开机引导程序 rEFIT&lt;/h3>
-&lt;p>安装完 ubuntu，重启在 mac 下下载安装 rEFIt。安装好后在终端里输入&lt;code>/efi/refit/. enable-always.sh&lt;/code>启动 rEFIt。重启，你就会看到 ubuntu 的选项。&lt;/p>
-&lt;h3 id="xubuntu估计-lubuntu-和-kubuntu-也应该适用仅是猜想">Xubuntu(估计 Lubuntu 和 Kubuntu 也应该适用，仅是猜想。)&lt;/h3>
-&lt;h3 id="准备工作-1">准备工作&lt;/h3>
-&lt;h4 id="如何刻录镜像到移动设备">如何刻录镜像到移动设备&lt;/h4>
-&lt;p>这个问题很重要，如果你下载了 iso 格式的 Xubuntu 系统镜像，
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;分区设置完毕后，下方还有一项“安装启动引导器的设备”，macbookpro 用户需要选择/boot 这个分区所在磁盘位置。&lt;/p&gt;
+&lt;h3 id="开机引导程序-refit"&gt;开机引导程序 rEFIT&lt;/h3&gt;
+&lt;p&gt;安装完 ubuntu，重启在 mac 下下载安装 rEFIt。安装好后在终端里输入&lt;code&gt;/efi/refit/. enable-always.sh&lt;/code&gt;启动 rEFIt。重启，你就会看到 ubuntu 的选项。&lt;/p&gt;
+&lt;h3 id="xubuntu估计-lubuntu-和-kubuntu-也应该适用仅是猜想"&gt;Xubuntu(估计 Lubuntu 和 Kubuntu 也应该适用，仅是猜想。)&lt;/h3&gt;
+&lt;h3 id="准备工作-1"&gt;准备工作&lt;/h3&gt;
+&lt;h4 id="如何刻录镜像到移动设备"&gt;如何刻录镜像到移动设备&lt;/h4&gt;
+&lt;p&gt;这个问题很重要，如果你下载了 iso 格式的 Xubuntu 系统镜像，
 你需要将该镜像不经过任何转换的完整刻录到移动设备或光盘上
 （我使用的是 unetbootin 这个软件，开源，跨平台，操作简便）。
 注意，绝对不可以将 iso 格式转换成 img（mac 镜像）后刻录。
-这样会导致 ubuntu 部分版本无法安装 grub 引导器。&lt;/p>
-&lt;h4 id="开机引导程序-refit-1">开机引导程序 rEFIt&lt;/h4>
-&lt;p>安装完的系统无法被 mac 直接引导，所以需要安装 rEFIt 引导。如果不想要安装它，
-可以参考下边附录 1 里的安装方法。重新修改引导文件。&lt;/p>
-&lt;h4 id="安装过程-1">安装过程&lt;/h4>
-&lt;ol>
-&lt;li>在官网下载 xubuntu 镜像，使用 uneetbootin 刻录到设备
-上(mac 版的 unetbootin 貌似刻录 iso 有问题，可以在 windows 上下载该软件使用)。&lt;/li>
-&lt;li>重启，开机界面按住&lt;code>option&lt;/code>键，有个 windows 命名的移动设备图标，选中进入。&lt;/li>
-&lt;li>安装过程不敷述, 装后重启&lt;/li>
-&lt;li>从 mac 进入，安装 rEFIt，在 shell 里运行&lt;code>/efi/refit/. enable-always.sh&lt;/code>启动 rEFIt&lt;/li>
-&lt;li>重启，出现两个图标，苹果代表 mac，企鹅代表 linux。至此，完成安装过程。&lt;/li>
-&lt;/ol>
-&lt;h2 id="ubuntu-或-xubuntu-安装后的一些配置">ubuntu 或 Xubuntu 安装后的一些配置&lt;/h2>
-&lt;p>打开系统配置文件，&lt;/p>
-&lt;pre>&lt;code>sudo gedit /etc/rc.local
-&lt;/code>&lt;/pre>
-&lt;p>在 exit 0 前边加入下边对应的语句,
-默认关闭功能键 Fn:&lt;/p>
-&lt;pre>&lt;code>echo 2 &amp;gt; /sys/module/hid_apple/parameters/fnmode
-&lt;/code>&lt;/pre>
-&lt;p>设置默认亮度(数字 2565 可以修改任意亮度)（xubuntu 下不起作用，原因未知）&lt;/p>
-&lt;pre>&lt;code>echo 2565 &amp;gt; /sys/class/backlight/intel_backlight/brightness
-&lt;/code>&lt;/pre>
-&lt;p>设置键盘灯亮度（数字 1 代表亮度):&lt;/p>
-&lt;pre>&lt;code>echo 1 &amp;gt; /sys/class/leds/smc::kbd_backlight/brightness
-&lt;/code>&lt;/pre>
-&lt;h3 id="附录-1">附录 1&lt;/h3>
-&lt;p>&lt;a href="https://help.ubuntu.com/community/MacBookPro11-1/Saucy">https://help.ubuntu.com/community/MacBookPro11-1/Saucy&lt;/a>&lt;/p></description></item></channel></rss>
+这样会导致 ubuntu 部分版本无法安装 grub 引导器。&lt;/p&gt;
+&lt;h4 id="开机引导程序-refit-1"&gt;开机引导程序 rEFIt&lt;/h4&gt;
+&lt;p&gt;安装完的系统无法被 mac 直接引导，所以需要安装 rEFIt 引导。如果不想要安装它，
+可以参考下边附录 1 里的安装方法。重新修改引导文件。&lt;/p&gt;
+&lt;h4 id="安装过程-1"&gt;安装过程&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;在官网下载 xubuntu 镜像，使用 uneetbootin 刻录到设备
+上(mac 版的 unetbootin 貌似刻录 iso 有问题，可以在 windows 上下载该软件使用)。&lt;/li&gt;
+&lt;li&gt;重启，开机界面按住&lt;code&gt;option&lt;/code&gt;键，有个 windows 命名的移动设备图标，选中进入。&lt;/li&gt;
+&lt;li&gt;安装过程不敷述, 装后重启&lt;/li&gt;
+&lt;li&gt;从 mac 进入，安装 rEFIt，在 shell 里运行&lt;code&gt;/efi/refit/. enable-always.sh&lt;/code&gt;启动 rEFIt&lt;/li&gt;
+&lt;li&gt;重启，出现两个图标，苹果代表 mac，企鹅代表 linux。至此，完成安装过程。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="ubuntu-或-xubuntu-安装后的一些配置"&gt;ubuntu 或 Xubuntu 安装后的一些配置&lt;/h2&gt;
+&lt;p&gt;打开系统配置文件，&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo gedit /etc/rc.local
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在 exit 0 前边加入下边对应的语句,
+默认关闭功能键 Fn:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;echo 2 &amp;gt; /sys/module/hid_apple/parameters/fnmode
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置默认亮度(数字 2565 可以修改任意亮度)（xubuntu 下不起作用，原因未知）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;echo 2565 &amp;gt; /sys/class/backlight/intel_backlight/brightness
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置键盘灯亮度（数字 1 代表亮度):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;echo 1 &amp;gt; /sys/class/leds/smc::kbd_backlight/brightness
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="附录-1"&gt;附录 1&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://help.ubuntu.com/community/MacBookPro11-1/Saucy"&gt;https://help.ubuntu.com/community/MacBookPro11-1/Saucy&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>

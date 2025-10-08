@@ -1,5 +1,4 @@
-<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>Cursor等AI编程工具的背后原理 | Steve Sun</title>
-<meta name=title content="Cursor等AI编程工具的背后原理"><meta name=description content='在上一篇文章DeepWIKI 是如何工作的我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？
+<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>Cursor等AI编程工具的背后原理 | Steve Sun</title><meta name=title content="Cursor等AI编程工具的背后原理"><meta name=description content='在上一篇文章DeepWIKI 是如何工作的我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？
 这个问题的答案就是 AST 分块。
 这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。
 AST

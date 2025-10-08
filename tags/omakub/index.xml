@@ -1,43 +1,43 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Omakub on Steve Sun</title><link>https://sund.site/tags/omakub/</link><description>Recent content in Omakub on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sat, 31 Aug 2024 00:23:37 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/omakub/index.xml" rel="self" type="application/rss+xml"/><item><title>Windows Efficient Setup</title><link>https://sund.site/posts/2024/windows-efficient-setup/</link><pubDate>Sat, 31 Aug 2024 00:23:37 +0800</pubDate><guid>https://sund.site/posts/2024/windows-efficient-setup/</guid><description>&lt;p>Last month I read DHH&amp;rsquo;s blog post &lt;a href="https://world.hey.com/dhh/introducing-omakub-354db366">Introducing Omakub&lt;/a>. Omakub is a project that helps you to setup your Ubuntu machine by running a single command. DHH composed a list of tools he uses on his Ubuntu.&lt;/p>
-&lt;p>In spirit of the post, I decided to setup my Windows machine efficiently like Omakub.&lt;/p>
-&lt;p>You can find the full setup script &lt;a href="https://gist.github.com/stevedsun/319f0c05b02e739207743dd441b6239a">here&lt;/a>.&lt;/p>
-&lt;p>Following is the keyboard Layout I am using.&lt;/p>
-&lt;h2 id="keyboard-layout">Keyboard Layout&lt;/h2>
-&lt;p>&lt;strong>Tool&lt;/strong>: AutoHotKey, PowerToys&lt;/p>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>Shortcut&lt;/th>
- &lt;th>Description&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>Alt + Number&lt;/td>
- &lt;td>Switch between Apps&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Win + Number&lt;/td>
- &lt;td>Switch between Desktops&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Caplock&lt;/td>
- &lt;td>Switch between Input Methods&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>Caplock(hold)&lt;/td>
- &lt;td>Switch between Upper/Lower&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;ol>
-&lt;li>Download &lt;a href="https://github.com/Ciantic/VirtualDesktopAccessor/releases/tag/2024-01-25-windows11">VirtualDesktopAccessor.dll&lt;/a>&lt;/li>
-&lt;li>Put the &lt;code>.dll&lt;/code> and &lt;code>.ahk&lt;/code> files in one folder, create a shortcut for &lt;code>Config.ahk&lt;/code>.&lt;/li>
-&lt;li>Copy the shortcut to path &lt;code>C:\Users\&amp;lt;YourName&amp;gt;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup&lt;/code> to make it auto startup.&lt;/li>
-&lt;li>Install &lt;code>PowerToys&lt;/code>, remap &lt;code>LWin&lt;/code> and &lt;code>LAlt&lt;/code>.&lt;/li>
-&lt;li>(Optional) Turn off window animation in windows settings.&lt;/li>
-&lt;/ol>
-&lt;h2 id="the-problem-of-windows-shortcuts">The Problem of Windows&amp;rsquo; Shortcuts&lt;/h2>
-&lt;p>As we know, the Windows shortcut is very limited when switching between apps and desktops. For users who are not English native speakers, switching input method when typing is also not a good experience.&lt;/p>
-&lt;p>Comparing with Windows, MacOS has a very powerful shortcut system. You can always use &lt;code>cmd + q&lt;/code> to close a window, &lt;code>caplock&lt;/code> to switch between input methods.&lt;/p>
-&lt;p>DHH moved the MacOS&amp;rsquo; advantages to Linux. The Windows users can also refer to the Omakub project and build a more powerful development environment.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Omakub on Steve Sun</title><link>https://sund.site/tags/omakub/</link><description>Recent content in Omakub on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sat, 31 Aug 2024 00:23:37 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/omakub/index.xml" rel="self" type="application/rss+xml"/><item><title>Windows Efficient Setup</title><link>https://sund.site/posts/2024/windows-efficient-setup/</link><pubDate>Sat, 31 Aug 2024 00:23:37 +0800</pubDate><guid>https://sund.site/posts/2024/windows-efficient-setup/</guid><description>&lt;p&gt;Last month I read DHH&amp;rsquo;s blog post &lt;a href="https://world.hey.com/dhh/introducing-omakub-354db366"&gt;Introducing Omakub&lt;/a&gt;. Omakub is a project that helps you to setup your Ubuntu machine by running a single command. DHH composed a list of tools he uses on his Ubuntu.&lt;/p&gt;
+&lt;p&gt;In spirit of the post, I decided to setup my Windows machine efficiently like Omakub.&lt;/p&gt;
+&lt;p&gt;You can find the full setup script &lt;a href="https://gist.github.com/stevedsun/319f0c05b02e739207743dd441b6239a"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Following is the keyboard Layout I am using.&lt;/p&gt;
+&lt;h2 id="keyboard-layout"&gt;Keyboard Layout&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Tool&lt;/strong&gt;: AutoHotKey, PowerToys&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Shortcut&lt;/th&gt;
+ &lt;th&gt;Description&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Alt + Number&lt;/td&gt;
+ &lt;td&gt;Switch between Apps&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Win + Number&lt;/td&gt;
+ &lt;td&gt;Switch between Desktops&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Caplock&lt;/td&gt;
+ &lt;td&gt;Switch between Input Methods&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Caplock(hold)&lt;/td&gt;
+ &lt;td&gt;Switch between Upper/Lower&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ol&gt;
+&lt;li&gt;Download &lt;a href="https://github.com/Ciantic/VirtualDesktopAccessor/releases/tag/2024-01-25-windows11"&gt;VirtualDesktopAccessor.dll&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Put the &lt;code&gt;.dll&lt;/code&gt; and &lt;code&gt;.ahk&lt;/code&gt; files in one folder, create a shortcut for &lt;code&gt;Config.ahk&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Copy the shortcut to path &lt;code&gt;C:\Users\&amp;lt;YourName&amp;gt;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup&lt;/code&gt; to make it auto startup.&lt;/li&gt;
+&lt;li&gt;Install &lt;code&gt;PowerToys&lt;/code&gt;, remap &lt;code&gt;LWin&lt;/code&gt; and &lt;code&gt;LAlt&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;(Optional) Turn off window animation in windows settings.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="the-problem-of-windows-shortcuts"&gt;The Problem of Windows&amp;rsquo; Shortcuts&lt;/h2&gt;
+&lt;p&gt;As we know, the Windows shortcut is very limited when switching between apps and desktops. For users who are not English native speakers, switching input method when typing is also not a good experience.&lt;/p&gt;
+&lt;p&gt;Comparing with Windows, MacOS has a very powerful shortcut system. You can always use &lt;code&gt;cmd + q&lt;/code&gt; to close a window, &lt;code&gt;caplock&lt;/code&gt; to switch between input methods.&lt;/p&gt;
+&lt;p&gt;DHH moved the MacOS&amp;rsquo; advantages to Linux. The Windows users can also refer to the Omakub project and build a more powerful development environment.&lt;/p&gt;</description></item></channel></rss>

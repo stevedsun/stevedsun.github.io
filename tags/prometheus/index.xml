@@ -1,142 +1,142 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Prometheus on Steve Sun</title><link>https://sund.site/tags/prometheus/</link><description>Recent content in Prometheus on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Thu, 24 Nov 2022 12:26:23 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/prometheus/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementing a Prometheus Exporter for Fluent-bit</title><link>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</link><pubDate>Thu, 24 Nov 2022 12:26:23 +0800</pubDate><guid>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</guid><description>&lt;h2 id="background">Background&lt;/h2>
-&lt;p>Fluent-bit is a great tool for logging and monitoring, many teams are using it to collect metrics and logs. Prometheus is also a popular tool for metrics analysis, but if you want to output Fluent-bit data to Prometheus, the only way is to use the node-exporter input plugin, which has fixed metrics and data format.&lt;/p>
-&lt;p>In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.&lt;/p>
-&lt;p>Today I want to share the final solution for this case. The complete demo code can be found on this Github repo: &lt;a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo">https://github.com/stevedsun/fluent-bit-output-prometheus-demo&lt;/a>&lt;/p>
-&lt;h2 id="fluent-bit-output-plugin">Fluent-bit Output Plugin&lt;/h2>
-&lt;p>Fluent-bit provides a way to implement your Golang plugin. (See &lt;a href="https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins">Fluent-bit Go Output Plugin&lt;/a>)&lt;/p>
-&lt;p>We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushes a record to the output plugin.&lt;/p>
-&lt;p>To implement a Fluent-bit output plugin, there are four call-back functions we need to overwrite.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">//export FLBPluginRegister
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">FLBPluginRegister&lt;/span>(def unsafe.Pointer) &lt;span style="color:#fc5fa3">int&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// Here we define the plugin name and description.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	&lt;span style="color:#fc5fa3">return&lt;/span> output.&lt;span style="color:#41a1c0">FLBPluginRegister&lt;/span>(def, &lt;span style="color:#fc6a5d">&amp;#34;promexporter&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;Prometheus Exporter&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">//export FLBPluginInit
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">FLBPluginInit&lt;/span>(plugin unsafe.Pointer) &lt;span style="color:#fc5fa3">int&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// We can extract output plugin parameters from `FLBPlguinConfigKey`.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	user := output.&lt;span style="color:#41a1c0">FLBPluginConfigKey&lt;/span>(plugin, &lt;span style="color:#fc6a5d">&amp;#34;username&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	passwd := output.&lt;span style="color:#41a1c0">FLBPluginConfigKey&lt;/span>(plugin, &lt;span style="color:#fc6a5d">&amp;#34;password&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// Here we can run a new Prometheus exporter server.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	&lt;span style="color:#41a1c0">NewExporter&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> output.FLB_OK
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">//export FLBPluginFlushCtx
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">FLBPluginFlushCtx&lt;/span>(ctx, data unsafe.Pointer, length C.&lt;span style="color:#fc5fa3">int&lt;/span>, tag *C.char) &lt;span style="color:#fc5fa3">int&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// Here we process every record, extract it and ship to exporter
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	dec := output.&lt;span style="color:#41a1c0">NewDecoder&lt;/span>(data, &lt;span style="color:#d0a8ff">int&lt;/span>(length))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">for&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#6c7986">// Extract Record
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>		ret, _, record := output.&lt;span style="color:#41a1c0">GetRecord&lt;/span>(dec)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">if&lt;/span> ret != &lt;span style="color:#d0bf69">0&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">break&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">for&lt;/span> k, v := &lt;span style="color:#fc5fa3">range&lt;/span> record {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#6c7986">// You have to extract record here, ship them to exporter.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> output.FLB_OK
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">//export FLBPluginExit
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">FLBPluginExit&lt;/span>() &lt;span style="color:#fc5fa3">int&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">if&lt;/span> err := server.srv.&lt;span style="color:#41a1c0">Shutdown&lt;/span>(context.&lt;span style="color:#41a1c0">TODO&lt;/span>()); err != &lt;span style="color:#fc5fa3">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#d0a8ff">panic&lt;/span>(err)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// Here we have to close go channel and daemon exporter server.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	&lt;span style="color:#d0a8ff">close&lt;/span>(collector.buff)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	server.wg.&lt;span style="color:#41a1c0">Wait&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> output.FLB_OK
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">main&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Note&lt;/strong>! You should not remove the comment lines above the function, they are important for building .so files.&lt;/p>
-&lt;pre>&lt;code> //export FLBPluginExit
-&lt;/code>&lt;/pre>
-&lt;h2 id="the-exporter-http-server">The Exporter HTTP Server&lt;/h2>
-&lt;p>The next step is to implement the HTTP server and make it run on a daemon.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// Here we start a background server on port 8989, the server will handle `/metrics` path, prometheus exporter will implement the handler.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">startHttpServer&lt;/span>(wg *sync.WaitGroup, reg *prometheus.Registry) *http.Server {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	srv := &amp;amp;http.Server{Addr: &lt;span style="color:#fc6a5d">&amp;#34;:8989&amp;#34;&lt;/span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	http.&lt;span style="color:#41a1c0">Handle&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;/metrics&amp;#34;&lt;/span>, promhttp.&lt;span style="color:#41a1c0">HandlerFor&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		reg,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		promhttp.HandlerOpts{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			EnableOpenMetrics: &lt;span style="color:#fc5fa3">true&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			Registry: reg,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">go&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">defer&lt;/span> wg.&lt;span style="color:#41a1c0">Done&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">if&lt;/span> err := srv.&lt;span style="color:#41a1c0">ListenAndServe&lt;/span>(); err != http.ErrServerClosed {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			fmt.&lt;span style="color:#41a1c0">Println&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;ListenAndServe():&amp;#34;&lt;/span>, err)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> srv
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">NewExporter&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	reg := prometheus.&lt;span style="color:#41a1c0">NewRegistry&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	reg.&lt;span style="color:#41a1c0">MustRegister&lt;/span>(collector)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// Here, we start a new HTTP server and save the instance object into a golang sync.WaitGroup, so that we can watch its status in `FLBPluginExit`
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	server.wg = &amp;amp;sync.WaitGroup{}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	server.wg.&lt;span style="color:#41a1c0">Add&lt;/span>(&lt;span style="color:#d0bf69">1&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	server.srv = &lt;span style="color:#41a1c0">startHttpServer&lt;/span>(server.wg, reg)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="the-exporter-collector">The Exporter Collector&lt;/h2>
-&lt;p>Now we have an HTTP server, but if we want to make it an exporter, we have to define the &lt;strong>collector&lt;/strong>. The collector is a Prometheus concept that implements two call-back functions:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// Here for instance, we define metrics to collect cpu info, which reuses the default Fluent-bit CPU metrics input data
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">NewMyCollector&lt;/span>() *myCollector {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> &amp;amp;myCollector{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		metrics: &lt;span style="color:#fc5fa3">map&lt;/span>[&lt;span style="color:#fc5fa3">string&lt;/span>]*prometheus.Desc{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc6a5d">&amp;#34;cpu&amp;#34;&lt;/span>: prometheus.&lt;span style="color:#41a1c0">NewDesc&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc6a5d">&amp;#34;cpu&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc6a5d">&amp;#34;Collect CPU usage&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				[]&lt;span style="color:#fc5fa3">string&lt;/span>{&lt;span style="color:#fc6a5d">&amp;#34;cpu&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;mode&amp;#34;&lt;/span>}, &lt;span style="color:#fc5fa3">nil&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#6c7986">// this buff is a golang channel object, which receive data sending from `FLBPluginFlushCtx` function
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>		buff: &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> cpuMetrics),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// `Describe` send our metrics name and defination to Prometheus exporter
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> (collector *myCollector) &lt;span style="color:#41a1c0">Describe&lt;/span>(ch &lt;span style="color:#fc5fa3">chan&lt;/span>&amp;lt;- *prometheus.Desc) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">for&lt;/span> _, desc := &lt;span style="color:#fc5fa3">range&lt;/span> collector.metrics {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		ch &amp;lt;- desc
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// `Collect` will read data from golang channel `buff` and send data to HTTP server handler
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> (collector *myCollector) &lt;span style="color:#41a1c0">Collect&lt;/span>(ch &lt;span style="color:#fc5fa3">chan&lt;/span>&amp;lt;- prometheus.Metric) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">for&lt;/span> _, desc := &lt;span style="color:#fc5fa3">range&lt;/span> collector.metrics {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">select&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">case&lt;/span> metric := &amp;lt;-collector.buff:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			fmt.&lt;span style="color:#41a1c0">Println&lt;/span>(metric.cpu, metric.mode, metric.value)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			ch &amp;lt;- prometheus.&lt;span style="color:#41a1c0">MustNewConstMetric&lt;/span>(desc, prometheus.GaugeValue, metric.value, metric.cpu, metric.mode)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">default&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">var&lt;/span> collector = &lt;span style="color:#41a1c0">NewMyCollector&lt;/span>()
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="building-so-file-and-running-in-fluent-bit">Building so file and running in Fluent-bit&lt;/h2>
-&lt;p>Last but not least, building Golang plugin into so file.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go build -buildmode=c-shared -o out_prom_exporter.so prom_exporter.go
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Run Fluent-bit with CLI flags:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>fluent-bit -v -e ./out_prom_exporter.so -i cpu -o promexporter
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That&amp;rsquo;s all steps to implement a customized Fluent-bit Prometheus exporter plugin. To see more details, please go to the Github repo &lt;a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo%3E">https://github.com/stevedsun/fluent-bit-output-prometheus-demo&amp;gt;&lt;/a>.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Prometheus on Steve Sun</title><link>https://sund.site/tags/prometheus/</link><description>Recent content in Prometheus on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Thu, 24 Nov 2022 12:26:23 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/prometheus/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementing a Prometheus Exporter for Fluent-bit</title><link>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</link><pubDate>Thu, 24 Nov 2022 12:26:23 +0800</pubDate><guid>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</guid><description>&lt;h2 id="background"&gt;Background&lt;/h2&gt;
+&lt;p&gt;Fluent-bit is a great tool for logging and monitoring, many teams are using it to collect metrics and logs. Prometheus is also a popular tool for metrics analysis, but if you want to output Fluent-bit data to Prometheus, the only way is to use the node-exporter input plugin, which has fixed metrics and data format.&lt;/p&gt;
+&lt;p&gt;In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.&lt;/p&gt;
+&lt;p&gt;Today I want to share the final solution for this case. The complete demo code can be found on this Github repo: &lt;a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo"&gt;https://github.com/stevedsun/fluent-bit-output-prometheus-demo&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="fluent-bit-output-plugin"&gt;Fluent-bit Output Plugin&lt;/h2&gt;
+&lt;p&gt;Fluent-bit provides a way to implement your Golang plugin. (See &lt;a href="https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins"&gt;Fluent-bit Go Output Plugin&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushes a record to the output plugin.&lt;/p&gt;
+&lt;p&gt;To implement a Fluent-bit output plugin, there are four call-back functions we need to overwrite.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fd8f3f"&gt;//export FLBPluginRegister&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;FLBPluginRegister&lt;/span&gt;(def unsafe.Pointer) &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// Here we define the plugin name and description.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; output.&lt;span style="color:#41a1c0"&gt;FLBPluginRegister&lt;/span&gt;(def, &lt;span style="color:#fc6a5d"&gt;&amp;#34;promexporter&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;Prometheus Exporter&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fd8f3f"&gt;//export FLBPluginInit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;FLBPluginInit&lt;/span&gt;(plugin unsafe.Pointer) &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// We can extract output plugin parameters from `FLBPlguinConfigKey`.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	user := output.&lt;span style="color:#41a1c0"&gt;FLBPluginConfigKey&lt;/span&gt;(plugin, &lt;span style="color:#fc6a5d"&gt;&amp;#34;username&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	passwd := output.&lt;span style="color:#41a1c0"&gt;FLBPluginConfigKey&lt;/span&gt;(plugin, &lt;span style="color:#fc6a5d"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// Here we can run a new Prometheus exporter server.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#41a1c0"&gt;NewExporter&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; output.FLB_OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fd8f3f"&gt;//export FLBPluginFlushCtx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;FLBPluginFlushCtx&lt;/span&gt;(ctx, data unsafe.Pointer, length C.&lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt;, tag *C.char) &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// Here we process every record, extract it and ship to exporter&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	dec := output.&lt;span style="color:#41a1c0"&gt;NewDecoder&lt;/span&gt;(data, &lt;span style="color:#d0a8ff"&gt;int&lt;/span&gt;(length))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#6c7986"&gt;// Extract Record&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		ret, _, record := output.&lt;span style="color:#41a1c0"&gt;GetRecord&lt;/span&gt;(dec)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; ret != &lt;span style="color:#d0bf69"&gt;0&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; k, v := &lt;span style="color:#fc5fa3"&gt;range&lt;/span&gt; record {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#6c7986"&gt;// You have to extract record here, ship them to exporter.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; output.FLB_OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fd8f3f"&gt;//export FLBPluginExit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;FLBPluginExit&lt;/span&gt;() &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; err := server.srv.&lt;span style="color:#41a1c0"&gt;Shutdown&lt;/span&gt;(context.&lt;span style="color:#41a1c0"&gt;TODO&lt;/span&gt;()); err != &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#d0a8ff"&gt;panic&lt;/span&gt;(err)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// Here we have to close go channel and daemon exporter server.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#d0a8ff"&gt;close&lt;/span&gt;(collector.buff)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	server.wg.&lt;span style="color:#41a1c0"&gt;Wait&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; output.FLB_OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;! You should not remove the comment lines above the function, they are important for building .so files.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; //export FLBPluginExit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="the-exporter-http-server"&gt;The Exporter HTTP Server&lt;/h2&gt;
+&lt;p&gt;The next step is to implement the HTTP server and make it run on a daemon.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// Here we start a background server on port 8989, the server will handle `/metrics` path, prometheus exporter will implement the handler.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;startHttpServer&lt;/span&gt;(wg *sync.WaitGroup, reg *prometheus.Registry) *http.Server {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	srv := &amp;amp;http.Server{Addr: &lt;span style="color:#fc6a5d"&gt;&amp;#34;:8989&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	http.&lt;span style="color:#41a1c0"&gt;Handle&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;/metrics&amp;#34;&lt;/span&gt;, promhttp.&lt;span style="color:#41a1c0"&gt;HandlerFor&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		reg,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		promhttp.HandlerOpts{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			EnableOpenMetrics: &lt;span style="color:#fc5fa3"&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			Registry: reg,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;defer&lt;/span&gt; wg.&lt;span style="color:#41a1c0"&gt;Done&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; err := srv.&lt;span style="color:#41a1c0"&gt;ListenAndServe&lt;/span&gt;(); err != http.ErrServerClosed {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			fmt.&lt;span style="color:#41a1c0"&gt;Println&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;ListenAndServe():&amp;#34;&lt;/span&gt;, err)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; srv
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;NewExporter&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	reg := prometheus.&lt;span style="color:#41a1c0"&gt;NewRegistry&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	reg.&lt;span style="color:#41a1c0"&gt;MustRegister&lt;/span&gt;(collector)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// Here, we start a new HTTP server and save the instance object into a golang sync.WaitGroup, so that we can watch its status in `FLBPluginExit`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	server.wg = &amp;amp;sync.WaitGroup{}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	server.wg.&lt;span style="color:#41a1c0"&gt;Add&lt;/span&gt;(&lt;span style="color:#d0bf69"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	server.srv = &lt;span style="color:#41a1c0"&gt;startHttpServer&lt;/span&gt;(server.wg, reg)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="the-exporter-collector"&gt;The Exporter Collector&lt;/h2&gt;
+&lt;p&gt;Now we have an HTTP server, but if we want to make it an exporter, we have to define the &lt;strong&gt;collector&lt;/strong&gt;. The collector is a Prometheus concept that implements two call-back functions:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// Here for instance, we define metrics to collect cpu info, which reuses the default Fluent-bit CPU metrics input data&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;NewMyCollector&lt;/span&gt;() *myCollector {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &amp;amp;myCollector{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		metrics: &lt;span style="color:#fc5fa3"&gt;map&lt;/span&gt;[&lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;]*prometheus.Desc{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc6a5d"&gt;&amp;#34;cpu&amp;#34;&lt;/span&gt;: prometheus.&lt;span style="color:#41a1c0"&gt;NewDesc&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc6a5d"&gt;&amp;#34;cpu&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc6a5d"&gt;&amp;#34;Collect CPU usage&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				[]&lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;{&lt;span style="color:#fc6a5d"&gt;&amp;#34;cpu&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;}, &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#6c7986"&gt;// this buff is a golang channel object, which receive data sending from `FLBPluginFlushCtx` function&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		buff: &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; cpuMetrics),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// `Describe` send our metrics name and defination to Prometheus exporter&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; (collector *myCollector) &lt;span style="color:#41a1c0"&gt;Describe&lt;/span&gt;(ch &lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt;&amp;lt;- *prometheus.Desc) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; _, desc := &lt;span style="color:#fc5fa3"&gt;range&lt;/span&gt; collector.metrics {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		ch &amp;lt;- desc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// `Collect` will read data from golang channel `buff` and send data to HTTP server handler&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; (collector *myCollector) &lt;span style="color:#41a1c0"&gt;Collect&lt;/span&gt;(ch &lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt;&amp;lt;- prometheus.Metric) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; _, desc := &lt;span style="color:#fc5fa3"&gt;range&lt;/span&gt; collector.metrics {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;select&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; metric := &amp;lt;-collector.buff:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			fmt.&lt;span style="color:#41a1c0"&gt;Println&lt;/span&gt;(metric.cpu, metric.mode, metric.value)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			ch &amp;lt;- prometheus.&lt;span style="color:#41a1c0"&gt;MustNewConstMetric&lt;/span&gt;(desc, prometheus.GaugeValue, metric.value, metric.cpu, metric.mode)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;default&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;var&lt;/span&gt; collector = &lt;span style="color:#41a1c0"&gt;NewMyCollector&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="building-so-file-and-running-in-fluent-bit"&gt;Building so file and running in Fluent-bit&lt;/h2&gt;
+&lt;p&gt;Last but not least, building Golang plugin into so file.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go build -buildmode=c-shared -o out_prom_exporter.so prom_exporter.go
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Run Fluent-bit with CLI flags:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fluent-bit -v -e ./out_prom_exporter.so -i cpu -o promexporter
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That&amp;rsquo;s all steps to implement a customized Fluent-bit Prometheus exporter plugin. To see more details, please go to the Github repo &lt;a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo%3E"&gt;https://github.com/stevedsun/fluent-bit-output-prometheus-demo&amp;gt;&lt;/a&gt;.&lt;/p&gt;</description></item></channel></rss>

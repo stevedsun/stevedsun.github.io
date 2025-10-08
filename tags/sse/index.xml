@@ -1,51 +1,51 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Sse on Steve Sun</title><link>https://sund.site/tags/sse/</link><description>Recent content in Sse on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 13 Sep 2023 09:19:18 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/sse/index.xml" rel="self" type="application/rss+xml"/><item><title>Go Server Side Events</title><link>https://sund.site/posts/2023/go-server-side-events/</link><pubDate>Wed, 13 Sep 2023 09:19:18 +0800</pubDate><guid>https://sund.site/posts/2023/go-server-side-events/</guid><description>&lt;p>Server-Sent Events (&lt;strong>SSE&lt;/strong>) is a technology that enables real-time communication between a web browser and a server. It allows the server to send updates or event notifications to the browser without the need for the browser to repeatedly make requests.&lt;/p>
-&lt;p>SSE is often used in applications that require real-time updates, such as chat applications, social media feeds, stock market tickers, or notifications systems. It provides a lightweight and efficient way to deliver server-side updates to clients, improving responsiveness and reducing unnecessary network traffic.&lt;/p>
-&lt;p>Following is an example of SSE in golang framework &lt;a href="https://github.com/gin-gonic/gin">Gin&lt;/a>:&lt;/p>
-&lt;p>The Gin API handler &lt;code>SSEDemoGetStatus&lt;/code> will call &lt;code>service.CheckStatus()&lt;/code> every 10 seconds and respond to client with message event.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">SSEDemoGetStatus&lt;/span>(c *gin.Context) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	chanStream := &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> &lt;span style="color:#fc5fa3">interface&lt;/span>{}, StreamBufferSize)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	clientGone := c.Writer.&lt;span style="color:#41a1c0">CloseNotify&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">go&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">defer&lt;/span> &lt;span style="color:#d0a8ff">close&lt;/span>(chanStream)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		ticker := time.&lt;span style="color:#41a1c0">NewTicker&lt;/span>(&lt;span style="color:#d0bf69">10&lt;/span>*time.Second)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">defer&lt;/span> ticker.&lt;span style="color:#41a1c0">Stop&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">for&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			status := service.&lt;span style="color:#41a1c0">CheckStatus&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			chanStream &amp;lt;- status
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">select&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">case&lt;/span> &amp;lt;-ticker.C:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc5fa3">continue&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">case&lt;/span> &amp;lt;-clientGone:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc5fa3">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Connection&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;keep-alive&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;X-Accel-Buffering&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;no&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Cache-Control&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;no-cache&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	c.&lt;span style="color:#41a1c0">Stream&lt;/span>(&lt;span style="color:#fc5fa3">func&lt;/span>(w io.Writer) &lt;span style="color:#fc5fa3">bool&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">if&lt;/span> msg, ok := &amp;lt;-chanStream; ok {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			c.&lt;span style="color:#41a1c0">SSEvent&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;message&amp;#34;&lt;/span>, msg)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc5fa3">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.&lt;span style="color:#41a1c0">SSEvent&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;status&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;Done&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc5fa3">false&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	})
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In this way, the client side will receive an HTTP request that establishes an TCP connection that continuely sent data from server side.&lt;/p>
-&lt;p>What have to be noticed is the HTTP header. In my case, I need to tell web server (like Nginx) do not cache the TCP traffic. For the javascript &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource">EventSource&lt;/a> API, the header &lt;code>Connection: keep-alive&lt;/code> is important.&lt;/p>
-&lt;p>A better place to put these headers is the Gin middleware function:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">HeadersMiddleware&lt;/span>() gin.HandlerFunc {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>(c *gin.Context) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Content-Type&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;text/event-stream&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Cache-Control&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;no-cache&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Connection&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;keep-alive&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Transfer-Encoding&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;chunked&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.&lt;span style="color:#41a1c0">Next&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Looking for more details please move to &lt;a href="https://github.com/gin-gonic/examples/blob/master/server-sent-event/main.go">Gin SSE example&lt;/a>.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Sse on Steve Sun</title><link>https://sund.site/tags/sse/</link><description>Recent content in Sse on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 13 Sep 2023 09:19:18 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/sse/index.xml" rel="self" type="application/rss+xml"/><item><title>Go Server Side Events</title><link>https://sund.site/posts/2023/go-server-side-events/</link><pubDate>Wed, 13 Sep 2023 09:19:18 +0800</pubDate><guid>https://sund.site/posts/2023/go-server-side-events/</guid><description>&lt;p&gt;Server-Sent Events (&lt;strong&gt;SSE&lt;/strong&gt;) is a technology that enables real-time communication between a web browser and a server. It allows the server to send updates or event notifications to the browser without the need for the browser to repeatedly make requests.&lt;/p&gt;
+&lt;p&gt;SSE is often used in applications that require real-time updates, such as chat applications, social media feeds, stock market tickers, or notifications systems. It provides a lightweight and efficient way to deliver server-side updates to clients, improving responsiveness and reducing unnecessary network traffic.&lt;/p&gt;
+&lt;p&gt;Following is an example of SSE in golang framework &lt;a href="https://github.com/gin-gonic/gin"&gt;Gin&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;The Gin API handler &lt;code&gt;SSEDemoGetStatus&lt;/code&gt; will call &lt;code&gt;service.CheckStatus()&lt;/code&gt; every 10 seconds and respond to client with message event.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;SSEDemoGetStatus&lt;/span&gt;(c *gin.Context) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	chanStream := &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;interface&lt;/span&gt;{}, StreamBufferSize)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	clientGone := c.Writer.&lt;span style="color:#41a1c0"&gt;CloseNotify&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;defer&lt;/span&gt; &lt;span style="color:#d0a8ff"&gt;close&lt;/span&gt;(chanStream)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		ticker := time.&lt;span style="color:#41a1c0"&gt;NewTicker&lt;/span&gt;(&lt;span style="color:#d0bf69"&gt;10&lt;/span&gt;*time.Second)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;defer&lt;/span&gt; ticker.&lt;span style="color:#41a1c0"&gt;Stop&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			status := service.&lt;span style="color:#41a1c0"&gt;CheckStatus&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			chanStream &amp;lt;- status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;select&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; &amp;lt;-ticker.C:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc5fa3"&gt;continue&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; &amp;lt;-clientGone:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Connection&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;keep-alive&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;X-Accel-Buffering&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;no&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Cache-Control&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;no-cache&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	c.&lt;span style="color:#41a1c0"&gt;Stream&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;(w io.Writer) &lt;span style="color:#fc5fa3"&gt;bool&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; msg, ok := &amp;lt;-chanStream; ok {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			c.&lt;span style="color:#41a1c0"&gt;SSEvent&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;, msg)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.&lt;span style="color:#41a1c0"&gt;SSEvent&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;status&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;Done&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this way, the client side will receive an HTTP request that establishes an TCP connection that continuely sent data from server side.&lt;/p&gt;
+&lt;p&gt;What have to be noticed is the HTTP header. In my case, I need to tell web server (like Nginx) do not cache the TCP traffic. For the javascript &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource"&gt;EventSource&lt;/a&gt; API, the header &lt;code&gt;Connection: keep-alive&lt;/code&gt; is important.&lt;/p&gt;
+&lt;p&gt;A better place to put these headers is the Gin middleware function:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;HeadersMiddleware&lt;/span&gt;() gin.HandlerFunc {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;(c *gin.Context) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;text/event-stream&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Cache-Control&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;no-cache&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Connection&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;keep-alive&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Transfer-Encoding&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;chunked&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.&lt;span style="color:#41a1c0"&gt;Next&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Looking for more details please move to &lt;a href="https://github.com/gin-gonic/examples/blob/master/server-sent-event/main.go"&gt;Gin SSE example&lt;/a&gt;.&lt;/p&gt;</description></item></channel></rss>

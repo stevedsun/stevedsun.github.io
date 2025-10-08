@@ -1,403 +1,403 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Go on Steve Sun</title><link>https://sund.site/categories/go/</link><description>Recent content in Go on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 13 Sep 2023 09:19:18 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/go/index.xml" rel="self" type="application/rss+xml"/><item><title>Go Server Side Events</title><link>https://sund.site/posts/2023/go-server-side-events/</link><pubDate>Wed, 13 Sep 2023 09:19:18 +0800</pubDate><guid>https://sund.site/posts/2023/go-server-side-events/</guid><description>&lt;p>Server-Sent Events (&lt;strong>SSE&lt;/strong>) is a technology that enables real-time communication between a web browser and a server. It allows the server to send updates or event notifications to the browser without the need for the browser to repeatedly make requests.&lt;/p>
-&lt;p>SSE is often used in applications that require real-time updates, such as chat applications, social media feeds, stock market tickers, or notifications systems. It provides a lightweight and efficient way to deliver server-side updates to clients, improving responsiveness and reducing unnecessary network traffic.&lt;/p>
-&lt;p>Following is an example of SSE in golang framework &lt;a href="https://github.com/gin-gonic/gin">Gin&lt;/a>:&lt;/p>
-&lt;p>The Gin API handler &lt;code>SSEDemoGetStatus&lt;/code> will call &lt;code>service.CheckStatus()&lt;/code> every 10 seconds and respond to client with message event.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">SSEDemoGetStatus&lt;/span>(c *gin.Context) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	chanStream := &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> &lt;span style="color:#fc5fa3">interface&lt;/span>{}, StreamBufferSize)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	clientGone := c.Writer.&lt;span style="color:#41a1c0">CloseNotify&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">go&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">defer&lt;/span> &lt;span style="color:#d0a8ff">close&lt;/span>(chanStream)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		ticker := time.&lt;span style="color:#41a1c0">NewTicker&lt;/span>(&lt;span style="color:#d0bf69">10&lt;/span>*time.Second)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">defer&lt;/span> ticker.&lt;span style="color:#41a1c0">Stop&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">for&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			status := service.&lt;span style="color:#41a1c0">CheckStatus&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			chanStream &amp;lt;- status
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">select&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">case&lt;/span> &amp;lt;-ticker.C:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc5fa3">continue&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">case&lt;/span> &amp;lt;-clientGone:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc5fa3">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Connection&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;keep-alive&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;X-Accel-Buffering&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;no&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Cache-Control&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;no-cache&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	c.&lt;span style="color:#41a1c0">Stream&lt;/span>(&lt;span style="color:#fc5fa3">func&lt;/span>(w io.Writer) &lt;span style="color:#fc5fa3">bool&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">if&lt;/span> msg, ok := &amp;lt;-chanStream; ok {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			c.&lt;span style="color:#41a1c0">SSEvent&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;message&amp;#34;&lt;/span>, msg)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc5fa3">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.&lt;span style="color:#41a1c0">SSEvent&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;status&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;Done&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc5fa3">false&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	})
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In this way, the client side will receive an HTTP request that establishes an TCP connection that continuely sent data from server side.&lt;/p>
-&lt;p>What have to be noticed is the HTTP header. In my case, I need to tell web server (like Nginx) do not cache the TCP traffic. For the javascript &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource">EventSource&lt;/a> API, the header &lt;code>Connection: keep-alive&lt;/code> is important.&lt;/p>
-&lt;p>A better place to put these headers is the Gin middleware function:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">HeadersMiddleware&lt;/span>() gin.HandlerFunc {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>(c *gin.Context) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Content-Type&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;text/event-stream&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Cache-Control&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;no-cache&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Connection&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;keep-alive&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.Writer.&lt;span style="color:#41a1c0">Header&lt;/span>().&lt;span style="color:#41a1c0">Set&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;Transfer-Encoding&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;chunked&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		c.&lt;span style="color:#41a1c0">Next&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Looking for more details please move to &lt;a href="https://github.com/gin-gonic/examples/blob/master/server-sent-event/main.go">Gin SSE example&lt;/a>.&lt;/p></description></item><item><title>Go 内存泄漏常见模式</title><link>https://sund.site/posts/2023/goroutine-leak/</link><pubDate>Tue, 27 Jun 2023 14:46:59 +0800</pubDate><guid>https://sund.site/posts/2023/goroutine-leak/</guid><description>&lt;p>最近在工作中排查 Go 语言内存泄漏问题时，发现&lt;a href="https://www.uber.com/blog/leakprof-featherlight-in-production-goroutine-leak-detection/">这篇 Uber 写的博客&lt;/a>，其中分享了几种常见的 goroutine 内存泄漏模式，于是把整理了 goroutine 的相关问题，希望更多人搜索到到这篇文章，帮助大家快速定位内存泄漏问题。&lt;/p>
-&lt;h2 id="goroutine-内存泄漏的原因">Goroutine 内存泄漏的原因&lt;/h2>
-&lt;p>Go 语言的内存泄漏通常因为错误地使用 goroutine 和 channel。例如以下几种情况：&lt;/p>
-&lt;ol>
-&lt;li>在 goroutine 里打开一个连接（如 gRPC）但是忘记 close&lt;/li>
-&lt;li>在 goroutine 里的全局变量对象没有释放&lt;/li>
-&lt;li>在 goroutine 里读 channel， 但是没有写入端，而被阻塞&lt;/li>
-&lt;li>在 goroutine 里写入无缓冲的 channel，但是由于 channel 的读端被其他协程关闭而阻塞&lt;/li>
-&lt;li>在 goroutine 里写入有缓冲的 channel，但是 channel 缓冲已满&lt;/li>
-&lt;/ol>
-&lt;p>这几种情况，通常掺杂在复杂的代码里逻辑里，很难调试发现问题。因此衍生出以下几种日常工作中&lt;strong>最容易出现问题的模式&lt;/strong>。&lt;/p>
-&lt;h2 id="常见-goroutine-内存泄漏模式">常见 Goroutine 内存泄漏模式&lt;/h2>
-&lt;h3 id="premature-function-return-功能过早返回">Premature Function Return /功能过早返回&lt;/h3>
-&lt;p>一个 goroutine 要写入 channel，但是在另一个端意外退出导致 channel 读取的代码没有执行。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">Example&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> a := &lt;span style="color:#d0bf69">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c := &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> &lt;span style="color:#fc5fa3">error&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">go&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c &amp;lt;- err
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// do something
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">if&lt;/span> a &amp;gt; &lt;span style="color:#d0bf69">0&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// do something
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> err := &amp;lt;-c
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>代码中主进程在&lt;code>if a &amp;gt; 0&lt;/code> 处 return，导致 channel 无法写入而被阻塞。&lt;/p>
-&lt;p>解决这种问题的一个思路是把无缓冲 channel 转化为缓冲大小为 1 的 channel。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>c := &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> &lt;span style="color:#fc5fa3">error&lt;/span>, &lt;span style="color:#d0bf69">1&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>有缓冲 channel 即使没有读取操作，也不会阻塞。&lt;/p>
-&lt;h3 id="the-timeout-leak-超时泄漏">The Timeout Leak /超时泄漏&lt;/h3>
-&lt;p>这是我们工作中遇到的问题，经常需要执行一个可能超时的异步操作时被使用。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">Example&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timeoutOption := &lt;span style="color:#41a1c0">SomeTimeoutOption&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> done := &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> any)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">go&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> done &amp;lt;- result
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">select&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">case&lt;/span> &amp;lt;- done:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">case&lt;/span> &amp;lt;- timeoutOption.&lt;span style="color:#41a1c0">Timeout&lt;/span>():
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在这段代码里，一旦 timeoutOption 操作超时，就会通知 select，接着程序退出，于是 goroutine 写入 done 的操作被阻塞而无法退出。&lt;/p>
-&lt;p>解决思路同上一个模式，用有缓冲 channel 替代无缓冲 channel。&lt;/p>
-&lt;h3 id="the-ncast-leak-多端读写泄漏">The NCast Leak /多端读写泄漏&lt;/h3>
-&lt;p>如果 channel 的读端只有一个，但是写端有多个，就会发生这种情况。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">Example&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c := &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> any)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">for&lt;/span> _, i := &lt;span style="color:#fc5fa3">range&lt;/span> items {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">go&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>(c &lt;span style="color:#fc5fa3">chan&lt;/span> any) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c &amp;lt;- result
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }(c)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> data := &amp;lt;- c
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这种情况也适用于“多个写端一个读端”的情况，解决方法是把 channel 设置成和写或读数量一致的缓冲数。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>c := &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> any, &lt;span style="color:#d0a8ff">len&lt;/span>(items))
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="channel-iteration-misuse-通道迭代误用">Channel Iteration Misuse /通道迭代误用&lt;/h3>
-&lt;p>Go 支持一种特性 &lt;a href="https://gobyexample.com/range-over-channels">&amp;ldquo;Range over channels&amp;rdquo;&lt;/a>, 可以用 range 来循环读取 channel 的内容。&lt;/p>
-&lt;p>但是一旦读取不到内容，range 就会等待 channel 的写入，而 range 如果正好在 goroutine 内部，这个 goroutine 就会被阻塞。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">Example&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> wg := &amp;amp;sync.WaitGroup{}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c := &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> any, &lt;span style="color:#d0bf69">1&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">for&lt;/span> _, i := items {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> wg.&lt;span style="color:#41a1c0">Add&lt;/span>(&lt;span style="color:#d0bf69">1&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">go&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c &amp;lt;- data
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">go&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#fc5fa3">for&lt;/span> data := &lt;span style="color:#fc5fa3">range&lt;/span> c {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> wg.&lt;span style="color:#41a1c0">Done&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> wg.&lt;span style="color:#41a1c0">Wait&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>解决这个问题的方式手动定义关闭 channel。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>wg := &amp;amp;sync.WaitGroup{}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c := &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> any, &lt;span style="color:#d0bf69">1&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">defer&lt;/span> &lt;span style="color:#d0a8ff">close&lt;/span>(c)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">//...
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样在 WaitGroup 全部结束后，主程序会关闭 channel，从而让异步的 goroutine 内部的 range 退出循环等待。&lt;/p>
-&lt;h2 id="小结">小结&lt;/h2>
-&lt;p>Goroutine 内存泄漏是 Go 语言最容易发生的内存泄漏情况，它通常伴随着错误地使用 goroutine 和 channel。而 channel 的特殊用法如 select 和 range 又让 channel 阻塞变得更加隐蔽不易发现，进而增加排查内存泄漏的难度。&lt;/p>
-&lt;p>在写 goroutine 和调试内存泄漏问题时，要重点关注 channel 相关的操作，尤其涉及到文中列举的四类模式：功能过早返回、超时泄漏、多端读写泄漏、通道迭代误用。&lt;/p></description></item><item><title>Implementing a Prometheus Exporter for Fluent-bit</title><link>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</link><pubDate>Thu, 24 Nov 2022 12:26:23 +0800</pubDate><guid>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</guid><description>&lt;h2 id="background">Background&lt;/h2>
-&lt;p>Fluent-bit is a great tool for logging and monitoring, many teams are using it to collect metrics and logs. Prometheus is also a popular tool for metrics analysis, but if you want to output Fluent-bit data to Prometheus, the only way is to use the node-exporter input plugin, which has fixed metrics and data format.&lt;/p>
-&lt;p>In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.&lt;/p>
-&lt;p>Today I want to share the final solution for this case. The complete demo code can be found on this Github repo: &lt;a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo">https://github.com/stevedsun/fluent-bit-output-prometheus-demo&lt;/a>&lt;/p>
-&lt;h2 id="fluent-bit-output-plugin">Fluent-bit Output Plugin&lt;/h2>
-&lt;p>Fluent-bit provides a way to implement your Golang plugin. (See &lt;a href="https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins">Fluent-bit Go Output Plugin&lt;/a>)&lt;/p>
-&lt;p>We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushes a record to the output plugin.&lt;/p>
-&lt;p>To implement a Fluent-bit output plugin, there are four call-back functions we need to overwrite.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">//export FLBPluginRegister
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">FLBPluginRegister&lt;/span>(def unsafe.Pointer) &lt;span style="color:#fc5fa3">int&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// Here we define the plugin name and description.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	&lt;span style="color:#fc5fa3">return&lt;/span> output.&lt;span style="color:#41a1c0">FLBPluginRegister&lt;/span>(def, &lt;span style="color:#fc6a5d">&amp;#34;promexporter&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;Prometheus Exporter&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">//export FLBPluginInit
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">FLBPluginInit&lt;/span>(plugin unsafe.Pointer) &lt;span style="color:#fc5fa3">int&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// We can extract output plugin parameters from `FLBPlguinConfigKey`.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	user := output.&lt;span style="color:#41a1c0">FLBPluginConfigKey&lt;/span>(plugin, &lt;span style="color:#fc6a5d">&amp;#34;username&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	passwd := output.&lt;span style="color:#41a1c0">FLBPluginConfigKey&lt;/span>(plugin, &lt;span style="color:#fc6a5d">&amp;#34;password&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// Here we can run a new Prometheus exporter server.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	&lt;span style="color:#41a1c0">NewExporter&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> output.FLB_OK
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">//export FLBPluginFlushCtx
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">FLBPluginFlushCtx&lt;/span>(ctx, data unsafe.Pointer, length C.&lt;span style="color:#fc5fa3">int&lt;/span>, tag *C.char) &lt;span style="color:#fc5fa3">int&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// Here we process every record, extract it and ship to exporter
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	dec := output.&lt;span style="color:#41a1c0">NewDecoder&lt;/span>(data, &lt;span style="color:#d0a8ff">int&lt;/span>(length))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">for&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#6c7986">// Extract Record
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>		ret, _, record := output.&lt;span style="color:#41a1c0">GetRecord&lt;/span>(dec)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">if&lt;/span> ret != &lt;span style="color:#d0bf69">0&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">break&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">for&lt;/span> k, v := &lt;span style="color:#fc5fa3">range&lt;/span> record {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#6c7986">// You have to extract record here, ship them to exporter.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> output.FLB_OK
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">//export FLBPluginExit
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">FLBPluginExit&lt;/span>() &lt;span style="color:#fc5fa3">int&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">if&lt;/span> err := server.srv.&lt;span style="color:#41a1c0">Shutdown&lt;/span>(context.&lt;span style="color:#41a1c0">TODO&lt;/span>()); err != &lt;span style="color:#fc5fa3">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#d0a8ff">panic&lt;/span>(err)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// Here we have to close go channel and daemon exporter server.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	&lt;span style="color:#d0a8ff">close&lt;/span>(collector.buff)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	server.wg.&lt;span style="color:#41a1c0">Wait&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> output.FLB_OK
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">main&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Note&lt;/strong>! You should not remove the comment lines above the function, they are important for building .so files.&lt;/p>
-&lt;pre>&lt;code> //export FLBPluginExit
-&lt;/code>&lt;/pre>
-&lt;h2 id="the-exporter-http-server">The Exporter HTTP Server&lt;/h2>
-&lt;p>The next step is to implement the HTTP server and make it run on a daemon.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// Here we start a background server on port 8989, the server will handle `/metrics` path, prometheus exporter will implement the handler.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">startHttpServer&lt;/span>(wg *sync.WaitGroup, reg *prometheus.Registry) *http.Server {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	srv := &amp;amp;http.Server{Addr: &lt;span style="color:#fc6a5d">&amp;#34;:8989&amp;#34;&lt;/span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	http.&lt;span style="color:#41a1c0">Handle&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;/metrics&amp;#34;&lt;/span>, promhttp.&lt;span style="color:#41a1c0">HandlerFor&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		reg,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		promhttp.HandlerOpts{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			EnableOpenMetrics: &lt;span style="color:#fc5fa3">true&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			Registry: reg,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">go&lt;/span> &lt;span style="color:#fc5fa3">func&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">defer&lt;/span> wg.&lt;span style="color:#41a1c0">Done&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">if&lt;/span> err := srv.&lt;span style="color:#41a1c0">ListenAndServe&lt;/span>(); err != http.ErrServerClosed {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			fmt.&lt;span style="color:#41a1c0">Println&lt;/span>(&lt;span style="color:#fc6a5d">&amp;#34;ListenAndServe():&amp;#34;&lt;/span>, err)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> srv
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">NewExporter&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	reg := prometheus.&lt;span style="color:#41a1c0">NewRegistry&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	reg.&lt;span style="color:#41a1c0">MustRegister&lt;/span>(collector)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// Here, we start a new HTTP server and save the instance object into a golang sync.WaitGroup, so that we can watch its status in `FLBPluginExit`
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>	server.wg = &amp;amp;sync.WaitGroup{}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	server.wg.&lt;span style="color:#41a1c0">Add&lt;/span>(&lt;span style="color:#d0bf69">1&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	server.srv = &lt;span style="color:#41a1c0">startHttpServer&lt;/span>(server.wg, reg)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="the-exporter-collector">The Exporter Collector&lt;/h2>
-&lt;p>Now we have an HTTP server, but if we want to make it an exporter, we have to define the &lt;strong>collector&lt;/strong>. The collector is a Prometheus concept that implements two call-back functions:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// Here for instance, we define metrics to collect cpu info, which reuses the default Fluent-bit CPU metrics input data
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> &lt;span style="color:#41a1c0">NewMyCollector&lt;/span>() *myCollector {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">return&lt;/span> &amp;amp;myCollector{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		metrics: &lt;span style="color:#fc5fa3">map&lt;/span>[&lt;span style="color:#fc5fa3">string&lt;/span>]*prometheus.Desc{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc6a5d">&amp;#34;cpu&amp;#34;&lt;/span>: prometheus.&lt;span style="color:#41a1c0">NewDesc&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc6a5d">&amp;#34;cpu&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc6a5d">&amp;#34;Collect CPU usage&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				[]&lt;span style="color:#fc5fa3">string&lt;/span>{&lt;span style="color:#fc6a5d">&amp;#34;cpu&amp;#34;&lt;/span>, &lt;span style="color:#fc6a5d">&amp;#34;mode&amp;#34;&lt;/span>}, &lt;span style="color:#fc5fa3">nil&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#6c7986">// this buff is a golang channel object, which receive data sending from `FLBPluginFlushCtx` function
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>		buff: &lt;span style="color:#d0a8ff">make&lt;/span>(&lt;span style="color:#fc5fa3">chan&lt;/span> cpuMetrics),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// `Describe` send our metrics name and defination to Prometheus exporter
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> (collector *myCollector) &lt;span style="color:#41a1c0">Describe&lt;/span>(ch &lt;span style="color:#fc5fa3">chan&lt;/span>&amp;lt;- *prometheus.Desc) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">for&lt;/span> _, desc := &lt;span style="color:#fc5fa3">range&lt;/span> collector.metrics {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		ch &amp;lt;- desc
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// `Collect` will read data from golang channel `buff` and send data to HTTP server handler
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">func&lt;/span> (collector *myCollector) &lt;span style="color:#41a1c0">Collect&lt;/span>(ch &lt;span style="color:#fc5fa3">chan&lt;/span>&amp;lt;- prometheus.Metric) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">for&lt;/span> _, desc := &lt;span style="color:#fc5fa3">range&lt;/span> collector.metrics {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">select&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">case&lt;/span> metric := &amp;lt;-collector.buff:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			fmt.&lt;span style="color:#41a1c0">Println&lt;/span>(metric.cpu, metric.mode, metric.value)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			ch &amp;lt;- prometheus.&lt;span style="color:#41a1c0">MustNewConstMetric&lt;/span>(desc, prometheus.GaugeValue, metric.value, metric.cpu, metric.mode)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">default&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">var&lt;/span> collector = &lt;span style="color:#41a1c0">NewMyCollector&lt;/span>()
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="building-so-file-and-running-in-fluent-bit">Building so file and running in Fluent-bit&lt;/h2>
-&lt;p>Last but not least, building Golang plugin into so file.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go build -buildmode=c-shared -o out_prom_exporter.so prom_exporter.go
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Run Fluent-bit with CLI flags:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>fluent-bit -v -e ./out_prom_exporter.so -i cpu -o promexporter
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That&amp;rsquo;s all steps to implement a customized Fluent-bit Prometheus exporter plugin. To see more details, please go to the Github repo &lt;a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo%3E">https://github.com/stevedsun/fluent-bit-output-prometheus-demo&amp;gt;&lt;/a>.&lt;/p></description></item><item><title>Building a File Parser</title><link>https://sund.site/posts/2022/2022-5-8_lexer_design/</link><pubDate>Sun, 08 May 2022 14:00:00 +0800</pubDate><guid>https://sund.site/posts/2022/2022-5-8_lexer_design/</guid><description>&lt;p>Last week, after reading this article - &lt;a href="https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go">How to Write a Lexer in Go&lt;/a>, I found that it is not so difficult to design a configuration file parser by this article&amp;rsquo;s mindset. Then I tried to write a fluent-bit configuration parser and finally got this &lt;a href="https://github.com/stevedsun/go-fluentbit-conf-parser">Fluent-Bit configuration parser for Golang&lt;/a>.&lt;/p>
-&lt;p>In this article, I want to introduce how to parse Fluent-bit configuration &lt;code>.conf&lt;/code> file, and the thinking behind it.&lt;/p>
-&lt;h2 id="fluent-bit-configuration-format-and-schema">Fluent-bit configuration format and schema&lt;/h2>
-&lt;pre tabindex="0">&lt;code>[FIRST_SECTION]
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Go on Steve Sun</title><link>https://sund.site/categories/go/</link><description>Recent content in Go on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 13 Sep 2023 09:19:18 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/go/index.xml" rel="self" type="application/rss+xml"/><item><title>Go Server Side Events</title><link>https://sund.site/posts/2023/go-server-side-events/</link><pubDate>Wed, 13 Sep 2023 09:19:18 +0800</pubDate><guid>https://sund.site/posts/2023/go-server-side-events/</guid><description>&lt;p&gt;Server-Sent Events (&lt;strong&gt;SSE&lt;/strong&gt;) is a technology that enables real-time communication between a web browser and a server. It allows the server to send updates or event notifications to the browser without the need for the browser to repeatedly make requests.&lt;/p&gt;
+&lt;p&gt;SSE is often used in applications that require real-time updates, such as chat applications, social media feeds, stock market tickers, or notifications systems. It provides a lightweight and efficient way to deliver server-side updates to clients, improving responsiveness and reducing unnecessary network traffic.&lt;/p&gt;
+&lt;p&gt;Following is an example of SSE in golang framework &lt;a href="https://github.com/gin-gonic/gin"&gt;Gin&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;The Gin API handler &lt;code&gt;SSEDemoGetStatus&lt;/code&gt; will call &lt;code&gt;service.CheckStatus()&lt;/code&gt; every 10 seconds and respond to client with message event.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;SSEDemoGetStatus&lt;/span&gt;(c *gin.Context) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	chanStream := &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;interface&lt;/span&gt;{}, StreamBufferSize)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	clientGone := c.Writer.&lt;span style="color:#41a1c0"&gt;CloseNotify&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;defer&lt;/span&gt; &lt;span style="color:#d0a8ff"&gt;close&lt;/span&gt;(chanStream)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		ticker := time.&lt;span style="color:#41a1c0"&gt;NewTicker&lt;/span&gt;(&lt;span style="color:#d0bf69"&gt;10&lt;/span&gt;*time.Second)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;defer&lt;/span&gt; ticker.&lt;span style="color:#41a1c0"&gt;Stop&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			status := service.&lt;span style="color:#41a1c0"&gt;CheckStatus&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			chanStream &amp;lt;- status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;select&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; &amp;lt;-ticker.C:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc5fa3"&gt;continue&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; &amp;lt;-clientGone:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Connection&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;keep-alive&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;X-Accel-Buffering&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;no&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Cache-Control&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;no-cache&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	c.&lt;span style="color:#41a1c0"&gt;Stream&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;(w io.Writer) &lt;span style="color:#fc5fa3"&gt;bool&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; msg, ok := &amp;lt;-chanStream; ok {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			c.&lt;span style="color:#41a1c0"&gt;SSEvent&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;, msg)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.&lt;span style="color:#41a1c0"&gt;SSEvent&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;status&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;Done&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this way, the client side will receive an HTTP request that establishes an TCP connection that continuely sent data from server side.&lt;/p&gt;
+&lt;p&gt;What have to be noticed is the HTTP header. In my case, I need to tell web server (like Nginx) do not cache the TCP traffic. For the javascript &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource"&gt;EventSource&lt;/a&gt; API, the header &lt;code&gt;Connection: keep-alive&lt;/code&gt; is important.&lt;/p&gt;
+&lt;p&gt;A better place to put these headers is the Gin middleware function:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;HeadersMiddleware&lt;/span&gt;() gin.HandlerFunc {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;(c *gin.Context) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;text/event-stream&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Cache-Control&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;no-cache&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Connection&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;keep-alive&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.Writer.&lt;span style="color:#41a1c0"&gt;Header&lt;/span&gt;().&lt;span style="color:#41a1c0"&gt;Set&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;Transfer-Encoding&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;chunked&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		c.&lt;span style="color:#41a1c0"&gt;Next&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Looking for more details please move to &lt;a href="https://github.com/gin-gonic/examples/blob/master/server-sent-event/main.go"&gt;Gin SSE example&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>Go 内存泄漏常见模式</title><link>https://sund.site/posts/2023/goroutine-leak/</link><pubDate>Tue, 27 Jun 2023 14:46:59 +0800</pubDate><guid>https://sund.site/posts/2023/goroutine-leak/</guid><description>&lt;p&gt;最近在工作中排查 Go 语言内存泄漏问题时，发现&lt;a href="https://www.uber.com/blog/leakprof-featherlight-in-production-goroutine-leak-detection/"&gt;这篇 Uber 写的博客&lt;/a&gt;，其中分享了几种常见的 goroutine 内存泄漏模式，于是把整理了 goroutine 的相关问题，希望更多人搜索到到这篇文章，帮助大家快速定位内存泄漏问题。&lt;/p&gt;
+&lt;h2 id="goroutine-内存泄漏的原因"&gt;Goroutine 内存泄漏的原因&lt;/h2&gt;
+&lt;p&gt;Go 语言的内存泄漏通常因为错误地使用 goroutine 和 channel。例如以下几种情况：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在 goroutine 里打开一个连接（如 gRPC）但是忘记 close&lt;/li&gt;
+&lt;li&gt;在 goroutine 里的全局变量对象没有释放&lt;/li&gt;
+&lt;li&gt;在 goroutine 里读 channel， 但是没有写入端，而被阻塞&lt;/li&gt;
+&lt;li&gt;在 goroutine 里写入无缓冲的 channel，但是由于 channel 的读端被其他协程关闭而阻塞&lt;/li&gt;
+&lt;li&gt;在 goroutine 里写入有缓冲的 channel，但是 channel 缓冲已满&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这几种情况，通常掺杂在复杂的代码里逻辑里，很难调试发现问题。因此衍生出以下几种日常工作中&lt;strong&gt;最容易出现问题的模式&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id="常见-goroutine-内存泄漏模式"&gt;常见 Goroutine 内存泄漏模式&lt;/h2&gt;
+&lt;h3 id="premature-function-return-功能过早返回"&gt;Premature Function Return /功能过早返回&lt;/h3&gt;
+&lt;p&gt;一个 goroutine 要写入 channel，但是在另一个端意外退出导致 channel 读取的代码没有执行。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;Example&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; a := &lt;span style="color:#d0bf69"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; c := &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;error&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; c &amp;lt;- err
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// do something&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; a &amp;gt; &lt;span style="color:#d0bf69"&gt;0&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// do something&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; err := &amp;lt;-c
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;代码中主进程在&lt;code&gt;if a &amp;gt; 0&lt;/code&gt; 处 return，导致 channel 无法写入而被阻塞。&lt;/p&gt;
+&lt;p&gt;解决这种问题的一个思路是把无缓冲 channel 转化为缓冲大小为 1 的 channel。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;c := &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;error&lt;/span&gt;, &lt;span style="color:#d0bf69"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;有缓冲 channel 即使没有读取操作，也不会阻塞。&lt;/p&gt;
+&lt;h3 id="the-timeout-leak-超时泄漏"&gt;The Timeout Leak /超时泄漏&lt;/h3&gt;
+&lt;p&gt;这是我们工作中遇到的问题，经常需要执行一个可能超时的异步操作时被使用。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;Example&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; timeoutOption := &lt;span style="color:#41a1c0"&gt;SomeTimeoutOption&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; done := &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;any&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; done &amp;lt;- result
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;select&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; &amp;lt;- done:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; &amp;lt;- timeoutOption.&lt;span style="color:#41a1c0"&gt;Timeout&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在这段代码里，一旦 timeoutOption 操作超时，就会通知 select，接着程序退出，于是 goroutine 写入 done 的操作被阻塞而无法退出。&lt;/p&gt;
+&lt;p&gt;解决思路同上一个模式，用有缓冲 channel 替代无缓冲 channel。&lt;/p&gt;
+&lt;h3 id="the-ncast-leak-多端读写泄漏"&gt;The NCast Leak /多端读写泄漏&lt;/h3&gt;
+&lt;p&gt;如果 channel 的读端只有一个，但是写端有多个，就会发生这种情况。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;Example&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; c := &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;any&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; _, i := &lt;span style="color:#fc5fa3"&gt;range&lt;/span&gt; items {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;(c &lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;any&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; c &amp;lt;- result
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }(c)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data := &amp;lt;- c
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这种情况也适用于“多个写端一个读端”的情况，解决方法是把 channel 设置成和写或读数量一致的缓冲数。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;c := &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;any&lt;/span&gt;, &lt;span style="color:#d0a8ff"&gt;len&lt;/span&gt;(items))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="channel-iteration-misuse-通道迭代误用"&gt;Channel Iteration Misuse /通道迭代误用&lt;/h3&gt;
+&lt;p&gt;Go 支持一种特性 &lt;a href="https://gobyexample.com/range-over-channels"&gt;&amp;ldquo;Range over channels&amp;rdquo;&lt;/a&gt;, 可以用 range 来循环读取 channel 的内容。&lt;/p&gt;
+&lt;p&gt;但是一旦读取不到内容，range 就会等待 channel 的写入，而 range 如果正好在 goroutine 内部，这个 goroutine 就会被阻塞。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;Example&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; wg := &amp;amp;sync.WaitGroup{}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; c := &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;any&lt;/span&gt;, &lt;span style="color:#d0bf69"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; _, i := items {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; wg.&lt;span style="color:#41a1c0"&gt;Add&lt;/span&gt;(&lt;span style="color:#d0bf69"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; c &amp;lt;- data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; data := &lt;span style="color:#fc5fa3"&gt;range&lt;/span&gt; c {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; wg.&lt;span style="color:#41a1c0"&gt;Done&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; wg.&lt;span style="color:#41a1c0"&gt;Wait&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;解决这个问题的方式手动定义关闭 channel。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wg := &amp;amp;sync.WaitGroup{}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;c := &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;any&lt;/span&gt;, &lt;span style="color:#d0bf69"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;defer&lt;/span&gt; &lt;span style="color:#d0a8ff"&gt;close&lt;/span&gt;(c)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fd8f3f"&gt;//...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这样在 WaitGroup 全部结束后，主程序会关闭 channel，从而让异步的 goroutine 内部的 range 退出循环等待。&lt;/p&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;Goroutine 内存泄漏是 Go 语言最容易发生的内存泄漏情况，它通常伴随着错误地使用 goroutine 和 channel。而 channel 的特殊用法如 select 和 range 又让 channel 阻塞变得更加隐蔽不易发现，进而增加排查内存泄漏的难度。&lt;/p&gt;
+&lt;p&gt;在写 goroutine 和调试内存泄漏问题时，要重点关注 channel 相关的操作，尤其涉及到文中列举的四类模式：功能过早返回、超时泄漏、多端读写泄漏、通道迭代误用。&lt;/p&gt;</description></item><item><title>Implementing a Prometheus Exporter for Fluent-bit</title><link>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</link><pubDate>Thu, 24 Nov 2022 12:26:23 +0800</pubDate><guid>https://sund.site/posts/2022/implementing-prometheus-exporter-for-fluentbit/</guid><description>&lt;h2 id="background"&gt;Background&lt;/h2&gt;
+&lt;p&gt;Fluent-bit is a great tool for logging and monitoring, many teams are using it to collect metrics and logs. Prometheus is also a popular tool for metrics analysis, but if you want to output Fluent-bit data to Prometheus, the only way is to use the node-exporter input plugin, which has fixed metrics and data format.&lt;/p&gt;
+&lt;p&gt;In our case, we want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin.&lt;/p&gt;
+&lt;p&gt;Today I want to share the final solution for this case. The complete demo code can be found on this Github repo: &lt;a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo"&gt;https://github.com/stevedsun/fluent-bit-output-prometheus-demo&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="fluent-bit-output-plugin"&gt;Fluent-bit Output Plugin&lt;/h2&gt;
+&lt;p&gt;Fluent-bit provides a way to implement your Golang plugin. (See &lt;a href="https://docs.fluentbit.io/manual/v/1.9-pre/development/golang-output-plugins"&gt;Fluent-bit Go Output Plugin&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;We can run an asynchronous HTTP server as the Prometheus exporter when Fluent-bit plugin initializing, and transform the Fluent-bit records to Prometheus metrics format when Fluent-bit flushes a record to the output plugin.&lt;/p&gt;
+&lt;p&gt;To implement a Fluent-bit output plugin, there are four call-back functions we need to overwrite.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fd8f3f"&gt;//export FLBPluginRegister&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;FLBPluginRegister&lt;/span&gt;(def unsafe.Pointer) &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// Here we define the plugin name and description.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; output.&lt;span style="color:#41a1c0"&gt;FLBPluginRegister&lt;/span&gt;(def, &lt;span style="color:#fc6a5d"&gt;&amp;#34;promexporter&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;Prometheus Exporter&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fd8f3f"&gt;//export FLBPluginInit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;FLBPluginInit&lt;/span&gt;(plugin unsafe.Pointer) &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// We can extract output plugin parameters from `FLBPlguinConfigKey`.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	user := output.&lt;span style="color:#41a1c0"&gt;FLBPluginConfigKey&lt;/span&gt;(plugin, &lt;span style="color:#fc6a5d"&gt;&amp;#34;username&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	passwd := output.&lt;span style="color:#41a1c0"&gt;FLBPluginConfigKey&lt;/span&gt;(plugin, &lt;span style="color:#fc6a5d"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// Here we can run a new Prometheus exporter server.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#41a1c0"&gt;NewExporter&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; output.FLB_OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fd8f3f"&gt;//export FLBPluginFlushCtx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;FLBPluginFlushCtx&lt;/span&gt;(ctx, data unsafe.Pointer, length C.&lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt;, tag *C.char) &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// Here we process every record, extract it and ship to exporter&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	dec := output.&lt;span style="color:#41a1c0"&gt;NewDecoder&lt;/span&gt;(data, &lt;span style="color:#d0a8ff"&gt;int&lt;/span&gt;(length))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#6c7986"&gt;// Extract Record&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		ret, _, record := output.&lt;span style="color:#41a1c0"&gt;GetRecord&lt;/span&gt;(dec)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; ret != &lt;span style="color:#d0bf69"&gt;0&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; k, v := &lt;span style="color:#fc5fa3"&gt;range&lt;/span&gt; record {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#6c7986"&gt;// You have to extract record here, ship them to exporter.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; output.FLB_OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fd8f3f"&gt;//export FLBPluginExit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;FLBPluginExit&lt;/span&gt;() &lt;span style="color:#fc5fa3"&gt;int&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; err := server.srv.&lt;span style="color:#41a1c0"&gt;Shutdown&lt;/span&gt;(context.&lt;span style="color:#41a1c0"&gt;TODO&lt;/span&gt;()); err != &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#d0a8ff"&gt;panic&lt;/span&gt;(err)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// Here we have to close go channel and daemon exporter server.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#d0a8ff"&gt;close&lt;/span&gt;(collector.buff)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	server.wg.&lt;span style="color:#41a1c0"&gt;Wait&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; output.FLB_OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;! You should not remove the comment lines above the function, they are important for building .so files.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; //export FLBPluginExit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="the-exporter-http-server"&gt;The Exporter HTTP Server&lt;/h2&gt;
+&lt;p&gt;The next step is to implement the HTTP server and make it run on a daemon.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// Here we start a background server on port 8989, the server will handle `/metrics` path, prometheus exporter will implement the handler.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;startHttpServer&lt;/span&gt;(wg *sync.WaitGroup, reg *prometheus.Registry) *http.Server {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	srv := &amp;amp;http.Server{Addr: &lt;span style="color:#fc6a5d"&gt;&amp;#34;:8989&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	http.&lt;span style="color:#41a1c0"&gt;Handle&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;/metrics&amp;#34;&lt;/span&gt;, promhttp.&lt;span style="color:#41a1c0"&gt;HandlerFor&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		reg,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		promhttp.HandlerOpts{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			EnableOpenMetrics: &lt;span style="color:#fc5fa3"&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			Registry: reg,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;go&lt;/span&gt; &lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;defer&lt;/span&gt; wg.&lt;span style="color:#41a1c0"&gt;Done&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; err := srv.&lt;span style="color:#41a1c0"&gt;ListenAndServe&lt;/span&gt;(); err != http.ErrServerClosed {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			fmt.&lt;span style="color:#41a1c0"&gt;Println&lt;/span&gt;(&lt;span style="color:#fc6a5d"&gt;&amp;#34;ListenAndServe():&amp;#34;&lt;/span&gt;, err)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; srv
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;NewExporter&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	reg := prometheus.&lt;span style="color:#41a1c0"&gt;NewRegistry&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	reg.&lt;span style="color:#41a1c0"&gt;MustRegister&lt;/span&gt;(collector)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// Here, we start a new HTTP server and save the instance object into a golang sync.WaitGroup, so that we can watch its status in `FLBPluginExit`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	server.wg = &amp;amp;sync.WaitGroup{}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	server.wg.&lt;span style="color:#41a1c0"&gt;Add&lt;/span&gt;(&lt;span style="color:#d0bf69"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	server.srv = &lt;span style="color:#41a1c0"&gt;startHttpServer&lt;/span&gt;(server.wg, reg)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="the-exporter-collector"&gt;The Exporter Collector&lt;/h2&gt;
+&lt;p&gt;Now we have an HTTP server, but if we want to make it an exporter, we have to define the &lt;strong&gt;collector&lt;/strong&gt;. The collector is a Prometheus concept that implements two call-back functions:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// Here for instance, we define metrics to collect cpu info, which reuses the default Fluent-bit CPU metrics input data&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;NewMyCollector&lt;/span&gt;() *myCollector {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &amp;amp;myCollector{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		metrics: &lt;span style="color:#fc5fa3"&gt;map&lt;/span&gt;[&lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;]*prometheus.Desc{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc6a5d"&gt;&amp;#34;cpu&amp;#34;&lt;/span&gt;: prometheus.&lt;span style="color:#41a1c0"&gt;NewDesc&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc6a5d"&gt;&amp;#34;cpu&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc6a5d"&gt;&amp;#34;Collect CPU usage&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				[]&lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;{&lt;span style="color:#fc6a5d"&gt;&amp;#34;cpu&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;}, &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#6c7986"&gt;// this buff is a golang channel object, which receive data sending from `FLBPluginFlushCtx` function&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		buff: &lt;span style="color:#d0a8ff"&gt;make&lt;/span&gt;(&lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt; cpuMetrics),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// `Describe` send our metrics name and defination to Prometheus exporter&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; (collector *myCollector) &lt;span style="color:#41a1c0"&gt;Describe&lt;/span&gt;(ch &lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt;&amp;lt;- *prometheus.Desc) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; _, desc := &lt;span style="color:#fc5fa3"&gt;range&lt;/span&gt; collector.metrics {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		ch &amp;lt;- desc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// `Collect` will read data from golang channel `buff` and send data to HTTP server handler&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; (collector *myCollector) &lt;span style="color:#41a1c0"&gt;Collect&lt;/span&gt;(ch &lt;span style="color:#fc5fa3"&gt;chan&lt;/span&gt;&amp;lt;- prometheus.Metric) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; _, desc := &lt;span style="color:#fc5fa3"&gt;range&lt;/span&gt; collector.metrics {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;select&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; metric := &amp;lt;-collector.buff:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			fmt.&lt;span style="color:#41a1c0"&gt;Println&lt;/span&gt;(metric.cpu, metric.mode, metric.value)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			ch &amp;lt;- prometheus.&lt;span style="color:#41a1c0"&gt;MustNewConstMetric&lt;/span&gt;(desc, prometheus.GaugeValue, metric.value, metric.cpu, metric.mode)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;default&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;var&lt;/span&gt; collector = &lt;span style="color:#41a1c0"&gt;NewMyCollector&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="building-so-file-and-running-in-fluent-bit"&gt;Building so file and running in Fluent-bit&lt;/h2&gt;
+&lt;p&gt;Last but not least, building Golang plugin into so file.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go build -buildmode=c-shared -o out_prom_exporter.so prom_exporter.go
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Run Fluent-bit with CLI flags:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fluent-bit -v -e ./out_prom_exporter.so -i cpu -o promexporter
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That&amp;rsquo;s all steps to implement a customized Fluent-bit Prometheus exporter plugin. To see more details, please go to the Github repo &lt;a href="https://github.com/stevedsun/fluent-bit-output-prometheus-demo%3E"&gt;https://github.com/stevedsun/fluent-bit-output-prometheus-demo&amp;gt;&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>Building a File Parser</title><link>https://sund.site/posts/2022/2022-5-8_lexer_design/</link><pubDate>Sun, 08 May 2022 14:00:00 +0800</pubDate><guid>https://sund.site/posts/2022/2022-5-8_lexer_design/</guid><description>&lt;p&gt;Last week, after reading this article - &lt;a href="https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go"&gt;How to Write a Lexer in Go&lt;/a&gt;, I found that it is not so difficult to design a configuration file parser by this article&amp;rsquo;s mindset. Then I tried to write a fluent-bit configuration parser and finally got this &lt;a href="https://github.com/stevedsun/go-fluentbit-conf-parser"&gt;Fluent-Bit configuration parser for Golang&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In this article, I want to introduce how to parse Fluent-bit configuration &lt;code&gt;.conf&lt;/code&gt; file, and the thinking behind it.&lt;/p&gt;
+&lt;h2 id="fluent-bit-configuration-format-and-schema"&gt;Fluent-bit configuration format and schema&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[FIRST_SECTION]
  Key1 some value
  Key2 another value
 
 [SECOND_SECTION]
  KeyN 3.14
-&lt;/code>&lt;/pre>&lt;p>Here is a classic mode configuration of Fluent-bit, it includes two parts:&lt;/p>
-&lt;ul>
-&lt;li>Section&lt;/li>
-&lt;li>Key/value pair&lt;/li>
-&lt;/ul>
-&lt;p>First of all, we need to define a struct that represents the Fluent-bit configuration file.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">type&lt;/span> FluentBitConf &lt;span style="color:#fc5fa3">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	Sections []Section
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">type&lt;/span> Section &lt;span style="color:#fc5fa3">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	Name &lt;span style="color:#fc5fa3">string&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	Entries []Entry
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">type&lt;/span> Entry &lt;span style="color:#fc5fa3">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	Key &lt;span style="color:#fc5fa3">string&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	Value &lt;span style="color:#fc5fa3">interface&lt;/span>{}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once we have a struct, the next step is to parse tokens from the file and save their values into golang struct. We can copy the logic of the lexer to develop our fluent bit parser.&lt;/p>
-&lt;p>In a lexer program, the target characters which we want to parse out are called &amp;ldquo;Token&amp;rdquo;, Token is also the keyword that our parser program is searching for. A parser program will read characters in a file one by one, whenever it found a token, the parser saves the value between tokens into the final structure and go ahead.&lt;/p>
-&lt;h2 id="parse-a-single-token">Parse a single token&lt;/h2>
-&lt;p>If we want to parse a Section, we have to make the parser read characters one by one and stop at &lt;code>[&lt;/code> character, which means the beginning of a Section. The parser must save the current state as &lt;code>t_section&lt;/code> and keep the parser reading until &lt;code>]&lt;/code> character, the word between &lt;code>[&lt;/code> and &lt;code>]&lt;/code> is the Section value we need to persist into go struct.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">// define some tag to tell parser state
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>&lt;span style="color:#fc5fa3">const&lt;/span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	t_section = &lt;span style="color:#fc5fa3">iota&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> (parser *FluentBitConfParser) &lt;span style="color:#41a1c0">Parse&lt;/span>() *FluentBitConf {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">var&lt;/span> currSection *Section = &lt;span style="color:#fc5fa3">nil&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">for&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// read charector one by one
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>		r, _, err := parser.reader.&lt;span style="color:#41a1c0">ReadRune&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">if&lt;/span> err != &lt;span style="color:#fc5fa3">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// stop at the end of file
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>			&lt;span style="color:#fc5fa3">if&lt;/span> err == io.EOF {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc5fa3">if&lt;/span> currSection != &lt;span style="color:#fc5fa3">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>					parser.Conf.Sections = &lt;span style="color:#d0a8ff">append&lt;/span>(parser.Conf.Sections, *currSection)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc5fa3">return&lt;/span> parser.Conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">return&lt;/span> parser.Conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">switch&lt;/span> r {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">case&lt;/span> &lt;span style="color:#fc6a5d">&amp;#39;\n&amp;#39;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">continue&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">case&lt;/span> &lt;span style="color:#fc6a5d">&amp;#39;[&amp;#39;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#6c7986">// save last config item
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>			&lt;span style="color:#fc5fa3">if&lt;/span> currSection != &lt;span style="color:#fc5fa3">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				parser.Conf.Sections = &lt;span style="color:#d0a8ff">append&lt;/span>(parser.Conf.Sections, *currSection)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#6c7986">// create new config item
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>			currSection = &amp;amp;Section{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				Name: &lt;span style="color:#fc6a5d">&amp;#34;&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				Entries: []Entry{},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			parser.token = t_section
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">default&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">if&lt;/span> unicode.&lt;span style="color:#41a1c0">IsSpace&lt;/span>(r) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc5fa3">continue&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6c7986">// here is important function, read the charectors after token-chareactor and save them into struct
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6c7986">&lt;/span>			strValue, _ := parser.&lt;span style="color:#41a1c0">parseString&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">switch&lt;/span> parser.token {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">case&lt;/span> t_section:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				currSection.Name = strValue
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				parser.token = t_entry_key
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In function &lt;code>parser.parseString()&lt;/code>, we have to read until the end of a value (for section, it&amp;rsquo;s &lt;code>]&lt;/code>), then return the value.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#fc5fa3">func&lt;/span> (parser *FluentBitConfParser) &lt;span style="color:#41a1c0">parseString&lt;/span>() (&lt;span style="color:#fc5fa3">string&lt;/span>, &lt;span style="color:#fc5fa3">error&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">var&lt;/span> val &lt;span style="color:#fc5fa3">string&lt;/span> = &lt;span style="color:#fc6a5d">&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">if&lt;/span> err := parser.reader.&lt;span style="color:#41a1c0">UnreadRune&lt;/span>(); err != &lt;span style="color:#fc5fa3">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc6a5d">&amp;#34;&amp;#34;&lt;/span>, err
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#fc5fa3">for&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		r, _, err := parser.reader.&lt;span style="color:#41a1c0">ReadRune&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">if&lt;/span> err != &lt;span style="color:#fc5fa3">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">if&lt;/span> err == io.EOF {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#fc5fa3">return&lt;/span> val, &lt;span style="color:#fc5fa3">nil&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">return&lt;/span> &lt;span style="color:#fc6a5d">&amp;#34;&amp;#34;&lt;/span>, err
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#fc5fa3">if&lt;/span> parser.token == t_section &amp;amp;&amp;amp; r == &lt;span style="color:#fc6a5d">&amp;#39;]&amp;#39;&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#fc5fa3">return&lt;/span> val, &lt;span style="color:#fc5fa3">nil&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		val = val + &lt;span style="color:#d0a8ff">string&lt;/span>(r)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>That&amp;rsquo;s all logic for parsing a section. Parse key/value pair is the same process, just note to make the parser know which state it is and save values between whitespace or &lt;code>\n&lt;/code>, you can see the code in &lt;a href="https://github.com/stevedsun/go-fluentbit-conf-parser/blob/master/parser.go">the Github repo&lt;/a>.&lt;/p>
-&lt;h2 id="conclusion">Conclusion&lt;/h2>
-&lt;p>To parse a configuration file, we have to&lt;/p>
-&lt;ul>
-&lt;li>Defining token (key characters)&lt;/li>
-&lt;li>Reading characters and looking for a token&lt;/li>
-&lt;li>Saving current state to tell parser which struct the following characters belong&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here is a classic mode configuration of Fluent-bit, it includes two parts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Section&lt;/li&gt;
+&lt;li&gt;Key/value pair&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;First of all, we need to define a struct that represents the Fluent-bit configuration file.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;type&lt;/span&gt; FluentBitConf &lt;span style="color:#fc5fa3"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	Sections []Section
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;type&lt;/span&gt; Section &lt;span style="color:#fc5fa3"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	Name &lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	Entries []Entry
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;type&lt;/span&gt; Entry &lt;span style="color:#fc5fa3"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	Key &lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	Value &lt;span style="color:#fc5fa3"&gt;interface&lt;/span&gt;{}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once we have a struct, the next step is to parse tokens from the file and save their values into golang struct. We can copy the logic of the lexer to develop our fluent bit parser.&lt;/p&gt;
+&lt;p&gt;In a lexer program, the target characters which we want to parse out are called &amp;ldquo;Token&amp;rdquo;, Token is also the keyword that our parser program is searching for. A parser program will read characters in a file one by one, whenever it found a token, the parser saves the value between tokens into the final structure and go ahead.&lt;/p&gt;
+&lt;h2 id="parse-a-single-token"&gt;Parse a single token&lt;/h2&gt;
+&lt;p&gt;If we want to parse a Section, we have to make the parser read characters one by one and stop at &lt;code&gt;[&lt;/code&gt; character, which means the beginning of a Section. The parser must save the current state as &lt;code&gt;t_section&lt;/code&gt; and keep the parser reading until &lt;code&gt;]&lt;/code&gt; character, the word between &lt;code&gt;[&lt;/code&gt; and &lt;code&gt;]&lt;/code&gt; is the Section value we need to persist into go struct.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;// define some tag to tell parser state&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;const&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	t_section = &lt;span style="color:#fc5fa3"&gt;iota&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; (parser *FluentBitConfParser) &lt;span style="color:#41a1c0"&gt;Parse&lt;/span&gt;() *FluentBitConf {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;var&lt;/span&gt; currSection *Section = &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// read charector one by one&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		r, _, err := parser.reader.&lt;span style="color:#41a1c0"&gt;ReadRune&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; err != &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// stop at the end of file&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; err == io.EOF {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; currSection != &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;					parser.Conf.Sections = &lt;span style="color:#d0a8ff"&gt;append&lt;/span&gt;(parser.Conf.Sections, *currSection)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; parser.Conf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; parser.Conf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;switch&lt;/span&gt; r {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; &lt;span style="color:#fc6a5d"&gt;&amp;#39;\n&amp;#39;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;continue&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; &lt;span style="color:#fc6a5d"&gt;&amp;#39;[&amp;#39;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#6c7986"&gt;// save last config item&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; currSection != &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				parser.Conf.Sections = &lt;span style="color:#d0a8ff"&gt;append&lt;/span&gt;(parser.Conf.Sections, *currSection)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#6c7986"&gt;// create new config item&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			currSection = &amp;amp;Section{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				Name: &lt;span style="color:#fc6a5d"&gt;&amp;#34;&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				Entries: []Entry{},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			parser.token = t_section
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;default&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; unicode.&lt;span style="color:#41a1c0"&gt;IsSpace&lt;/span&gt;(r) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc5fa3"&gt;continue&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#6c7986"&gt;// here is important function, read the charectors after token-chareactor and save them into struct&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			strValue, _ := parser.&lt;span style="color:#41a1c0"&gt;parseString&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;switch&lt;/span&gt; parser.token {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;case&lt;/span&gt; t_section:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				currSection.Name = strValue
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				parser.token = t_entry_key
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In function &lt;code&gt;parser.parseString()&lt;/code&gt;, we have to read until the end of a value (for section, it&amp;rsquo;s &lt;code&gt;]&lt;/code&gt;), then return the value.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; (parser *FluentBitConfParser) &lt;span style="color:#41a1c0"&gt;parseString&lt;/span&gt;() (&lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt;, &lt;span style="color:#fc5fa3"&gt;error&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;var&lt;/span&gt; val &lt;span style="color:#fc5fa3"&gt;string&lt;/span&gt; = &lt;span style="color:#fc6a5d"&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; err := parser.reader.&lt;span style="color:#41a1c0"&gt;UnreadRune&lt;/span&gt;(); err != &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc6a5d"&gt;&amp;#34;&amp;#34;&lt;/span&gt;, err
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#fc5fa3"&gt;for&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		r, _, err := parser.reader.&lt;span style="color:#41a1c0"&gt;ReadRune&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; err != &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; err == io.EOF {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;				&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; val, &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; &lt;span style="color:#fc6a5d"&gt;&amp;#34;&amp;#34;&lt;/span&gt;, err
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		&lt;span style="color:#fc5fa3"&gt;if&lt;/span&gt; parser.token == t_section &amp;amp;&amp;amp; r == &lt;span style="color:#fc6a5d"&gt;&amp;#39;]&amp;#39;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;			&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; val, &lt;span style="color:#fc5fa3"&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;		val = val + &lt;span style="color:#d0a8ff"&gt;string&lt;/span&gt;(r)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That&amp;rsquo;s all logic for parsing a section. Parse key/value pair is the same process, just note to make the parser know which state it is and save values between whitespace or &lt;code&gt;\n&lt;/code&gt;, you can see the code in &lt;a href="https://github.com/stevedsun/go-fluentbit-conf-parser/blob/master/parser.go"&gt;the Github repo&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;To parse a configuration file, we have to&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Defining token (key characters)&lt;/li&gt;
+&lt;li&gt;Reading characters and looking for a token&lt;/li&gt;
+&lt;li&gt;Saving current state to tell parser which struct the following characters belong&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

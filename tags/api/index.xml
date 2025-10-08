@@ -1,92 +1,91 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Api on Steve Sun</title><link>https://sund.site/tags/api/</link><description>Recent content in Api on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sat, 13 Jul 2024 16:12:34 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/api/index.xml" rel="self" type="application/rss+xml"/><item><title>RESTful Web Service Cookbook 笔记</title><link>https://sund.site/posts/2024/restful-api-cookbook/</link><pubDate>Sat, 13 Jul 2024 16:12:34 +0800</pubDate><guid>https://sund.site/posts/2024/restful-api-cookbook/</guid><description>&lt;p>&lt;a href="https://www.oreilly.com/library/view/restful-web-services/9780596809140/">RESTful Web Service Cookbook&lt;/a> 是一本简短、精炼的 RESTful 接口设计指南。这篇文章（笔记）用来记录这本书中提到的重点。&lt;/p>
-&lt;blockquote>
-&lt;p>因为 RESTful 对后端开发来说实在太熟悉不过，所以我会省略掉那些习以为常的约定，只记录书中提到的、大多数开发者没有注意到的细节。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="http-method">HTTP Method&lt;/h2>
-&lt;h3 id="get">GET&lt;/h3>
-&lt;p>进行&lt;strong>安全&lt;/strong>与&lt;strong>幂等&lt;/strong>的信息获取。&lt;/p>
-&lt;h3 id="post">POST&lt;/h3>
-&lt;p>执行的目标是一个资源集合（工厂），而不是具体的 URI。&lt;/p>
-&lt;p>适用场景：&lt;/p>
-&lt;ul>
-&lt;li>创建新的资源,把资源作为一个工厂。&lt;/li>
-&lt;li>通过一个控制器资源来修改一个或多个资源。&lt;/li>
-&lt;li>执行需要大数据输入（参数较多）的查询。&lt;/li>
-&lt;li>&lt;strong>在其他 HTTP 方法看上去不合适时，执行不安全或非幂等的操作&lt;/strong>。&lt;/li>
-&lt;/ul>
-&lt;p>解决方案：&lt;/p>
-&lt;ul>
-&lt;li>将一个已存在的资源标识为创建新资源的工厂。虽然您可以把任意资源用做工厂,但常见的做法是使用一个集合资源。&lt;/li>
-&lt;li>让客户端向工厂资源提交附有需要创建资源的表述的 POST 请求。通过可选支持的 &lt;strong>Slug&lt;/strong> 头, 客户端可以向服务器建议一个名字,作为被创建资源的 URI 的一部分。&lt;/li>
-&lt;li>资源创建之后,返回响应码 &lt;strong>201(Created)&lt;/strong>,并在 &lt;strong>Location&lt;/strong> 头中包含新创建资源的 URI。&lt;/li>
-&lt;li>如果响应正文包含了新创建资源的完整表述,那么在 &lt;strong>Content-Location&lt;/strong> 头中包含新创建资源的 URI。&lt;/li>
-&lt;/ul>
-&lt;h3 id="put">PUT&lt;/h3>
-&lt;p>仅在客户端可以控制 URI 的构成时,才使用 PUT 方法创建新资源。&lt;strong>（换句话说，PUT 也可以创建资源，但是仅限于客户端可以指定 URI）&lt;/strong>&lt;/p>
-&lt;h2 id="确定资源对象的粒度">确定资源对象的粒度&lt;/h2>
-&lt;p>应该以适合客户端使用模式的方式来设计资源,而不是基于现有的数据库或对象模型。&lt;/p>
-&lt;ul>
-&lt;li>可缓存性&lt;/li>
-&lt;li>减小修改频率&lt;/li>
-&lt;li>可变性——分离可变和不可变数据&lt;/li>
-&lt;/ul>
-&lt;h3 id="如何设计复合资源">如何设计复合资源?&lt;/h3>
-&lt;p>&lt;strong>复合资源&lt;/strong>降低了统一接口的可见性,因为它们的表述中包含了和其他资源相重叠的数据。&lt;/p>
-&lt;ul>
-&lt;li>如果符合资源使用&lt;strong>频率不高&lt;/strong>，可以考虑用&lt;strong>缓存&lt;/strong>替代。&lt;/li>
-&lt;li>考虑网络开销，复合资源会不会降低服务端吞吐量，增大延时。&lt;/li>
-&lt;/ul>
-&lt;h2 id="http-body">HTTP Body&lt;/h2>
-&lt;p>以 JSON 格式的 Body 为例：&lt;/p>
-&lt;ol>
-&lt;li>最好包含一个指向 self 的链接&lt;/li>
-&lt;li>如果分页，最好包含下一页的链接&lt;/li>
-&lt;li>如果分页，要指示集合的大小（总数）&lt;/li>
-&lt;li>如果查询对象是本地化的，添加一个属性来表示本地化内容的语言&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;John&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;id&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;urn:example:user:1234&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;link&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;rel&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;self&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;href&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;http://www.example.org/person/john&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;address&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;id&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;urn:example:address:4567&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;link&amp;#34;: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;rel&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;self&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;href&amp;#34;: &lt;span style="color:#fc6a5d">&amp;#34;http://www.example.org/person/john/address&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="http-response">HTTP Response&lt;/h2>
-&lt;ol>
-&lt;li>对于客户端错误，返回 4xx 状态码 + Date （错误发生的时间）。&lt;/li>
-&lt;li>对于服务端错误，返回 5xx 状态码 + Date （错误发生的时间）。&lt;/li>
-&lt;li>Body 中要描述错误，如果有外部文档和链接可参考，在 Header 提供一个 Link 头或直接把链接写在 Body 里。&lt;/li>
-&lt;li>为了后期追踪或分析，在服务器上记录了错误日志，应该提供一个可以找到该错误的标识符或链接。&lt;/li>
-&lt;/ol>
-&lt;h2 id="设计查询结构">设计查询结构&lt;/h2>
-&lt;h3 id="设计查询请求">设计查询请求&lt;/h3>
-&lt;ol>
-&lt;li>为了缓存和性能，尽量避免范围查询。解决方法包括：
-&lt;ul>
-&lt;li>使用预定义查询&lt;/li>
-&lt;li>也可以使用 HTTP Header： Range&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>避免使用通用语言（SQL、XPATH）的查询。&lt;/li>
-&lt;li>避免 URI 和数据存储方式的紧耦合（前端把后端当作数据库）。&lt;/li>
-&lt;li>对于参数较多，可以考虑使用 POST（因为 URI 长度有最大限制）
-&lt;ul>
-&lt;li>POST 接口的缺点是丧失了缓存能力&lt;/li>
-&lt;li>POST 请求是不可缓存的，所以 Cache-Control 和 Expires 头无济于事&lt;/li>
-&lt;li>解决缓存问题，可以让 POST 创建一个临时资源，把 link 返回前端，前端下次用 GET 获取该资源&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="设计查询响应结果">设计查询响应结果&lt;/h3>
-&lt;ol>
-&lt;li>返回集合。添加合理的缓存过期头。&lt;/li>
-&lt;li>如果没有结果，应该返回&lt;strong>空集合&lt;/strong>。&lt;/li>
-&lt;/ol></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Api on Steve Sun</title><link>https://sund.site/tags/api/</link><description>Recent content in Api on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sat, 13 Jul 2024 16:12:34 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/api/index.xml" rel="self" type="application/rss+xml"/><item><title>RESTful Web Service Cookbook 笔记</title><link>https://sund.site/posts/2024/restful-api-cookbook/</link><pubDate>Sat, 13 Jul 2024 16:12:34 +0800</pubDate><guid>https://sund.site/posts/2024/restful-api-cookbook/</guid><description>&lt;p&gt;&lt;a href="https://www.oreilly.com/library/view/restful-web-services/9780596809140/"&gt;RESTful Web Service Cookbook&lt;/a&gt; 是一本简短、精炼的 RESTful 接口设计指南。这篇文章（笔记）用来记录这本书中提到的重点。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因为 RESTful 对后端开发来说实在太熟悉不过，所以我会省略掉那些习以为常的约定，只记录书中提到的、大多数开发者没有注意到的细节。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id="http-method"&gt;HTTP Method&lt;/h2&gt;
+&lt;h3 id="get"&gt;GET&lt;/h3&gt;
+&lt;p&gt;进行&lt;strong&gt;安全&lt;/strong&gt;与&lt;strong&gt;幂等&lt;/strong&gt;的信息获取。&lt;/p&gt;
+&lt;h3 id="post"&gt;POST&lt;/h3&gt;
+&lt;p&gt;执行的目标是一个资源集合（工厂），而不是具体的 URI。&lt;/p&gt;
+&lt;p&gt;适用场景：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;创建新的资源,把资源作为一个工厂。&lt;/li&gt;
+&lt;li&gt;通过一个控制器资源来修改一个或多个资源。&lt;/li&gt;
+&lt;li&gt;执行需要大数据输入（参数较多）的查询。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;在其他 HTTP 方法看上去不合适时，执行不安全或非幂等的操作&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;解决方案：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;将一个已存在的资源标识为创建新资源的工厂。虽然您可以把任意资源用做工厂,但常见的做法是使用一个集合资源。&lt;/li&gt;
+&lt;li&gt;让客户端向工厂资源提交附有需要创建资源的表述的 POST 请求。通过可选支持的 &lt;strong&gt;Slug&lt;/strong&gt; 头, 客户端可以向服务器建议一个名字,作为被创建资源的 URI 的一部分。&lt;/li&gt;
+&lt;li&gt;资源创建之后,返回响应码 &lt;strong&gt;201(Created)&lt;/strong&gt;,并在 &lt;strong&gt;Location&lt;/strong&gt; 头中包含新创建资源的 URI。&lt;/li&gt;
+&lt;li&gt;如果响应正文包含了新创建资源的完整表述,那么在 &lt;strong&gt;Content-Location&lt;/strong&gt; 头中包含新创建资源的 URI。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="put"&gt;PUT&lt;/h3&gt;
+&lt;p&gt;仅在客户端可以控制 URI 的构成时,才使用 PUT 方法创建新资源。&lt;strong&gt;（换句话说，PUT 也可以创建资源，但是仅限于客户端可以指定 URI）&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="确定资源对象的粒度"&gt;确定资源对象的粒度&lt;/h2&gt;
+&lt;p&gt;应该以适合客户端使用模式的方式来设计资源,而不是基于现有的数据库或对象模型。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可缓存性&lt;/li&gt;
+&lt;li&gt;减小修改频率&lt;/li&gt;
+&lt;li&gt;可变性——分离可变和不可变数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="如何设计复合资源"&gt;如何设计复合资源?&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;复合资源&lt;/strong&gt;降低了统一接口的可见性,因为它们的表述中包含了和其他资源相重叠的数据。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果符合资源使用&lt;strong&gt;频率不高&lt;/strong&gt;，可以考虑用&lt;strong&gt;缓存&lt;/strong&gt;替代。&lt;/li&gt;
+&lt;li&gt;考虑网络开销，复合资源会不会降低服务端吞吐量，增大延时。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="http-body"&gt;HTTP Body&lt;/h2&gt;
+&lt;p&gt;以 JSON 格式的 Body 为例：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;最好包含一个指向 self 的链接&lt;/li&gt;
+&lt;li&gt;如果分页，最好包含下一页的链接&lt;/li&gt;
+&lt;li&gt;如果分页，要指示集合的大小（总数）&lt;/li&gt;
+&lt;li&gt;如果查询对象是本地化的，添加一个属性来表示本地化内容的语言&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;name&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;John&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;urn:example:user:1234&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;link&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;rel&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;self&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;href&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;http://www.example.org/person/john&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;address&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;urn:example:address:4567&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;link&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;rel&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;self&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;href&amp;#34;: &lt;span style="color:#fc6a5d"&gt;&amp;#34;http://www.example.org/person/john/address&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="http-response"&gt;HTTP Response&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;对于客户端错误，返回 4xx 状态码 + Date （错误发生的时间）。&lt;/li&gt;
+&lt;li&gt;对于服务端错误，返回 5xx 状态码 + Date （错误发生的时间）。&lt;/li&gt;
+&lt;li&gt;Body 中要描述错误，如果有外部文档和链接可参考，在 Header 提供一个 Link 头或直接把链接写在 Body 里。&lt;/li&gt;
+&lt;li&gt;为了后期追踪或分析，在服务器上记录了错误日志，应该提供一个可以找到该错误的标识符或链接。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="设计查询结构"&gt;设计查询结构&lt;/h2&gt;
+&lt;h3 id="设计查询请求"&gt;设计查询请求&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;为了缓存和性能，尽量避免范围查询。解决方法包括：
+&lt;ul&gt;
+&lt;li&gt;使用预定义查询&lt;/li&gt;
+&lt;li&gt;也可以使用 HTTP Header： Range&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;避免使用通用语言（SQL、XPATH）的查询。&lt;/li&gt;
+&lt;li&gt;避免 URI 和数据存储方式的紧耦合（前端把后端当作数据库）。&lt;/li&gt;
+&lt;li&gt;对于参数较多，可以考虑使用 POST（因为 URI 长度有最大限制）
+&lt;ul&gt;
+&lt;li&gt;POST 接口的缺点是丧失了缓存能力&lt;/li&gt;
+&lt;li&gt;POST 请求是不可缓存的，所以 Cache-Control 和 Expires 头无济于事&lt;/li&gt;
+&lt;li&gt;解决缓存问题，可以让 POST 创建一个临时资源，把 link 返回前端，前端下次用 GET 获取该资源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="设计查询响应结果"&gt;设计查询响应结果&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;返回集合。添加合理的缓存过期头。&lt;/li&gt;
+&lt;li&gt;如果没有结果，应该返回&lt;strong&gt;空集合&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ol&gt;</description></item></channel></rss>

@@ -1,4 +1,46 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Steve Sun</title><link>https://sund.site/tags/linux/</link><description>Recent content in Linux on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sat, 19 Jul 2025 01:06:32 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Steve Sun</title><link>https://sund.site/tags/linux/</link><description>Recent content in Linux on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 22 Oct 2025 23:21:21 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
+&lt;p&gt;装完后有一些需要改造的配置记录在这篇文章中，供大家参考。&lt;/p&gt;
+&lt;h2 id="4k-显示器设置"&gt;4K 显示器设置&lt;/h2&gt;
+&lt;p&gt;修改系统菜单 Setup - Monitor，按照你自己显示器的分辨率，根据配置文件中的注释设置参数，比如我的显示器 27 寸 4k：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;env = GDK_SCALE,1.75
+monitor=,preferred,auto,1.875
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;额外为 QT 软件添加缩放设置&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;env = QT_AUTO_SCREEN_SCALE_FACTOR,1
+env = QT_SCALE_FACTOR,1.75
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="中文输入法"&gt;中文输入法&lt;/h2&gt;
+&lt;p&gt;参考 &lt;a href="https://manateelazycat.github.io/2024/12/17/fcitx-best-config/"&gt;Fcitx 最佳配置实践&lt;/a&gt;。文章中“安装 emacs-rime”这一章节如果不使用 emacs 可以忽略。&lt;/p&gt;
+&lt;h2 id="终端字体修改设置"&gt;终端字体修改设置&lt;/h2&gt;
+&lt;p&gt;系统自带字体在终端环境下对中文都不太友好。我喜欢用&lt;code&gt;Maple Mono&lt;/code&gt;这个字体，可以安装 AUR 包&lt;code&gt;maple-mono-nf-cn&lt;/code&gt;这个库。然后在&lt;code&gt;~/.config/alacritty/alacritty.toml&lt;/code&gt;中修改字体设置：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[font]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;normal = { family = &lt;span style="color:#fc6a5d"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bold = { family = &lt;span style="color:#fc6a5d"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;italic = { family = &lt;span style="color:#fc6a5d"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;size = &lt;span style="color:#d0bf69"&gt;12&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="键盘默认的-numlock-关闭"&gt;键盘默认的 numlock 关闭&lt;/h2&gt;
+&lt;p&gt;Omarchy 安装后会默认开启小键盘的 numlock，可以在系统菜单 Setup - Input 中设置：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;numlock_by_default = false
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="neovim-的一些设置"&gt;Neovim 的一些设置&lt;/h2&gt;
+&lt;p&gt;Neovim 默认使用了 Lazyvim，我在&lt;code&gt;~/.config/nvim/lua/config/options.lua&lt;/code&gt;里添加了一些配置，可以参考注释选择性添加：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-lua" data-lang="lua"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;-- 修复中文字体在终端里有下划线的问题&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim.opt.spelllang = { &lt;span style="color:#fc6a5d"&gt;&amp;#34;en&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;cjk&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;-- 在 markdown 文件中关闭语法检查&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim.api.nvim_create_autocmd(&lt;span style="color:#fc6a5d"&gt;&amp;#34;FileType&amp;#34;&lt;/span&gt;, {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pattern = &lt;span style="color:#fc6a5d"&gt;&amp;#34;markdown&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; callback = &lt;span style="color:#fc5fa3"&gt;function&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim.diagnostic.enable(&lt;span style="color:#fc5fa3"&gt;false&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;end&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后创建&lt;code&gt;~/.config/nvim/lua/plugins/flush.lua&lt;/code&gt;并添加内容，恢复 Vim 默认的 normal 模式下 s 键的功能：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-lua" data-lang="lua"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc6a5d"&gt;&amp;#34;folke/flash.nvim&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; keys = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; { &lt;span style="color:#fc6a5d"&gt;&amp;#34;s&amp;#34;&lt;/span&gt;, mode = { &lt;span style="color:#fc6a5d"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;x&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;o&amp;#34;&lt;/span&gt; }, &lt;span style="color:#fc5fa3"&gt;false&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt=""&gt;&lt;/p&gt;
 &lt;p&gt;这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。&lt;/p&gt;
 &lt;p&gt;不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。&lt;/p&gt;

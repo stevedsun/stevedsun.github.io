@@ -1,4 +1,46 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 08 Oct 2025 20:39:15 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-e2e-testing/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-e2e-testing/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 22 Oct 2025 23:21:21 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
+&lt;p&gt;装完后有一些需要改造的配置记录在这篇文章中，供大家参考。&lt;/p&gt;
+&lt;h2 id="4k-显示器设置"&gt;4K 显示器设置&lt;/h2&gt;
+&lt;p&gt;修改系统菜单 Setup - Monitor，按照你自己显示器的分辨率，根据配置文件中的注释设置参数，比如我的显示器 27 寸 4k：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;env = GDK_SCALE,1.75
+monitor=,preferred,auto,1.875
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;额外为 QT 软件添加缩放设置&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;env = QT_AUTO_SCREEN_SCALE_FACTOR,1
+env = QT_SCALE_FACTOR,1.75
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="中文输入法"&gt;中文输入法&lt;/h2&gt;
+&lt;p&gt;参考 &lt;a href="https://manateelazycat.github.io/2024/12/17/fcitx-best-config/"&gt;Fcitx 最佳配置实践&lt;/a&gt;。文章中“安装 emacs-rime”这一章节如果不使用 emacs 可以忽略。&lt;/p&gt;
+&lt;h2 id="终端字体修改设置"&gt;终端字体修改设置&lt;/h2&gt;
+&lt;p&gt;系统自带字体在终端环境下对中文都不太友好。我喜欢用&lt;code&gt;Maple Mono&lt;/code&gt;这个字体，可以安装 AUR 包&lt;code&gt;maple-mono-nf-cn&lt;/code&gt;这个库。然后在&lt;code&gt;~/.config/alacritty/alacritty.toml&lt;/code&gt;中修改字体设置：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[font]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;normal = { family = &lt;span style="color:#fc6a5d"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bold = { family = &lt;span style="color:#fc6a5d"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;italic = { family = &lt;span style="color:#fc6a5d"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;size = &lt;span style="color:#d0bf69"&gt;12&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="键盘默认的-numlock-关闭"&gt;键盘默认的 numlock 关闭&lt;/h2&gt;
+&lt;p&gt;Omarchy 安装后会默认开启小键盘的 numlock，可以在系统菜单 Setup - Input 中设置：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;numlock_by_default = false
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="neovim-的一些设置"&gt;Neovim 的一些设置&lt;/h2&gt;
+&lt;p&gt;Neovim 默认使用了 Lazyvim，我在&lt;code&gt;~/.config/nvim/lua/config/options.lua&lt;/code&gt;里添加了一些配置，可以参考注释选择性添加：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-lua" data-lang="lua"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;-- 修复中文字体在终端里有下划线的问题&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim.opt.spelllang = { &lt;span style="color:#fc6a5d"&gt;&amp;#34;en&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;cjk&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#6c7986"&gt;-- 在 markdown 文件中关闭语法检查&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim.api.nvim_create_autocmd(&lt;span style="color:#fc6a5d"&gt;&amp;#34;FileType&amp;#34;&lt;/span&gt;, {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pattern = &lt;span style="color:#fc6a5d"&gt;&amp;#34;markdown&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; callback = &lt;span style="color:#fc5fa3"&gt;function&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; vim.diagnostic.enable(&lt;span style="color:#fc5fa3"&gt;false&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc5fa3"&gt;end&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后创建&lt;code&gt;~/.config/nvim/lua/plugins/flush.lua&lt;/code&gt;并添加内容，恢复 Vim 默认的 normal 模式下 s 键的功能：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-lua" data-lang="lua"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;return&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#fc6a5d"&gt;&amp;#34;folke/flash.nvim&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; keys = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; { &lt;span style="color:#fc6a5d"&gt;&amp;#34;s&amp;#34;&lt;/span&gt;, mode = { &lt;span style="color:#fc6a5d"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;x&amp;#34;&lt;/span&gt;, &lt;span style="color:#fc6a5d"&gt;&amp;#34;o&amp;#34;&lt;/span&gt; }, &lt;span style="color:#fc5fa3"&gt;false&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-e2e-testing/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-e2e-testing/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
 &lt;p&gt;用 OpenCode 而没有选其他 AI Agent 框架（如 Claude Code）是因为它可以集成公司的企业版 Github Copilot 账号，这样我们在公司内网可以无限量调用 GPT-4 和 Claude Sonnet 等大语言模型。&lt;/p&gt;
 &lt;p&gt;其次微软做的 Playwright 是一个可以调用浏览器 API 的自动化测试框架。相比于 Selenium 更轻量，社区维护更积极，和大模型结合也更好（有官方的 MCP Server）。Playwright 还内置了 webdriver，免去了很多环境配置的麻烦。&lt;/p&gt;
 &lt;p&gt;基于 OpenCode 和 Playwright-MCP-Server，稍加少量提示词模板，就可以不写一行测试代码，完整跑通一组 Web UI 的 E2E 测试用例。这在过去简直无法想象。&lt;/p&gt;
@@ -361,19 +403,4 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;p&gt;要 Hand on enablement，有些焦虑的本质，是缺少行动。互联网的发达让人习惯性地收集信息，而不是采取行动。&lt;/p&gt;
 &lt;p&gt;我最近在犹豫是否需要买一辆车做代步工具，我发现我无法决策的原因是缺少开车的机会，不了解自己的需求。所以「是否买车」的问题对我来说可以转换成「创造条件开车」。下一步就是租车先了解自己的需求。&lt;/p&gt;
 &lt;p&gt;快速行动，也可以获得一种全新的视角，你会发现这和前边强调模拟演练的共通之处：&lt;strong&gt;多种视角下的得到的浅显认识，往往能胜过单一视角下的深入研究&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;Let&amp;rsquo;s do it.&lt;/p&gt;</description></item><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/pairing-with-ai-02/</guid><description>&lt;p&gt;在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;任务死循环&lt;/li&gt;
-&lt;li&gt;模型无法修复环境问题&lt;/li&gt;
-&lt;li&gt;模型执行长任务后半段忘记上下文&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="一些使用经验"&gt;一些使用经验&lt;/h2&gt;
-&lt;p&gt;以我自己为例，我经常使用 Cline + Github Copilot 的组合。我很喜欢 Cline 的功能是 &lt;code&gt;Checkpoint restore&lt;/code&gt;，它可以在执行错误的位置重新编辑提示词执行。这让我可以在相同的任务中调用不同的模型，观察他们处理问题的能力。&lt;/p&gt;
-&lt;p&gt;用作规划（Plan）的模型通常用 Deepseek-R1，Gemini 2.0 Flash Thinking，Claude 3.7。这里除了 Claude 3.7 能够比较准确给出计划外，其他模型多少都容易走「歪路」， 比如 Deepseek-R1 喜欢做一些多余的事情，让它翻译中文，它会调用 MCP 的翻译服务而不是自己翻译。&lt;/p&gt;
-&lt;p&gt;从经济角度考虑，解决简单问题 Gemini 2.0 Flash Thinking 是比较快速、经济的模型。复杂问题直接上 Claude 3.7 可能更容易控制成本。&lt;/p&gt;
-&lt;p&gt;用作执行任务（Act）的模型里，Deepseek-V3 表现非常不稳定，经常死循环或丢失上下文。Claude 太贵，而 Gemini 2.0 Flash 是相对准确且划算的模型。置于国产的 Qwen 系列模型不完全支持 Function Calling，Cline 也没有适配，所以暂时无法测试。&lt;/p&gt;
-&lt;h2 id="ai-编程疑难杂症的应对方法"&gt;AI 编程疑难杂症的应对方法&lt;/h2&gt;
-&lt;p&gt;最近读到&lt;a href="https://ezyang.github.io/ai-blindspots/"&gt;AI Blindspots&lt;/a&gt;这篇文章，作者系统性整理了 AI 编程中遇到的问题和他的思路。对我非常有启发。我用 Agent 把它翻译成了中文并人工做了润色，你可以在这里读到：&lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5"&gt;AI 编程的盲点&lt;/a&gt;。&lt;/p&gt;
-&lt;p&gt;概括起来，解决 AI 问题的核心要领还是三点：更准确的提示词、更完整的上下文、缩小问题规模。&lt;/p&gt;
-&lt;p&gt;相信随着技术的发展，编程范式会发生翻天覆地的变化。如果重构变得如此容易，那么马丁福勒的《重构》是否应该出一套 AI 时代下的新范式。如果文档不再是被人读，而是喂给模型当作上下文，那么文档的形态应该是什么样？是否提供一个向量化的文档接口供大模型调用，将是未来编程框架的新常态？&lt;/p&gt;
-&lt;p&gt;我对未来充满期待。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;Let&amp;rsquo;s do it.&lt;/p&gt;</description></item></channel></rss>

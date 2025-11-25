@@ -27,8 +27,8 @@ Description
 
 - 从仓库根读取 CATEGORIES.md 来选择 category 建议。
 - tags 自动抽取 2-3 个，可由用户手动增删。
-- upvote 与 toc 字段默认遵循 archetypes/default.md；如用户显式指定则覆盖。
 - 写文件时默认使用 `content/posts/<YYYY>/<slug>.md` 结构；若 new.sh 存在，可调用 new.sh 创建文件然后编辑。
+- 正文的内容只需生成各个章节标题和正文第一段开头。
 - 写入与 commit：默认仅写入文件（经用户确认），不会自动 commit。用户可选择手动 commit 或使用 --auto-commit（需显式授权）。
 
 交互示例（伪）：

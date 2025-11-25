@@ -1,7 +1,7 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
-categories: [随笔]
+categories: []
 tags: []
 aliases: [/posts/{{ .Name }}/]
 description: ""

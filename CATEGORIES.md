@@ -1,3 +1,5 @@
+# Categories
+
 - Software Architecture
 - Go
 - Python

@@ -1,6 +1,6 @@
 ---
 name: proofread
-description: 帮助用户对 Markdown 文件校对与修复
+description: 校对 Markdown 文章
 ---
 
 ## When to use

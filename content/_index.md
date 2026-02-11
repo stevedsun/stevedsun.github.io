@@ -2,7 +2,9 @@
 title: "Steve Sun"
 ---
 
-As a **software developer**, I'm passionate about understanding the **underlying systems** and **principles of technology**. I have a talent for deconstructing complex challenges into clear, **structured models**, and I find great joy in sharing my knowledge and experiences with the community.
+- Break down complex problems.
+- Discuss what makes good software design taste.
+- Explore engineering practices.
 
 ---
 

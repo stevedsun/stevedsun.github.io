@@ -31,4 +31,4 @@ hugo serve
 
 ## Publish
 
-This repo has set up github actions. Just push the commit to main branch, this will auto trigger page publish process.
+This repo has set up github actions. Just push the commit to master branch, this will auto trigger page publish process.

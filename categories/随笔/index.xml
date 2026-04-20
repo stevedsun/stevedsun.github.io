@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>随笔 on Steve Sun</title><link>https://sund.site/categories/%E9%9A%8F%E7%AC%94/</link><description>Recent content in 随笔 on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 03 Nov 2025 22:07:40 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml"/><item><title>外部化的J人</title><link>https://sund.site/posts/2025/ext-judging/</link><pubDate>Mon, 03 Nov 2025 22:07:40 +0800</pubDate><guid>https://sund.site/posts/2025/ext-judging/</guid><description>&lt;p&gt;生活中有一类人，喜欢催促别人制定计划。只要事情还悬在半空，他就感到不安。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>随笔 on Steve Sun</title><link>https://sund.site/categories/%E9%9A%8F%E7%AC%94/</link><description>Recent content in 随笔 on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 03 Nov 2025 22:07:40 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml"/><item><title>外部化的J人</title><link>https://sund.site/posts/2025/%E5%A4%96%E9%83%A8%E5%8C%96%E7%9A%84j%E4%BA%BA/</link><pubDate>Mon, 03 Nov 2025 22:07:40 +0800</pubDate><guid>https://sund.site/posts/2025/%E5%A4%96%E9%83%A8%E5%8C%96%E7%9A%84j%E4%BA%BA/</guid><description>&lt;p&gt;生活中有一类人，喜欢催促别人制定计划。只要事情还悬在半空，他就感到不安。&lt;/p&gt;
 &lt;p&gt;这种人不一定是公司老板，也不一定多强势，他就是喜欢问“什么时候能定下来？”“周末怎么安排，到底去哪？”，类似这样，向外寻找确定性。&lt;/p&gt;
 &lt;p&gt;这种人，我们暂且叫他们“外部化的 J 人”或“Ex J 人”，J 人就是 MBTI 人格分析中的 Judging 型性格的人，喜欢预判未来走向，热爱制定计划。与之相对的是 P 人，随性自在。&lt;/p&gt;
 &lt;p&gt;Ex J 人，就是把这种 J 属性外溢给他人的人，同化他人成为 J 人的 J 人。&lt;/p&gt;
@@ -14,7 +14,7 @@
 &lt;p&gt;如何跟 Ex J 人沟通呢？&lt;/p&gt;
 &lt;p&gt;我也不知道答案，所以不耻 Chat 问，请教了 GPT 答案：要分成两步，先缓和对方情绪，表达理解；再用模糊的步骤代替精确的结论，比如你定不出计划，就说现在定不下来，一旦发生什么，就可以如何应对。让对方看到你的思考过程。&lt;/p&gt;
 &lt;p&gt;这样，用大概的步骤，或模糊的时间点，代替精确的回答，让对方的控制欲有所缓解，也没有被对方卷入节奏。&lt;/p&gt;
-&lt;p&gt;啊，做人好累。最后，希望你成为 P 人吧，如果实在不行，也答应我，当个好 J 人，好吗。&lt;/p&gt;</description></item><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
+&lt;p&gt;啊，做人好累。最后，希望你成为 P 人吧，如果实在不行，也答应我，当个好 J 人，好吗。&lt;/p&gt;</description></item><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-%E4%B8%80%E4%BA%9B%E4%B8%AD%E6%96%87%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E8%AE%BE%E7%BD%AE/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-%E4%B8%80%E4%BA%9B%E4%B8%AD%E6%96%87%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E8%AE%BE%E7%BD%AE/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
 &lt;p&gt;装完后有一些需要改造的配置记录在这篇文章中，供大家参考。&lt;/p&gt;
 &lt;h2 id="4k-显示器设置"&gt;4K 显示器设置&lt;/h2&gt;
 &lt;p&gt;修改系统菜单 Setup - Monitor，按照你自己显示器的分辨率，根据配置文件中的注释设置参数，比如我的显示器 27 寸 4k：&lt;/p&gt;
@@ -56,7 +56,7 @@ env = QT_SCALE_FACTOR,1.75
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-e2e-testing/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-e2e-testing/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-agent--%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86-%E4%BA%A7%E5%93%81%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-agent--%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86-%E4%BA%A7%E5%93%81%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
 &lt;p&gt;用 OpenCode 而没有选其他 AI Agent 框架（如 Claude Code）是因为它可以集成公司的企业版 Github Copilot 账号，这样我们在公司内网可以无限量调用 GPT-4 和 Claude Sonnet 等大语言模型。&lt;/p&gt;
 &lt;p&gt;其次微软做的 Playwright 是一个可以调用浏览器 API 的自动化测试框架。相比于 Selenium 更轻量，社区维护更积极，和大模型结合也更好（有官方的 MCP Server）。Playwright 还内置了 webdriver，免去了很多环境配置的麻烦。&lt;/p&gt;
 &lt;p&gt;基于 OpenCode 和 Playwright-MCP-Server，稍加少量提示词模板，就可以不写一行测试代码，完整跑通一组 Web UI 的 E2E 测试用例。这在过去简直无法想象。&lt;/p&gt;
@@ -74,8 +74,16 @@ env = QT_SCALE_FACTOR,1.75
 &lt;li&gt;不必要的移动&lt;/li&gt;
 &lt;li&gt;缺陷&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;AI Agent 一定程度上解决了“过度生产（要重复编写测试代码）”，“等待（从需求实现到测试用例实现，最后才能验证功能）”，“不必要的运输（业务需求在不同人员之间的传递）”三个方面的浪费。&lt;/p&gt;</description></item><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;AI Agent 一定程度上解决了“过度生产（要重复编写测试代码）”，“等待（从需求实现到测试用例实现，最后才能验证功能）”，“不必要的运输（业务需求在不同人员之间的传递）”三个方面的浪费。&lt;/p&gt;</description></item><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/%E9%81%87%E5%88%B0-linux-%E7%B3%BB%E7%BB%9F-kernel-panic-%E4%BA%86%E8%AF%A5%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/%E9%81%87%E5%88%B0-linux-%E7%B3%BB%E7%BB%9F-kernel-panic-%E4%BA%86%E8%AF%A5%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。&lt;/p&gt;
 &lt;p&gt;不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。&lt;/p&gt;
 &lt;p&gt;下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。&lt;/p&gt;
@@ -136,7 +144,15 @@ nvme0n1
 &lt;li&gt;
 &lt;p&gt;用&lt;code&gt;mount&lt;/code&gt;挂载原系统必要文件，进入原系统并重建 initramfs&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ol&gt;</description></item><item><title>如何与「老登」相处</title><link>https://sund.site/posts/2025/how-to-deal-with-elders/</link><pubDate>Sun, 13 Jul 2025 12:40:24 +0800</pubDate><guid>https://sund.site/posts/2025/how-to-deal-with-elders/</guid><description>&lt;p&gt;&lt;img src="https://sund.site/images/how-to-deal-with-elders/HollywoodVices.jpg" alt="Thou Shalt Not"&gt;&lt;/p&gt;
+&lt;/ol&gt;</description></item><item><title>如何与「老登」相处</title><link>https://sund.site/posts/2025/%E5%A6%82%E4%BD%95%E4%B8%8E%E8%80%81%E7%99%BB%E7%9B%B8%E5%A4%84/</link><pubDate>Sun, 13 Jul 2025 12:40:24 +0800</pubDate><guid>https://sund.site/posts/2025/%E5%A6%82%E4%BD%95%E4%B8%8E%E8%80%81%E7%99%BB%E7%9B%B8%E5%A4%84/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/how-to-deal-with-elders/HollywoodVices.jpg" alt="Thou Shalt Not" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;Thou Shalt Not&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;每一天，我们难免要和一些资历稍长（不一定指年龄）的「老登」打交道。大部分打工人在退休以前，都要活在一个由老登制定游戏规则的世界里。&lt;/p&gt;
 &lt;p&gt;如何应对这样的世界？下面是一个参考，不构成建议，请勿模仿。&lt;/p&gt;
 &lt;p&gt;1934年美国电影制片人与发行人协会出台了历史上最严格的电影制作守则──「Hays Code（海思法典）」。这部守则旨在&lt;strong&gt;提高观众的道德水准&lt;/strong&gt;。&lt;/p&gt;
@@ -166,7 +182,7 @@ nvme0n1
 &lt;p&gt;回到开头的问题，在一个老登们制定规则的世界里，如何自处？&lt;/p&gt;
 &lt;p&gt;答案就是玩一个&lt;a href="https://book.douban.com/subject/25742296/"&gt;无限的游戏&lt;/a&gt;（？）。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;有限的游戏在边界内玩，无限的游戏玩的就是边界。&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>读完这本书，沟通将是一个有迹可循的过程</title><link>https://sund.site/posts/2025/super-communicator/</link><pubDate>Tue, 13 May 2025 13:49:37 +0800</pubDate><guid>https://sund.site/posts/2025/super-communicator/</guid><description>&lt;p&gt;沟通能力能够决定了一个人是否幸福。在与周围人相处融洽的环境下，能让我们觉得被包容，被理解。反之会让我们苦恼：明明抱有善意的交流，为什么总是导致冲突和分歧。到底问题出在哪里？&lt;/p&gt;
+&lt;p&gt;有限的游戏在边界内玩，无限的游戏玩的就是边界。&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>读完这本书，沟通将是一个有迹可循的过程</title><link>https://sund.site/posts/2025/%E8%AF%BB%E5%AE%8C%E8%BF%99%E6%9C%AC%E4%B9%A6%E6%B2%9F%E9%80%9A%E5%B0%86%E6%98%AF%E4%B8%80%E4%B8%AA%E6%9C%89%E8%BF%B9%E5%8F%AF%E5%BE%AA%E7%9A%84%E8%BF%87%E7%A8%8B/</link><pubDate>Tue, 13 May 2025 13:49:37 +0800</pubDate><guid>https://sund.site/posts/2025/%E8%AF%BB%E5%AE%8C%E8%BF%99%E6%9C%AC%E4%B9%A6%E6%B2%9F%E9%80%9A%E5%B0%86%E6%98%AF%E4%B8%80%E4%B8%AA%E6%9C%89%E8%BF%B9%E5%8F%AF%E5%BE%AA%E7%9A%84%E8%BF%87%E7%A8%8B/</guid><description>&lt;p&gt;沟通能力能够决定了一个人是否幸福。在与周围人相处融洽的环境下，能让我们觉得被包容，被理解。反之会让我们苦恼：明明抱有善意的交流，为什么总是导致冲突和分歧。到底问题出在哪里？&lt;/p&gt;
 &lt;p&gt;《超级沟通者》这本书最近给我很多启发，我希望和你分享一些沟通技巧。这和那些强调同理心，强调谈判方法的书籍不同，它提出了一个更深层次的观点：&lt;strong&gt;对话的目的，是了解身边人如何看待世界的同时，帮助他们理解我们的想法&lt;/strong&gt;。&lt;/p&gt;
 &lt;h2 id="当对话进入到个人感受层面的交流时人与人才能建立起深度的连接"&gt;当对话进入到个人感受层面的交流时，人与人才能建立起深度的连接&lt;/h2&gt;
 &lt;p&gt;哈佛大学进行过一项调查，为什么有些会议能够缓和参与各方的冲突并达成共识，为什么有些谈话的参与者能够建立起深层次的连接。研究者发现，这类沟通中往往存在一个高中心度参与者，也就是标题中的「超级沟通者」，他具有这些特点：&lt;/p&gt;
@@ -226,7 +242,7 @@ nvme0n1
 &lt;p&gt;对于不同主张、不同信仰的人，交流的目的更多是互相理解，分享经历和观点，而不是说服他人改变想法。&lt;/p&gt;
 &lt;h2 id="总结"&gt;总结&lt;/h2&gt;
 &lt;p&gt;我最近在与朋友闲聊时有个体会，一个成熟的人，不能止步于「尊重但不理解」或是「谁好谁坏」的讨论中，即使我们不能解决大部分矛盾和误解，仍然可以做到「我不完全认同，但是我能理解你为什么这样做」。理解观点不同的人，也会让我们自己避免内耗，更加开朗。&lt;/p&gt;
-&lt;p&gt;回顾上面三种类型的对话，日常交流我们可以通过区分对话类型，切换不同的思维模式，从开放性话题渐进地进入到感受层面的交流，和他人建立更深层次的连接。善加实践，我们的生活和工作都必将获益。&lt;/p&gt;</description></item><item><title>为什么不应该让AI生成单元测试</title><link>https://sund.site/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/posts/2025/do-not-vibe-testing/</guid><description>&lt;p&gt;最近听到 Gru.ai 创始人张海龙老师在一档&lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9"&gt;播客节目&lt;/a&gt;中提到自动生成 Unit Testing 是他们在做 AI Coding 的主要方向。&lt;/p&gt;
+&lt;p&gt;回顾上面三种类型的对话，日常交流我们可以通过区分对话类型，切换不同的思维模式，从开放性话题渐进地进入到感受层面的交流，和他人建立更深层次的连接。善加实践，我们的生活和工作都必将获益。&lt;/p&gt;</description></item><item><title>为什么不应该让AI生成单元测试</title><link>https://sund.site/posts/2025/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%BA%94%E8%AF%A5%E8%AE%A9ai%E7%94%9F%E6%88%90%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/posts/2025/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%BA%94%E8%AF%A5%E8%AE%A9ai%E7%94%9F%E6%88%90%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/</guid><description>&lt;p&gt;最近听到 Gru.ai 创始人张海龙老师在一档&lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9"&gt;播客节目&lt;/a&gt;中提到自动生成 Unit Testing 是他们在做 AI Coding 的主要方向。&lt;/p&gt;
 &lt;p&gt;Gru.ai 官网上有这么两句话：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Forget about unit testing – get covered automatically (忘记单元测试 - 自动覆盖)
@@ -250,7 +266,7 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;p&gt;要 Hand on enablement，有些焦虑的本质，是缺少行动。互联网的发达让人习惯性地收集信息，而不是采取行动。&lt;/p&gt;
 &lt;p&gt;我最近在犹豫是否需要买一辆车做代步工具，我发现我无法决策的原因是缺少开车的机会，不了解自己的需求。所以「是否买车」的问题对我来说可以转换成「创造条件开车」。下一步就是租车先了解自己的需求。&lt;/p&gt;
 &lt;p&gt;快速行动，也可以获得一种全新的视角，你会发现这和前边强调模拟演练的共通之处：&lt;strong&gt;多种视角下的得到的浅显认识，往往能胜过单一视角下的深入研究&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;Let&amp;rsquo;s do it.&lt;/p&gt;</description></item><item><title>磨合</title><link>https://sund.site/posts/2024/symbiosis/</link><pubDate>Mon, 16 Sep 2024 23:31:14 +0800</pubDate><guid>https://sund.site/posts/2024/symbiosis/</guid><description>&lt;p&gt;前几天买了一辆公路车，车店老板说，新买的自行车要骑一段时间，需要慢慢磨合。&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s do it.&lt;/p&gt;</description></item><item><title>磨合</title><link>https://sund.site/posts/2024/%E7%A3%A8%E5%90%88/</link><pubDate>Mon, 16 Sep 2024 23:31:14 +0800</pubDate><guid>https://sund.site/posts/2024/%E7%A3%A8%E5%90%88/</guid><description>&lt;p&gt;前几天买了一辆公路车，车店老板说，新买的自行车要骑一段时间，需要慢慢磨合。&lt;/p&gt;
 &lt;p&gt;我不知道老板说的「磨合」，是人适应车，还是车适应人。也可能两者都有。&lt;/p&gt;
 &lt;p&gt;这让我联想起书里这段话：&lt;/p&gt;
 &lt;blockquote&gt;
@@ -264,45 +280,173 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;p&gt;与某物共生，前提是它必须足够复杂。需要你认真去理解，去体会。简单就意味着「参数」太少，它无法向你拟合，你只能傻傻地向它拟合，适应它。&lt;/p&gt;
 &lt;p&gt;为了让某物达到你预期的状态，你要经过漫长的、名为磨合的旅程。这期间，你看到了和预期中不同的风景，最初预设的目标不那么重要了，无尽的可能性在前方等着你。&lt;/p&gt;
 &lt;p&gt;这就是最佳状态，不用纠结于完美，完美是平衡，旅程本身就是目的地。&lt;/p&gt;
-&lt;p&gt;朋友们，像车手训练自己耐力那样，不断去和你周遭的一切磨合吧，因为磨合就是人生的全部意义。&lt;/p&gt;</description></item><item><title>乐山游记</title><link>https://sund.site/posts/2024/leshan/</link><pubDate>Sun, 23 Jun 2024 18:50:51 +0800</pubDate><guid>https://sund.site/posts/2024/leshan/</guid><description>&lt;p&gt;&lt;img src="https://sund.site/images/leshan/1.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;朋友们，像车手训练自己耐力那样，不断去和你周遭的一切磨合吧，因为磨合就是人生的全部意义。&lt;/p&gt;</description></item><item><title>乐山游记</title><link>https://sund.site/posts/2024/%E4%B9%90%E5%B1%B1%E6%B8%B8%E8%AE%B0/</link><pubDate>Sun, 23 Jun 2024 18:50:51 +0800</pubDate><guid>https://sund.site/posts/2024/%E4%B9%90%E5%B1%B1%E6%B8%B8%E8%AE%B0/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/1.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;最近工作节奏放缓，业余时间也多了。我决定去乐山看看。久闻小吃之都的美名，但是来成都之后一直在全国出差，对这座高铁只要 50 分钟就能到达的城市，一次面都没见过，实在说不过去。&lt;/p&gt;
 &lt;p&gt;作为时间管理小能手，我星期六早上 6 点就从家出发，8 点多到了乐山站。先找个早餐店弄一碗乐山豆腐脑吧，这是我在成都最爱的小吃之一，很期待原产地的风味。很多店铺都还没开门，一直走到了火车站对面的美食街才找到一家。坐下，一碗酥肉豆腐脑，一个牛肉咔饼。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/2.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/2.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;乐山豆腐脑和北方豆腐脑不太一样。它的主食是豆花和红薯粉丝。在粘稠的豆花粉丝汤里，加上炸黄豆、花生、牛肉（或者酥肉、鸡丝）、香菜。洒上辣椒油。有时候再放点薄脆。吃到嘴里是滑滑的咸辣汤汁裹着肉和黄豆的酥脆口感。乐山本地的豆腐脑用的豆花似乎和成都小店里有区别，是比嫩豆腐要稍微老一点的豆腐，汤也更入味。&lt;/p&gt;
 &lt;p&gt;牛肉咔饼其实就是肉夹馍的四川版。把牛肉剁碎，再用葱姜蒜等调料用粉蒸肉的手法蒸熟，夹在一个软软的面饼里。一大早肉刚出锅，眼看老板夹着带热气的蒸肉放到饼里，香得很！&lt;/p&gt;
 &lt;p&gt;吃饱喝足之后，第一个要去的地方是乐山大佛。&lt;/p&gt;
 &lt;p&gt;乐山大佛在地图上很容易找到。乐山市面积不大，整个城市位于三江交汇处。乐山大佛就坐在三江口，眼观峨眉山。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/3.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/3.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;从地图上就能看出，大渡河泥沙更多，河水偏黄色。而岷江水是青绿色。在大佛前的交汇点，形成一条非常明显的分界线。&lt;/p&gt;
 &lt;p&gt;打车 40 分钟到了景区，门票分两种：坐船和爬山。小小一座凌云山，被当地开辟出山和水两条收费路线，颇有四川小吃的特色，一菜多吃。&lt;/p&gt;
 &lt;p&gt;我选择了更轻松的坐船。船从岷江的嘉州渡开船，行至大渡河交汇处，江水已经开始由青泛黄。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/4.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/4.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;复行十几分钟，就到了大佛脚下。大佛的左脚先映入眼帘，大佛身边左右护法已经被千年的江风磨平了棱角。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/5.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/5.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;乐山大佛项目立项于唐代，经过了三代项目经理才完工。到现代也在不断修缮。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/6.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/6.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;大佛周围的山崖有很多方孔，是用来搭建脚手架的。据说大佛外层原本有一座叫“大像阁”的七层建筑罩住大佛本体。但在历史上被毁掉了。在乐山博物馆还能看到很多相关资料。博物馆里还有一些有趣的豆知识：大佛头上的每一个圆圈都是一根长条状的石头，工匠先于大佛头部开凿出一个个插槽，再把这些长条状的“慧根”嵌进去。这可能是最早期的模块化设计。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/7.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/7.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;继续前行，绕过大佛，就能看到凌云山的栈道和像蚂蚁穴一样的山路，如果选了登山门票，你就会和其他游客像小蚂蚁一样出现在这里。凌云山其实只是江上的一座小山丘，能在这样一个光滑无附着的地方凿出道路，很佩服古人的毅力。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/8.jpg" alt=""&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/9.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/8.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/9.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;船往回开时，站在船尾能看到凌云山的远影形成一尊向右躺平的卧佛形象。这个躺平的形象，就是乐山的精神图腾。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/10.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/10.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;离开乐山大佛景区，继续探索乐山的美食吧！坐公交车前往上中顺特色街区。&lt;/p&gt;
 &lt;p&gt;上中顺有很多小吃，比如叶婆婆钵钵鸡，但是因为排队人太多，一个人吃钵钵鸡又浪费了一大锅锅底，所以我这次就放弃了。直奔海汇源纸皮烧麦。&lt;/p&gt;
 &lt;p&gt;海汇源的烧麦有鲜肉、牛肉、羊肉三种馅，还可以加钱把烧麦做成锅贴。我这次买的就是锅贴烧麦。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/11.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/11.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;乐山纸皮烧麦跟成都的烧麦、北方的烧麦都不一样。成都烧麦的馅是肉粒和糯米混合的，味道像广式粽子；北方是牛羊肉馅。乐山烧麦肉馅更像北方，皮非常薄，用油煎一下口感脆香。我过去吃烧麦最不喜欢吃它顶端的褶皱。因为蒸烧麦时那里经常蒸不熟，会有生面渣的口感。但是海汇源的烧麦完全没有这个问题，它把服务态度以外的卖点都做足了（服务态度不好也是四川小吃的特色）。海汇源的烧麦不但皮薄馅大，小料（四川叫蘸水）也很有特色，辣椒油里似乎还能吃出一点点柠檬汁的味道。&lt;/p&gt;
 &lt;p&gt;从海汇源出来，我又在街边买了三串糖醋酱裹着的炸豆腐，算是乐山近年和绵绵冰（中式 Gelato）一样流行的街边小吃，不过味道一般，不作推荐。&lt;/p&gt;
 &lt;p&gt;从上中顺街区往东南方向走，就能看到大渡河。沿着大渡河有几座渡口，可以眺望对面的凌云山。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/12.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/12.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;沿江有很多小亭子，当地老年人会聚到这里打一种叫“贰柒拾”的四川桥牌。这种牌有 1~10 十种数字和红黑两类花色。像打麻将一样可以吃碰胡，本质是个凑牌型算番数的概率计分游戏。&lt;/p&gt;
 &lt;p&gt;据说之所以用这种长条形的纸牌，是因为过去物质匮乏，人们用工厂里填物料用的废纸来制作纸牌。这种乐山“贰柒拾”应该是四川长牌的一个变种，四川长牌在湖广地区也曾经流行，很多老年人都会打。但是现如今当地的年轻人也都沉迷王者荣耀了，再过几年只能在非遗博物馆听讲解员讲解玩法。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/13.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/13.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;我很欣赏乐山街头这种随处可见的景象：茶馆、打牌的小桌子。根本不需要特别的场地，一棵树周围的三米圈出一个阴凉，就是当地老年人的天然棋牌馆。随着年纪增长，我也越来越享受这种不容易变质的快乐，像下班回家看看体育运动，或者打开斗鱼看魔兽争霸比赛。这些赛事最大的特点是规则几乎不会变化，它们不像王者荣耀，几天不玩就陌生了，不会时不时给你更新个玩法，增加个人物。人不是计算机，更不是所谓“用户”，我不需要经常更新。年纪越大，多巴胺越是依赖那些简单、不变的东西。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/14.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/14.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;沿着大渡河：远处是镇坐千年的大佛，脚下三江汇聚，水花在岷江与大渡河之间，像用粉笔划出的分界线。近处是急流中游泳的老人。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/15.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/15.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;结束了乐山之行，赶回成都已经困得睁不开眼了，一觉睡到第二天下午两点。发现上午朋友在微信群里发了张图片。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/leshan/16.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/leshan/16.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;从乐山回来我突然领悟了那句话：如果浪费时间能让你感到快乐，那时间就没有浪费。&lt;/p&gt;</description></item></channel></rss>

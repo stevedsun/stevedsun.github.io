@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Evernote on Steve Sun</title><link>https://sund.site/tags/evernote/</link><description>Recent content in Evernote on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 18 Nov 2019 13:49:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/evernote/index.xml" rel="self" type="application/rss+xml"/><item><title>抛弃笔记本，完全用标签管理笔记有什么需要注意的</title><link>https://sund.site/posts/2019/all-tag-in-evernote/</link><pubDate>Mon, 18 Nov 2019 13:49:00 +0800</pubDate><guid>https://sund.site/posts/2019/all-tag-in-evernote/</guid><description>&lt;p&gt;日常工作中经常会出现这样的情况：&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Evernote on Steve Sun</title><link>https://sund.site/tags/evernote/</link><description>Recent content in Evernote on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 18 Nov 2019 13:49:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/evernote/index.xml" rel="self" type="application/rss+xml"/><item><title>抛弃笔记本，完全用标签管理笔记有什么需要注意的</title><link>https://sund.site/posts/2019/%E6%8A%9B%E5%BC%83%E7%AC%94%E8%AE%B0%E6%9C%AC%E5%AE%8C%E5%85%A8%E7%94%A8%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86%E7%AC%94%E8%AE%B0%E6%9C%89%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84/</link><pubDate>Mon, 18 Nov 2019 13:49:00 +0800</pubDate><guid>https://sund.site/posts/2019/%E6%8A%9B%E5%BC%83%E7%AC%94%E8%AE%B0%E6%9C%AC%E5%AE%8C%E5%85%A8%E7%94%A8%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86%E7%AC%94%E8%AE%B0%E6%9C%89%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84/</guid><description>&lt;p&gt;日常工作中经常会出现这样的情况：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;小张怎么也想不起来上次收藏的一篇健身饮食相关的文章，到底是在印象笔记的「健身」分类下，还是在「健康」或者「饮食」分类下，跨分类的文章太多，小张感到头秃&lt;/li&gt;
 &lt;li&gt;小李用标签管理文档，但是每次查询标签时，总是犹豫到底应该搜索&lt;code&gt;时间管理&lt;/code&gt;还是&lt;code&gt;效率&lt;/code&gt;，亦或是&lt;code&gt;工作流&lt;/code&gt;，标签实在太多，小李很恼火&lt;/li&gt;
@@ -6,7 +6,15 @@
 &lt;p&gt;这两种情况都属于整理方法不科学，给检索时造成了麻烦。&lt;/p&gt;
 &lt;h2 id="检索分类的难题"&gt;检索分类的难题&lt;/h2&gt;
 &lt;p&gt;在正式介绍整理方法前，不得不先声明一个事实：**完全无重叠的分类是不可能实现的。**以小张为例，小张是一个健身教练，他在「健身方法」分类下有教会员如何管理「睡眠」、「饮食」和「健身动作」，同时小张也热爱生活，他在「生活」分类下有「财务知识」，并在「睡眠」和「饮食」里记录自己的睡眠和饮食习惯。这就造成了「睡眠」和「饮食」同时存在于个人生活和健身方法两个分类里。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g909mdd42bj30dj08ddfx.jpg" alt="如何打标签-分类"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g909mdd42bj30dj08ddfx.jpg" alt="如何打标签-分类" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;如何打标签-分类&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;像小张这样的情况几乎不可避免，分类作为一种整理方法，就免不了出现上图中重叠的部分。什么是分类？**分类就是预先设计好一堆插槽，再把不同的东西分门别类放进对应的插槽里。**小张在检索「饮食」相关的内容时，他的分类系统失效了，同一个东西可以属于不同插槽。小张此时必须用「个人生活 + 饮食」或是「健身 + 饮食」的扩展分类形式才能得到想要的结果。由此可见，&lt;strong&gt;分类失效最简单的解决办法是扩展分类&lt;/strong&gt;，比如增加两个子分类「生活饮食」和「健身饮食」。但是由于文档日积月累，这种小分类越来越多，越来越难管理；而一些分类里只存了 1、2 篇文档，根本没必要单独开个分类。&lt;/p&gt;
 &lt;p&gt;小张的头秃越来越严重了，为了帮助像小张这样的分类困难症，人们想出了两种不同的办法：&lt;/p&gt;
 &lt;ol&gt;
@@ -36,11 +44,27 @@
 &lt;h2 id="完全标签化的思路"&gt;完全标签化的思路&lt;/h2&gt;
 &lt;p&gt;现在流行一种管理方式，抛弃分类，完全用标签管理。拿印象笔记为例，在这篇 &lt;a href="https://medium.com/@thomashoneyman/using-evernote-the-right-way-ef61f530d1ad"&gt;《Using Evernote (the right way)》&lt;/a&gt; 的文章中，作者抛弃了常见的笔记本分类法，完全用标签来整理笔记。笔记本只保留「收件箱」、「收藏夹」和「废纸篓」。这种方式免去了整理笔记本的麻烦，但同时，造成了检索时必须依赖标签。作者为了解决这一难题，提出了一种被我称之为**「给标签分类」（ 原文是 Organize Tags）**的做法。&lt;/p&gt;
 &lt;p&gt;其实给标签分类的做法非常常见，以 &lt;a href="https://www.douban.com/"&gt;豆瓣&lt;/a&gt; 为例，你肯定见过下边的标签分类方式：&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g91dwdctqwj30hw0wqq5h.jpg" alt="douban"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g91dwdctqwj30hw0wqq5h.jpg" alt="douban" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;douban&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;**这种方式的好处就是：你既可以直接在搜索栏搜索具体的标签，也可以通过标签分类先筛选出标签，再点击标签明层缩小筛选范围。**这就解决了标签不好逐层检索的问题。&lt;/p&gt;
 &lt;p&gt;仍然以印象笔记为例，我们该如何改造它，使之成为完全标签化的系统呢？&lt;/p&gt;
 &lt;p&gt;首先，把现有笔记的标签归入对应的父类标签。比如新建一个&lt;code&gt;信息管理&lt;/code&gt;，然后把&lt;code&gt;项目管理&lt;/code&gt;、&lt;code&gt;时间管理&lt;/code&gt;、&lt;code&gt;思维导图&lt;/code&gt;、&lt;code&gt;信息检索&lt;/code&gt;全部拖到&lt;code&gt;信息管理&lt;/code&gt;标签下，使之成为父标签。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g91dw8hj6hj307m090jre.jpg" alt="006y8mN6gy1g90dkrc0utj307m090q37"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g91dw8hj6hj307m090jre.jpg" alt="006y8mN6gy1g90dkrc0utj307m090q37" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;006y8mN6gy1g90dkrc0utj307m090q37&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;之后，按照「我是谁，从哪来，到哪去」的原则补充所有遗失的标签。&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;我是谁，笔记属于哪个知识点、具体的知识类型&lt;/li&gt;
@@ -48,7 +72,15 @@
 &lt;li&gt;到哪去，笔记的用途，比如进行中的某个项目&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;这样，一篇笔记的标签看起来是这样：&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g90dnvno5pj316g07qgne.jpg" alt="标签命名"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g90dnvno5pj316g07qgne.jpg" alt="标签命名" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;标签命名&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;这里的来源我直接使用了印象笔记自带的信息。标签的用途如果不明确也可以忽略。知识点要遵循具体，尽量不可拆分的原则。父类别标签的存在，是为了避免开头中小李遇到的问题，标签太多时，检索无从下手。文章有了父类别标签，你就多了一种筛选笔记的方式：直接在标签管理界面点选父标签来缩小筛选范围。&lt;/p&gt;
 &lt;p&gt;完成了这些，我们下次检索笔记，就可以用两种方式：&lt;/p&gt;
 &lt;ol&gt;

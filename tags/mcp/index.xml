@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>MCP on Steve Sun</title><link>https://sund.site/tags/mcp/</link><description>Recent content in MCP on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 20 Apr 2026 12:37:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/mcp/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent 工具对比：MCP 为什么只是个过渡产物</title><link>https://sund.site/posts/2026/ai-agent-tool-comparison-mcp-transitional/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/posts/2026/ai-agent-tool-comparison-mcp-transitional/</guid><description>&lt;p&gt;如果你做过 AI Agent 开发，大概率已经用过 MCP，也可能接触过 Agent Skill 的概念。我们不需要再解释它们是什么——这篇文章要回答的问题是：&lt;strong&gt;当两者都能实现&amp;quot;让 AI 调用工具&amp;quot;这件事时，为什么我认为 MCP 是一个会被淘汰的过渡态方案&lt;/strong&gt;。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>MCP on Steve Sun</title><link>https://sund.site/tags/mcp/</link><description>Recent content in MCP on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 20 Apr 2026 12:37:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/mcp/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent 工具对比：MCP 为什么只是个过渡产物</title><link>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</guid><description>&lt;p&gt;如果你做过 AI Agent 开发，大概率已经用过 MCP，也可能接触过 Agent Skill 的概念。我们不需要再解释它们是什么——这篇文章要回答的问题是：&lt;strong&gt;当两者都能实现&amp;quot;让 AI 调用工具&amp;quot;这件事时，为什么我认为 MCP 是一个会被淘汰的过渡态方案&lt;/strong&gt;。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="mcp-的根本局限协议层无法承载语义"&gt;MCP 的根本局限：协议层无法承载语义&lt;/h2&gt;
 &lt;p&gt;MCP 的设计逻辑是：给 AI 一个结构化的工具调用协议，工具发现、调用、解析全部走固定格式。&lt;/p&gt;
@@ -75,4 +75,14 @@
 &lt;p&gt;MCP 不是坏设计。它在 AI 工具调用这个课题上迈出了重要的第一步，让&amp;quot;AI 连接外部世界&amp;quot;这件事从不可能变成了可能。&lt;/p&gt;
 &lt;p&gt;但可能和正确之间还有距离。当我们发现一种更符合 AI 认知方式的能力封装方案时，过渡态就应该退出舞台。&lt;/p&gt;
 &lt;p&gt;Agent Skill 是不是最终答案？我不确定。但它比 MCP 更接近 AI 真正需要的东西——语义、上下文、灵活性，以及一个不需要额外协议层的调用体验。这种封装方式对工程师友好，对普通用户更友好，因为它把技术复杂性藏进了文档层，让 Agent 替用户处理那些本不该需要人类操心的事。&lt;/p&gt;
-&lt;p&gt;这个方向的探索，值得认真对待。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;这个方向的探索，值得认真对待。&lt;/p&gt;
+&lt;p&gt;最后贴上 2025 年我对 MCP 这个概念的剖 (tu) 析 (cao)。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ai-agent-tool-comparison-mcp-transitonal/x-mcp-thread.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;</description></item></channel></rss>

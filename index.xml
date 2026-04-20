@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 20 Apr 2026 12:37:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent 工具对比：MCP 为什么只是个过渡产物</title><link>https://sund.site/posts/2026/ai-agent-tool-comparison-mcp-transitional/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/posts/2026/ai-agent-tool-comparison-mcp-transitional/</guid><description>&lt;p&gt;如果你做过 AI Agent 开发，大概率已经用过 MCP，也可能接触过 Agent Skill 的概念。我们不需要再解释它们是什么——这篇文章要回答的问题是：&lt;strong&gt;当两者都能实现&amp;quot;让 AI 调用工具&amp;quot;这件事时，为什么我认为 MCP 是一个会被淘汰的过渡态方案&lt;/strong&gt;。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 20 Apr 2026 12:37:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent 工具对比：MCP 为什么只是个过渡产物</title><link>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</guid><description>&lt;p&gt;如果你做过 AI Agent 开发，大概率已经用过 MCP，也可能接触过 Agent Skill 的概念。我们不需要再解释它们是什么——这篇文章要回答的问题是：&lt;strong&gt;当两者都能实现&amp;quot;让 AI 调用工具&amp;quot;这件事时，为什么我认为 MCP 是一个会被淘汰的过渡态方案&lt;/strong&gt;。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="mcp-的根本局限协议层无法承载语义"&gt;MCP 的根本局限：协议层无法承载语义&lt;/h2&gt;
 &lt;p&gt;MCP 的设计逻辑是：给 AI 一个结构化的工具调用协议，工具发现、调用、解析全部走固定格式。&lt;/p&gt;
@@ -75,7 +75,17 @@
 &lt;p&gt;MCP 不是坏设计。它在 AI 工具调用这个课题上迈出了重要的第一步，让&amp;quot;AI 连接外部世界&amp;quot;这件事从不可能变成了可能。&lt;/p&gt;
 &lt;p&gt;但可能和正确之间还有距离。当我们发现一种更符合 AI 认知方式的能力封装方案时，过渡态就应该退出舞台。&lt;/p&gt;
 &lt;p&gt;Agent Skill 是不是最终答案？我不确定。但它比 MCP 更接近 AI 真正需要的东西——语义、上下文、灵活性，以及一个不需要额外协议层的调用体验。这种封装方式对工程师友好，对普通用户更友好，因为它把技术复杂性藏进了文档层，让 Agent 替用户处理那些本不该需要人类操心的事。&lt;/p&gt;
-&lt;p&gt;这个方向的探索，值得认真对待。&lt;/p&gt;</description></item><item><title>外部化的J人</title><link>https://sund.site/posts/2025/ext-judging/</link><pubDate>Mon, 03 Nov 2025 22:07:40 +0800</pubDate><guid>https://sund.site/posts/2025/ext-judging/</guid><description>&lt;p&gt;生活中有一类人，喜欢催促别人制定计划。只要事情还悬在半空，他就感到不安。&lt;/p&gt;
+&lt;p&gt;这个方向的探索，值得认真对待。&lt;/p&gt;
+&lt;p&gt;最后贴上 2025 年我对 MCP 这个概念的剖 (tu) 析 (cao)。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ai-agent-tool-comparison-mcp-transitonal/x-mcp-thread.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;</description></item><item><title>外部化的J人</title><link>https://sund.site/posts/2025/%E5%A4%96%E9%83%A8%E5%8C%96%E7%9A%84j%E4%BA%BA/</link><pubDate>Mon, 03 Nov 2025 22:07:40 +0800</pubDate><guid>https://sund.site/posts/2025/%E5%A4%96%E9%83%A8%E5%8C%96%E7%9A%84j%E4%BA%BA/</guid><description>&lt;p&gt;生活中有一类人，喜欢催促别人制定计划。只要事情还悬在半空，他就感到不安。&lt;/p&gt;
 &lt;p&gt;这种人不一定是公司老板，也不一定多强势，他就是喜欢问“什么时候能定下来？”“周末怎么安排，到底去哪？”，类似这样，向外寻找确定性。&lt;/p&gt;
 &lt;p&gt;这种人，我们暂且叫他们“外部化的 J 人”或“Ex J 人”，J 人就是 MBTI 人格分析中的 Judging 型性格的人，喜欢预判未来走向，热爱制定计划。与之相对的是 P 人，随性自在。&lt;/p&gt;
 &lt;p&gt;Ex J 人，就是把这种 J 属性外溢给他人的人，同化他人成为 J 人的 J 人。&lt;/p&gt;
@@ -91,7 +101,7 @@
 &lt;p&gt;如何跟 Ex J 人沟通呢？&lt;/p&gt;
 &lt;p&gt;我也不知道答案，所以不耻 Chat 问，请教了 GPT 答案：要分成两步，先缓和对方情绪，表达理解；再用模糊的步骤代替精确的结论，比如你定不出计划，就说现在定不下来，一旦发生什么，就可以如何应对。让对方看到你的思考过程。&lt;/p&gt;
 &lt;p&gt;这样，用大概的步骤，或模糊的时间点，代替精确的回答，让对方的控制欲有所缓解，也没有被对方卷入节奏。&lt;/p&gt;
-&lt;p&gt;啊，做人好累。最后，希望你成为 P 人吧，如果实在不行，也答应我，当个好 J 人，好吗。&lt;/p&gt;</description></item><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
+&lt;p&gt;啊，做人好累。最后，希望你成为 P 人吧，如果实在不行，也答应我，当个好 J 人，好吗。&lt;/p&gt;</description></item><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-%E4%B8%80%E4%BA%9B%E4%B8%AD%E6%96%87%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E8%AE%BE%E7%BD%AE/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-%E4%B8%80%E4%BA%9B%E4%B8%AD%E6%96%87%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E8%AE%BE%E7%BD%AE/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
 &lt;p&gt;装完后有一些需要改造的配置记录在这篇文章中，供大家参考。&lt;/p&gt;
 &lt;h2 id="4k-显示器设置"&gt;4K 显示器设置&lt;/h2&gt;
 &lt;p&gt;修改系统菜单 Setup - Monitor，按照你自己显示器的分辨率，根据配置文件中的注释设置参数，比如我的显示器 27 寸 4k：&lt;/p&gt;
@@ -133,7 +143,7 @@ env = QT_SCALE_FACTOR,1.75
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-e2e-testing/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-e2e-testing/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-agent--%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86-%E4%BA%A7%E5%93%81%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-agent--%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86-%E4%BA%A7%E5%93%81%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
 &lt;p&gt;用 OpenCode 而没有选其他 AI Agent 框架（如 Claude Code）是因为它可以集成公司的企业版 Github Copilot 账号，这样我们在公司内网可以无限量调用 GPT-4 和 Claude Sonnet 等大语言模型。&lt;/p&gt;
 &lt;p&gt;其次微软做的 Playwright 是一个可以调用浏览器 API 的自动化测试框架。相比于 Selenium 更轻量，社区维护更积极，和大模型结合也更好（有官方的 MCP Server）。Playwright 还内置了 webdriver，免去了很多环境配置的麻烦。&lt;/p&gt;
 &lt;p&gt;基于 OpenCode 和 Playwright-MCP-Server，稍加少量提示词模板，就可以不写一行测试代码，完整跑通一组 Web UI 的 E2E 测试用例。这在过去简直无法想象。&lt;/p&gt;
@@ -151,8 +161,16 @@ env = QT_SCALE_FACTOR,1.75
 &lt;li&gt;不必要的移动&lt;/li&gt;
 &lt;li&gt;缺陷&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;AI Agent 一定程度上解决了“过度生产（要重复编写测试代码）”，“等待（从需求实现到测试用例实现，最后才能验证功能）”，“不必要的运输（业务需求在不同人员之间的传递）”三个方面的浪费。&lt;/p&gt;</description></item><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;AI Agent 一定程度上解决了“过度生产（要重复编写测试代码）”，“等待（从需求实现到测试用例实现，最后才能验证功能）”，“不必要的运输（业务需求在不同人员之间的传递）”三个方面的浪费。&lt;/p&gt;</description></item><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/%E9%81%87%E5%88%B0-linux-%E7%B3%BB%E7%BB%9F-kernel-panic-%E4%BA%86%E8%AF%A5%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/%E9%81%87%E5%88%B0-linux-%E7%B3%BB%E7%BB%9F-kernel-panic-%E4%BA%86%E8%AF%A5%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。&lt;/p&gt;
 &lt;p&gt;不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。&lt;/p&gt;
 &lt;p&gt;下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。&lt;/p&gt;
@@ -213,7 +231,15 @@ nvme0n1
 &lt;li&gt;
 &lt;p&gt;用&lt;code&gt;mount&lt;/code&gt;挂载原系统必要文件，进入原系统并重建 initramfs&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ol&gt;</description></item><item><title>如何与「老登」相处</title><link>https://sund.site/posts/2025/how-to-deal-with-elders/</link><pubDate>Sun, 13 Jul 2025 12:40:24 +0800</pubDate><guid>https://sund.site/posts/2025/how-to-deal-with-elders/</guid><description>&lt;p&gt;&lt;img src="https://sund.site/images/how-to-deal-with-elders/HollywoodVices.jpg" alt="Thou Shalt Not"&gt;&lt;/p&gt;
+&lt;/ol&gt;</description></item><item><title>如何与「老登」相处</title><link>https://sund.site/posts/2025/%E5%A6%82%E4%BD%95%E4%B8%8E%E8%80%81%E7%99%BB%E7%9B%B8%E5%A4%84/</link><pubDate>Sun, 13 Jul 2025 12:40:24 +0800</pubDate><guid>https://sund.site/posts/2025/%E5%A6%82%E4%BD%95%E4%B8%8E%E8%80%81%E7%99%BB%E7%9B%B8%E5%A4%84/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/how-to-deal-with-elders/HollywoodVices.jpg" alt="Thou Shalt Not" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;Thou Shalt Not&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;每一天，我们难免要和一些资历稍长（不一定指年龄）的「老登」打交道。大部分打工人在退休以前，都要活在一个由老登制定游戏规则的世界里。&lt;/p&gt;
 &lt;p&gt;如何应对这样的世界？下面是一个参考，不构成建议，请勿模仿。&lt;/p&gt;
 &lt;p&gt;1934年美国电影制片人与发行人协会出台了历史上最严格的电影制作守则──「Hays Code（海思法典）」。这部守则旨在&lt;strong&gt;提高观众的道德水准&lt;/strong&gt;。&lt;/p&gt;
@@ -243,7 +269,7 @@ nvme0n1
 &lt;p&gt;回到开头的问题，在一个老登们制定规则的世界里，如何自处？&lt;/p&gt;
 &lt;p&gt;答案就是玩一个&lt;a href="https://book.douban.com/subject/25742296/"&gt;无限的游戏&lt;/a&gt;（？）。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;有限的游戏在边界内玩，无限的游戏玩的就是边界。&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
+&lt;p&gt;有限的游戏在边界内玩，无限的游戏玩的就是边界。&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/cursor%E7%AD%89ai%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E7%9A%84%E8%83%8C%E5%90%8E%E5%8E%9F%E7%90%86/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/cursor%E7%AD%89ai%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E7%9A%84%E8%83%8C%E5%90%8E%E5%8E%9F%E7%90%86/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
 &lt;p&gt;这个问题的答案就是 AST 分块。&lt;/p&gt;
 &lt;p&gt;这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p&gt;
 &lt;h2 id="ast"&gt;AST&lt;/h2&gt;
@@ -294,7 +320,15 @@ nvme0n1
 &lt;p&gt;Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p&gt;
 &lt;p&gt;当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p&gt;
 &lt;p&gt;有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;网友&lt;/a&gt;整理了这张流程图：&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline 的官方博客&lt;/a&gt; 可以让我们窥见它的实现思路。&lt;/p&gt;
 &lt;p&gt;Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p&gt;
@@ -303,7 +337,15 @@ nvme0n1
 &lt;p&gt;When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;Cline 会使用它们的 &lt;code&gt;list_code_definition_names&lt;/code&gt;工具将源代码转换成 AST。Cline 把这个 AST 当作整个源代码的「地图」。&lt;/p&gt;
 &lt;p&gt;当 Cline 自动执行任务时，它会分析当前要修改的文件，从文件构建 AST，从 AST 生成自然语言上下文（类似 DeepWIKI 把代码转换成文档）。并将上下文传给 LLM，让 LLM 决定下一步是该修改文件，还是需要查看另一个文件补充更多上下文。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/ast-chunk/cline.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ast-chunk/cline.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;如果说 Cursor 比较的是向量空间代码片段的相似度，Cline 就是将代码片段转换成自然语言的描述，然后让 LLM 通过语义的理解，在源代码仓库中搜寻线索，比较代码片段之间的语义相似度。&lt;/p&gt;
 &lt;p&gt;Cline 这种实现方式，显然更安全，企业用户不用担心 Cline 滥用源代码。但是副作用就是消耗了更多 Token。不断在不同文件之间获取上下文也花费更多时间。对于一些特殊情况，它甚至会在两个文件之间循环跳转，陷入死循环。&lt;/p&gt;
 &lt;p&gt;从我自身感受来说，Cline 在一些模型（Deepseek-r1, OpenAI-4o）的表现上比 Cursor 的 Agent 模式更好，因为 Cline 的语义理解比向量相似度更充分利用这些模型的自然语言能力。&lt;/p&gt;
@@ -314,7 +356,7 @@ nvme0n1
 &lt;h2 id="扩展阅读"&gt;扩展阅读&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWIKI&lt;/a&gt; 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/deepwiki-%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/deepwiki-%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWIKI&lt;/a&gt; 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p&gt;
 &lt;p&gt;我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p&gt;
 &lt;h2 id="生成代码结构地图"&gt;生成代码结构地图&lt;/h2&gt;
 &lt;p&gt;首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong&gt;代表语法结构和文件结构的元数据&lt;/strong&gt;和&lt;strong&gt;代表代码描述和片段的向量数据&lt;/strong&gt;两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p&gt;
@@ -328,7 +370,15 @@ nvme0n1
 &lt;li&gt;最后由一个前端渲染引擎把 LLM 的输出渲染成文档页面。&lt;/li&gt;
 &lt;li&gt;重复步骤 1。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;图片来自https://www.gptsecurity.info/2024/05/26/RAG/&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="难点-1分块策略"&gt;难点 1：分块策略&lt;/h2&gt;
 &lt;p&gt;上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p&gt;
 &lt;p&gt;但是代码的拆分不同，比如一个函数体由&lt;code&gt;{&lt;/code&gt; &lt;code&gt;}&lt;/code&gt;包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p&gt;
@@ -386,7 +436,7 @@ nvme0n1
 &lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>读完这本书，沟通将是一个有迹可循的过程</title><link>https://sund.site/posts/2025/super-communicator/</link><pubDate>Tue, 13 May 2025 13:49:37 +0800</pubDate><guid>https://sund.site/posts/2025/super-communicator/</guid><description>&lt;p&gt;沟通能力能够决定了一个人是否幸福。在与周围人相处融洽的环境下，能让我们觉得被包容，被理解。反之会让我们苦恼：明明抱有善意的交流，为什么总是导致冲突和分歧。到底问题出在哪里？&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>读完这本书，沟通将是一个有迹可循的过程</title><link>https://sund.site/posts/2025/%E8%AF%BB%E5%AE%8C%E8%BF%99%E6%9C%AC%E4%B9%A6%E6%B2%9F%E9%80%9A%E5%B0%86%E6%98%AF%E4%B8%80%E4%B8%AA%E6%9C%89%E8%BF%B9%E5%8F%AF%E5%BE%AA%E7%9A%84%E8%BF%87%E7%A8%8B/</link><pubDate>Tue, 13 May 2025 13:49:37 +0800</pubDate><guid>https://sund.site/posts/2025/%E8%AF%BB%E5%AE%8C%E8%BF%99%E6%9C%AC%E4%B9%A6%E6%B2%9F%E9%80%9A%E5%B0%86%E6%98%AF%E4%B8%80%E4%B8%AA%E6%9C%89%E8%BF%B9%E5%8F%AF%E5%BE%AA%E7%9A%84%E8%BF%87%E7%A8%8B/</guid><description>&lt;p&gt;沟通能力能够决定了一个人是否幸福。在与周围人相处融洽的环境下，能让我们觉得被包容，被理解。反之会让我们苦恼：明明抱有善意的交流，为什么总是导致冲突和分歧。到底问题出在哪里？&lt;/p&gt;
 &lt;p&gt;《超级沟通者》这本书最近给我很多启发，我希望和你分享一些沟通技巧。这和那些强调同理心，强调谈判方法的书籍不同，它提出了一个更深层次的观点：&lt;strong&gt;对话的目的，是了解身边人如何看待世界的同时，帮助他们理解我们的想法&lt;/strong&gt;。&lt;/p&gt;
 &lt;h2 id="当对话进入到个人感受层面的交流时人与人才能建立起深度的连接"&gt;当对话进入到个人感受层面的交流时，人与人才能建立起深度的连接&lt;/h2&gt;
 &lt;p&gt;哈佛大学进行过一项调查，为什么有些会议能够缓和参与各方的冲突并达成共识，为什么有些谈话的参与者能够建立起深层次的连接。研究者发现，这类沟通中往往存在一个高中心度参与者，也就是标题中的「超级沟通者」，他具有这些特点：&lt;/p&gt;
@@ -446,7 +496,7 @@ nvme0n1
 &lt;p&gt;对于不同主张、不同信仰的人，交流的目的更多是互相理解，分享经历和观点，而不是说服他人改变想法。&lt;/p&gt;
 &lt;h2 id="总结"&gt;总结&lt;/h2&gt;
 &lt;p&gt;我最近在与朋友闲聊时有个体会，一个成熟的人，不能止步于「尊重但不理解」或是「谁好谁坏」的讨论中，即使我们不能解决大部分矛盾和误解，仍然可以做到「我不完全认同，但是我能理解你为什么这样做」。理解观点不同的人，也会让我们自己避免内耗，更加开朗。&lt;/p&gt;
-&lt;p&gt;回顾上面三种类型的对话，日常交流我们可以通过区分对话类型，切换不同的思维模式，从开放性话题渐进地进入到感受层面的交流，和他人建立更深层次的连接。善加实践，我们的生活和工作都必将获益。&lt;/p&gt;</description></item><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p&gt;最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p&gt;
+&lt;p&gt;回顾上面三种类型的对话，日常交流我们可以通过区分对话类型，切换不同的思维模式，从开放性话题渐进地进入到感受层面的交流，和他人建立更深层次的连接。善加实践，我们的生活和工作都必将获益。&lt;/p&gt;</description></item><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%80%A7%E8%83%BD%E7%9A%84%E4%B8%80%E8%88%AC%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%80%A7%E8%83%BD%E7%9A%84%E4%B8%80%E8%88%AC%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF/</guid><description>&lt;p&gt;最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p&gt;
 &lt;p&gt;我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/"&gt;Go 内存泄漏常见模式&lt;/a&gt;中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p&gt;
 &lt;p&gt;在上一次教训之后，我们对代码单元测试层面做了 goruntine 内存泄漏的检测——使用&lt;code&gt;go.uber.org/goleak&lt;/code&gt;。只需要在单元测试开头加上一句:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#fc5fa3"&gt;func&lt;/span&gt; &lt;span style="color:#41a1c0"&gt;TestXXX&lt;/span&gt;(t *testing.T) {

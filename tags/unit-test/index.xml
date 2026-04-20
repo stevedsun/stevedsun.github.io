@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Unit Test on Steve Sun</title><link>https://sund.site/tags/unit-test/</link><description>Recent content in Unit Test on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 11 Dec 2024 17:02:43 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/unit-test/index.xml" rel="self" type="application/rss+xml"/><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p&gt;未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Unit Test on Steve Sun</title><link>https://sund.site/tags/unit-test/</link><description>Recent content in Unit Test on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 11 Dec 2024 17:02:43 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/unit-test/index.xml" rel="self" type="application/rss+xml"/><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/%E4%B8%8Eai%E5%8D%8F%E4%BD%9C%E7%BC%96%E7%A8%8B%E6%B5%8B%E8%AF%95%E7%AF%87/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/%E4%B8%8Eai%E5%8D%8F%E4%BD%9C%E7%BC%96%E7%A8%8B%E6%B5%8B%E8%AF%95%E7%AF%87/</guid><description>&lt;p&gt;未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p&gt;
 &lt;p&gt;我试图浅显地讨论一下哪些软件开发的手段更适合在 AI 时代提高 AI 编写代码的可观测性和维护性。接下来所有以「与 AI 协作编程」为标题的文章都只是抛砖引玉，并未形成系统化方法论。期望任何错误之处，读者不吝赐教。&lt;/p&gt;
 &lt;h2 id="使用-ai-编写代码有哪些常见问题"&gt;使用 AI 编写代码有哪些常见问题？&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;可观测性问题：AI 实现的功能不完备，经常要手动修改片段&lt;/strong&gt;&lt;/p&gt;
@@ -30,7 +30,15 @@
 &lt;li&gt;
 &lt;p&gt;无状态的代码（函数式）最容易测试&lt;/p&gt;
 &lt;p&gt;因为它的输出具有不变性。应该让核心代码尽量无状态，将状态、外部系统依赖放在应用服务层。而把深且不易理解的核心逻辑，放在领域服务层。这里的细节可以参考 DDD（Domain Driven Design）的思想。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/pairing-with-ai-01/functional_core.png" alt="functional_core.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/pairing-with-ai-01/functional_core.png" alt="functional_core.png" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;functional_core.png&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id="小结"&gt;小结&lt;/h2&gt;

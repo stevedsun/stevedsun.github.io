@@ -1,0 +1,93 @@
+<!doctype html><html lang=zh-CN><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://sund.site/favicon.ico><title>遇到 Linux 系统 Kernel Panic 了该如何应对 | Steve Sun</title><meta name=title content="遇到 Linux 系统 Kernel Panic 了该如何应对"><meta name=description content="晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。
+
+    
+    
+    
+    
+
+
+这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。
+不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。
+下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。
+1. 找到根分区和 EFI 分区
+lsblk -f
+会返回类似如下结果，其中vfat格式是efi分区，ext4是系统根分区。
+NAME        FSTYPE   LABEL  UUID                                 MOUNTPOINT
+nvme0n1                                                          
+├─nvme0n1p1 vfat           1234-5678                            /boot/efi
+└─nvme0n1p2 ext4           955b06a9-983d-4e04-b2ef-60b559db46e6 
+2. 用fsck修复分区错误
+注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。
+先修复根分区：
+sudo fsck -f /dev/nvme0n1p2
+出现提示输入y允许，或者a全部允许。这一步我发现了一些错误并成功修复了。
+接下来检查修复efi分区：
+sudo fsck -f /dev/nvme0n1p1
+我在这一步出现提示：
+there are different between boot sector and it's backup：
+1) Copy original to backup
+2) Copy backup to original
+3) No action
+根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 1) Copy original to backup 复制原始引导扇区到备份扇区。"><meta name=keywords content="Linux,"><link rel=canonical href=https://sund.site/posts/2025/%E9%81%87%E5%88%B0-linux-%E7%B3%BB%E7%BB%9F-kernel-panic-%E4%BA%86%E8%AF%A5%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9/><meta property="og:url" content="https://sund.site/posts/2025/%E9%81%87%E5%88%B0-linux-%E7%B3%BB%E7%BB%9F-kernel-panic-%E4%BA%86%E8%AF%A5%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9/"><meta property="og:site_name" content="Steve Sun"><meta property="og:title" content="遇到 Linux 系统 Kernel Panic 了该如何应对"><meta property="og:description" content="晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。
+这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。
+不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。
+下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。
+1. 找到根分区和 EFI 分区 lsblk -f 会返回类似如下结果，其中vfat格式是efi分区，ext4是系统根分区。
+NAME FSTYPE LABEL UUID MOUNTPOINT nvme0n1 ├─nvme0n1p1 vfat 1234-5678 /boot/efi └─nvme0n1p2 ext4 955b06a9-983d-4e04-b2ef-60b559db46e6 2. 用fsck修复分区错误 注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。
+先修复根分区：
+sudo fsck -f /dev/nvme0n1p2 出现提示输入y允许，或者a全部允许。这一步我发现了一些错误并成功修复了。
+接下来检查修复efi分区：
+sudo fsck -f /dev/nvme0n1p1 我在这一步出现提示：
+there are different between boot sector and it's backup： 1) Copy original to backup 2) Copy backup to original 3) No action 根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 1) Copy original to backup 复制原始引导扇区到备份扇区。"><meta property="og:locale" content="zh_CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-07-19T01:06:32+08:00"><meta property="article:modified_time" content="2025-07-19T01:06:32+08:00"><meta property="article:tag" content="Linux"><meta property="og:image" content="https://sund.site/images/share.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://sund.site/images/share.png"><meta name=twitter:title content="遇到 Linux 系统 Kernel Panic 了该如何应对"><meta name=twitter:description content="晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。
+这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。
+不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。
+下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。
+1. 找到根分区和 EFI 分区 lsblk -f 会返回类似如下结果，其中vfat格式是efi分区，ext4是系统根分区。
+NAME FSTYPE LABEL UUID MOUNTPOINT nvme0n1 ├─nvme0n1p1 vfat 1234-5678 /boot/efi └─nvme0n1p2 ext4 955b06a9-983d-4e04-b2ef-60b559db46e6 2. 用fsck修复分区错误 注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。
+先修复根分区：
+sudo fsck -f /dev/nvme0n1p2 出现提示输入y允许，或者a全部允许。这一步我发现了一些错误并成功修复了。
+接下来检查修复efi分区：
+sudo fsck -f /dev/nvme0n1p1 我在这一步出现提示：
+there are different between boot sector and it's backup： 1) Copy original to backup 2) Copy backup to original 3) No action 根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 1) Copy original to backup 复制原始引导扇区到备份扇区。"><meta itemprop=name content="遇到 Linux 系统 Kernel Panic 了该如何应对"><meta itemprop=description content="晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。
+这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。
+不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。
+下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。
+1. 找到根分区和 EFI 分区 lsblk -f 会返回类似如下结果，其中vfat格式是efi分区，ext4是系统根分区。
+NAME FSTYPE LABEL UUID MOUNTPOINT nvme0n1 ├─nvme0n1p1 vfat 1234-5678 /boot/efi └─nvme0n1p2 ext4 955b06a9-983d-4e04-b2ef-60b559db46e6 2. 用fsck修复分区错误 注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。
+先修复根分区：
+sudo fsck -f /dev/nvme0n1p2 出现提示输入y允许，或者a全部允许。这一步我发现了一些错误并成功修复了。
+接下来检查修复efi分区：
+sudo fsck -f /dev/nvme0n1p1 我在这一步出现提示：
+there are different between boot sector and it's backup： 1) Copy original to backup 2) Copy backup to original 3) No action 根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 1) Copy original to backup 复制原始引导扇区到备份扇区。"><meta itemprop=datePublished content="2025-07-19T01:06:32+08:00"><meta itemprop=dateModified content="2025-07-19T01:06:32+08:00"><meta itemprop=wordCount content="167"><meta itemprop=image content="https://sund.site/images/share.png"><meta itemprop=keywords content="Linux"><meta name=referrer content="no-referrer-when-downgrade"><style>:root{--width-max:720px;--font-primary:Verdana, sans-serif;--font-secondary:monospace;--font-size-primary:1em;--font-size-secondary:0.8em;--bg-color-primary:#fdfdfd;--bg-color-secondary:#f2f4f7;--text-color-primary:#1a1a1a;--text-color-secondary:#444;--text-color-tertiary:#8c8c8c;--link-color:#0066cc;--link-visited-color:#551a8b;--border-color:#d0d7de;--upvoted-color:#fa8072}@media(prefers-color-scheme:dark){:root{--bg-color-primary:#121212;--bg-color-secondary:#1c1f24;--text-color-primary:#e5e5e5;--text-color-secondary:#b3b3b7;--text-color-tertiary:#a0a0a0;--link-color:#6da6ff;--link-visited-color:#b388ff;--border-color:#30363d;--upvoted-color:#ff6b6b}}body{font-family:var(--font-primary);font-size:var(--font-size-primary);margin:auto;padding:20px;max-width:var(--width-max);text-align:left;background-color:var(--bg-color-primary);word-wrap:break-word;overflow-wrap:break-word;line-height:1.5;color:var(--text-color-primary)}h1,h2,h3,h4,h5,h6,strong,b{color:var(--text-color-primary)}h1,h2,h3,h4,h5,h6{margin:16px 0}a{color:var(--link-color);cursor:pointer;text-decoration:none}a:hover{text-decoration:underline}.title{text-decoration:none;border:0}.title:hover{text-decoration:none}.title span{font-weight:400}nav a{margin-right:8px}textarea{width:100%;font-size:16px}input{font-size:14px}content{line-height:1.6}table{width:100%;border-collapse:collapse;border:1px solid var(--border-color);border-radius:4px}th,td{border:1px solid var(--border-color);padding:4px}th{background-color:var(--bg-color-secondary)}hr{border:0;border-top:1px dashed}img{max-width:100%;display:block;margin-left:auto;margin-right:auto;border:1px solid var(--border-color);border-radius:4px;content-visibility:auto}img[src*="#minipic"]{max-width:50%;margin-left:0;margin-right:auto}.image-caption figcaption{text-align:center;font-style:italic;font-size:.8em;margin-top:.6em;color:var(--text-color-secondary)}.image-caption{margin:auto}i{font-style:normal}time{font-family:var(--font-secondary);font-size:15px}code{font-family:var(--font-secondary);background-color:var(--bg-color-secondary);padding:2px;border-radius:4px}pre code{display:block;padding:16px;white-space:pre-wrap;overflow-x:auto}div.highlight pre{border-radius:4px}div.highlight code{background-color:var(--bg-color-secondary)}blockquote{border-left:4px solid var(--border-color);color:var(--text-color-secondary);margin:0;padding-left:8px;font-style:normal}blockquote p{margin:0}footer{padding:25px 0;text-align:center;font-size:var(--font-size-secondary)}ul li:has(input){list-style-type:none;margin-left:-25.5px}ul.blog-posts{list-style-type:none;padding:unset}ul.blog-posts li{display:flex}ul.blog-posts li span{flex:0 0 130px}ul.blog-posts li span.grouped{flex:0 0 80px}ul.blog-posts li a:visited{color:var(--link-visited-color)}div.toc{position:fixed;top:50%;left:calc( (100vw + var(--width-max))/2 );transform:translateY(-50%);width:calc((90vw - var(--width-max))/2);max-height:80vh;overflow-y:auto;border:none;padding:0;margin:0;z-index:99;-ms-overflow-style:none;scrollbar-width:none}div.toc::-webkit-scrollbar{display:none}.toc-nav{padding:1.5rem}.toc-nav ul{list-style:none;padding:0;margin:0}.toc-nav li{margin:8px 0}.toc-nav a{display:block;text-decoration:none;color:transparent;padding:0 12px;transition:all .2s ease;font-size:.9rem;line-height:1.4;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.toc-nav:hover a{color:var(--text-color-tertiary)}.toc-nav a::before{content:"";display:inline-block;width:16px;height:4px;background-color:var(--text-color-tertiary);border-radius:16px;margin-right:12px;vertical-align:middle}.toc-nav ul ul a::before{width:12px;margin-right:16px}.toc-nav ul ul ul a::before{width:8px;margin-right:20px}.toc-nav a.active,.toc-nav a:hover{text-decoration:none;color:var(--text-color-primary)}.toc-nav a.active::before,.toc-nav a:hover::before{background-color:var(--text-color-primary)}button.upvote-btn{margin:0;padding:0;border:none;background:0 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;color:var(--text-color-primary)}button.upvoted{color:var(--upvoted-color)}span.upvote-count{margin-top:-4px;font-size:smaller}body:has(.image-zoom-toggle:checked){overflow:hidden}.image-zoom-container{position:relative;display:block}.image-zoom-toggle{display:none}.image-zoom-label{cursor:zoom-in;display:block;position:relative}.image-zoom-label:focus{outline:2px solid var(--link-color);outline-offset:2px}.zoomable-image{transition:transform .3s ease}.image-zoom-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);z-index:1000;align-items:center;justify-content:center;padding:20px;margin:0}.image-zoom-toggle:checked~.image-zoom-overlay{display:flex;cursor:zoom-out}.image-zoom-toggle:checked~.image-zoom-label{cursor:default}.image-zoom-toggle:checked~.image-zoom-overlay .zoomable-image{max-width:90vw;max-height:90vh;width:auto;height:auto;transform:scale(1);border:none;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.3);margin-left:auto!important;margin-right:auto!important}.image-zoom-toggle:checked~.image-zoom-overlay::before{content:"";position:absolute;top:20px;right:20px;width:32px;height:32px;background:rgba(255,255,255,.9);border-radius:50%;cursor:pointer;z-index:1001}.image-zoom-toggle:checked~.image-zoom-overlay::after{content:"✕";position:absolute;top:20px;right:20px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#000;cursor:pointer;z-index:1002}.image-zoom-toggle:checked~.image-zoom-overlay figcaption{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:8px 16px;border-radius:4px;font-size:14px;z-index:1001;max-width:80vw;text-align:center}@media(max-width:800px){img[src*="#minipic"]{max-width:100%;margin-left:auto;margin-right:auto}div.toc{display:none}.image-zoom-label{cursor:pointer}.image-zoom-toggle:checked~.image-zoom-overlay{padding:10px}.image-zoom-toggle:checked~.image-zoom-overlay::before,.image-zoom-toggle:checked~.image-zoom-overlay::after{top:10px;right:10px;width:28px;height:28px;font-size:16px}.image-zoom-toggle:checked~.image-zoom-overlay figcaption{bottom:10px;font-size:12px;padding:6px 12px}}</style><style>body,div.post-body,h1,h2,h3,h4{font-family:microsoft yahei,pingfang sc,avenir,segoe ui,hiragino sans gb,STHeiti,microsoft sans serif,wenquanyi micro hei,sans-serif}</style><script async src="https://www.googletagmanager.com/gtag/js?id=G-XJJVVQ0LBH"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-XJJVVQ0LBH")</script></head><body><header><a href=/ class=title><h1>Steve Sun</h1></a><nav><a href=/>Home</a>
+<a href=/friends/>Friends</a>
+<a href=/posts/>Posts</a></nav></header><main><h1>遇到 Linux 系统 Kernel Panic 了该如何应对</h1><p><i><time datetime=2025-07-19 pubdate>19 Jul, 2025</time></i></p><content><p>晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。</p><p><figure class=image-caption><img src=https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png alt loading=lazy><figcaption></figcaption></figure></p><p>这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。</p><p>不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。</p><p>下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。</p><h2 id=1-找到根分区和-efi-分区>1. 找到根分区和 EFI 分区</h2><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>lsblk -f
+</span></span></code></pre></div><p>会返回类似如下结果，其中<code>vfat</code>格式是efi分区，<code>ext4</code>是系统根分区。</p><pre tabindex=0><code>NAME        FSTYPE   LABEL  UUID                                 MOUNTPOINT
+nvme0n1                                                          
+├─nvme0n1p1 vfat           1234-5678                            /boot/efi
+└─nvme0n1p2 ext4           955b06a9-983d-4e04-b2ef-60b559db46e6 
+</code></pre><h2 id=2-用fsck修复分区错误>2. 用<code>fsck</code>修复分区错误</h2><p>注意这一步及之后的步骤，分区的路径要用上一步你的系统中的分区路径。</p><p>先修复根分区：</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>sudo fsck -f /dev/nvme0n1p2
+</span></span></code></pre></div><p>出现提示输入<code>y</code>允许，或者<code>a</code>全部允许。这一步我发现了一些错误并成功修复了。</p><p>接下来检查修复efi分区：</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>sudo fsck -f /dev/nvme0n1p1
+</span></span></code></pre></div><p>我在这一步出现提示：</p><pre tabindex=0><code>there are different between boot sector and it&#39;s backup：
+1) Copy original to backup
+2) Copy backup to original
+3) No action
+</code></pre><p>根据网上搜索到的结果，如果系统能正常进入grub，说明我原始扇区是好的，所以我选择 <code>1) Copy original to backup</code> 复制原始引导扇区到备份扇区。</p><h2 id=3-挂载原系统并重建-initramfs>3. 挂载原系统并重建 initramfs</h2><p>下面这一步，要把原系统根分区挂载到当前 LiveUSB 系统里，同时为了执行必要的命令，要把 LiveUSB 系统的四个关键目录挂到原系统。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>sudo mkdir -p /mnt/ubuntu
+</span></span><span style=display:flex><span>sudo mount /dev/nvme0n1p2 /mnt/ubuntu
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sudo mount --bind /dev /mnt/ubuntu/dev
+</span></span><span style=display:flex><span>sudo mount --bind /proc /mnt/ubuntu/proc
+</span></span><span style=display:flex><span>sudo mount --bind /sys /mnt/ubuntu/sys
+</span></span><span style=display:flex><span>sudo mount --bind /run /mnt/ubuntu/run
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sudo mount /dev/nvme0n1p1 /mnt/ubuntu/boot/efi
+</span></span></code></pre></div><p>一顿操作后，就可以切换到原系统 root shell 了。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>sudo chroot /mnt/ubuntu
+</span></span></code></pre></div><p>然后是安装 grub 并重新为系统内核生成 initramfs 启动镜像。<code>grub-install</code>命令的参数要根据自己的系统设置。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu
+</span></span><span style=display:flex><span>update-initramfs -c -k all
+</span></span><span style=display:flex><span>update-grub
+</span></span></code></pre></div><p>最后，退出原系统 root shell，重启。</p><div class=highlight><pre tabindex=0 style=color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#d0a8ff>exit</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sudo reboot
+</span></span></code></pre></div><p>拔掉U盘进入原系统，我这时就可以正常登录了。</p><h2 id=总结>总结</h2><ol><li><p>不要慌</p></li><li><p>家中常备 Live USB</p></li><li><p>用 <code>fsck</code> 命令修复分区错误</p></li><li><p>用<code>mount</code>挂载原系统必要文件，进入原系统并重建 initramfs</p></li></ol></content><p><a href=https://sund.site/tags/linux/>#Linux</a></p><div class=toc><nav id=TableOfContents><ul><li><a href=#1-找到根分区和-efi-分区>1. 找到根分区和 EFI 分区</a></li><li><a href=#2-用fsck修复分区错误>2. 用<code>fsck</code>修复分区错误</a></li><li><a href=#3-挂载原系统并重建-initramfs>3. 挂载原系统并重建 initramfs</a></li><li><a href=#总结>总结</a></li></ul></nav></div></main><footer>Subscribe via <a href=/index.xml>RSS</a>.<br>Made with
+<a href=https://github.com/rokcso/hugo-bearneo/>Hugo Bear Neo</a>.<br>Copyright © 2013-2025, Steve Sun.
+🗺️ <a href=/sitemap.xml>Sitemap</a>.</footer></body></html>

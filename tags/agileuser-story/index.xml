@@ -1,8 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agile，user-Story on Steve Sun</title><link>https://sund.site/tags/agileuser-story/</link><description>Recent content in Agile，user-Story on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Fri, 07 Apr 2023 06:37:53 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/agileuser-story/index.xml" rel="self" type="application/rss+xml"/><item><title>用户故事地图</title><link>https://sund.site/posts/2023/user-story-mapping/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><guid>https://sund.site/posts/2023/user-story-mapping/</guid><description>&lt;blockquote&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agile，user-Story on Steve Sun</title><link>https://sund.site/tags/agileuser-story/</link><description>Recent content in Agile，user-Story on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Fri, 07 Apr 2023 06:37:53 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/agileuser-story/index.xml" rel="self" type="application/rss+xml"/><item><title>用户故事地图</title><link>https://sund.site/posts/2023/%E7%94%A8%E6%88%B7%E6%95%85%E4%BA%8B%E5%9C%B0%E5%9B%BE/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><guid>https://sund.site/posts/2023/%E7%94%A8%E6%88%B7%E6%95%85%E4%BA%8B%E5%9C%B0%E5%9B%BE/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;用户故事是软件开发和项目管理中的常用术语。主旨是以日常语言或商务用语撰写句子，是一段简单的功能表述。以客户或使用者的观点撰写下有价值的功能、引导、框架来与使用者进行互动，进而推动工作进程。可以被认为是一种规格文件，但更精确而言，它代表客户的需求与方向。&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;在敏捷开发需求分析阶段，要使用一些流程工具，如&lt;strong&gt;用户故事地图&lt;/strong&gt;，来把那些抽象、模糊的用户需求，转化为具体的、分优先级的、模块化的用户故事。&lt;/p&gt;
 &lt;p&gt;一个用户地图看起来是这样的。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/user-story-mapping/user-story.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/user-story-mapping/user-story.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="绘制用户故事地图的过程"&gt;绘制用户故事地图的过程&lt;/h2&gt;
 &lt;p&gt;绘制用户故事地图应遵循一些基本原则：&lt;/p&gt;
 &lt;ol&gt;
@@ -26,7 +34,15 @@
 &lt;/ol&gt;
 &lt;p&gt;第三步是针对每一个主干故事，通过头脑风暴的形式补充更多小的用户故事，用便签纸贴在下边。&lt;/p&gt;
 &lt;p&gt;最后按优先级，把重要的用户故事放在上面，不那么重要的放在下边。然后横向划分出不同的泳道，把故事按特定的&lt;strong&gt;目标成果&lt;/strong&gt;划分为不同的阶段。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/user-story-mapping/user-story-2.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/user-story-mapping/user-story-2.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;比如第一阶段完成基本的功能开发，那么横向的第一排所有用户故事就是第一个版本需要完成的工作。&lt;/p&gt;
 &lt;p&gt;这样就完成了用户故事的设计。我们重新梳理一下过程：&lt;/p&gt;
 &lt;ol&gt;
@@ -39,7 +55,15 @@
 &lt;/ol&gt;
 &lt;h2 id="运用设计思维"&gt;运用设计思维&lt;/h2&gt;
 &lt;p&gt;上面介绍了用户故事的绘制过程，但是其实找到真正的用户需求点才是最难的。为了从特定领域的客户或用户那里挖掘出有价值的需求，通常需要使用&lt;strong&gt;设计思维&lt;/strong&gt;（Design Thinking）来帮助团队沟通、寻找焦点问题。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/user-story-mapping/design-thinking.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/user-story-mapping/design-thinking.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;设计思维一共有五步。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;共情&lt;/strong&gt;：沟通，找到问题。&lt;/li&gt;

@@ -40,7 +40,7 @@
 &lt;h2 id="the-problem-of-windows-shortcuts"&gt;The Problem of Windows&amp;rsquo; Shortcuts&lt;/h2&gt;
 &lt;p&gt;As we know, the Windows shortcut is very limited when switching between apps and desktops. For users who are not English native speakers, switching input method when typing is also not a good experience.&lt;/p&gt;
 &lt;p&gt;Comparing with Windows, MacOS has a very powerful shortcut system. You can always use &lt;code&gt;cmd + q&lt;/code&gt; to close a window, &lt;code&gt;caplock&lt;/code&gt; to switch between input methods.&lt;/p&gt;
-&lt;p&gt;DHH moved the MacOS&amp;rsquo; advantages to Linux. The Windows users can also refer to the Omakub project and build a more powerful development environment.&lt;/p&gt;</description></item><item><title>用 Notion 实践卡片盒笔记法</title><link>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</link><pubDate>Sat, 12 Dec 2020 22:42:53 +0800</pubDate><guid>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</guid><description>&lt;p&gt;今天给大家介绍一种整理和回顾碎片知识的方法——卡片盒笔记法。&lt;/p&gt;
+&lt;p&gt;DHH moved the MacOS&amp;rsquo; advantages to Linux. The Windows users can also refer to the Omakub project and build a more powerful development environment.&lt;/p&gt;</description></item><item><title>用 Notion 实践卡片盒笔记法</title><link>https://sund.site/posts/2020/%E7%94%A8-notion-%E5%AE%9E%E8%B7%B5%E5%8D%A1%E7%89%87%E7%9B%92%E7%AC%94%E8%AE%B0%E6%B3%95/</link><pubDate>Sat, 12 Dec 2020 22:42:53 +0800</pubDate><guid>https://sund.site/posts/2020/%E7%94%A8-notion-%E5%AE%9E%E8%B7%B5%E5%8D%A1%E7%89%87%E7%9B%92%E7%AC%94%E8%AE%B0%E6%B3%95/</guid><description>&lt;p&gt;今天给大家介绍一种整理和回顾碎片知识的方法——卡片盒笔记法。&lt;/p&gt;
 &lt;p&gt;应该不少人都读过少数派作者玉树芝兰老师写的&lt;a href="https://sspai.com/post/59109"&gt;关于卡片盒笔记法的文章&lt;/a&gt;。&lt;a href="https://pmthinking.com/"&gt;产品沉思录&lt;/a&gt;的主理人少楠也写过很多相关的内容，最近他们还出了一个工具（Flomo - 浮墨笔记）也是基于这套方法论的。&lt;/p&gt;
 &lt;p&gt;在这篇文章中，我会结合自己用 Notion 的经验，分享一下我如何用 Notion 做卡片笔记。&lt;/p&gt;
 &lt;p&gt;本文参考了 &lt;a href="https://www.youtube.com/channel/UC66w1T4oMv66Jn1LR5CW2yg"&gt;Youtube 频道 Mukul Khanna&lt;/a&gt; 关于 Notion 的一系列使用方法。&lt;/p&gt;
@@ -50,18 +50,42 @@
 &lt;p&gt;人类大脑有两种思维模式——专注和发散。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;我门通常学习某一学科知识时使用的是专注模式——从一个知识点引申到相关的知识点，像串糖葫芦一样把一系列知识点串联起来形成一套知识体系&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;在另一些情况下，如艺术创作、技术创新等，我们的大脑会切换为发散模式——大脑在在一些关联但不同领域的知识间来回跳跃，形成一种全新的思考路径&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/notion-zenttle/1.jpeg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/notion-zenttle/1.jpeg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;此时此刻，我为了将分散在不同笔记中零散的知识点关联起来形成这篇大家看到的文章，就需要同时借助两种模式，找到不同网站、文献间相关的内容，把他们组织起来。&lt;/p&gt;
 &lt;p&gt;相对应的，卡片盒笔记法有两种关联笔记的方式，「顺序」和「引用」：&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;当我们在专注模式下阅读一本书或一篇文献时，我们可以把瞬间的想法记录在笔记中，按顺序（比如按章节）把若干笔记关联起来&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;而当我们在记录笔记过程中想到相关的内容在另一篇文献中也出现过，那么我们可以在笔记中用引用的方式把另一篇笔记内容和这篇内容做关联&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/notion-zenttle/2.jpeg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/notion-zenttle/2.jpeg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;这样一篇笔记（卡片盒笔记法里的「卡片」），就有了两条途径来回顾它——&lt;strong&gt;顺序阅读和延伸阅读&lt;/strong&gt;。例如，一段时间后，我们想把这段时间的学习心得梳理出来归纳成一篇文章，我们就可以先以某一篇笔记为起始点，顺序读下面的笔记卡片，读到感兴趣的内容再看看它关联的那些卡片是否可以作为素材。以此类推，从一片知识的网络中抽丝剥茧，抽象出一种独特的脉络。当然，这些卡片还可以和其他卡片组合，形成另一种视角。这一套卡片构成的卡片盒，就是一套不断碰撞出新想法的数据库。&lt;/p&gt;
 &lt;h2 id="notion-为什么适合做卡片盒笔记法"&gt;Notion 为什么适合做卡片盒笔记法&lt;/h2&gt;
 &lt;p&gt;Notion 在前一段时间更新了 Backlinks （反向链接）功能，这一功能的推出，把 Notion 和新晋的几款网状知识管理工具（Roam Search、Obsidian）的差异大大缩小，成为了做卡片盒笔记法的合适工具。相对于专注做卡片笔记的软件来说，Notion 的优势是更加灵活的配置和用途广泛的页面元素。&lt;/p&gt;
 &lt;h2 id="用-notion-实践卡片盒笔记法"&gt;用 Notion 实践卡片盒笔记法&lt;/h2&gt;
 &lt;p&gt;我们首先脱离 Notion 这个软件，看看通常情况下一张卡片由哪些部分组成。下图是来自 &lt;a href="https://zettelkasten.de/introduction/"&gt;Introduction to the Zettelkasten&lt;/a&gt; 文章的配图，呈现了一张卡片的样子：&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/notion-zenttle/3.jpeg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/notion-zenttle/3.jpeg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;标题。包含一个唯一编号的标题，编号的作用是在其他笔记中可以方便引用该笔记，而不用担心笔记的标题发生变化使引用失效&lt;/li&gt;
 &lt;li&gt;标签。方便回顾笔记时对某一类内容做整理归纳&lt;/li&gt;
@@ -76,7 +100,15 @@
 &lt;p&gt;下面回到 Notion 这个工具，我们一步步来搭建卡片盒笔记法。&lt;/p&gt;
 &lt;h3 id="搭建文献库---零散知识的数据库"&gt;搭建文献库 - 零散知识的数据库&lt;/h3&gt;
 &lt;p&gt;所谓巧妇难为无米之炊，我们做笔记的第一步就是搭建文献资料库，这是一切笔记的源头，有点像数据工程里的「贴源数据层」，文献库是为了让互联网上经常失效的文章有个备份的好地方，同时你也可以在文献库里对文章进行划线、高亮和备注。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/notion-zenttle/4.jpeg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/notion-zenttle/4.jpeg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;这是我的一个文献库，专门收藏一些专业外的小知识。&lt;/p&gt;
 &lt;p&gt;首先要在 Notion 创建一个列表页面（List Page），取名「文献库」。列表中的每一个条目都是一个页面，包含一些基本属性：&lt;/p&gt;
 &lt;ul&gt;
@@ -88,14 +120,38 @@
 &lt;li&gt;URL，这是 Chrome 网页剪藏扩展（Save to Notion）的默认属性&lt;/li&gt;
 &lt;li&gt;添加时间&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/notion-zenttle/5.jpeg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/notion-zenttle/5.jpeg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;为了从网页上剪藏这样一篇文章，我在 Chrome 浏览器里安装了 &lt;a href="https://chrome.google.com/webstore/detail/ldmmifpegigmeammaeckplhnjbbpccmm"&gt;Save to Notion&lt;/a&gt; 这个扩展，它的优点就是可以在剪藏网页内容同时设置好笔记的属性。把 Save to Notion 保存位置设置成你已经建立好的文献库，就可以一键保存到 Notion 了。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/notion-zenttle/6.jpeg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/notion-zenttle/6.jpeg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;对于那些无法被直接剪藏的文献（比如 pdf 格式的论文、书籍、视频等）也可以直接在笔记页面直接填写 meta data 的方式指明出处，下文会介绍何谓卡片笔记的 meta data。&lt;/p&gt;
 &lt;h3 id="搭建卡片盒---思维碎片的收集器"&gt;搭建卡片盒 - 思维碎片的收集器&lt;/h3&gt;
 &lt;p&gt;有了可以追溯的文献库，接下来是卡片盒笔记法的核心步骤，搭建卡片盒。&lt;/p&gt;
 &lt;p&gt;卡片盒可以用 Notion 的 Gallery Page 来展现。每一个笔记页面都是一张卡片。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/notion-zenttle/7.jpeg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/notion-zenttle/7.jpeg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;「卡片」也有一些基本属性需要设置：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;标题&lt;/li&gt;
@@ -109,13 +165,29 @@
 &lt;li&gt;下一条。下一篇顺序关联的笔记&lt;/li&gt;
 &lt;li&gt;索引。表明这篇文章是否被收录到索引里。关于索引在下文会介绍&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/notion-zenttle/8.jpeg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/notion-zenttle/8.jpeg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;前文说，一张笔记卡片有两种方式和其他卡片或参考文献产生关联：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;在参考中引用文献。这点在属性的文献、文献 metadata 中我们已经实现了。&lt;/li&gt;
 &lt;li&gt;直接在正文中引用。Notion 天然支持 backlinks 双向关联。一个页面如果提及了其他页面内容，可以在被引用的页面顶部的 backlinks 里看到二者的关联。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/notion-zenttle/9.jpeg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/notion-zenttle/9.jpeg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;另外针对思维的两种模式：专注模式和发散模式，有两种回顾卡片的方式：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;我们特意设置了「上一条」、「下一条」这样的指向其他页面的链接，来方便我们按顺序回顾一系列笔记，对应了专注模式&lt;/li&gt;
@@ -126,7 +198,15 @@
 &lt;h3 id="搭建卡片索引---网络中的高速公路"&gt;搭建卡片索引 - 网络中的高速公路&lt;/h3&gt;
 &lt;p&gt;有了知识的网络，我们还要回顾。很多人管理笔记的方式就是存起来放在那里，这是自欺欺人。我们要定期回顾，按顺序、标签、延伸阅读等方式，在卡片盒中随机漫步，把相关的卡片联系起来，在知识的网络里构成一条思维的回路，发现一些过去没有发现的知识关联，让不同学科、领域的知识可以互相佐证、交叉引用。&lt;/p&gt;
 &lt;p&gt;继续在 Notion 创建一个名为「索引」的列表页面，页面中每一个条目都是一个主题的索引页面，将多张卡片用超链接的方式组织在一个主题下，犹如图书的目录。比如这篇文章，我就是从这个索引中演化而来。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/notion-zenttle/10.jpeg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/notion-zenttle/10.jpeg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;这就好比一条信息高速公路。可以让我们直达这个主题下的笔记。但是修建高速公路的副作用，是会让我们忽略那些拥有别样风景的小路。每一张卡片，可以成为另一个主题里的内容。&lt;strong&gt;重要的是，路径不只一条。&lt;/strong&gt;&lt;/p&gt;
 &lt;h3 id="减少笔记数量给大脑减压"&gt;减少笔记数量，给大脑减压&lt;/h3&gt;
 &lt;p&gt;卡片盒笔记法和其他知识管理方法的共同问题就是，笔记量越大，回顾的成本越高，越到后期回顾越花费时间，很多人有心里负担也就放弃或是干脆觉得这些方法都是糊弄人的。&lt;/p&gt;
@@ -141,51 +221,139 @@
 &lt;p&gt;&lt;a href="https://sspai.com/post/61886"&gt;Matrix 圆桌 | 网状结构笔记工具是一阵风吗？&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://zettelkasten.de/"&gt;Zettelkasten 介绍&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://takesmartnotes.com/"&gt;Take Smart Notes&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=lOY-drtTJX0&amp;amp;feature=youtu.be"&gt;How I use Zettelkasten in Notion | Best note-taking knowledge-management system 📝&lt;/a&gt;&lt;/p&gt;</description></item><item><title>番茄工作法和Keep是绝配</title><link>https://sund.site/posts/2020/2020-2-17_wfh/</link><pubDate>Mon, 17 Feb 2020 20:43:43 +0800</pubDate><guid>https://sund.site/posts/2020/2020-2-17_wfh/</guid><description>&lt;h2 id="要有路线图"&gt;要有路线图&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=lOY-drtTJX0&amp;amp;feature=youtu.be"&gt;How I use Zettelkasten in Notion | Best note-taking knowledge-management system 📝&lt;/a&gt;&lt;/p&gt;</description></item><item><title>番茄工作法和Keep是绝配</title><link>https://sund.site/posts/2020/%E7%95%AA%E8%8C%84%E5%B7%A5%E4%BD%9C%E6%B3%95%E5%92%8Ckeep%E6%98%AF%E7%BB%9D%E9%85%8D/</link><pubDate>Mon, 17 Feb 2020 20:43:43 +0800</pubDate><guid>https://sund.site/posts/2020/%E7%95%AA%E8%8C%84%E5%B7%A5%E4%BD%9C%E6%B3%95%E5%92%8Ckeep%E6%98%AF%E7%BB%9D%E9%85%8D/</guid><description>&lt;h2 id="要有路线图"&gt;要有路线图&lt;/h2&gt;
 &lt;p&gt;平时在办公室里，大家可以面对面沟通，有问题、回复都可以迅速得到反馈，好像一个走正步的方队，每个人的节奏都可以从余光中确认。但是在家办公，这种节奏就乱掉了。&lt;/p&gt;
 &lt;p&gt;我最近正好转到数据团队做一些数据工程的工作，急需恶补很多知识。我在网上搜到几张数据工程师知识图谱和一些&lt;a href="https://www.coursera.org/specializations/gcp-data-machine-learning"&gt;认证课程&lt;/a&gt;。按照自己的能力，我规划了学习路线，并且用 Notion 记录下来。这份路线图里包含了一些书籍和网络课程，能够帮我快速上手实践，以备在复工后快速进入状态。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzm5fb4wrj21go1327oi.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzm5fb4wrj21go1327oi.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzm5fb4wrj21go1327oi.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzm5fb4wrj21go1327oi.jpg" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;https://tva1.sinaimg.cn/large/4a41845fly1gbzm5fb4wrj21go1327oi.jpg&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="寻找免费的学习资源"&gt;寻找免费的学习资源&lt;/h2&gt;
 &lt;p&gt;有了路线，就要去找学习资源，付费的电子书和网络教程很多，我想重点说说那些免费资源（抛开盗版不谈），比如著名的动物书出版商 O’Reilly 就有一大堆&lt;a href="https://www.oreilly.com/free/"&gt;免费的正版技术类电子书&lt;/a&gt;可供下载。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzlq4t8fuj21is1681kx.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzlq4t8fuj21is1681kx.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzlq4t8fuj21is1681kx.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzlq4t8fuj21is1681kx.jpg" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;https://tva1.sinaimg.cn/large/4a41845fly1gbzlq4t8fuj21is1681kx.jpg&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;另外，&lt;strong&gt;Youtube 上的教学视频质量也非常高&lt;/strong&gt;，对于快速上手一种工具或是搭建开发环境非常有帮助。（随便一搜就有很多成套的教学视频，不乏官方教学视频，比如 Google Cloud Platform 提供了很多教学短片）&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzlumpbuxj21de14m7mr.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzlumpbuxj21de14m7mr.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzlumpbuxj21de14m7mr.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzlumpbuxj21de14m7mr.jpg" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;https://tva1.sinaimg.cn/large/4a41845fly1gbzlumpbuxj21de14m7mr.jpg&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;我在 Youtube 还意外发现一些 &lt;a href="https://www.youtube.com/channel/UCFd-9jAfbuUjwDZjisOwv1w"&gt;健身 Youtuber&lt;/a&gt; 们分享的健身教学视频，也非常适合闲暇时间提高姿势水平。&lt;/p&gt;
 &lt;h2 id="任务要和时间绑定"&gt;任务要和时间绑定&lt;/h2&gt;
 &lt;p&gt;完成一个长计划的第一步，是拆解任务。工作中同事们总强调 Tasking （拆解任务）的重要性。要保证完成计划的质量，必须把计划按步骤拆解成可执行和回顾的小任务。相信喜欢折腾 GTD 之类效率工具的人很清楚其中的意义。但是&lt;strong&gt;在没有约束的家庭环境里，光拆解任务可能还不够，更重要的是把任务和时间绑定，给自己一个记录时间的习惯&lt;/strong&gt;。&lt;/p&gt;
 &lt;h3 id="不局限于工具的番茄工作法"&gt;不局限于工具的番茄工作法&lt;/h3&gt;
 &lt;p&gt;番茄工作法固然好，但是市面上很少真正提高效率的工具。手机上的番茄工作法 App 唯一给我的教训就是增加了我拿起手机的次数。所以我最后矬子里拔大个，选了 Toggl 的 Mac 桌面版，它自带番茄时钟可以很好的兼顾时间记录和定时提醒功能。我还尝试用 NFC 贴纸提高我记录时间的效率（主要记录做饭之类碎片的时间）。至于如何使用 NFC 贴纸，参考这篇《&lt;a href="https://sspai.com/post/57394"&gt;5 个实用生活场景，iPhone 上的 NFC 还能这么用》&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzmdw563kj20u01400uv.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzmdw563kj20u01400uv.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzmdw563kj20u01400uv.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzmdw563kj20u01400uv.jpg" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;https://tva1.sinaimg.cn/large/4a41845fly1gbzmdw563kj20u01400uv.jpg&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="利用番茄工作法的间歇时间做-4-分钟锻炼"&gt;利用番茄工作法的间歇时间做 4 分钟锻炼&lt;/h2&gt;
 &lt;p&gt;番茄工作法每隔 25 分钟会有 5 分钟的休息时间，我通常利用这个间隙来做一组俯卧撑、平板支撑或者深蹲，Keep 上有很多 4 分钟的燃脂训练，拿来配合番茄工作法使用效果更佳。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzmkewpd0j20n01ds77x.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzmkewpd0j20n01ds77x.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzmkewpd0j20n01ds77x.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzmkewpd0j20n01ds77x.jpg" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;https://tva1.sinaimg.cn/large/4a41845fly1gbzmkewpd0j20n01ds77x.jpg&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h3 id="把平时忽略的碎片时间统计出来"&gt;把平时忽略的碎片时间统计出来&lt;/h3&gt;
 &lt;p&gt;发呆拖延的时间、做饭的时间，这些工作忙时不太关心的碎片时间，我利用这个大长假把他们统计了一下，我在去年年底制定了一个「2020 年告别外卖」的计划。因为平时工作忙，想脱离外卖自己做饭，就要格外注意挑选制作时间短，食材储存容易的饮食方案。我也在 Notion 里新建了一个项目，来记录做饭的时间、各种食物的优缺点（有点强迫症）。待完成这个计划时我也会整理出来。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzmwbctjjj20n00wu3zj.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzmwbctjjj20n00wu3zj.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/4a41845fly1gbzmwbctjjj20n00wu3zj.jpg" alt="https://tva1.sinaimg.cn/large/4a41845fly1gbzmwbctjjj20n00wu3zj.jpg" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;https://tva1.sinaimg.cn/large/4a41845fly1gbzmwbctjjj20n00wu3zj.jpg&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h3 id="给娱乐时间限量"&gt;给娱乐时间限量&lt;/h3&gt;
 &lt;p&gt;我平时很少看电视，最近又把吃灰半年的《歧路旅人》拿出来玩，我给自己规定的是每天必须天黑才能打开游戏机，而且玩到 20%电量之前必须关机休息。这样每天娱乐时间就不会超过 2 个小时。&lt;/p&gt;
 &lt;p&gt;最近奥斯卡颁奖后，一批电影片单也出来了，不如趁这段时间把 2019 年错过的好电影也补一补。&lt;/p&gt;
 &lt;h2 id="用音乐和灯光隔离出个人空间"&gt;用音乐和灯光隔离出个人空间&lt;/h2&gt;
 &lt;p&gt;我在几个月前发的一篇文章&lt;a href="https://mp.weixin.qq.com/s/OuZigL_Y8Ep3rLl38Hxc0A"&gt;《用一个模型理解什么是注意力的边缘》&lt;/a&gt;里已经分析过怎么用「聚光灯效应」和背景音乐来创造专注的环境，对这部分感兴趣的同学可以去阅读一下。&lt;/p&gt;
 &lt;h2 id="小结"&gt;小结&lt;/h2&gt;
-&lt;p&gt;综上，充分利用假期的时间去充电吧，要给自己指定任务、要有追踪任务的工具，多利用闲暇时间锻炼、多关注平时上班时没空去关注的生活细节，给 2019 年错过的好东西一个补救的机会。&lt;/p&gt;</description></item><item><title>如何练习双拼输入法</title><link>https://sund.site/posts/2020/2020-1-19_xnheulpb/</link><pubDate>Sun, 19 Jan 2020 07:21:17 +0800</pubDate><guid>https://sund.site/posts/2020/2020-1-19_xnheulpb/</guid><description>&lt;h2 id="双拼输入法是什么"&gt;双拼输入法是什么？&lt;/h2&gt;
+&lt;p&gt;综上，充分利用假期的时间去充电吧，要给自己指定任务、要有追踪任务的工具，多利用闲暇时间锻炼、多关注平时上班时没空去关注的生活细节，给 2019 年错过的好东西一个补救的机会。&lt;/p&gt;</description></item><item><title>如何练习双拼输入法</title><link>https://sund.site/posts/2020/%E5%A6%82%E4%BD%95%E7%BB%83%E4%B9%A0%E5%8F%8C%E6%8B%BC%E8%BE%93%E5%85%A5%E6%B3%95/</link><pubDate>Sun, 19 Jan 2020 07:21:17 +0800</pubDate><guid>https://sund.site/posts/2020/%E5%A6%82%E4%BD%95%E7%BB%83%E4%B9%A0%E5%8F%8C%E6%8B%BC%E8%BE%93%E5%85%A5%E6%B3%95/</guid><description>&lt;h2 id="双拼输入法是什么"&gt;双拼输入法是什么？&lt;/h2&gt;
 &lt;p&gt;「双拼输入法」类似于我们大多人使用的全拼输入法，也是一种基于汉语拼音的汉字输入方案。&lt;/p&gt;
 &lt;p&gt;让我们先来复习一下小学的知识 😂，任何一个汉字都有对应的拼音，拼音由声母和韵母组成。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/1.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/1.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;声母除了&lt;code&gt;zh&lt;/code&gt;，&lt;code&gt;sh&lt;/code&gt;，&lt;code&gt;ch&lt;/code&gt;之外，都是由单个字母表示。例如「拼」字的声母&lt;code&gt;p&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;韵母通常由 1 到 4 个字母组成，例如拼字的韵母就是&lt;code&gt;in&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;通常大家用的全拼输入法，韵母部分要全部打出来（现代输入法通常可以智能联想，但是大多数情况下都需要你打出大部分字母），比如输入「拼」你需要打三个键&lt;code&gt;p&lt;/code&gt;，&lt;code&gt;i&lt;/code&gt;，&lt;code&gt;n&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;双拼输入法就是为了解决全拼输入法在输入韵母时低效率的问题。双拼的开发者试图把汉语拼音的全部韵母映射到键盘的所有按键上，这样每次输入一个汉字，只需要输入两个按键（声母+韵母）。&lt;/p&gt;
 &lt;p&gt;例如，我把&lt;code&gt;ing&lt;/code&gt;映射到键盘的字母&lt;code&gt;K&lt;/code&gt;上，把&lt;code&gt;ang&lt;/code&gt;映射到字母&lt;code&gt;H&lt;/code&gt;上。输入「乒乓」时就是下面的效果。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/2.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/2.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;现在比较流行的双拼方案有很多，我选择了比较受大家青睐的小鹤双拼方案。它的键盘布局是下面这样的（初次看你可能会觉得不适……别急，读完这篇文章学起来就会很轻松）。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/3.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/3.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="双拼输入法能提高打字效率吗"&gt;双拼输入法能提高打字效率吗？&lt;/h2&gt;
 &lt;p&gt;学习之前我们通常有个疑问：这玩意真能提高打字效率？&lt;/p&gt;
 &lt;p&gt;我带着这个疑问，找到了一个测试汉字打字速度的&lt;a href="https://dz.wubidz.cn/"&gt;网站&lt;/a&gt;，我通过一个月的使用，对比了前后的输入速度，得出的答案让我确信写这篇文章能够帮助你通过双拼提高打字效率。（不要吐槽我每分钟字数太少，测速网站采用了古诗词作为输入，一定程度上屏蔽输入法智能联想的效果。你可以亲自去尝试一下 😛）&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/4.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/4.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;（KPM=每分钟按键次数，BPM=每分钟退格次数）&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/5.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/5.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="开始学习小鹤双拼"&gt;开始学习小鹤双拼&lt;/h2&gt;
 &lt;p&gt;学习知识之前，先了解它的原理会帮助我们更容易记忆它。理解原理看似是增加了额外的负担，但是死记硬背的知识往往难以形成结构化的记忆，很容易遗忘。&lt;/p&gt;
 &lt;p&gt;学习小鹤双拼前，我们先要了解三件事：&lt;/p&gt;
@@ -196,7 +364,15 @@
 &lt;/ul&gt;
 &lt;h2 id="声母的规律"&gt;声母的规律&lt;/h2&gt;
 &lt;p&gt;前面提到，汉语拼音声母大多数是单个字母，除了三个特别的&lt;code&gt;zh&lt;/code&gt;，&lt;code&gt;sh&lt;/code&gt;，&lt;code&gt;ch&lt;/code&gt;。小鹤双拼和全拼一样，直接按字母键就可以输入对应的声母，那三个特别的声母映射到键盘的&lt;code&gt;V&lt;/code&gt;，&lt;code&gt;U&lt;/code&gt;，&lt;code&gt;I&lt;/code&gt;上。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/6.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/6.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;之所以映射成&lt;code&gt;zh=V，sh=U，ch=I&lt;/code&gt;，是考虑到两个因素：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;这三个字母（V，U，I）都没有对应声母&lt;/li&gt;
@@ -207,9 +383,25 @@
 &lt;h2 id="韵母的规律"&gt;韵母的规律&lt;/h2&gt;
 &lt;p&gt;汉语拼音的韵母有一些很特殊，例如&lt;code&gt;ua&lt;/code&gt; 和&lt;code&gt;ia&lt;/code&gt;前边的声母是&lt;strong&gt;互斥&lt;/strong&gt;的。以&lt;code&gt;jia&lt;/code&gt;（加）为例，你肯定没听过&lt;code&gt;jua&lt;/code&gt;的组合（可能小岳岳除外 😂）。所以&lt;code&gt;ua&lt;/code&gt;和&lt;code&gt;ia&lt;/code&gt;前边的声母不可能是同一个字母，那么即使把这两个韵母放在同一个按键上，也不会出现输入汉字时的混淆。&lt;/p&gt;
 &lt;p&gt;符合这种规律的韵母一共有 7 对，小鹤双拼的按键分布是下面这样的。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/7.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/7.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;为了方便记忆，小鹤双拼让每个按键对应的声母和其中一个韵母能组合成有意义的汉字发音。所以你只需按口诀或文末提到的练习工具针对练习即可，其中需特殊训练的只有上面的 7 个按键。&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/8.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/8.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;有一些汉字没有声母（零声母），这种情况只要会全拼输入法就可以一秒解决：&lt;/p&gt;
 &lt;p&gt;单字母韵母，如：  啊＝ aa  哦=oo  额=ee&lt;/p&gt;
 &lt;p&gt;双字母韵母，如：  爱＝ ai  恩=en  欧=ou&lt;/p&gt;
@@ -221,20 +413,52 @@
 &lt;li&gt;第二层是韵母，其中特殊的（黄色高亮）是&lt;code&gt;T&lt;/code&gt;，&lt;code&gt;O&lt;/code&gt;，&lt;code&gt;S&lt;/code&gt;，&lt;code&gt;K&lt;/code&gt;，&lt;code&gt;L&lt;/code&gt;，&lt;code&gt;X&lt;/code&gt;，&lt;code&gt;V&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;第三层是易忘按键（蓝色高亮），它们分别是&lt;code&gt;Q&lt;/code&gt;，&lt;code&gt;P&lt;/code&gt;，&lt;code&gt;Z&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/9.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/9.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;你可以把这张图保存起来，放在桌面壁纸里或是打印出来放在键盘前边，练习时用来对照。&lt;/p&gt;
 &lt;h2 id="记忆工具"&gt;记忆工具&lt;/h2&gt;
 &lt;p&gt;小鹤双拼&lt;a href="https://www.flypy.com/index.html"&gt;官网&lt;/a&gt;提供了多种练习工具。你可以微信扫一扫这个小程序，随时用手机练习。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/10.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/10.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;桌面端推荐一个在线的&lt;a href="https://api.ihint.me/shuang/"&gt;网页双拼练习工具&lt;/a&gt;，地址是 &lt;a href="https://api.ihint.me/shuang/"&gt;https://api.ihint.me/shuang/&lt;/a&gt;。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/11.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/11.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="测试工具"&gt;测试工具&lt;/h2&gt;
 &lt;p&gt;为了测试打字速度，你可以使用上文提到的&lt;a href="https://dz.wubidz.cn/"&gt;在线网页打字测速工具&lt;/a&gt;，地址是&lt;a href="https://dz.wubidz.cn/"&gt;https://dz.wubidz.cn/&lt;/a&gt;。&lt;/p&gt;
 &lt;h2 id="小结"&gt;小结&lt;/h2&gt;
 &lt;p&gt;本文以小鹤双拼为例，为你分析了汉语拼音组合原理和双拼输入法的映射规律。未来你在学习任何拼音输入法时都可以按照这种规律，以分层结构提高对键盘布局的认识。&lt;/p&gt;
 &lt;p&gt;从练习时间角度，掌握双拼要一周左右，超过全拼打字速度也只需要两周多。所以双拼是非常值得学习的输入方案。&lt;/p&gt;
 &lt;p&gt;目前所有平台都有比较成熟的双拼输入法 App，例如 iOS 和 Mac 系统自带的双拼输入法、Google 的移动端输入法 Gboard。某些国产输入法，在我的测试下经常会出现「过度联想」的问题，比如输入一个字母，自动联想出一个甚至更多汉字，这和双拼输入法一个汉字两个字母的敲键节奏稍有违背，我个人倾向于在移动端使用 Gboard 或默认输入法。&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://www.buymeacoffee.com/stevedsun"&gt;&lt;img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px" alt="Buy Me A Coffee"&gt;&lt;/a&gt;&lt;/p&gt;</description></item><item><title>为 Mac OS 10.15 开启 HiDPI，让 2K 显示器更舒适</title><link>https://sund.site/posts/2019/macbook-hidpi/</link><pubDate>Sun, 24 Nov 2019 16:11:00 +0800</pubDate><guid>https://sund.site/posts/2019/macbook-hidpi/</guid><description>&lt;p&gt;以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户&lt;a href="https://github.com/xzhih"&gt;ZeRo° Xu&lt;/a&gt; 在 &lt;a href="https://github.com/xzhih/one-key-hidpi"&gt;一键开启 HiDPI 脚本&lt;/a&gt; 里的 &lt;a href="https://github.com/syscl/Enable-HiDPI-OSX/issues/49"&gt;Github Issue&lt;/a&gt; 和一篇博文 &lt;a href="https://www.smslit.top/2019/01/02/mac_hidpi/"&gt;《为 mac 连接的 2k 显示器开启 HiDPI》&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.buymeacoffee.com/stevedsun"&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px" alt="Buy Me A Coffee" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;Buy Me A Coffee&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/a&gt;&lt;/p&gt;</description></item><item><title>为 Mac OS 10.15 开启 HiDPI，让 2K 显示器更舒适</title><link>https://sund.site/posts/2019/%E4%B8%BA-mac-os-10.15-%E5%BC%80%E5%90%AF-hidpi%E8%AE%A9-2k-%E6%98%BE%E7%A4%BA%E5%99%A8%E6%9B%B4%E8%88%92%E9%80%82/</link><pubDate>Sun, 24 Nov 2019 16:11:00 +0800</pubDate><guid>https://sund.site/posts/2019/%E4%B8%BA-mac-os-10.15-%E5%BC%80%E5%90%AF-hidpi%E8%AE%A9-2k-%E6%98%BE%E7%A4%BA%E5%99%A8%E6%9B%B4%E8%88%92%E9%80%82/</guid><description>&lt;p&gt;以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户&lt;a href="https://github.com/xzhih"&gt;ZeRo° Xu&lt;/a&gt; 在 &lt;a href="https://github.com/xzhih/one-key-hidpi"&gt;一键开启 HiDPI 脚本&lt;/a&gt; 里的 &lt;a href="https://github.com/syscl/Enable-HiDPI-OSX/issues/49"&gt;Github Issue&lt;/a&gt; 和一篇博文 &lt;a href="https://www.smslit.top/2019/01/02/mac_hidpi/"&gt;《为 mac 连接的 2k 显示器开启 HiDPI》&lt;/a&gt;。&lt;/p&gt;
 &lt;h2 id="什么是-hidpi"&gt;什么是 HiDPI&lt;/h2&gt;
 &lt;p&gt;引用自 Github 用户 &lt;a href="https://github.com/xzhih"&gt;ZeRo° Xu&lt;/a&gt; ：&lt;/p&gt;
 &lt;blockquote&gt;
@@ -317,7 +541,7 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;p&gt;Main Display 和 Display 2 就分别是你的外接显示器和 macbook 的显示器分辨率设置（位置有可能对掉，自己尝试一下）。带有 ⚡️ 符号的分辨率设置项就是开启 HiDPI 后新增出来的。如果你像我一样是 2K 显示器，可以给显示器选择&lt;code&gt;1920x1080⚡️&lt;/code&gt;那个配置。是不是比原生分辨率的 UI 和字体更大更清晰了。&lt;/p&gt;
 &lt;h2 id="小结"&gt;小结&lt;/h2&gt;
 &lt;p&gt;本文教你强行开启 macbook 的 HiDPI 设置，并针对 2K 显示器新增了配置文件到系统配置目录里，最后用 RDM 自由设置适合你显示器的分辨率。至于 HiDPI 的原理，请自行搜索，此处不再赘述。&lt;/p&gt;
-&lt;p&gt;希望本文对你有帮助，也欢迎你留言反馈。&lt;/p&gt;</description></item><item><title>抛弃笔记本，完全用标签管理笔记有什么需要注意的</title><link>https://sund.site/posts/2019/all-tag-in-evernote/</link><pubDate>Mon, 18 Nov 2019 13:49:00 +0800</pubDate><guid>https://sund.site/posts/2019/all-tag-in-evernote/</guid><description>&lt;p&gt;日常工作中经常会出现这样的情况：&lt;/p&gt;
+&lt;p&gt;希望本文对你有帮助，也欢迎你留言反馈。&lt;/p&gt;</description></item><item><title>抛弃笔记本，完全用标签管理笔记有什么需要注意的</title><link>https://sund.site/posts/2019/%E6%8A%9B%E5%BC%83%E7%AC%94%E8%AE%B0%E6%9C%AC%E5%AE%8C%E5%85%A8%E7%94%A8%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86%E7%AC%94%E8%AE%B0%E6%9C%89%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84/</link><pubDate>Mon, 18 Nov 2019 13:49:00 +0800</pubDate><guid>https://sund.site/posts/2019/%E6%8A%9B%E5%BC%83%E7%AC%94%E8%AE%B0%E6%9C%AC%E5%AE%8C%E5%85%A8%E7%94%A8%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86%E7%AC%94%E8%AE%B0%E6%9C%89%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84/</guid><description>&lt;p&gt;日常工作中经常会出现这样的情况：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;小张怎么也想不起来上次收藏的一篇健身饮食相关的文章，到底是在印象笔记的「健身」分类下，还是在「健康」或者「饮食」分类下，跨分类的文章太多，小张感到头秃&lt;/li&gt;
 &lt;li&gt;小李用标签管理文档，但是每次查询标签时，总是犹豫到底应该搜索&lt;code&gt;时间管理&lt;/code&gt;还是&lt;code&gt;效率&lt;/code&gt;，亦或是&lt;code&gt;工作流&lt;/code&gt;，标签实在太多，小李很恼火&lt;/li&gt;
@@ -325,7 +549,15 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;p&gt;这两种情况都属于整理方法不科学，给检索时造成了麻烦。&lt;/p&gt;
 &lt;h2 id="检索分类的难题"&gt;检索分类的难题&lt;/h2&gt;
 &lt;p&gt;在正式介绍整理方法前，不得不先声明一个事实：**完全无重叠的分类是不可能实现的。**以小张为例，小张是一个健身教练，他在「健身方法」分类下有教会员如何管理「睡眠」、「饮食」和「健身动作」，同时小张也热爱生活，他在「生活」分类下有「财务知识」，并在「睡眠」和「饮食」里记录自己的睡眠和饮食习惯。这就造成了「睡眠」和「饮食」同时存在于个人生活和健身方法两个分类里。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g909mdd42bj30dj08ddfx.jpg" alt="如何打标签-分类"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g909mdd42bj30dj08ddfx.jpg" alt="如何打标签-分类" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;如何打标签-分类&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;像小张这样的情况几乎不可避免，分类作为一种整理方法，就免不了出现上图中重叠的部分。什么是分类？**分类就是预先设计好一堆插槽，再把不同的东西分门别类放进对应的插槽里。**小张在检索「饮食」相关的内容时，他的分类系统失效了，同一个东西可以属于不同插槽。小张此时必须用「个人生活 + 饮食」或是「健身 + 饮食」的扩展分类形式才能得到想要的结果。由此可见，&lt;strong&gt;分类失效最简单的解决办法是扩展分类&lt;/strong&gt;，比如增加两个子分类「生活饮食」和「健身饮食」。但是由于文档日积月累，这种小分类越来越多，越来越难管理；而一些分类里只存了 1、2 篇文档，根本没必要单独开个分类。&lt;/p&gt;
 &lt;p&gt;小张的头秃越来越严重了，为了帮助像小张这样的分类困难症，人们想出了两种不同的办法：&lt;/p&gt;
 &lt;ol&gt;
@@ -355,11 +587,27 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;h2 id="完全标签化的思路"&gt;完全标签化的思路&lt;/h2&gt;
 &lt;p&gt;现在流行一种管理方式，抛弃分类，完全用标签管理。拿印象笔记为例，在这篇 &lt;a href="https://medium.com/@thomashoneyman/using-evernote-the-right-way-ef61f530d1ad"&gt;《Using Evernote (the right way)》&lt;/a&gt; 的文章中，作者抛弃了常见的笔记本分类法，完全用标签来整理笔记。笔记本只保留「收件箱」、「收藏夹」和「废纸篓」。这种方式免去了整理笔记本的麻烦，但同时，造成了检索时必须依赖标签。作者为了解决这一难题，提出了一种被我称之为**「给标签分类」（ 原文是 Organize Tags）**的做法。&lt;/p&gt;
 &lt;p&gt;其实给标签分类的做法非常常见，以 &lt;a href="https://www.douban.com/"&gt;豆瓣&lt;/a&gt; 为例，你肯定见过下边的标签分类方式：&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g91dwdctqwj30hw0wqq5h.jpg" alt="douban"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g91dwdctqwj30hw0wqq5h.jpg" alt="douban" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;douban&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;**这种方式的好处就是：你既可以直接在搜索栏搜索具体的标签，也可以通过标签分类先筛选出标签，再点击标签明层缩小筛选范围。**这就解决了标签不好逐层检索的问题。&lt;/p&gt;
 &lt;p&gt;仍然以印象笔记为例，我们该如何改造它，使之成为完全标签化的系统呢？&lt;/p&gt;
 &lt;p&gt;首先，把现有笔记的标签归入对应的父类标签。比如新建一个&lt;code&gt;信息管理&lt;/code&gt;，然后把&lt;code&gt;项目管理&lt;/code&gt;、&lt;code&gt;时间管理&lt;/code&gt;、&lt;code&gt;思维导图&lt;/code&gt;、&lt;code&gt;信息检索&lt;/code&gt;全部拖到&lt;code&gt;信息管理&lt;/code&gt;标签下，使之成为父标签。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g91dw8hj6hj307m090jre.jpg" alt="006y8mN6gy1g90dkrc0utj307m090q37"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g91dw8hj6hj307m090jre.jpg" alt="006y8mN6gy1g90dkrc0utj307m090q37" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;006y8mN6gy1g90dkrc0utj307m090q37&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;之后，按照「我是谁，从哪来，到哪去」的原则补充所有遗失的标签。&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;我是谁，笔记属于哪个知识点、具体的知识类型&lt;/li&gt;
@@ -367,7 +615,15 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;li&gt;到哪去，笔记的用途，比如进行中的某个项目&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;这样，一篇笔记的标签看起来是这样：&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g90dnvno5pj316g07qgne.jpg" alt="标签命名"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g90dnvno5pj316g07qgne.jpg" alt="标签命名" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;标签命名&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;这里的来源我直接使用了印象笔记自带的信息。标签的用途如果不明确也可以忽略。知识点要遵循具体，尽量不可拆分的原则。父类别标签的存在，是为了避免开头中小李遇到的问题，标签太多时，检索无从下手。文章有了父类别标签，你就多了一种筛选笔记的方式：直接在标签管理界面点选父标签来缩小筛选范围。&lt;/p&gt;
 &lt;p&gt;完成了这些，我们下次检索笔记，就可以用两种方式：&lt;/p&gt;
 &lt;ol&gt;
@@ -378,15 +634,39 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;p&gt;看到这里你也许已经发现，这种完全标签化的方式其实只不过是把分类变成了标签，它同样存在父标签之间范围重叠的问题，所以一样要遵循前文的分类和标签的使用原则。&lt;/p&gt;
 &lt;h2 id="小结"&gt;小结&lt;/h2&gt;
 &lt;p&gt;本文先分析了检索分类的难题——分类之间的重叠造成添加和检索时的不便。之后按照分类和标签两种归类方式的区别，提出了创建和使用分类、标签的原则，即谨慎分类，组合标签。之后介绍了一种完全标签化的管理信息方式。它的本质仍然是通过分类 + 标签的组合，提高检索效率。&lt;/p&gt;
-&lt;p&gt;希望本文对你有所帮助，也欢迎在评论区留言发表你的观点。&lt;/p&gt;</description></item><item><title>Nintendo Switch 联机优化策略</title><link>https://sund.site/posts/2019/nintendo-switch-network-opt/</link><pubDate>Mon, 07 Oct 2019 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2019/nintendo-switch-network-opt/</guid><description>&lt;h2 id="简单方法"&gt;简单方法&lt;/h2&gt;
+&lt;p&gt;希望本文对你有所帮助，也欢迎在评论区留言发表你的观点。&lt;/p&gt;</description></item><item><title>Nintendo Switch 联机优化策略</title><link>https://sund.site/posts/2019/nintendo-switch-%E8%81%94%E6%9C%BA%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/</link><pubDate>Mon, 07 Oct 2019 22:18:00 +0800</pubDate><guid>https://sund.site/posts/2019/nintendo-switch-%E8%81%94%E6%9C%BA%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/</guid><description>&lt;h2 id="简单方法"&gt;简单方法&lt;/h2&gt;
 &lt;p&gt;首先介绍下 Nintendo Switch 在哪里设置网络，如下图，设置界面=&amp;gt;互联网设置里，可以修改 IP，DNS 等常用网络配置。修改之后点击「链接测试」，可以测试你的 NAT 和下载、上传速度。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pz8xft9ej31i30u0ng9.jpg" alt="1"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pz8xft9ej31i30u0ng9.jpg" alt="1" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;1&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h3 id="首先设置路由器的-wifi-类型为-5g"&gt;首先：设置路由器的 WIFI 类型为 5G&lt;/h3&gt;
 &lt;p&gt;因为 NS 对 2.4GHz 的 Wifi 优化非常差，所以一般玩家都选择设置 Wifi 类型为 5GHz，5G 的缺点是穿墙能力差，但是速度很快，所以建议把 NS 放在离路由器不太远的位置。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pzbkstq4j30vy0l2mz4.jpg" alt="image-20191007215608157"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pzbkstq4j30vy0l2mz4.jpg" alt="image-20191007215608157" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;image-20191007215608157&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h3 id="最简单粗暴的方法购买加速器"&gt;最简单粗暴的方法：购买加速器&lt;/h3&gt;
 &lt;p&gt;购买加速器是最省心省力的方案，以网易 UU 加速器为例，加速后可以把 NAT 从 D 上升到 B 或 A，完全可以满足大部分延迟要求较低游戏的需要。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyt6dxbij31aw0qokjl.jpg" alt="image-20191007213820867"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyt6dxbij31aw0qokjl.jpg" alt="image-20191007213820867" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;image-20191007213820867&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;Mac 版 UU 加速器目前还处于免费测试阶段，可以随意使用。按照提示配置 NS 上的 IP 和 DNS 即可。但是如果想让联机速度突破 A，甚至小于 30ms 延迟，就要结合第二部分「进阶方法」中的内容了。&lt;/p&gt;
 &lt;h3 id="最方便的方法dns-优化"&gt;最方便的方法：DNS 优化&lt;/h3&gt;
 &lt;p&gt;这也是最多人的办法，以「Splatoon2」为例，四川电信在不使用任何加速器的情况下，单单设置了合适的 DNS，就可以流畅体验乌贼娘了。注意这种方法在晚上 8 ～ 10 点高峰期间有一定概率掉线。下面提供一些我常用的 DNS，不同地区效果不同，需要自己尝试。&lt;/p&gt;
@@ -401,18 +681,42 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;设置路由器 DMZ，所谓 DMZ 就是隔离区，简单理解为外网可以直接访问你 DMZ 中指定的 IP。现在把你主机的 IP 放入 DMZ 中，这样牺牲一定安全性的同时换来延迟的进一步降低。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyoqpcpsj311s0ccgow.jpg" alt="image-20191007213358497"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyoqpcpsj311s0ccgow.jpg" alt="image-20191007213358497" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;image-20191007213358497&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;开启路由器的「Full Cone NAT」。以 pandavan 固件为例，在防火墙设置中可以找到。其他路由器也一定有类似的设置，耐心找一下。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyq72iu5j311w0m8q5q.jpg" alt="image-20191007213535337"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pyq72iu5j311w0m8q5q.jpg" alt="image-20191007213535337" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;image-20191007213535337&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id="电信宽带改为桥接方式"&gt;电信宽带改为桥接方式&lt;/h3&gt;
 &lt;p&gt;中国电信宽带默认使用光猫拨号上网。这样普通用户免去很多麻烦的同时，也增加了 NAT 联机的延迟。解决办法就是把宽带连接方式改为「桥接」。&lt;/p&gt;
 &lt;p&gt;所谓桥接，就是不使用电信提供的光猫进行拨号上网，而是直接由你自己的路由器拨号，这样可以一定程度降低延迟。中国电信网上营业厅可以直接修改，也可以自己打客服电话或去营业厅办理（只要告诉业务人员，我要把宽带连接方式改为桥接）。&lt;/p&gt;
 &lt;p&gt;修改之后的十几分钟内时间，你的网络会断开，此时你必须用自己的宽带账号和密码在路由器上（注意不是光猫）重新登录宽带上网。我使用桥接+DNS 修改，在未使用加速器的情况下，就可以把 NAT 直接从 D 提升为 A。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pz96eo7pj31hs0u07gp.jpg" alt="2"&gt;&lt;/p&gt;</description></item><item><title>一些投资知识</title><link>https://sund.site/posts/2017/investment/</link><pubDate>Thu, 19 Jan 2017 13:25:55 +0800</pubDate><guid>https://sund.site/posts/2017/investment/</guid><description>&lt;h2 id="资产配置"&gt;资产配置&lt;/h2&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7pz96eo7pj31hs0u07gp.jpg" alt="2" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;2&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;</description></item><item><title>一些投资知识</title><link>https://sund.site/posts/2017/%E4%B8%80%E4%BA%9B%E6%8A%95%E8%B5%84%E7%9F%A5%E8%AF%86/</link><pubDate>Thu, 19 Jan 2017 13:25:55 +0800</pubDate><guid>https://sund.site/posts/2017/%E4%B8%80%E4%BA%9B%E6%8A%95%E8%B5%84%E7%9F%A5%E8%AF%86/</guid><description>&lt;h2 id="资产配置"&gt;资产配置&lt;/h2&gt;
 &lt;p&gt;债、股、基金等综合配置。基金有的偏股，有的偏债，有的偏另类。看清楚哪些基金适合自己。&lt;/p&gt;
 &lt;p&gt;每种理财产品、基金都是有一些底层资产构成。&lt;/p&gt;
 &lt;h3 id="什么是底层资产"&gt;什么是底层资产&lt;/h3&gt;

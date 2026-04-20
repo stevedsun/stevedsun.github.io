@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/tags/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 08 Oct 2025 20:39:15 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-e2e-testing/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-e2e-testing/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/tags/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 08 Oct 2025 20:39:15 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-agent--%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86-%E4%BA%A7%E5%93%81%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-agent--%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86-%E4%BA%A7%E5%93%81%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
 &lt;p&gt;用 OpenCode 而没有选其他 AI Agent 框架（如 Claude Code）是因为它可以集成公司的企业版 Github Copilot 账号，这样我们在公司内网可以无限量调用 GPT-4 和 Claude Sonnet 等大语言模型。&lt;/p&gt;
 &lt;p&gt;其次微软做的 Playwright 是一个可以调用浏览器 API 的自动化测试框架。相比于 Selenium 更轻量，社区维护更积极，和大模型结合也更好（有官方的 MCP Server）。Playwright 还内置了 webdriver，免去了很多环境配置的麻烦。&lt;/p&gt;
 &lt;p&gt;基于 OpenCode 和 Playwright-MCP-Server，稍加少量提示词模板，就可以不写一行测试代码，完整跑通一组 Web UI 的 E2E 测试用例。这在过去简直无法想象。&lt;/p&gt;
@@ -16,7 +16,7 @@
 &lt;li&gt;不必要的移动&lt;/li&gt;
 &lt;li&gt;缺陷&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;AI Agent 一定程度上解决了“过度生产（要重复编写测试代码）”，“等待（从需求实现到测试用例实现，最后才能验证功能）”，“不必要的运输（业务需求在不同人员之间的传递）”三个方面的浪费。&lt;/p&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
+&lt;p&gt;AI Agent 一定程度上解决了“过度生产（要重复编写测试代码）”，“等待（从需求实现到测试用例实现，最后才能验证功能）”，“不必要的运输（业务需求在不同人员之间的传递）”三个方面的浪费。&lt;/p&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/cursor%E7%AD%89ai%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E7%9A%84%E8%83%8C%E5%90%8E%E5%8E%9F%E7%90%86/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/cursor%E7%AD%89ai%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E7%9A%84%E8%83%8C%E5%90%8E%E5%8E%9F%E7%90%86/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
 &lt;p&gt;这个问题的答案就是 AST 分块。&lt;/p&gt;
 &lt;p&gt;这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p&gt;
 &lt;h2 id="ast"&gt;AST&lt;/h2&gt;
@@ -67,7 +67,15 @@
 &lt;p&gt;Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p&gt;
 &lt;p&gt;当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p&gt;
 &lt;p&gt;有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;网友&lt;/a&gt;整理了这张流程图：&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline 的官方博客&lt;/a&gt; 可以让我们窥见它的实现思路。&lt;/p&gt;
 &lt;p&gt;Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p&gt;
@@ -76,7 +84,15 @@
 &lt;p&gt;When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;Cline 会使用它们的 &lt;code&gt;list_code_definition_names&lt;/code&gt;工具将源代码转换成 AST。Cline 把这个 AST 当作整个源代码的「地图」。&lt;/p&gt;
 &lt;p&gt;当 Cline 自动执行任务时，它会分析当前要修改的文件，从文件构建 AST，从 AST 生成自然语言上下文（类似 DeepWIKI 把代码转换成文档）。并将上下文传给 LLM，让 LLM 决定下一步是该修改文件，还是需要查看另一个文件补充更多上下文。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/ast-chunk/cline.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ast-chunk/cline.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;如果说 Cursor 比较的是向量空间代码片段的相似度，Cline 就是将代码片段转换成自然语言的描述，然后让 LLM 通过语义的理解，在源代码仓库中搜寻线索，比较代码片段之间的语义相似度。&lt;/p&gt;
 &lt;p&gt;Cline 这种实现方式，显然更安全，企业用户不用担心 Cline 滥用源代码。但是副作用就是消耗了更多 Token。不断在不同文件之间获取上下文也花费更多时间。对于一些特殊情况，它甚至会在两个文件之间循环跳转，陷入死循环。&lt;/p&gt;
 &lt;p&gt;从我自身感受来说，Cline 在一些模型（Deepseek-r1, OpenAI-4o）的表现上比 Cursor 的 Agent 模式更好，因为 Cline 的语义理解比向量相似度更充分利用这些模型的自然语言能力。&lt;/p&gt;
@@ -87,7 +103,7 @@
 &lt;h2 id="扩展阅读"&gt;扩展阅读&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWIKI&lt;/a&gt; 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/deepwiki-%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/deepwiki-%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWIKI&lt;/a&gt; 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p&gt;
 &lt;p&gt;我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p&gt;
 &lt;h2 id="生成代码结构地图"&gt;生成代码结构地图&lt;/h2&gt;
 &lt;p&gt;首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong&gt;代表语法结构和文件结构的元数据&lt;/strong&gt;和&lt;strong&gt;代表代码描述和片段的向量数据&lt;/strong&gt;两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p&gt;
@@ -101,7 +117,15 @@
 &lt;li&gt;最后由一个前端渲染引擎把 LLM 的输出渲染成文档页面。&lt;/li&gt;
 &lt;li&gt;重复步骤 1。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;图片来自https://www.gptsecurity.info/2024/05/26/RAG/&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="难点-1分块策略"&gt;难点 1：分块策略&lt;/h2&gt;
 &lt;p&gt;上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p&gt;
 &lt;p&gt;但是代码的拆分不同，比如一个函数体由&lt;code&gt;{&lt;/code&gt; &lt;code&gt;}&lt;/code&gt;包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p&gt;
@@ -159,7 +183,7 @@
 &lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>为什么不应该让AI生成单元测试</title><link>https://sund.site/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/posts/2025/do-not-vibe-testing/</guid><description>&lt;p&gt;最近听到 Gru.ai 创始人张海龙老师在一档&lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9"&gt;播客节目&lt;/a&gt;中提到自动生成 Unit Testing 是他们在做 AI Coding 的主要方向。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>为什么不应该让AI生成单元测试</title><link>https://sund.site/posts/2025/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%BA%94%E8%AF%A5%E8%AE%A9ai%E7%94%9F%E6%88%90%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/posts/2025/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%BA%94%E8%AF%A5%E8%AE%A9ai%E7%94%9F%E6%88%90%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/</guid><description>&lt;p&gt;最近听到 Gru.ai 创始人张海龙老师在一档&lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9"&gt;播客节目&lt;/a&gt;中提到自动生成 Unit Testing 是他们在做 AI Coding 的主要方向。&lt;/p&gt;
 &lt;p&gt;Gru.ai 官网上有这么两句话：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Forget about unit testing – get covered automatically (忘记单元测试 - 自动覆盖)
@@ -169,7 +193,7 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;p&gt;但是 Gru.ai 在做的，是用&lt;strong&gt;AI 提高单元测试覆盖率， 众所周知，覆盖率提高不等价于测试效率提高，更不等于质量提高&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;用一句提示词让 AI 自动帮你写出可以运行的单元测试。这对初级程序员来说非常具有诱惑力。好比一个射击运动员为了提高射击准确度，每次先开枪，然后在子弹坑附近画上靶子。&lt;/p&gt;
 &lt;p&gt;提升测试覆盖率的目的，是让人类工程师充分考虑边界条件。AI 辅助人类生成测试是一种节省时间的做法，这无可厚非，而 Gru.ai 却让我们「忘记单元测试，自动覆盖」。但 AI 大多时候不清楚边界条件，除非人类显式地告诉它。那么 AI 如何自动推断边界条件？我们又如何确信 AI 推断的边界条件是正确的？AI 测试了代码，谁来测试 AI ？&lt;/p&gt;
-&lt;p&gt;如果说 Cursor 这类 AI Coding 产品凝聚了硅谷程序员们对 Vibe Coding 的想象，那么 Gru.ai 就是中国程序员们对 Vibe Testing 的「美好期望」。&lt;/p&gt;</description></item><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/pairing-with-ai-02/</guid><description>&lt;p&gt;在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p&gt;
+&lt;p&gt;如果说 Cursor 这类 AI Coding 产品凝聚了硅谷程序员们对 Vibe Coding 的想象，那么 Gru.ai 就是中国程序员们对 Vibe Testing 的「美好期望」。&lt;/p&gt;</description></item><item><title>与AI协作编程──痛点篇</title><link>https://sund.site/posts/2025/%E4%B8%8Eai%E5%8D%8F%E4%BD%9C%E7%BC%96%E7%A8%8B%E7%97%9B%E7%82%B9%E7%AF%87/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2025/%E4%B8%8Eai%E5%8D%8F%E4%BD%9C%E7%BC%96%E7%A8%8B%E7%97%9B%E7%82%B9%E7%AF%87/</guid><description>&lt;p&gt;在与 AI 协作编程中，经常遇到一些大模型无法正确执行的情况。最常见的有：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;任务死循环&lt;/li&gt;
 &lt;li&gt;模型无法修复环境问题&lt;/li&gt;
@@ -184,7 +208,7 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;p&gt;最近读到&lt;a href="https://ezyang.github.io/ai-blindspots/"&gt;AI Blindspots&lt;/a&gt;这篇文章，作者系统性整理了 AI 编程中遇到的问题和他的思路。对我非常有启发。我用 Agent 把它翻译成了中文并人工做了润色，你可以在这里读到：&lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5"&gt;AI 编程的盲点&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;概括起来，解决 AI 问题的核心要领还是三点：更准确的提示词、更完整的上下文、缩小问题规模。&lt;/p&gt;
 &lt;p&gt;相信随着技术的发展，编程范式会发生翻天覆地的变化。如果重构变得如此容易，那么马丁福勒的《重构》是否应该出一套 AI 时代下的新范式。如果文档不再是被人读，而是喂给模型当作上下文，那么文档的形态应该是什么样？是否提供一个向量化的文档接口供大模型调用，将是未来编程框架的新常态？&lt;/p&gt;
-&lt;p&gt;我对未来充满期待。&lt;/p&gt;</description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p&gt;未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p&gt;
+&lt;p&gt;我对未来充满期待。&lt;/p&gt;</description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/%E4%B8%8Eai%E5%8D%8F%E4%BD%9C%E7%BC%96%E7%A8%8B%E6%B5%8B%E8%AF%95%E7%AF%87/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/%E4%B8%8Eai%E5%8D%8F%E4%BD%9C%E7%BC%96%E7%A8%8B%E6%B5%8B%E8%AF%95%E7%AF%87/</guid><description>&lt;p&gt;未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p&gt;
 &lt;p&gt;我试图浅显地讨论一下哪些软件开发的手段更适合在 AI 时代提高 AI 编写代码的可观测性和维护性。接下来所有以「与 AI 协作编程」为标题的文章都只是抛砖引玉，并未形成系统化方法论。期望任何错误之处，读者不吝赐教。&lt;/p&gt;
 &lt;h2 id="使用-ai-编写代码有哪些常见问题"&gt;使用 AI 编写代码有哪些常见问题？&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;可观测性问题：AI 实现的功能不完备，经常要手动修改片段&lt;/strong&gt;&lt;/p&gt;
@@ -216,7 +240,15 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;li&gt;
 &lt;p&gt;无状态的代码（函数式）最容易测试&lt;/p&gt;
 &lt;p&gt;因为它的输出具有不变性。应该让核心代码尽量无状态，将状态、外部系统依赖放在应用服务层。而把深且不易理解的核心逻辑，放在领域服务层。这里的细节可以参考 DDD（Domain Driven Design）的思想。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/pairing-with-ai-01/functional_core.png" alt="functional_core.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/pairing-with-ai-01/functional_core.png" alt="functional_core.png" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;functional_core.png&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id="小结"&gt;小结&lt;/h2&gt;

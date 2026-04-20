@@ -1,21 +1,61 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>输入法 on Steve Sun</title><link>https://sund.site/tags/%E8%BE%93%E5%85%A5%E6%B3%95/</link><description>Recent content in 输入法 on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sun, 19 Jan 2020 07:21:17 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/%E8%BE%93%E5%85%A5%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>如何练习双拼输入法</title><link>https://sund.site/posts/2020/2020-1-19_xnheulpb/</link><pubDate>Sun, 19 Jan 2020 07:21:17 +0800</pubDate><guid>https://sund.site/posts/2020/2020-1-19_xnheulpb/</guid><description>&lt;h2 id="双拼输入法是什么"&gt;双拼输入法是什么？&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>输入法 on Steve Sun</title><link>https://sund.site/tags/%E8%BE%93%E5%85%A5%E6%B3%95/</link><description>Recent content in 输入法 on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Sun, 19 Jan 2020 07:21:17 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/%E8%BE%93%E5%85%A5%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>如何练习双拼输入法</title><link>https://sund.site/posts/2020/%E5%A6%82%E4%BD%95%E7%BB%83%E4%B9%A0%E5%8F%8C%E6%8B%BC%E8%BE%93%E5%85%A5%E6%B3%95/</link><pubDate>Sun, 19 Jan 2020 07:21:17 +0800</pubDate><guid>https://sund.site/posts/2020/%E5%A6%82%E4%BD%95%E7%BB%83%E4%B9%A0%E5%8F%8C%E6%8B%BC%E8%BE%93%E5%85%A5%E6%B3%95/</guid><description>&lt;h2 id="双拼输入法是什么"&gt;双拼输入法是什么？&lt;/h2&gt;
 &lt;p&gt;「双拼输入法」类似于我们大多人使用的全拼输入法，也是一种基于汉语拼音的汉字输入方案。&lt;/p&gt;
 &lt;p&gt;让我们先来复习一下小学的知识 😂，任何一个汉字都有对应的拼音，拼音由声母和韵母组成。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/1.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/1.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;声母除了&lt;code&gt;zh&lt;/code&gt;，&lt;code&gt;sh&lt;/code&gt;，&lt;code&gt;ch&lt;/code&gt;之外，都是由单个字母表示。例如「拼」字的声母&lt;code&gt;p&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;韵母通常由 1 到 4 个字母组成，例如拼字的韵母就是&lt;code&gt;in&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;通常大家用的全拼输入法，韵母部分要全部打出来（现代输入法通常可以智能联想，但是大多数情况下都需要你打出大部分字母），比如输入「拼」你需要打三个键&lt;code&gt;p&lt;/code&gt;，&lt;code&gt;i&lt;/code&gt;，&lt;code&gt;n&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;双拼输入法就是为了解决全拼输入法在输入韵母时低效率的问题。双拼的开发者试图把汉语拼音的全部韵母映射到键盘的所有按键上，这样每次输入一个汉字，只需要输入两个按键（声母+韵母）。&lt;/p&gt;
 &lt;p&gt;例如，我把&lt;code&gt;ing&lt;/code&gt;映射到键盘的字母&lt;code&gt;K&lt;/code&gt;上，把&lt;code&gt;ang&lt;/code&gt;映射到字母&lt;code&gt;H&lt;/code&gt;上。输入「乒乓」时就是下面的效果。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/2.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/2.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;现在比较流行的双拼方案有很多，我选择了比较受大家青睐的小鹤双拼方案。它的键盘布局是下面这样的（初次看你可能会觉得不适……别急，读完这篇文章学起来就会很轻松）。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/3.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/3.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="双拼输入法能提高打字效率吗"&gt;双拼输入法能提高打字效率吗？&lt;/h2&gt;
 &lt;p&gt;学习之前我们通常有个疑问：这玩意真能提高打字效率？&lt;/p&gt;
 &lt;p&gt;我带着这个疑问，找到了一个测试汉字打字速度的&lt;a href="https://dz.wubidz.cn/"&gt;网站&lt;/a&gt;，我通过一个月的使用，对比了前后的输入速度，得出的答案让我确信写这篇文章能够帮助你通过双拼提高打字效率。（不要吐槽我每分钟字数太少，测速网站采用了古诗词作为输入，一定程度上屏蔽输入法智能联想的效果。你可以亲自去尝试一下 😛）&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/4.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/4.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;（KPM=每分钟按键次数，BPM=每分钟退格次数）&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/5.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/5.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="开始学习小鹤双拼"&gt;开始学习小鹤双拼&lt;/h2&gt;
 &lt;p&gt;学习知识之前，先了解它的原理会帮助我们更容易记忆它。理解原理看似是增加了额外的负担，但是死记硬背的知识往往难以形成结构化的记忆，很容易遗忘。&lt;/p&gt;
 &lt;p&gt;学习小鹤双拼前，我们先要了解三件事：&lt;/p&gt;
@@ -26,7 +66,15 @@
 &lt;/ul&gt;
 &lt;h2 id="声母的规律"&gt;声母的规律&lt;/h2&gt;
 &lt;p&gt;前面提到，汉语拼音声母大多数是单个字母，除了三个特别的&lt;code&gt;zh&lt;/code&gt;，&lt;code&gt;sh&lt;/code&gt;，&lt;code&gt;ch&lt;/code&gt;。小鹤双拼和全拼一样，直接按字母键就可以输入对应的声母，那三个特别的声母映射到键盘的&lt;code&gt;V&lt;/code&gt;，&lt;code&gt;U&lt;/code&gt;，&lt;code&gt;I&lt;/code&gt;上。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/6.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/6.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;之所以映射成&lt;code&gt;zh=V，sh=U，ch=I&lt;/code&gt;，是考虑到两个因素：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;这三个字母（V，U，I）都没有对应声母&lt;/li&gt;
@@ -37,9 +85,25 @@
 &lt;h2 id="韵母的规律"&gt;韵母的规律&lt;/h2&gt;
 &lt;p&gt;汉语拼音的韵母有一些很特殊，例如&lt;code&gt;ua&lt;/code&gt; 和&lt;code&gt;ia&lt;/code&gt;前边的声母是&lt;strong&gt;互斥&lt;/strong&gt;的。以&lt;code&gt;jia&lt;/code&gt;（加）为例，你肯定没听过&lt;code&gt;jua&lt;/code&gt;的组合（可能小岳岳除外 😂）。所以&lt;code&gt;ua&lt;/code&gt;和&lt;code&gt;ia&lt;/code&gt;前边的声母不可能是同一个字母，那么即使把这两个韵母放在同一个按键上，也不会出现输入汉字时的混淆。&lt;/p&gt;
 &lt;p&gt;符合这种规律的韵母一共有 7 对，小鹤双拼的按键分布是下面这样的。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/7.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/7.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;为了方便记忆，小鹤双拼让每个按键对应的声母和其中一个韵母能组合成有意义的汉字发音。所以你只需按口诀或文末提到的练习工具针对练习即可，其中需特殊训练的只有上面的 7 个按键。&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/8.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/8.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;有一些汉字没有声母（零声母），这种情况只要会全拼输入法就可以一秒解决：&lt;/p&gt;
 &lt;p&gt;单字母韵母，如：  啊＝ aa  哦=oo  额=ee&lt;/p&gt;
 &lt;p&gt;双字母韵母，如：  爱＝ ai  恩=en  欧=ou&lt;/p&gt;
@@ -51,17 +115,49 @@
 &lt;li&gt;第二层是韵母，其中特殊的（黄色高亮）是&lt;code&gt;T&lt;/code&gt;，&lt;code&gt;O&lt;/code&gt;，&lt;code&gt;S&lt;/code&gt;，&lt;code&gt;K&lt;/code&gt;，&lt;code&gt;L&lt;/code&gt;，&lt;code&gt;X&lt;/code&gt;，&lt;code&gt;V&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;第三层是易忘按键（蓝色高亮），它们分别是&lt;code&gt;Q&lt;/code&gt;，&lt;code&gt;P&lt;/code&gt;，&lt;code&gt;Z&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/9.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/9.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;你可以把这张图保存起来，放在桌面壁纸里或是打印出来放在键盘前边，练习时用来对照。&lt;/p&gt;
 &lt;h2 id="记忆工具"&gt;记忆工具&lt;/h2&gt;
 &lt;p&gt;小鹤双拼&lt;a href="https://www.flypy.com/index.html"&gt;官网&lt;/a&gt;提供了多种练习工具。你可以微信扫一扫这个小程序，随时用手机练习。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/10.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/10.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;桌面端推荐一个在线的&lt;a href="https://api.ihint.me/shuang/"&gt;网页双拼练习工具&lt;/a&gt;，地址是 &lt;a href="https://api.ihint.me/shuang/"&gt;https://api.ihint.me/shuang/&lt;/a&gt;。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/shuangpin/11.jpg" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/shuangpin/11.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="测试工具"&gt;测试工具&lt;/h2&gt;
 &lt;p&gt;为了测试打字速度，你可以使用上文提到的&lt;a href="https://dz.wubidz.cn/"&gt;在线网页打字测速工具&lt;/a&gt;，地址是&lt;a href="https://dz.wubidz.cn/"&gt;https://dz.wubidz.cn/&lt;/a&gt;。&lt;/p&gt;
 &lt;h2 id="小结"&gt;小结&lt;/h2&gt;
 &lt;p&gt;本文以小鹤双拼为例，为你分析了汉语拼音组合原理和双拼输入法的映射规律。未来你在学习任何拼音输入法时都可以按照这种规律，以分层结构提高对键盘布局的认识。&lt;/p&gt;
 &lt;p&gt;从练习时间角度，掌握双拼要一周左右，超过全拼打字速度也只需要两周多。所以双拼是非常值得学习的输入方案。&lt;/p&gt;
 &lt;p&gt;目前所有平台都有比较成熟的双拼输入法 App，例如 iOS 和 Mac 系统自带的双拼输入法、Google 的移动端输入法 Gboard。某些国产输入法，在我的测试下经常会出现「过度联想」的问题，比如输入一个字母，自动联想出一个甚至更多汉字，这和双拼输入法一个汉字两个字母的敲键节奏稍有违背，我个人倾向于在移动端使用 Gboard 或默认输入法。&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://www.buymeacoffee.com/stevedsun"&gt;&lt;img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px" alt="Buy Me A Coffee"&gt;&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;&lt;a href="https://www.buymeacoffee.com/stevedsun"&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png?width=217px" alt="Buy Me A Coffee" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;Buy Me A Coffee&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>

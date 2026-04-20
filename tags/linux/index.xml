@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Steve Sun</title><link>https://sund.site/tags/linux/</link><description>Recent content in Linux on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 22 Oct 2025 23:21:21 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Steve Sun</title><link>https://sund.site/tags/linux/</link><description>Recent content in Linux on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Wed, 22 Oct 2025 23:21:21 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-%E4%B8%80%E4%BA%9B%E4%B8%AD%E6%96%87%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E8%AE%BE%E7%BD%AE/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-%E4%B8%80%E4%BA%9B%E4%B8%AD%E6%96%87%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E8%AE%BE%E7%BD%AE/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
 &lt;p&gt;装完后有一些需要改造的配置记录在这篇文章中，供大家参考。&lt;/p&gt;
 &lt;h2 id="4k-显示器设置"&gt;4K 显示器设置&lt;/h2&gt;
 &lt;p&gt;修改系统菜单 Setup - Monitor，按照你自己显示器的分辨率，根据配置文件中的注释设置参数，比如我的显示器 27 寸 4k：&lt;/p&gt;
@@ -40,8 +40,16 @@ env = QT_SCALE_FACTOR,1.75
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt=""&gt;&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/%E9%81%87%E5%88%B0-linux-%E7%B3%BB%E7%BB%9F-kernel-panic-%E4%BA%86%E8%AF%A5%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/%E9%81%87%E5%88%B0-linux-%E7%B3%BB%E7%BB%9F-kernel-panic-%E4%BA%86%E8%AF%A5%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;这时候很多人就慌了，其实完全不必慌。只需要用一个 LiveUSB 启动盘修复一下。&lt;/p&gt;
 &lt;p&gt;不过我这个 Ubuntu 安装了一年多，一直很稳定，家里也没预备 LiveUSB，无奈只能掏出吃灰好几年的旧电脑，开机密码猜了半个多小时才进入系统……下载 Ubuntu ISO 文件，制作 LiveUSB。&lt;/p&gt;
 &lt;p&gt;下面是从 LiveUSB 启动后进入 Try Ubuntu，用 Terminal 排错的过程，供大家参考。&lt;/p&gt;
@@ -102,7 +110,7 @@ nvme0n1
 &lt;li&gt;
 &lt;p&gt;用&lt;code&gt;mount&lt;/code&gt;挂载原系统必要文件，进入原系统并重建 initramfs&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ol&gt;</description></item><item><title>macbook安装ubuntu</title><link>https://sund.site/posts/2013/macbook_ubuntu/</link><pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2013/macbook_ubuntu/</guid><description>&lt;p&gt;&lt;strong&gt;注意，ubuntu 和 xubuntu 安装上有一定差别，请严格按照你选择的系统版本流程安装&lt;/strong&gt;&lt;/p&gt;
+&lt;/ol&gt;</description></item><item><title>macbook安装ubuntu</title><link>https://sund.site/posts/2013/macbook%E5%AE%89%E8%A3%85ubuntu/</link><pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate><guid>https://sund.site/posts/2013/macbook%E5%AE%89%E8%A3%85ubuntu/</guid><description>&lt;p&gt;&lt;strong&gt;注意，ubuntu 和 xubuntu 安装上有一定差别，请严格按照你选择的系统版本流程安装&lt;/strong&gt;&lt;/p&gt;
 &lt;h3 id="ubuntu"&gt;ubuntu&lt;/h3&gt;
 &lt;h3 id="准备工作"&gt;准备工作&lt;/h3&gt;
 &lt;h5 id="分区"&gt;分区&lt;/h5&gt;

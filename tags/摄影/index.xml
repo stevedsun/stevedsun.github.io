@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>摄影 on Steve Sun</title><link>https://sund.site/tags/%E6%91%84%E5%BD%B1/</link><description>Recent content in 摄影 on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Fri, 17 May 2024 23:07:29 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/%E6%91%84%E5%BD%B1/index.xml" rel="self" type="application/rss+xml"/><item><title>Ricoh GR 2 使用心得</title><link>https://sund.site/posts/2024/ricoh_gr2_sharing/</link><pubDate>Fri, 17 May 2024 23:07:29 +0800</pubDate><guid>https://sund.site/posts/2024/ricoh_gr2_sharing/</guid><description>&lt;p&gt;买 GR2 已经很多年了，几年前写过一篇&lt;a href="https://sund.site/posts/2019/ricoh-gr2-settings/"&gt;Ricol GR 2 参数说明&lt;/a&gt;，作为初学者分享了参数的说明。今天这篇分享一下这几年的使用心得。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>摄影 on Steve Sun</title><link>https://sund.site/tags/%E6%91%84%E5%BD%B1/</link><description>Recent content in 摄影 on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Fri, 17 May 2024 23:07:29 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/%E6%91%84%E5%BD%B1/index.xml" rel="self" type="application/rss+xml"/><item><title>Ricoh GR 2 使用心得</title><link>https://sund.site/posts/2024/ricoh-gr-2-%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</link><pubDate>Fri, 17 May 2024 23:07:29 +0800</pubDate><guid>https://sund.site/posts/2024/ricoh-gr-2-%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</guid><description>&lt;p&gt;买 GR2 已经很多年了，几年前写过一篇&lt;a href="https://sund.site/posts/2019/ricoh-gr2-settings/"&gt;Ricol GR 2 参数说明&lt;/a&gt;，作为初学者分享了参数的说明。今天这篇分享一下这几年的使用心得。&lt;/p&gt;
 &lt;h2 id="机内裁剪"&gt;机内裁剪&lt;/h2&gt;
 &lt;p&gt;GR2 作为 28mm 相机，对于普通人扫街来说，最大的痛点就是经常抓不到合适的构图。28mm 的优点是取景范围更大，可以捕捉更多环境信息，但是相对地，用它拍摄时经常混入太多杂乱的场景元素。&lt;/p&gt;
 &lt;p&gt;但是好在 GR2 支持机内裁剪，可以把 28mm 裁切成 35mm 或 47mm 镜头。这让街拍时的构图更加灵活（当然以牺牲画质为代价）。&lt;/p&gt;
@@ -12,7 +12,15 @@
 &lt;/ul&gt;
 &lt;h2 id="自定义参数"&gt;自定义参数&lt;/h2&gt;
 &lt;h3 id="fuji-胶片风格"&gt;FUJI 胶片风格&lt;/h3&gt;
-&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20(3).png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%283%29.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;滤镜模式：正片。 饱和度：4、对比度：5、鲜明度：6&lt;/li&gt;
 &lt;li&gt;白平衡：复合 AWB&lt;/li&gt;
@@ -21,7 +29,15 @@
 &lt;/ul&gt;
 &lt;p&gt;上面这套参数模仿富士相机的胶片效果。对比鲜明度较高，有淡淡的绿色调。&lt;/p&gt;
 &lt;h3 id="日常蓝色调"&gt;日常蓝色调&lt;/h3&gt;
-&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20(2).png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%282%29.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;滤镜模式：正片。 饱和度：7、对比度：3、鲜明度：7&lt;/li&gt;
 &lt;li&gt;白平衡：复合 AWB&lt;/li&gt;
@@ -38,7 +54,15 @@
 &lt;/ul&gt;
 &lt;p&gt;适合旅行拍摄低对比度的小清新画面。&lt;/p&gt;
 &lt;h3 id="性冷淡"&gt;性冷淡&lt;/h3&gt;
-&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20(4).png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%284%29.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;滤镜模式：轻微。 饱和度：9、对比度：5、鲜明度：9&lt;/li&gt;
 &lt;li&gt;白平衡：CT：4200K&lt;/li&gt;
@@ -53,7 +77,7 @@
 &lt;p&gt;关于这个模式的更多介绍推荐阿默的视频： &lt;a href="https://www.youtube.com/watch?v=JAZd5cM03NY"&gt;【ＧＲ浪漫】 GR III GR IIIx 感性で描く日常スナップ&lt;/a&gt;。&lt;/p&gt;
 &lt;h2 id="tav-模式和-p-模式"&gt;Tav 模式和 P 模式&lt;/h2&gt;
 &lt;p&gt;Tav 和 P 模式很相似，是 GR2 特有的一种模式。在 Tav 模式下，你可以手动调节 F 和 快门速度，让相机自动调节 ISO，这个好处就是你可以用一个相对较快的快门速度（比如 1/125）来保证抓拍街道上移动的人物的同时，很轻松地调节 F 来获得不同的取景深度。但是要切忌让 ISO 高于 800，噪点会明显增加。&lt;/p&gt;
-&lt;p&gt;P 模式是我街拍用的比较多的模式，它固定了 ISO，你可以在 F 和快门二选一，另一个交给相机自动设置。这种适合在光线环境不好的情况下抓拍，尤其适合成都这种常年阴暗的城市 🤣&lt;/p&gt;</description></item><item><title>Ricoh GR2 参数说明</title><link>https://sund.site/posts/2019/ricoh-gr2-settings/</link><pubDate>Thu, 14 Nov 2019 14:46:00 +0800</pubDate><guid>https://sund.site/posts/2019/ricoh-gr2-settings/</guid><description>&lt;h2 id="常用相机术语"&gt;常用相机术语&lt;/h2&gt;
+&lt;p&gt;P 模式是我街拍用的比较多的模式，它固定了 ISO，你可以在 F 和快门二选一，另一个交给相机自动设置。这种适合在光线环境不好的情况下抓拍，尤其适合成都这种常年阴暗的城市 🤣&lt;/p&gt;</description></item><item><title>Ricoh GR2 参数说明</title><link>https://sund.site/posts/2019/ricoh-gr2-%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E/</link><pubDate>Thu, 14 Nov 2019 14:46:00 +0800</pubDate><guid>https://sund.site/posts/2019/ricoh-gr2-%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E/</guid><description>&lt;h2 id="常用相机术语"&gt;常用相机术语&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;包围曝光&lt;/strong&gt;：同时使用不同曝光参数或滤镜拍摄三张照片或是合成一张。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NR&lt;/strong&gt;：即降噪功能，如感光度 ISO NR，低速快门 NR。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;ND 滤镜&lt;/strong&gt;：即减光镜，减少进光量，延长曝光时间，用于拍摄云彩，溪流等长曝光场景。&lt;/p&gt;
@@ -61,9 +85,25 @@
 &lt;p&gt;&lt;strong&gt;AE&lt;/strong&gt;：自动曝光（Auto Exposure）。&lt;/p&gt;
 &lt;h2 id="半按快门警告图标"&gt;半按快门警告图标&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;抖动警告（!((📷))）&lt;/strong&gt;：快门速度过慢，照片质量会因为微微抖动而模糊。可以改善周围环境亮度或是手动提高快门速度。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/image-20220820184826880.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/image-20220820184826880.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;自动曝光警告（!AE）&lt;/strong&gt;：快门速度太快，可能照片会发暗。可以调低快门速度或是增大光圈等。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://sund.site/images/image-20220820184847600.png" alt=""&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/image-20220820184847600.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="各项参数的对抖动曝光噪点的影响"&gt;各项参数的对抖动、曝光、噪点的影响&lt;/h2&gt;
 &lt;table&gt;
  &lt;thead&gt;

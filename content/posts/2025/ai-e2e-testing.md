@@ -1,8 +1,8 @@
 ---
 title: "AI Agent + 产品经理 = 产品测试工程师"
 date: 2025-10-08T20:39:15+08:00
-categories: [随笔]
-tags: [ai]
+categories: [AI]
+tags: [vibe coding, ai agent, testing]
 aliases: [/posts/ai-e2e-testing/]
 description: ""
 ---

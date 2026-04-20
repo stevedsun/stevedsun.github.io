@@ -7,3 +7,4 @@
 - Efficiency
 - 技术规范
 - 随笔
+- AI

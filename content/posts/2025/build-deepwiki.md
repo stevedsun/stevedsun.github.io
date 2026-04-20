@@ -1,8 +1,8 @@
 ---
 title: "DeepWIKI 是如何工作的"
 date: 2025-05-24T12:50:40+08:00
-categories: [Software Architecture]
-tags: [AI]
+categories: [AI]
+tags: [vibe coding, deepwiki, llm knowledge management]
 aliases: [/posts/build-deepwiki/]
 description: ""
 ---

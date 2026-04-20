@@ -1,8 +1,8 @@
 ---
 title: "与AI协作编程──痛点篇"
 date: 2025-03-23T00:00:01+08:00
-categories: [Software Architecture]
-tags: [AI]
+categories: [AI]
+tags: [vibe coding]
 aliases: [/posts/ai-promgramming/]
 description: ""
 ---

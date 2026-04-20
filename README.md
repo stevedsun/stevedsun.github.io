@@ -10,25 +10,31 @@ Dependencies:
 
 Refer to <https://gohugo.io/installation/>
 
-## Build
+### Build
 
 ```bash
 hugo mod get -u
 hugo
 ```
 
-## New Post
+## Get Started
+
+### New Post
 
 ```bash
-./new post-title
+hugo new posts/{current-year}/{post-title}.md
 ```
 
-## Preview
+### Category
+
+The article category is choosen based on `CATEGORIES.md`.
+
+### Preview
 
 ```bash
 hugo serve
 ```
 
-## Publish
+### Publish
 
 This repo has set up github actions. Just push the commit to master branch, this will auto trigger page publish process.

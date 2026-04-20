@@ -109,5 +109,5 @@ endLevel = 4
 # Structure of the generated URL.
 [permalinks]
 # blog = "/p/:slug"
-posts = "/posts/:year/:contentbasename"
+posts = "/posts/:year/:slug"
 # tags = "/blog/:slug"

@@ -3,7 +3,7 @@
 &lt;h2 id="1-mount-dockersocks-into-container"&gt;1. Mount &lt;code&gt;docker.socks&lt;/code&gt; into container&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;docker.socks&lt;/code&gt; is a Unix socket that Docker Engine API listens on. You can mount &lt;code&gt;/var/run/docker.socks&lt;/code&gt; file to your container and call Docker Engine API through this socket.&lt;/p&gt;
 &lt;p&gt;For instance, If I want to get docker information by calling that API:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#fff;background-color:#1f1f24;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -s --unix-socket /var/run/docker.sock http://localhost/info
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -s --unix-socket /var/run/docker.sock http://localhost/info
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can refer to &lt;a href="https://docs.docker.com/engine/api/v1.41/"&gt;Docker Engine API&lt;/a&gt; to find more useful details.&lt;/p&gt;
 &lt;h2 id="2-using-pid-mode-host"&gt;2. Using PID mode &lt;code&gt;host&lt;/code&gt;&lt;/h2&gt;
 &lt;p&gt;By default, Docker uses the Linux PID namespace to isolate containers&amp;rsquo; filesystem view. It means if two processes have the same PID, they will share the filesystem permission.&lt;/p&gt;

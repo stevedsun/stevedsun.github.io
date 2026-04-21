@@ -7,6 +7,8 @@ aliases: [/posts/ai-agent-tool-comparison-mcp-transitional/]
 description: ""
 ---
 
+![](https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-agent-mcp-header-900x383.png)
+
 如果你做过 AI Agent 开发，大概率已经用过 MCP，也可能接触过 Agent Skill 的概念。我们不需要再解释它们是什么——这篇文章要回答的问题是：**当两者都能实现"让 AI 调用工具"这件事时，为什么我认为 MCP 是一个会被淘汰的过渡态方案**。
 
 ---

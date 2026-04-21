@@ -1,18 +1,4 @@
 {{ define "main" }}
-
-{{/* Auto-detect ASCII art header image: images/{slug}/header-900x383.png */}}
-{{ $headerPath := printf "images/%s/header-900x383.png" .File.BaseFileName }}
-{{ if fileExists $headerPath }}
-<div class="post-header-image" style="margin-bottom: 1.5em; text-align: center;">
-  <img src="{{ $headerPath | relURL }}"
-       alt="{{ .Title }}"
-       width="900"
-       height="383"
-       style="max-width: 100%; height: auto; border-radius: 2px;"
-  />
-</div>
-{{ end }}
-
 {{ if eq .Type "posts" }}
 {{ if not .Params.menu }}
 <h1>{{ .Title }}</h1>

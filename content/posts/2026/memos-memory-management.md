@@ -7,7 +7,7 @@ aliases: [/posts/memos-memory-management/]
 description: ""
 ---
 
-![](https://raw.githubusercontent.com/stevedsun/blog-img/main/memos-memory-header.png)
+![](https://raw.githubusercontent.com/stevedsun/blog-img/main/memos-memory-management-header-900x383.png)
 
 最近在研究 AI 智能体的时候，接触到 MemOS。简单说，MemOS 解决了一个核心问题：AI 怎么记住关于"我"的事情。
 

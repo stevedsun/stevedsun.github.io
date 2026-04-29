@@ -1,4 +1,34 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/categories/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Mon, 20 Apr 2026 12:37:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent 工具对比：MCP 为什么只是个过渡产物</title><link>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</guid><description>&lt;p&gt;&lt;figure
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/categories/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2025, Steve Sun.</copyright><lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>记忆的层级，和 AI 智能体的记忆管理</title><link>https://sund.site/posts/2026/%E8%AE%B0%E5%BF%86%E7%9A%84%E5%B1%82%E7%BA%A7%E5%92%8C-ai-%E6%99%BA%E8%83%BD%E4%BD%93%E7%9A%84%E8%AE%B0%E5%BF%86%E7%AE%A1%E7%90%86/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AE%B0%E5%BF%86%E7%9A%84%E5%B1%82%E7%BA%A7%E5%92%8C-ai-%E6%99%BA%E8%83%BD%E4%BD%93%E7%9A%84%E8%AE%B0%E5%BF%86%E7%AE%A1%E7%90%86/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/memos-memory-header.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;最近在研究 AI 智能体的时候，接触到 MemOS。简单说，MemOS 解决了一个核心问题：AI 怎么记住关于&amp;quot;我&amp;quot;的事情。&lt;/p&gt;
+&lt;p&gt;市面上大多数 AI 对话是 stateless 的——你说啥它忘啥，每次都是全新的。但真正的个人助手不一样，它需要记得你是谁、你关心什么、你过去说过什么。MemOS 就是一套给 AI 用的记忆管理系统，让 AI 能够跨越时间积累对你的理解。&lt;/p&gt;
+&lt;p&gt;研究 MemOS 的过程中，我发现它的分层逻辑其实和人的记忆方式非常像——甚至包括我自己那套&amp;quot;先看框架、再看细节&amp;quot;的读书习惯。&lt;/p&gt;
+&lt;p&gt;我读书有一个习惯：先看目录，了解整体框架，再去读细节。回忆的时候也是——先找一个入口，顺着框架一层层往里走。&lt;/p&gt;
+&lt;h2 id="四层架构"&gt;四层架构&lt;/h2&gt;
+&lt;p&gt;MemOS 把记忆分成四层。&lt;/p&gt;
+&lt;p&gt;第一层是即时记忆，容量很小，存几十秒到几分钟就会消失。就像脑子里正在想的几个念头，注意力一转移就没了。&lt;/p&gt;
+&lt;p&gt;第二层是短期记忆，存的大概是&amp;quot;今天发生的事&amp;quot;。今天聊了什么话题、有什么情绪波动，都在这层。等第二天醒来，大部分变成&amp;quot;上周的事&amp;quot;，慢慢淡忘。&lt;/p&gt;
+&lt;p&gt;第三层是长期记忆，永久存储。我是谁、我的目标是什么、我关心什么，永久事实放这里，不会丢。&lt;/p&gt;
+&lt;p&gt;第四层是知识库，同样是永久存储，但存的不是和个人相关的事实，而是从外部学来的知识。&lt;/p&gt;
+&lt;p&gt;四层分级，配合自动整理机制，这就是 MemOS 的基本骨架。&lt;/p&gt;
+&lt;h2 id="存放记忆哪些细节值得保留"&gt;存放记忆：哪些细节值得保留&lt;/h2&gt;
+&lt;p&gt;一条新信息进来，系统会做四步：理解、打分、找关联、决定存哪层。&lt;/p&gt;
+&lt;p&gt;以&amp;quot;今天吃了薯片，减肥失败了&amp;quot;为例。系统先拆解：主体是我，行为是吃薯片，时间是今天，情绪是沮丧。然后打分——这件事和减肥这个长期目标相关，分数不会太低。接着向量数据库去找已有的相关记忆：上周说想吃火锅，昨天说今天要运动打卡。最后根据分数决定存在哪层。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AI 的&amp;quot;记住&amp;quot;，本质上是在问一个问题：这件事和&amp;quot;我是谁&amp;quot;这个框架有什么关系？&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="检索记忆从轮廓到纵深"&gt;检索记忆：从轮廓到纵深&lt;/h2&gt;
+&lt;p&gt;当我问&amp;quot;最近减肥坚持得怎么样&amp;quot;，系统不会把所有记忆都翻一遍。它先理解问题指向，同时在四层存储里检索，找到相关记忆后由 LLM 理解关系——火锅是上周忍住了，薯片是今天没忍住，运动打卡还没完成——最后组合成一个有逻辑链条的回答。&lt;/p&gt;
+&lt;p&gt;这和我的回忆方式是一样的：先有轮廓，再往里走。&lt;/p&gt;
+&lt;h2 id="最后"&gt;最后&lt;/h2&gt;
+&lt;p&gt;AI 帮我们记住越来越多的东西之后，有些东西会悄悄变化。&lt;/p&gt;
+&lt;p&gt;记忆外包给 AI 的部分越多，留给人脑的空间就越少——比如那些原本需要自己记住的细节、需要在回忆时走的弯路。但反过来，真正被强化的可能是另一类能力：判断什么值得记住、怎么把碎片组织成框架、以及和 AI 协同使用记忆的方式。&lt;/p&gt;
+&lt;p&gt;这大概才是个人助手真正改变的东西——不是让机器更像人，而是让人学会怎么用机器。&lt;/p&gt;</description></item><item><title>AI Agent 工具对比：MCP 为什么只是个过渡产物</title><link>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  

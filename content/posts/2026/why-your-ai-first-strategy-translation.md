@@ -7,6 +7,9 @@ aliases: [/posts/why-your-ai-first-strategy-translation/]
 description: "CREAO CTO Peter Pang 的实战报告：99% 生产代码由 AI 编写，每天 3-8 次生产部署，25 人团队如何重新设计工程流程。"
 ---
 
+
+![](https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-first-strategy-header-900x383.png)
+
 > **原文**：[Why Your "AI-First" Strategy Is Probably Wrong](https://x.com/intuitiveml/status/2043545596699750791)
 >
 > **作者**：Peter Pang（[@intuitiveml](https://x.com/intuitiveml)），CREAO CTO，前 Meta GenAI tech lead、Apple AI Scientist

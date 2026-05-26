@@ -96,7 +96,7 @@ email = ""
 
 [markup]
 [markup.highlight]
-noclasses = true
+noclasses = false
 lineNos = false
 style = "friendly"
 

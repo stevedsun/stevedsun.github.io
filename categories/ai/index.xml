@@ -1,4 +1,316 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/categories/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2026, Steve Sun.</copyright><lastBuildDate>Mon, 25 May 2026 23:55:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】为什么你的"AI-First"策略很可能是错的</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E7%9A%84ai-first%E7%AD%96%E7%95%A5%E5%BE%88%E5%8F%AF%E8%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</link><pubDate>Mon, 25 May 2026 23:55:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E7%9A%84ai-first%E7%AD%96%E7%95%A5%E5%BE%88%E5%8F%AF%E8%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</guid><description>&lt;p&gt;&lt;figure
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/categories/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2026, Steve Sun.</copyright><lastBuildDate>Tue, 26 May 2026 16:11:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>如何设计一个智能体（AI Agent）</title><link>https://sund.site/posts/2026/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E6%99%BA%E8%83%BD%E4%BD%93ai-agent/</link><pubDate>Tue, 26 May 2026 16:11:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E6%99%BA%E8%83%BD%E4%BD%93ai-agent/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-agent-design-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;AI 智能体（Agent）很有可能是未来AI软件设计的范式，所以对于大部分开发者、刚接触 vibe coding 的非技术人员，了解它的设计方式和背后的原理，就能在未来设计新时代的应用软件时更得心应手。&lt;/p&gt;
+&lt;p&gt;本文试图用通俗易懂的语言，让你理解什么是 AI Agent，它解决了什么问题，以它为基础设施，有哪些协议和工具将在未来派上用场。&lt;/p&gt;
+&lt;p&gt;本文目标读者：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Vibe coding 人群（快速做原型、边做边改）&lt;/li&gt;
+&lt;li&gt;程序员&lt;/li&gt;
+&lt;li&gt;刚接触编程的非技术用户&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="从第一性原理出发agent-框架到底在解决什么问题"&gt;从第一性原理出发：Agent 框架到底在解决什么问题&lt;/h2&gt;
+&lt;h3 id="模型很强但不可靠"&gt;模型很强，但不可靠&lt;/h3&gt;
+&lt;p&gt;大模型（LLM）会“猜”，不会“保证”。
+所以你不能把它当确定性程序（同样输入一定同样输出）。&lt;/p&gt;
+&lt;p&gt;需要解决的问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如何让不稳定输出进入可控流程&lt;/li&gt;
+&lt;li&gt;如何在失败时知道失败在哪里&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="现实中的任务结果往往不是一个简单的答复而是一个完整的流程产出物"&gt;现实中的任务结果往往不是一个简单的答复，而是一个完整的流程产出物&lt;/h3&gt;
+&lt;p&gt;真实任务往往是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;读信息&lt;/li&gt;
+&lt;li&gt;做决策&lt;/li&gt;
+&lt;li&gt;调用工具&lt;/li&gt;
+&lt;li&gt;根据工具结果继续决策&lt;/li&gt;
+&lt;li&gt;最终产出文档、代码或者其他&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这意味着 Agent 的设计目标不仅局限在“一问一答”，而是一套“循环决策系统”。&lt;/p&gt;
+&lt;h3 id="用户不想等到最后才看到结果"&gt;用户不想等到最后才看到结果&lt;/h3&gt;
+&lt;p&gt;在和AI交互过程中，用户通常希望：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;过程可见（streaming，流式显示）&lt;/li&gt;
+&lt;li&gt;可以打断（abort，中止当前任务）&lt;/li&gt;
+&lt;li&gt;可以中途追加指令（steer，在执行任务过程中给予引导）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以系统必须天然支持实时交互，而不是一次性黑盒执行。&lt;/p&gt;
+&lt;h3 id="上下文会越来越大成本会越来越高"&gt;上下文会越来越大，成本会越来越高&lt;/h3&gt;
+&lt;p&gt;对话越长，输入越大，速度越慢，费用越高，甚至会超限。
+必须有“压缩历史、保留关键信息”的机制。&lt;/p&gt;
+&lt;h3 id="一个内核要服务多种交互方式"&gt;一个内核要服务多种交互方式&lt;/h3&gt;
+&lt;p&gt;同一个 Agent 要能跑在：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;终端界面（TUI，Terminal UI，终端交互界面）&lt;/li&gt;
+&lt;li&gt;远程调用（RPC，Remote Procedure Call，远程过程调用）&lt;/li&gt;
+&lt;li&gt;未来可能的 Web 或 App&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以“智能内核”和“界面层”必须解耦（彼此独立，不绑死）。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="从问题到需求再到设计"&gt;从问题到需求，再到设计&lt;/h2&gt;
+&lt;h3 id="需求清单"&gt;需求清单&lt;/h3&gt;
+&lt;p&gt;一个可用 Agent 框架至少要满足：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;可循环：支持“思考 -&amp;gt; 调工具 -&amp;gt; 再思考”&lt;/li&gt;
+&lt;li&gt;可观察：每一步都能被 UI 或日志系统看到&lt;/li&gt;
+&lt;li&gt;可控制：能暂停、取消、插队、续跑&lt;/li&gt;
+&lt;li&gt;可恢复：失败后可重试，可继续上一次会话&lt;/li&gt;
+&lt;li&gt;可扩展：能加新工具、新模型、新前端&lt;/li&gt;
+&lt;li&gt;可治理：对成本、上下文、权限有边界&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="端到端流程图"&gt;端到端流程图&lt;/h3&gt;
+&lt;p&gt;以问题驱动需求，需求驱动设计的方式，我们就可以得出下面的流程图：&lt;/p&gt;
+&lt;div class="mermaid"&gt;flowchart TD
+ A[用户提出目标] --&gt; B[Agent 理解当前任务]
+ B --&gt; C[是否需要工具?]
+ C -- 否 --&gt; D[直接给出答案]
+ C -- 是 --&gt; E[生成工具调用请求]
+ E --&gt; F[执行工具]
+ F --&gt; G[拿到工具结果]
+ G --&gt; H[结果是否足够?]
+ H -- 否 --&gt; B
+ H -- 是 --&gt; D
+
+ D --&gt; I[流式返回给用户]
+ I --&gt; J[用户可中断/追加要求]
+ J --&gt; B&lt;/div&gt;
+&lt;p&gt;这个图表达的是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Agent 是闭环系统，不是单次函数。&lt;/li&gt;
+&lt;li&gt;“工具”是能力放大器，不是附属品。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;用户在回路内，而不是回路外&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="整体架构图"&gt;整体架构图&lt;/h3&gt;
+&lt;div class="mermaid"&gt;graph LR
+ subgraph Interaction Layer[交互层]
+ UI1[TUI/CLI]
+ UI2[RPC/API]
+ UI3[Web/App]
+ end
+
+ subgraph Runtime Layer[运行时层]
+ SESSION[会话编排器]
+ POLICY[策略中心: 重试/压缩/预算]
+ end
+
+ subgraph Core Layer[核心层]
+ LOOP[Agent 决策循环]
+ STATE[状态管理]
+ EVENTS[事件总线]
+ end
+
+ subgraph Capability Layer[能力层]
+ TOOLS[工具系统]
+ MODEL[模型适配层]
+ MEMORY[记忆与上下文管理]
+ end
+
+ UI1 --&gt; SESSION
+ UI2 --&gt; SESSION
+ UI3 --&gt; SESSION
+ SESSION --&gt; LOOP
+ SESSION --&gt; POLICY
+ LOOP &lt;--&gt; STATE
+ LOOP --&gt; EVENTS
+ LOOP &lt;--&gt; TOOLS
+ LOOP &lt;--&gt; MODEL
+ POLICY &lt;--&gt; MEMORY
+ MODEL --&gt; LLM[外部模型服务]&lt;/div&gt;
+&lt;h3 id="组件图理解谁负责什么"&gt;组件图（理解“谁负责什么”）&lt;/h3&gt;
+&lt;div class="mermaid"&gt;flowchart LR
+ USER[用户]
+ ORCH[会话编排器]
+ CORE[Agent Core]
+ ADAPTER[模型适配器]
+ TOOLRUN[工具执行器]
+ OBS[观察与事件]
+
+ USER &lt;--&gt; ORCH
+ ORCH &lt;--&gt; CORE
+ CORE &lt;--&gt; ADAPTER
+ CORE &lt;--&gt; TOOLRUN
+ CORE --&gt; OBS
+ OBS --&gt; ORCH&lt;/div&gt;
+&lt;p&gt;职责拆分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;会话编排器：处理用户输入、会话状态、重试和压缩策略。&lt;/li&gt;
+&lt;li&gt;Agent Core：只做“思考循环”和“状态推进”。&lt;/li&gt;
+&lt;li&gt;模型适配器：屏蔽不同模型供应商差异。&lt;/li&gt;
+&lt;li&gt;工具执行器：统一执行本地或远程工具。&lt;/li&gt;
+&lt;li&gt;观察与事件：把过程变成可见信号给 UI/日志系统。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="落地这些设计必备协议和基础设计模式是什么"&gt;落地这些设计，必备协议和基础设计模式是什么&lt;/h2&gt;
+&lt;p&gt;这一节是完成上面设计的“最小必需品”。需要从协议、设计模式角度考虑引入哪些工程实践。（好比盖摩天大楼，需要先定义好用什么材料、哪些通用的工程设计可以拿来就用、如何让建筑结构从力学上经得起时间验证）。&lt;/p&gt;
+&lt;p&gt;这些协议目前大部分由开发者按需设计实现，但是在不远的未来，很可能逐个出现标准规范。&lt;/p&gt;
+&lt;h3 id="必备协议不全就会失控"&gt;必备协议（不全就会失控）&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;消息协议（Message Protocol）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;统一描述用户消息、助手消息、工具结果。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;事件协议（Event Protocol）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;统一描述开始、更新、结束、错误、工具执行状态。&lt;/li&gt;
+&lt;li&gt;目的：让 UI 和日志看到“过程”，不是只看到“结论”。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;工具协议（Tool Contract）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;工具名、参数结构（Schema，字段规则）、执行返回格式必须固定。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;流式协议（Streaming Contract）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;支持增量输出（delta，分段输出），保证用户实时反馈。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="5"&gt;
+&lt;li&gt;取消协议（Cancellation Contract）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;任意环节都应响应中止信号，避免“停不下来”。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="6"&gt;
+&lt;li&gt;错误协议（Error Contract）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;失败必须结构化（可机器处理），不能只靠字符串报错。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="需要理解的基础设计模式"&gt;需要理解的基础设计模式&lt;/h3&gt;
+&lt;p&gt;对于没有编程经验的读者，下面的一些编程基础设计模式，需要你先从其他资料中理解。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;状态机（State Machine）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Agent 每一步都有状态转移（例如：等待输入 -&amp;gt; 生成输出 -&amp;gt; 工具执行 -&amp;gt; 回到生成）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;发布-订阅（Pub/Sub，发布与订阅）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Core 发事件，UI/日志订阅事件。&lt;/li&gt;
+&lt;li&gt;好处：核心逻辑不依赖具体界面。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;适配器（Adapter）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;把不同模型接口包装成统一调用方式。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;策略模式（Strategy）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;重试策略、工具并发策略、压缩策略可替换。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="5"&gt;
+&lt;li&gt;管道与过滤（Pipeline）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;输入预处理 -&amp;gt; 模型调用 -&amp;gt; 工具执行 -&amp;gt; 后处理，是可插拔链路。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="6"&gt;
+&lt;li&gt;幂等与可恢复（Idempotency/Recoverability）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;同一操作重复执行不应产生灾难性副作用，失败后能恢复。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="以-pi-agent-为例设计理念与架构"&gt;以 PI Agent 为例：设计理念与架构&lt;/h2&gt;
+&lt;p&gt;前面是“通用 Agent 框架设计”。现在落到最近很火的极简框架 &lt;a href="https://github.com/earendil-works/pi"&gt;PI Agent&lt;/a&gt; 。&lt;/p&gt;
+&lt;p&gt;一起来看看这个框架是如何设计 Agent 的。&lt;/p&gt;
+&lt;h3 id="设计理念"&gt;设计理念&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;内核最小化&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Core 只负责循环、状态、事件、工具编排。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;外围可插拔&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;模型、工具、重试、上下文处理都可替换。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;过程优先于结果&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;先保证过程可见、可控，再追求“聪明输出”。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;会话优先于请求&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;把 Agent 当长期会话系统，不当单次 API 调用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="agent-core-逻辑流程图"&gt;Agent Core 逻辑流程图&lt;/h3&gt;
+&lt;div class="mermaid"&gt;flowchart TD
+ START[开始一次会话回合] --&gt; TURN[开启 turn]
+ TURN --&gt; CALL[调用模型并流式接收输出]
+ CALL --&gt; CHECK{输出里有工具调用?}
+
+ CHECK -- 否 --&gt; STOPCHECK{是否停止?}
+ CHECK -- 是 --&gt; TOOL[执行工具批次]
+ TOOL --&gt; MERGE[把工具结果写回上下文]
+ MERGE --&gt; STOPCHECK
+
+ STOPCHECK -- 停止 --&gt; END[结束并发出结束事件]
+ STOPCHECK -- 继续 --&gt; NEXT[进入下一回合]
+ NEXT --&gt; TURN&lt;/div&gt;
+&lt;h3 id="agent-core-组件关系图"&gt;Agent Core 组件关系图&lt;/h3&gt;
+&lt;div class="mermaid"&gt;graph TD
+ CORE[Agent Core]
+ S[State 状态存储]
+ L[Loop 回合循环]
+ E[Events 事件发射]
+ T[Tool Executor 工具执行]
+ M[Model Stream 模型流调用]
+ Q[Queue 消息队列: steer/followUp]
+
+ CORE --&gt; S
+ CORE --&gt; L
+ L --&gt; M
+ L --&gt; T
+ L --&gt; E
+ L --&gt; Q
+ T --&gt; E
+ M --&gt; E
+ E --&gt; S&lt;/div&gt;
+&lt;p&gt;这个结构的价值是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;交互层只看事件，不碰核心状态。&lt;/li&gt;
+&lt;li&gt;模型替换不会改循环骨架。&lt;/li&gt;
+&lt;li&gt;工具扩展不会破坏核心控制流。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;Agent 架构不是“让模型更聪明”，而是“让不确定的模型在可控系统里稳定工作”。&lt;/p&gt;
+&lt;p&gt;你可以把它记成这个公式：&lt;/p&gt;
+&lt;p&gt;$$
+\text{可用 Agent} = \text{模型能力} \times \text{工程控制能力}
+$$&lt;/p&gt;
+&lt;p&gt;其中工程控制能力主要来自：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;循环设计&lt;/li&gt;
+&lt;li&gt;协议设计&lt;/li&gt;
+&lt;li&gt;事件可观察性&lt;/li&gt;
+&lt;li&gt;可恢复与可扩展性&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;从目前的趋势看，这大概率将是下一代应用软件的基础范式。&lt;/p&gt;</description></item><item><title>【译文】为什么你的"AI-First"策略很可能是错的</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E7%9A%84ai-first%E7%AD%96%E7%95%A5%E5%BE%88%E5%8F%AF%E8%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</link><pubDate>Mon, 25 May 2026 23:55:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E7%9A%84ai-first%E7%AD%96%E7%95%A5%E5%BE%88%E5%8F%AF%E8%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  

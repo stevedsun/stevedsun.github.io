@@ -40,7 +40,7 @@ images = ["images/share.png"]
 
 # 版权说明文案，将应用到 RSS 和页面底部
 # Copyright notice text, to be applied to RSS and the bottom of the page.
-copyright = "Copyright © 2013-2025, Steve Sun."
+copyright = "Copyright © 2013-2026, Steve Sun."
 
 # 博客文章列表是否按年份分组，Bear Blog 样式为 false
 # Is the list of blog articles grouped by year, the Bear Blog style is false.

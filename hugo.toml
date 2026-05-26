@@ -95,9 +95,12 @@ name = "Steve Sun"
 email = ""
 
 [markup]
+[markup.highlight]
+noClasses = false
+lineNos = true
+lineNumbersInTable = true
+style = "friendly"
 
-# 配置 TOC 渲染规则
-# Configure TOC rendering rules.
 [markup.tableOfContents]
 # 从 h2 开始到 h4 结束，后续的 h 等级将不会被渲染
 # From h2 to h4, subsequent h levels will not be rendered.

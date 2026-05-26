@@ -9,6 +9,45 @@ body,div.post-body,h1,h2,h3,h4 {
   text-align: center;
   margin: 1.5em 0;
 }
+
+/* ===== Code block styling ===== */
+
+/* Inline code */
+p code, li code {
+  background-color: #eff1f3;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: #333;
+}
+
+/* Code block container */
+div.highlight pre {
+  border-radius: 6px;
+  padding: 0;
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+}
+
+div.highlight code {
+  background: none !important;
+  padding: 16px;
+}
+
+/* In dark mode, override code block background to a dark color.
+   The "friendly" Chroma theme's token colors (green keywords, red strings, blue types)
+   remain readable on this dark background. */
+@media (prefers-color-scheme: dark) {
+  p code, li code {
+    background-color: #2d2d2d !important;
+    color: #e6db74 !important;
+  }
+
+  /* Override the Chroma inline bg on the container div */
+  div.highlight div[style*="background"] {
+    background-color: #1e1e1e !important;
+  }
+}
 </style>
 
 <!-- KaTeX: LaTeX math rendering -->

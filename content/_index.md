@@ -2,6 +2,8 @@
 title: "Steve Sun"
 ---
 
+![](https://raw.githubusercontent.com/stevedsun/blog-img/main/home-header-900x383.png)
+
 - Break down complex problems.
 - Discuss what makes good software design taste.
 - Explore engineering practices.

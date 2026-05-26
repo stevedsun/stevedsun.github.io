@@ -3,15 +3,8 @@
 &lt;h2 id="1-mount-dockersocks-into-container"&gt;1. Mount &lt;code&gt;docker.socks&lt;/code&gt; into container&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;docker.socks&lt;/code&gt; is a Unix socket that Docker Engine API listens on. You can mount &lt;code&gt;/var/run/docker.socks&lt;/code&gt; file to your container and call Docker Engine API through this socket.&lt;/p&gt;
 &lt;p&gt;For instance, If I want to get docker information by calling that API:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -s --unix-socket /var/run/docker.sock http://localhost/info
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;You can refer to &lt;a href="https://docs.docker.com/engine/api/v1.41/"&gt;Docker Engine API&lt;/a&gt; to find more useful details.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -s --unix-socket /var/run/docker.sock http://localhost/info
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can refer to &lt;a href="https://docs.docker.com/engine/api/v1.41/"&gt;Docker Engine API&lt;/a&gt; to find more useful details.&lt;/p&gt;
 &lt;h2 id="2-using-pid-mode-host"&gt;2. Using PID mode &lt;code&gt;host&lt;/code&gt;&lt;/h2&gt;
 &lt;p&gt;By default, Docker uses the Linux PID namespace to isolate containers&amp;rsquo; filesystem view. It means if two processes have the same PID, they will share the filesystem permission.&lt;/p&gt;
 &lt;p&gt;Docker has a startup parameter &lt;code&gt;--pid=host&lt;/code&gt; to change the PID namespace to its host process&amp;rsquo;s namespace. You can use this parameter to make your docker container have the same privilege as the host process.&lt;/p&gt;

@@ -3,22 +3,11 @@ body,div.post-body,h1,h2,h3,h4 {
   font-family: 'Microsoft Yahei', 'PingFang SC', 'Avenir', 'Segoe UI', 'Hiragino Sans GB', STHeiti, 'Microsoft Sans Serif', 'WenQuanYi Micro Hei', sans-serif;
 }
 
-/* Mermaid diagram responsiveness */
+/* Mermaid */
 .mermaid {
   overflow-x: auto;
   text-align: center;
   margin: 1.5em 0;
-}
-
-/* ===== Code block styling ===== */
-
-/* Inline code */
-p code, li code {
-  background-color: #eff1f3;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  color: #333;
 }
 
 /* Code block container */
@@ -26,31 +15,27 @@ div.highlight pre {
   border-radius: 6px;
   padding: 0;
   overflow-x: auto;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ddd;
 }
 
 div.highlight code {
-  background: none !important;
+  background: none;
   padding: 16px;
 }
 
-/* In dark mode, override code block background to a dark color.
-   The "friendly" Chroma theme's token colors (green keywords, red strings, blue types)
-   remain readable on this dark background. */
+/* Dark mode — invert Hugo's friendly inline styles to monokai-like appearance */
 @media (prefers-color-scheme: dark) {
-  p code, li code {
-    background-color: #2d2d2d !important;
-    color: #e6db74 !important;
+  div.highlight {
+    filter: invert(0.88) hue-rotate(180deg);
   }
-
-  /* Override the Chroma inline bg on the container div */
-  div.highlight div[style*="background"] {
-    background-color: #1e1e1e !important;
+  /* Undo double-inversion for images inside code blocks */
+  div.highlight img {
+    filter: invert(1) hue-rotate(180deg);
   }
 }
 </style>
 
-<!-- KaTeX: LaTeX math rendering -->
+<!-- KaTeX -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
@@ -63,7 +48,7 @@ div.highlight code {
       ]
     });"></script>
 
-<!-- Mermaid: diagram rendering -->
+<!-- Mermaid -->
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" crossorigin="anonymous"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {

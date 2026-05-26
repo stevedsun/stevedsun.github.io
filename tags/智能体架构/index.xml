@@ -2,7 +2,7 @@
  class="image-caption"
 &gt;
  
- &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-agent-design-header-900x383.png" alt="" loading="lazy" /&gt;
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-agent-dot-matrix-header-900x383.png" alt="" loading="lazy" /&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -53,8 +53,17 @@
 &lt;li&gt;远程调用（RPC，Remote Procedure Call，远程过程调用）&lt;/li&gt;
 &lt;li&gt;未来可能的 Web 或 App&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;所以“智能内核”和“界面层”必须解耦（彼此独立，不绑死）。&lt;/p&gt;
+&lt;p&gt;所以&amp;quot;智能内核&amp;quot;和&amp;quot;界面层&amp;quot;必须解耦（彼此独立，不绑死）。&lt;/p&gt;
 &lt;hr&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-agent-crt-terminal-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="从问题到需求再到设计"&gt;从问题到需求，再到设计&lt;/h2&gt;
 &lt;h3 id="需求清单"&gt;需求清单&lt;/h3&gt;
 &lt;p&gt;一个可用 Agent 框架至少要满足：&lt;/p&gt;
@@ -148,6 +157,15 @@
 &lt;li&gt;观察与事件：把过程变成可见信号给 UI/日志系统。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-agent-pixel-halftone-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
 &lt;h2 id="落地这些设计必备协议和基础设计模式是什么"&gt;落地这些设计，必备协议和基础设计模式是什么&lt;/h2&gt;
 &lt;p&gt;这一节是完成上面设计的“最小必需品”。需要从协议、设计模式角度考虑引入哪些工程实践。（好比盖摩天大楼，需要先定义好用什么材料、哪些通用的工程设计可以拿来就用、如何让建筑结构从力学上经得起时间验证）。&lt;/p&gt;
 &lt;p&gt;这些协议目前大部分由开发者按需设计实现，但是在不远的未来，很可能逐个出现标准规范。&lt;/p&gt;

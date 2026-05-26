@@ -63,5 +63,5 @@
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span>first_instr <span style=color:#f92672>=</span> (<span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>char</span><span style=color:#f92672>*</span>) <span style=color:#a6e22e>PyString_AS_STRING</span>(co<span style=color:#f92672>-&gt;</span>co_code);
 </span></span><span style=display:flex><span>next_instr <span style=color:#f92672>=</span> first_instr <span style=color:#f92672>+</span> f<span style=color:#f92672>-&gt;</span>f_lasti <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>;
 </span></span></code></pre></div><p>所以生成器对象每次执行结束都把字节码的偏移量记录下来，并把运行状态保存在 PyFrameObject 里，下一次运行时生成器时，python 解释器直接按照偏移量寻找下一个字节码指令。</p></content><p><a href=https://sund.site/tags/python/>#Python</a></p><div class=toc><nav id=TableOfContents><ul><li><a href=#举个栗子>举个栗子</a></li><li><a href=#生成器是如何记录代码返回位置的>生成器是如何记录代码返回位置的</a></li></ul></nav></div></main><footer>Subscribe via <a href=/index.xml>RSS</a>.<br>Made with
-<a href=https://github.com/rokcso/hugo-bearneo/>Hugo Bear Neo</a>.<br>Copyright © 2013-2025, Steve Sun.
+<a href=https://github.com/rokcso/hugo-bearneo/>Hugo Bear Neo</a>.<br>Copyright © 2013-2026, Steve Sun.
 🗺️ <a href=/sitemap.xml>Sitemap</a>.</footer></body></html>

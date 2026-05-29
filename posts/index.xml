@@ -458,37 +458,7 @@ $$&lt;/p&gt;
 &lt;p&gt;这些工具对任何团队都是可用的。我们的栈里没有任何东西是专有的。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;竞争优势在于围绕这些工具重新设计一切的决心，以及承受代价的意愿。&lt;/strong&gt; 代价是真实的：员工的不确定性、CTO 每天工作 18 小时、资深工程师质疑自己的价值、旧系统消失新系统尚未被证明的两周真空期。&lt;/p&gt;
 &lt;p&gt;我们承受了那个代价。两个月后，数字说明了一切。&lt;/p&gt;
-&lt;p&gt;我们是构建 agent 平台的公司。我们用 agent 构建了它。&lt;/p&gt;</description></item><item><title>记忆的层级，和 AI 智能体的记忆管理</title><link>https://sund.site/posts/2026/%E8%AE%B0%E5%BF%86%E7%9A%84%E5%B1%82%E7%BA%A7%E5%92%8C-ai-%E6%99%BA%E8%83%BD%E4%BD%93%E7%9A%84%E8%AE%B0%E5%BF%86%E7%AE%A1%E7%90%86/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AE%B0%E5%BF%86%E7%9A%84%E5%B1%82%E7%BA%A7%E5%92%8C-ai-%E6%99%BA%E8%83%BD%E4%BD%93%E7%9A%84%E8%AE%B0%E5%BF%86%E7%AE%A1%E7%90%86/</guid><description>&lt;p&gt;&lt;figure
- class="image-caption"
-&gt;
- 
- &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/memos-memory-management-header-900x383.png" alt="" loading="lazy" /&gt;
- 
- &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/p&gt;
-&lt;p&gt;最近在研究 AI 智能体的时候，接触到 MemOS。简单说，MemOS 解决了一个核心问题：AI 怎么记住关于&amp;quot;我&amp;quot;的事情。&lt;/p&gt;
-&lt;p&gt;市面上大多数 AI 对话是 stateless 的——你说啥它忘啥，每次都是全新的。但真正的个人助手不一样，它需要记得你是谁、你关心什么、你过去说过什么。MemOS 就是一套给 AI 用的记忆管理系统，让 AI 能够跨越时间积累对你的理解。&lt;/p&gt;
-&lt;p&gt;研究 MemOS 的过程中，我发现它的分层逻辑其实和人的记忆方式非常像——甚至包括我自己那套&amp;quot;先看框架、再看细节&amp;quot;的读书习惯。&lt;/p&gt;
-&lt;p&gt;我读书有一个习惯：先看目录，了解整体框架，再去读细节。回忆的时候也是——先找一个入口，顺着框架一层层往里走。&lt;/p&gt;
-&lt;h2 id="四层架构"&gt;四层架构&lt;/h2&gt;
-&lt;p&gt;MemOS 把记忆分成四层。&lt;/p&gt;
-&lt;p&gt;第一层是即时记忆，容量很小，存几十秒到几分钟就会消失。就像脑子里正在想的几个念头，注意力一转移就没了。&lt;/p&gt;
-&lt;p&gt;第二层是短期记忆，存的大概是&amp;quot;今天发生的事&amp;quot;。今天聊了什么话题、有什么情绪波动，都在这层。等第二天醒来，大部分变成&amp;quot;上周的事&amp;quot;，慢慢淡忘。&lt;/p&gt;
-&lt;p&gt;第三层是长期记忆，永久存储。我是谁、我的目标是什么、我关心什么，永久事实放这里，不会丢。&lt;/p&gt;
-&lt;p&gt;第四层是知识库，同样是永久存储，但存的不是和个人相关的事实，而是从外部学来的知识。&lt;/p&gt;
-&lt;p&gt;四层分级，配合自动整理机制，这就是 MemOS 的基本骨架。&lt;/p&gt;
-&lt;h2 id="存放记忆哪些细节值得保留"&gt;存放记忆：哪些细节值得保留&lt;/h2&gt;
-&lt;p&gt;一条新信息进来，系统会做四步：理解、打分、找关联、决定存哪层。&lt;/p&gt;
-&lt;p&gt;以&amp;quot;今天吃了薯片，减肥失败了&amp;quot;为例。系统先拆解：主体是我，行为是吃薯片，时间是今天，情绪是沮丧。然后打分——这件事和减肥这个长期目标相关，分数不会太低。接着向量数据库去找已有的相关记忆：上周说想吃火锅，昨天说今天要运动打卡。最后根据分数决定存在哪层。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;AI 的&amp;quot;记住&amp;quot;，本质上是在问一个问题：这件事和&amp;quot;我是谁&amp;quot;这个框架有什么关系？&lt;/strong&gt;&lt;/p&gt;
-&lt;h2 id="检索记忆从轮廓到纵深"&gt;检索记忆：从轮廓到纵深&lt;/h2&gt;
-&lt;p&gt;当我问&amp;quot;最近减肥坚持得怎么样&amp;quot;，系统不会把所有记忆都翻一遍。它先理解问题指向，同时在四层存储里检索，找到相关记忆后由 LLM 理解关系——火锅是上周忍住了，薯片是今天没忍住，运动打卡还没完成——最后组合成一个有逻辑链条的回答。&lt;/p&gt;
-&lt;p&gt;这和我的回忆方式是一样的：先有轮廓，再往里走。&lt;/p&gt;
-&lt;h2 id="最后"&gt;最后&lt;/h2&gt;
-&lt;p&gt;AI 帮我们记住越来越多的东西之后，有些东西会悄悄变化。&lt;/p&gt;
-&lt;p&gt;记忆外包给 AI 的部分越多，留给人脑的空间就越少——比如那些原本需要自己记住的细节、需要在回忆时走的弯路。但反过来，真正被强化的可能是另一类能力：判断什么值得记住、怎么把碎片组织成框架、以及和 AI 协同使用记忆的方式。&lt;/p&gt;
-&lt;p&gt;这大概才是个人助手真正改变的东西——不是让机器更像人，而是让人学会怎么用机器。&lt;/p&gt;</description></item><item><title>AI Agent 工具对比：MCP 为什么只是个过渡产物</title><link>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</guid><description>&lt;p&gt;&lt;figure
+&lt;p&gt;我们是构建 agent 平台的公司。我们用 agent 构建了它。&lt;/p&gt;</description></item><item><title>AI Agent 工具对比：MCP 为什么只是个过渡产物</title><link>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -855,4 +825,84 @@ nvme0n1
 &lt;h2 id="扩展阅读"&gt;扩展阅读&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/deepwiki-%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/deepwiki-%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWIKI&lt;/a&gt; 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p&gt;
+&lt;p&gt;我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p&gt;
+&lt;h2 id="生成代码结构地图"&gt;生成代码结构地图&lt;/h2&gt;
+&lt;p&gt;首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong&gt;代表语法结构和文件结构的元数据&lt;/strong&gt;和&lt;strong&gt;代表代码描述和片段的向量数据&lt;/strong&gt;两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p&gt;
+&lt;h2 id="生成-wiki-页面"&gt;生成 WIKI 页面&lt;/h2&gt;
+&lt;p&gt;生成 WIKI 页面的过程，就是 RAG 系统 query 的过程：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;程序递归读取项目结构。&lt;/li&gt;
+&lt;li&gt;从元数据库中查询当前文件的元数据，再从向量数据库中查找相关性最强的代码和描述信息的 id。&lt;/li&gt;
+&lt;li&gt;用这些 id 再去元数据库里查询到描述信息，从工程文件中查询对应代码片段。&lt;/li&gt;
+&lt;li&gt;将上面的所有内容作为 context，根据元数据类型（架构、组件等）组合适当的 prompt，输入给 LLM。&lt;/li&gt;
+&lt;li&gt;最后由一个前端渲染引擎把 LLM 的输出渲染成文档页面。&lt;/li&gt;
+&lt;li&gt;重复步骤 1。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="图片来自https://www.gptsecurity.info/2024/05/26/RAG/" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;图片来自https://www.gptsecurity.info/2024/05/26/RAG/&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h2 id="难点-1分块策略"&gt;难点 1：分块策略&lt;/h2&gt;
+&lt;p&gt;上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p&gt;
+&lt;p&gt;但是代码的拆分不同，比如一个函数体由&lt;code&gt;{&lt;/code&gt; &lt;code&gt;}&lt;/code&gt;包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p&gt;
+&lt;p&gt;目前的解决办法有两种，一种是基于整个文件的分块，这种情况文件大小不能超过分块大小的上限，而且分块数据缺少真实的调用关系上下文。我们知道，代码的组织单元并不是文件（文件树只是方便人类阅读的组织形式），而是以类和函数为单元的网状依赖关系图。&lt;/p&gt;
+&lt;p&gt;第二种方式就是先用语法工具对代码文件做静态分析，再根据分析结果将代码以语法结构进行拆分。这种方式实现复杂，网上并没有找到相关的资料，幸而读到这篇&lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;，它介绍了如何利用语法静态分析来给代码分块，构建高效的代码仓库 RAG 系统。 但是文章也没有提供开源实现，考虑到作为商业项目的核心技术，这部分内容非常值得深入。我会持续跟进这部分内容的研究。&lt;/p&gt;
+&lt;h2 id="难点-2-解析语法结构"&gt;难点 2: 解析语法结构&lt;/h2&gt;
+&lt;p&gt;元数据的语法解析要比向量数据简单一些，我从另一个开源项目&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;中找到一些线索。&lt;/p&gt;
+&lt;p&gt;这个项目使用了 &lt;code&gt;tree-sitter&lt;/code&gt; 来分析项目语法结构，从而得到三类元数据文件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tag.json&lt;/code&gt;：代表一个文件、函数、类的路径、行号、描述等基础信息。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tree_structure.json&lt;/code&gt;: 项目的文件树结构信息。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;*.pkl&lt;/code&gt;: 对象依赖关系图。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;*.pkl&lt;/code&gt;是语法分析器扫描项目文件之后得到的一个网状的对象关系图，它使用 python 的 pickle 库把 python 网状对象序列化成文件。&lt;/p&gt;
+&lt;p&gt;从这个项目的实现来看，难点 1 中嵌入向量的过程似乎也可以用 &lt;code&gt;tree-sitter&lt;/code&gt; 生成的代码元信息对代码按行分块。&lt;/p&gt;
+&lt;h2 id="提示词工程"&gt;提示词工程&lt;/h2&gt;
+&lt;p&gt;在 RAG 查询阶段，要根据当前元信息的类型，组装不同的提示词。&lt;/p&gt;
+&lt;p&gt;这个项目&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt; 里有不少提示词可供参考：&lt;/p&gt;
+&lt;p&gt;生成概述的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a concise overview of this repository focused primarily on:
+* Purpose and Scope: What is this project&amp;#39;s main purpose?
+* Core Features: What are the key features and capabilities?
+* Target audience/users
+* Main technologies or frameworks used
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成架构文档的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Create a comprehensive architecture overview for this repository. Include:
+* A high-level description of the system architecture
+* Main components and their roles
+* Data flow between components
+* External dependencies and integrations
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成组件文档的提示词&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a comprehensive analysis of all key components in this codebase. For each component:
+* Name of the component
+* Purpose and main responsibility
+* How it interacts with other components
+* Design patterns or techniques used
+* Key characteristics
+* File paths that implement this component
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其余请参考项目文件，就不一一列举了。&lt;/p&gt;
+&lt;h2 id="总结"&gt;总结&lt;/h2&gt;
+&lt;p&gt;DeepWIKI 是一个基于 RAG 系统的代码文档生成工具，它通过以下步骤工作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;对代码仓库进行语法分析，生成元数据和向量数据&lt;/li&gt;
+&lt;li&gt;然后通过 RAG 系统查询这些数据来生成文档&lt;/li&gt;
+&lt;li&gt;最后用前端引擎渲染成可读的文档页面&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;实现过程中有两个主要难点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;代码分块策略：需要考虑代码的语法结构，不能像自然语言那样简单分割&lt;/li&gt;
+&lt;li&gt;语法结构解析：可以使用 tree-sitter 等工具来解析代码结构&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虽然目前有一些开源项目可以参考，但核心的分块策略实现仍然需要深入研究。&lt;/p&gt;
+&lt;h2 id="参考项目"&gt;参考项目&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

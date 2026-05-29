@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Philosophy on Steve Sun</title><link>https://sund.site/tags/philosophy/</link><description>Recent content in Philosophy on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2026, Steve Sun.</copyright><lastBuildDate>Fri, 29 May 2026 17:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/philosophy/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】你可以直接这么说</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</link><pubDate>Fri, 29 May 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/you-can-just-say-it-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://noperator.dev/posts/you-can-just-say-it/"&gt;You Can Just Say It&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Caleb Gross（&lt;a href="https://x.com/noperator"&gt;@noperator&lt;/a&gt;）&lt;/p&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;p&gt;有一种评估人类及其创造性产物价值的奇怪论证范式，大致长这样：在 AI 时代，某些角色还是应该优先用人类，因为 AI 永远无法执行该角色所需的任务。或者，至少人类做得更好。又或者，人类和 AI 的输出看起来可能差不多，但人类的产物更优，有一些微妙的风格原因是 AI 无法复制的。再或者，至少 AI 无法一致地复制它。&lt;/p&gt;
+&lt;p&gt;看看球门柱底座上那些被反复移动留下的擦痕。等混凝土凝固吧，28 天。&lt;/p&gt;
+&lt;p&gt;这类思路归结为一句话：&lt;strong&gt;&amp;ldquo;人类如果有高质量产出，那就有价值。&amp;rdquo;&lt;/strong&gt; 这个论证的危险之处在于，它完全取决于一个存在但正在缩窄的人类—AI 能力差距。这个差距过去确实存在（2023 年的 ChatGPT 时代）。现在或许依然存在。但将来是否还会存在——我不知道。&lt;/p&gt;
+&lt;p&gt;不妨换一种说法：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&amp;ldquo;人类是有价值的。&amp;rdquo;&lt;/strong&gt; 你可以直接这么说。作为人类的一员，我建议你这么说。不需要任何资格限定。这是一个稳健的陈述，不取决于某个前沿模型在某个最新 benchmark 上的瞬时分数。&lt;/p&gt;
+&lt;h2 id="关于质量的题外话"&gt;关于&amp;quot;质量&amp;quot;的题外话&lt;/h2&gt;
+&lt;p&gt;作为相关但——重要的是不需要说的——题外话：你怎么衡量一件创造性产品的质量？它有效吗？它完成了它本该完成的事吗？这个问题隐含了质量的两个子成分：&lt;strong&gt;意图&lt;/strong&gt;和&lt;strong&gt;物质形式&lt;/strong&gt;。在我看来，很多为人类创造性产物辩护的论证，过分关注形式而忽视了意图。&lt;/p&gt;
+&lt;p&gt;创作是将意图蒸馏成形式的过程。意图通常不可分割地嵌入产物的形式之中。人类会反复（有时是痛苦地）塑造和重塑自己的创作，直到它足够匹配脑海中的样子。生成式 AI 的奇特之处在于，它可以用最低限度的意图产出可观的形式。一个人带着模糊的心理模型来到任务面前——并不清楚自己想完成什么——AI 却照样能生成东西。&amp;ldquo;帮我写一封辞职信给老板。&amp;ldquo;&amp;ldquo;嗯……看起来还行。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;也许&amp;quot;AI slop&amp;quot;本质上是在表达：&lt;strong&gt;难以辨识形式背后的意图。&lt;/strong&gt; 按这个定义，人类同样很擅长制造 slop；生成式 AI 只是降低了创造无意图形式的准入门槛。也可以说，意图体现在 prompt 中。对于散文类的文本产物，一个打磨充分的 prompt 或许已经很接近意图的形式本身了。最近在讨论（不）使用 LLM 作为人际沟通中介时，我的朋友 Tom Hudson 告诉我：&lt;strong&gt;&amp;ldquo;如果你要用 LLM 给我写一封邮件，我宁愿你把 prompt 直接发给我——至少那样我还知道你到底想说什么。&amp;rdquo;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;生成式 AI 的病理在于，它太容易让你在意图不明的情况下生成大量形式。而手工创作时，这个错误更难犯。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;&amp;ldquo;神就照着自己的形象造人。&amp;rdquo;&lt;/em&gt; —— 创世记 1:27&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&amp;ldquo;人的尊严不依赖于人的能力。&amp;rdquo;&lt;/em&gt; —— Magnifica Humanitas, §50&lt;/p&gt;
+&lt;p&gt;神学中也使用类似的术语。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;本文由 AI 翻译，可能存在错误&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

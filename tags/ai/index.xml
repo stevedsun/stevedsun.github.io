@@ -1,4 +1,88 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/tags/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2026, Steve Sun.</copyright><lastBuildDate>Fri, 29 May 2026 17:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】你可以直接这么说</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</link><pubDate>Fri, 29 May 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</guid><description>&lt;p&gt;&lt;figure
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/tags/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2026, Steve Sun.</copyright><lastBuildDate>Wed, 03 Jun 2026 10:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】运行一个 AI-native 的工程团队</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</link><pubDate>Wed, 03 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/running-an-ai-native-engineering-org-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://claude.com/blog/running-an-ai-native-engineering-org"&gt;Running an AI-native engineering org&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Fiona Fung，Anthropic Claude Code &amp;amp; Claude Cowork 工程总监&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;翻译&lt;/strong&gt;：AI 辅助翻译&lt;/p&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;p&gt;很多年的工程组织方式，从瀑布到敏捷，都建立在一个假设之上：&lt;strong&gt;写代码是贵的那个环节。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我的职业生涯始于 2000 年代初，在 Visual Studio 团队。那时候软件烧进 CD-ROM，有硬性的制造截止日期。后来软件可以在线分发，我们开始连续发布。现在我们正在经历又一次转变——这次围绕的是写软件所需的时间和人力。&lt;/p&gt;
+&lt;p&gt;在 Claude Code 团队，写代码、写测试、重构已经很少让我们卡住了。但瓶颈没有消失——只是转移了。&lt;strong&gt;验证、代码审查、安全成了新的瓶颈。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我们都能很快生成大量代码了，但随之而来的是新问题：这段代码正确吗？怎么维护？还有一个来自其他工程 Leader 的常见问题——&amp;ldquo;你们怎么让人类跟上代码审查的速度？&amp;rdquo;&lt;/p&gt;
+&lt;h2 id="那些悄悄失效的流程"&gt;那些悄悄失效的流程&lt;/h2&gt;
+&lt;p&gt;每个流程被设计出来的时候都有它的理由——它填补了一个缺口。但当那个缺口不再存在，流程却很少会自己消失。Claude Code 开始以 agentic coding 为默认工作方式后，很多现存流程就不 work 了。以下是团队重写的几个规范，以及为什么。&lt;/p&gt;
+&lt;h3 id="规划从-roadmap-变成-jit"&gt;规划：从 roadmap 变成 JIT&lt;/h3&gt;
+&lt;p&gt;以前因为写代码贵，所以花大量时间预规划。我刚加入 Claude Code 团队时，写了一份不错的半年路线图——然后因为 Claude Code 的存在，变化太快，三个月就过时了。&lt;/p&gt;
+&lt;p&gt;工程速度变了，我们规划 sprint 的方式也变了。我称之为&lt;strong&gt;及时规划（JIT planning）&lt;/strong&gt;，有点像 JIT 编译——怎么在正确的时间做恰好正确的事？我们的规划仪式从设计文档变成了 PR 里的讨论，或直接上原型。这个领域变化太快，我们不做大量的产品评审。流程变成了：先出 prototype，让大量内部用户用起来，根据反馈快速迭代。&lt;/p&gt;
+&lt;h3 id="上下文获取问-claude不是问作者"&gt;上下文获取：问 Claude，不是问作者&lt;/h3&gt;
+&lt;p&gt;以前代码是工程师写的，遇到问题第一步都是去找写那段代码的人。现在所有 PR 都是 Claude 辅助的，&amp;ldquo;谁改的&amp;quot;已经不够用了。新的做法是深入一层：你到底需要知道什么？是想找回归的原因？找个专家回答客户问题？还是了解某个决策的上下文？&lt;strong&gt;你问 Claude 那个问题，然后看 Claude 能不能直接回答——而且它能带更多数据和上下文。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在 Claude Code 团队，无论什么问题，我们还有一步：&amp;ldquo;这东西能不能自动化？&amp;ldquo;比如每天早上用 Claude 汇总客户反馈渠道——从我自己喝咖啡时手动做的事，变成了后台自动跑的东西。&lt;/p&gt;
+&lt;h3 id="代码审查信任但要验证"&gt;代码审查：信任但要验证&lt;/h3&gt;
+&lt;p&gt;Claude 处理所有样式检查、lint、PR feedback、在 commit 前 catch bug、以及加测试。人类参与的地方缩小到了&lt;strong&gt;领域知识&lt;/strong&gt;这一层：法律审查、安全边界和信任边界的代码、产品判断和审美。&lt;/p&gt;
+&lt;p&gt;但需要持续评估——信任和验证的平衡点会随模型的进步而变化。今天需要人类做的事，下一个模型可能就不需要了。&lt;/p&gt;
+&lt;h3 id="团队构成角色变模糊"&gt;团队构成：角色变模糊&lt;/h3&gt;
+&lt;p&gt;PM 现在大量写代码。非传统背景的人借助 Claude 能参与工程，工程师也开始做内容和设计——这些以前被视为非技术侧的工作。&lt;/p&gt;
+&lt;p&gt;Claude Code 工程团队招人时，我只看两类人：一类是&lt;strong&gt;有产品感的创意建造者&lt;/strong&gt;——极度好奇、热衷于解决实际问题的造梦人。另一类是&lt;strong&gt;深度系统专家&lt;/strong&gt;——比如我加入时发现团队缺少系统背景的人才，而这是做 Claude Code on the Web 所需要的。&lt;/p&gt;
+&lt;p&gt;我不怎么看的是原始产出速度。模型已经处理了那部分。更关键的问题是：&lt;strong&gt;你还在哪些地方需要人类 expertise？&lt;/strong&gt; 那才是精力该放的地方。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;th&gt;之前&lt;/th&gt;
+ &lt;th&gt;之后&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;规划&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;六个月产品路线图&lt;/td&gt;
+ &lt;td&gt;JIT 规划：prototype → 内部用户试用 → 反馈驱动迭代&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;上下文获取&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;找写代码的人问&lt;/td&gt;
+ &lt;td&gt;先问 Claude，然后问&amp;quot;这东西能自动化吗&amp;rdquo;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;代码审查&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;人类审所有东西&lt;/td&gt;
+ &lt;td&gt;Claude 处理 style、bug、测试。人类只审领域重要部分&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;团队构成&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;固定角色：工程师写代码，PM 规划，设计师设计&lt;/td&gt;
+ &lt;td&gt;角色模糊化：PM 做 prototype，工程师做设计和上下文。招 creative builder 和 deep systems expert&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="新规范怎么落地"&gt;新规范怎么落地&lt;/h2&gt;
+&lt;p&gt;有些做法是团队核心原则，强制执行；有些则让子团队（pod）自己摸索。&lt;/p&gt;
+&lt;p&gt;Claude Code 团队的三条硬性原则：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;全员 dogfood&lt;/strong&gt;：所有成员——包括跨职能伙伴——都在用 Claude Code（和 Claude Cowork），一直在想怎么用 Claude 把工作做得更快更高效。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;团队尽量扁平&lt;/strong&gt;：每个管理者先当 IC，先通过真实 shipping 来理解作为一个工程师在 Anthropic 是怎样的。只有一个整体团队使命，管理者支持各个 pod，保持敏捷，人可以随时流向有工作的地方。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;不要犹豫，杀死不再有效的流程&lt;/strong&gt;：不断质问&amp;quot;我们为什么这样做事&amp;rdquo;。当某件事不再合理时，团队成员有权质疑和杀死旧流程。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在这几条规则之内，每个 pod 有很大的自主权——他们自己决定怎么用 Claude 做 triage、怎么做规划仪式和 standup、哪个 workflow 最先被&amp;quot;Claudified&amp;rdquo;。&lt;/p&gt;
+&lt;h2 id="怎么知道新规范落实了"&gt;怎么知道新规范落实了&lt;/h2&gt;
+&lt;p&gt;三个指标，建议所有工程 Leader 现在就开始追踪：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Onboarding 时间下降&lt;/strong&gt;：新人多久能开始产出？我们的团队现在的速度比一年前快得多，工程师第一周就能 ship 真实代码。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;PR cycle time 下降&lt;/strong&gt;：这里有点意思——它可能帮你发现 pipeline 里哪里在 struggle to scale。代码生成量大了，build 系统和 CI 有时候可能跟不上。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude 辅助的 commit 占比上升&lt;/strong&gt;：我们这边默认每个 commit 都是 Claude 辅助的。过去四个月我好像没见过非 Claude 辅助的 commit。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;但注意：&lt;strong&gt;不要把吞吐量和成功混淆。&lt;/strong&gt; 吞吐量只是一个指标，真正的指标是你想解决的那个问题本身。吞吐量只有在 alignment 正确时才有意义。&lt;/p&gt;
+&lt;h2 id="如何开始"&gt;如何开始&lt;/h2&gt;
+&lt;p&gt;如果只留一句话：选你团队里最吵的那个 workflow——最贵的、最让人头疼的、团队最不想面对的。然后问：&lt;strong&gt;它还在实现它的目的吗？如果是，能不能自动化它？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我以前在一个团队，有个昂贵的周会，一大屋子人。我发现所有人都在低头敲电脑，只有轮到自己汇报时才抬起头说几句，然后又缩回去。我问了一个最简单的问题：&amp;ldquo;我们为什么要开这个会？感觉像是在花很大的成本做没什么价值的事。&amp;ldquo;就这一句话，所有人都意识到这个会没用。我们取消了它。&lt;/p&gt;
+&lt;p&gt;所以，问自己一个问题：你的工程流程里，有什么是可以自动化、甚至直接砍掉的？&lt;/p&gt;</description></item><item><title>【译文】你可以直接这么说</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</link><pubDate>Fri, 29 May 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  

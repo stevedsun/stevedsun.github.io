@@ -1,4 +1,88 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2026, Steve Sun.</copyright><lastBuildDate>Fri, 29 May 2026 17:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】你可以直接这么说</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</link><pubDate>Fri, 29 May 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</guid><description>&lt;p&gt;&lt;figure
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2026, Steve Sun.</copyright><lastBuildDate>Wed, 03 Jun 2026 10:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】运行一个 AI-native 的工程团队</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</link><pubDate>Wed, 03 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/running-an-ai-native-engineering-org-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://claude.com/blog/running-an-ai-native-engineering-org"&gt;Running an AI-native engineering org&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Fiona Fung，Anthropic Claude Code &amp;amp; Claude Cowork 工程总监&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;翻译&lt;/strong&gt;：AI 辅助翻译&lt;/p&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;p&gt;很多年的工程组织方式，从瀑布到敏捷，都建立在一个假设之上：&lt;strong&gt;写代码是贵的那个环节。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我的职业生涯始于 2000 年代初，在 Visual Studio 团队。那时候软件烧进 CD-ROM，有硬性的制造截止日期。后来软件可以在线分发，我们开始连续发布。现在我们正在经历又一次转变——这次围绕的是写软件所需的时间和人力。&lt;/p&gt;
+&lt;p&gt;在 Claude Code 团队，写代码、写测试、重构已经很少让我们卡住了。但瓶颈没有消失——只是转移了。&lt;strong&gt;验证、代码审查、安全成了新的瓶颈。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我们都能很快生成大量代码了，但随之而来的是新问题：这段代码正确吗？怎么维护？还有一个来自其他工程 Leader 的常见问题——&amp;ldquo;你们怎么让人类跟上代码审查的速度？&amp;rdquo;&lt;/p&gt;
+&lt;h2 id="那些悄悄失效的流程"&gt;那些悄悄失效的流程&lt;/h2&gt;
+&lt;p&gt;每个流程被设计出来的时候都有它的理由——它填补了一个缺口。但当那个缺口不再存在，流程却很少会自己消失。Claude Code 开始以 agentic coding 为默认工作方式后，很多现存流程就不 work 了。以下是团队重写的几个规范，以及为什么。&lt;/p&gt;
+&lt;h3 id="规划从-roadmap-变成-jit"&gt;规划：从 roadmap 变成 JIT&lt;/h3&gt;
+&lt;p&gt;以前因为写代码贵，所以花大量时间预规划。我刚加入 Claude Code 团队时，写了一份不错的半年路线图——然后因为 Claude Code 的存在，变化太快，三个月就过时了。&lt;/p&gt;
+&lt;p&gt;工程速度变了，我们规划 sprint 的方式也变了。我称之为&lt;strong&gt;及时规划（JIT planning）&lt;/strong&gt;，有点像 JIT 编译——怎么在正确的时间做恰好正确的事？我们的规划仪式从设计文档变成了 PR 里的讨论，或直接上原型。这个领域变化太快，我们不做大量的产品评审。流程变成了：先出 prototype，让大量内部用户用起来，根据反馈快速迭代。&lt;/p&gt;
+&lt;h3 id="上下文获取问-claude不是问作者"&gt;上下文获取：问 Claude，不是问作者&lt;/h3&gt;
+&lt;p&gt;以前代码是工程师写的，遇到问题第一步都是去找写那段代码的人。现在所有 PR 都是 Claude 辅助的，&amp;ldquo;谁改的&amp;quot;已经不够用了。新的做法是深入一层：你到底需要知道什么？是想找回归的原因？找个专家回答客户问题？还是了解某个决策的上下文？&lt;strong&gt;你问 Claude 那个问题，然后看 Claude 能不能直接回答——而且它能带更多数据和上下文。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在 Claude Code 团队，无论什么问题，我们还有一步：&amp;ldquo;这东西能不能自动化？&amp;ldquo;比如每天早上用 Claude 汇总客户反馈渠道——从我自己喝咖啡时手动做的事，变成了后台自动跑的东西。&lt;/p&gt;
+&lt;h3 id="代码审查信任但要验证"&gt;代码审查：信任但要验证&lt;/h3&gt;
+&lt;p&gt;Claude 处理所有样式检查、lint、PR feedback、在 commit 前 catch bug、以及加测试。人类参与的地方缩小到了&lt;strong&gt;领域知识&lt;/strong&gt;这一层：法律审查、安全边界和信任边界的代码、产品判断和审美。&lt;/p&gt;
+&lt;p&gt;但需要持续评估——信任和验证的平衡点会随模型的进步而变化。今天需要人类做的事，下一个模型可能就不需要了。&lt;/p&gt;
+&lt;h3 id="团队构成角色变模糊"&gt;团队构成：角色变模糊&lt;/h3&gt;
+&lt;p&gt;PM 现在大量写代码。非传统背景的人借助 Claude 能参与工程，工程师也开始做内容和设计——这些以前被视为非技术侧的工作。&lt;/p&gt;
+&lt;p&gt;Claude Code 工程团队招人时，我只看两类人：一类是&lt;strong&gt;有产品感的创意建造者&lt;/strong&gt;——极度好奇、热衷于解决实际问题的造梦人。另一类是&lt;strong&gt;深度系统专家&lt;/strong&gt;——比如我加入时发现团队缺少系统背景的人才，而这是做 Claude Code on the Web 所需要的。&lt;/p&gt;
+&lt;p&gt;我不怎么看的是原始产出速度。模型已经处理了那部分。更关键的问题是：&lt;strong&gt;你还在哪些地方需要人类 expertise？&lt;/strong&gt; 那才是精力该放的地方。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;th&gt;之前&lt;/th&gt;
+ &lt;th&gt;之后&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;规划&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;六个月产品路线图&lt;/td&gt;
+ &lt;td&gt;JIT 规划：prototype → 内部用户试用 → 反馈驱动迭代&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;上下文获取&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;找写代码的人问&lt;/td&gt;
+ &lt;td&gt;先问 Claude，然后问&amp;quot;这东西能自动化吗&amp;rdquo;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;代码审查&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;人类审所有东西&lt;/td&gt;
+ &lt;td&gt;Claude 处理 style、bug、测试。人类只审领域重要部分&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;团队构成&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;固定角色：工程师写代码，PM 规划，设计师设计&lt;/td&gt;
+ &lt;td&gt;角色模糊化：PM 做 prototype，工程师做设计和上下文。招 creative builder 和 deep systems expert&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="新规范怎么落地"&gt;新规范怎么落地&lt;/h2&gt;
+&lt;p&gt;有些做法是团队核心原则，强制执行；有些则让子团队（pod）自己摸索。&lt;/p&gt;
+&lt;p&gt;Claude Code 团队的三条硬性原则：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;全员 dogfood&lt;/strong&gt;：所有成员——包括跨职能伙伴——都在用 Claude Code（和 Claude Cowork），一直在想怎么用 Claude 把工作做得更快更高效。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;团队尽量扁平&lt;/strong&gt;：每个管理者先当 IC，先通过真实 shipping 来理解作为一个工程师在 Anthropic 是怎样的。只有一个整体团队使命，管理者支持各个 pod，保持敏捷，人可以随时流向有工作的地方。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;不要犹豫，杀死不再有效的流程&lt;/strong&gt;：不断质问&amp;quot;我们为什么这样做事&amp;rdquo;。当某件事不再合理时，团队成员有权质疑和杀死旧流程。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在这几条规则之内，每个 pod 有很大的自主权——他们自己决定怎么用 Claude 做 triage、怎么做规划仪式和 standup、哪个 workflow 最先被&amp;quot;Claudified&amp;rdquo;。&lt;/p&gt;
+&lt;h2 id="怎么知道新规范落实了"&gt;怎么知道新规范落实了&lt;/h2&gt;
+&lt;p&gt;三个指标，建议所有工程 Leader 现在就开始追踪：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Onboarding 时间下降&lt;/strong&gt;：新人多久能开始产出？我们的团队现在的速度比一年前快得多，工程师第一周就能 ship 真实代码。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;PR cycle time 下降&lt;/strong&gt;：这里有点意思——它可能帮你发现 pipeline 里哪里在 struggle to scale。代码生成量大了，build 系统和 CI 有时候可能跟不上。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude 辅助的 commit 占比上升&lt;/strong&gt;：我们这边默认每个 commit 都是 Claude 辅助的。过去四个月我好像没见过非 Claude 辅助的 commit。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;但注意：&lt;strong&gt;不要把吞吐量和成功混淆。&lt;/strong&gt; 吞吐量只是一个指标，真正的指标是你想解决的那个问题本身。吞吐量只有在 alignment 正确时才有意义。&lt;/p&gt;
+&lt;h2 id="如何开始"&gt;如何开始&lt;/h2&gt;
+&lt;p&gt;如果只留一句话：选你团队里最吵的那个 workflow——最贵的、最让人头疼的、团队最不想面对的。然后问：&lt;strong&gt;它还在实现它的目的吗？如果是，能不能自动化它？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我以前在一个团队，有个昂贵的周会，一大屋子人。我发现所有人都在低头敲电脑，只有轮到自己汇报时才抬起头说几句，然后又缩回去。我问了一个最简单的问题：&amp;ldquo;我们为什么要开这个会？感觉像是在花很大的成本做没什么价值的事。&amp;ldquo;就这一句话，所有人都意识到这个会没用。我们取消了它。&lt;/p&gt;
+&lt;p&gt;所以，问自己一个问题：你的工程流程里，有什么是可以自动化、甚至直接砍掉的？&lt;/p&gt;</description></item><item><title>【译文】你可以直接这么说</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</link><pubDate>Fri, 29 May 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -766,91 +850,4 @@ nvme0n1
 &lt;p&gt;回到开头的问题，在一个老登们制定规则的世界里，如何自处？&lt;/p&gt;
 &lt;p&gt;答案就是玩一个&lt;a href="https://book.douban.com/subject/25742296/"&gt;无限的游戏&lt;/a&gt;（？）。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;有限的游戏在边界内玩，无限的游戏玩的就是边界。&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/cursor%E7%AD%89ai%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E7%9A%84%E8%83%8C%E5%90%8E%E5%8E%9F%E7%90%86/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/cursor%E7%AD%89ai%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E7%9A%84%E8%83%8C%E5%90%8E%E5%8E%9F%E7%90%86/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
-&lt;p&gt;这个问题的答案就是 AST 分块。&lt;/p&gt;
-&lt;p&gt;这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p&gt;
-&lt;h2 id="ast"&gt;AST&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Abstract Syntax Tree&lt;/strong&gt;（&lt;strong&gt;AST&lt;/strong&gt;，抽象语法树）是源代码的树形表示，它反映了代码的语法结构。在代码分块时，AST 可以帮助我们更好地理解代码的语义边界。&lt;/p&gt;
-&lt;p&gt;AST 在各种编译、分析源代码工具中都广泛使用。例如前端的 Babel、TypeScript 编译器（TSC），就利用 AST 来将 es6 或者 TypeScript 代码转换成浏览器可理解的 js 代码。&lt;/p&gt;
-&lt;p&gt;下面是一个简单的例子，展示 AST 如何把 TypeScript 代码转换成树形结构，假设有一段 TypeScript 函数：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;greet&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;: &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Hello, &amp;#34;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;经过 AST 工具的转换，它被抽象成下面的语法树结构：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;SourceFile：
-&lt;ul&gt;
-&lt;li&gt;FunctionDeclaration
-&lt;ul&gt;
-&lt;li&gt;Identifier：&amp;ldquo;greet&amp;rdquo;&lt;/li&gt;
-&lt;li&gt;Parameter：
-&lt;ul&gt;
-&lt;li&gt;Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Block：
-&lt;ul&gt;
-&lt;li&gt;ReturnStatement：
-&lt;ul&gt;
-&lt;li&gt;BinaryExpression：
-&lt;ul&gt;
-&lt;li&gt;StringLiteral：&amp;ldquo;Hello, &amp;quot;&lt;/li&gt;
-&lt;li&gt;Identifier：&amp;ldquo;name&amp;rdquo;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;后续编译器就可以遍历这个语法树，按节点转换成 Javascript 代码。&lt;/p&gt;
-&lt;p&gt;理解了 AST，就大致可以理解 DeepWIKI、甚至是 Cursor 这种代码编辑器如何构建代码索引的。&lt;/p&gt;
-&lt;h2 id="cursor"&gt;Cursor&lt;/h2&gt;
-&lt;p&gt;在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing"&gt;Cursor 的官方文档&lt;/a&gt;中，可以看到关于它如何索引用户代码的相关描述。&lt;/p&gt;
-&lt;p&gt;Cursor 会扫描用户代码仓库，计算文件哈希值并构建 Merkle 树，类似 Git 比较文件差异的原理，Cursor 用 Merkle 树来比较用户空间文件的差异，并且将用户修改过的文件以增量的方式上传到 Cursor 的服务器。&lt;/p&gt;
-&lt;p&gt;被上传的文件，会被分块并嵌入，存储在 Turbopuffer 数据库中。这就是将源代码构建成 RAG 的过程。&lt;/p&gt;
-&lt;p&gt;这里的分块使用了 AST 工具将代码先结构化成语法树，然后将序列化后的语法树节点切成小块，最后嵌入成向量存储起来。&lt;/p&gt;
-&lt;p&gt;Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p&gt;
-&lt;p&gt;当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p&gt;
-&lt;p&gt;有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;网友&lt;/a&gt;整理了这张流程图：&lt;/p&gt;
-&lt;p&gt;&lt;figure
- class="image-caption"
-&gt;
- 
- &lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt="" loading="lazy" /&gt;
- 
- &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/p&gt;
-&lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline 的官方博客&lt;/a&gt; 可以让我们窥见它的实现思路。&lt;/p&gt;
-&lt;p&gt;Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p&gt;
-&lt;p&gt;下面是开发者对 Cline 原理的介绍：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p&gt;&lt;/blockquote&gt;
-&lt;p&gt;Cline 会使用它们的 &lt;code&gt;list_code_definition_names&lt;/code&gt;工具将源代码转换成 AST。Cline 把这个 AST 当作整个源代码的「地图」。&lt;/p&gt;
-&lt;p&gt;当 Cline 自动执行任务时，它会分析当前要修改的文件，从文件构建 AST，从 AST 生成自然语言上下文（类似 DeepWIKI 把代码转换成文档）。并将上下文传给 LLM，让 LLM 决定下一步是该修改文件，还是需要查看另一个文件补充更多上下文。&lt;/p&gt;
-&lt;p&gt;&lt;figure
- class="image-caption"
-&gt;
- 
- &lt;img src="https://sund.site/images/ast-chunk/cline.png" alt="" loading="lazy" /&gt;
- 
- &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/p&gt;
-&lt;p&gt;如果说 Cursor 比较的是向量空间代码片段的相似度，Cline 就是将代码片段转换成自然语言的描述，然后让 LLM 通过语义的理解，在源代码仓库中搜寻线索，比较代码片段之间的语义相似度。&lt;/p&gt;
-&lt;p&gt;Cline 这种实现方式，显然更安全，企业用户不用担心 Cline 滥用源代码。但是副作用就是消耗了更多 Token。不断在不同文件之间获取上下文也花费更多时间。对于一些特殊情况，它甚至会在两个文件之间循环跳转，陷入死循环。&lt;/p&gt;
-&lt;p&gt;从我自身感受来说，Cline 在一些模型（Deepseek-r1, OpenAI-4o）的表现上比 Cursor 的 Agent 模式更好，因为 Cline 的语义理解比向量相似度更充分利用这些模型的自然语言能力。&lt;/p&gt;
-&lt;p&gt;但是对于专门为编程优化过的 Claude-Sonnet，则没有明显差异，这时就要看用户希望更高的安全性还是更快的响应速度。&lt;/p&gt;
-&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
-&lt;p&gt;本文主要介绍了代码编辑器如何利用抽象语法树（AST）来构建代码索引和实现代码补全功能。&lt;/p&gt;
-&lt;p&gt;总的来说，AST 是理解代码语法结构的重要工具,不同的实现方式各有优劣。&lt;/p&gt;
-&lt;h2 id="扩展阅读"&gt;扩展阅读&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item></channel></rss>
+&lt;p&gt;有限的游戏在边界内玩，无限的游戏玩的就是边界。&lt;/p&gt;&lt;/blockquote&gt;</description></item></channel></rss>

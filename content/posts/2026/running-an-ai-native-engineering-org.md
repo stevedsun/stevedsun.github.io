@@ -1,6 +1,6 @@
 ---
 title: '【译文】运行一个 AI-native 的工程团队'
-date: 2026-06-04T08:00:00+08:00
+date: 2026-06-03T10:00:00+08:00
 draft: false
 categories: [AI, Engineering]
 tags: [AI, Claude Code, Engineering, Translation, 工程管理, AI Agent]

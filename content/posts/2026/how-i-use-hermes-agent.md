@@ -2,6 +2,7 @@
 title: '我怎么用 Hermes Agent 写代码'
 date: 2026-06-07T10:00:00+08:00
 draft: false
+slug: "how-i-use-hermes-agent"
 categories: [AI, Engineering]
 tags: [AI, Hermes Agent, Codex CLI, AI Agent, 工程管理, 软件开发]
 description: "我同时跑两个 Hermes Agent，一个写代码一个做 PO。核心纪律：Hermes 绝不写代码。三层闸机防御、双轨工作流、隧道复用 —— 踩过坑之后长出来的方法论。"

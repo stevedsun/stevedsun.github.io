@@ -1,4 +1,78 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Engineering on Steve Sun</title><link>https://sund.site/categories/engineering/</link><description>Recent content in Engineering on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2026, Steve Sun.</copyright><lastBuildDate>Wed, 03 Jun 2026 10:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/engineering/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】运行一个 AI-native 的工程团队</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</link><pubDate>Wed, 03 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</guid><description>&lt;p&gt;&lt;figure
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Engineering on Steve Sun</title><link>https://sund.site/categories/engineering/</link><description>Recent content in Engineering on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>Copyright © 2013-2026, Steve Sun.</copyright><lastBuildDate>Sun, 07 Jun 2026 10:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/engineering/index.xml" rel="self" type="application/rss+xml"/><item><title>我怎么用 Hermes Agent 写代码</title><link>https://sund.site/posts/2026/%E6%88%91%E6%80%8E%E4%B9%88%E7%94%A8-hermes-agent-%E5%86%99%E4%BB%A3%E7%A0%81/</link><pubDate>Sun, 07 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E6%88%91%E6%80%8E%E4%B9%88%E7%94%A8-hermes-agent-%E5%86%99%E4%BB%A3%E7%A0%81/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/how-i-use-hermes-agent-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;我同时跑两个 Hermes Agent。&lt;/p&gt;
+&lt;p&gt;一个叫超级卷儿，处理日常对话和信息检索。另一个叫码卷儿，专职软件工程。两个独立的 Telegram bot，独立的配置，独立的会话数据库。&lt;/p&gt;
+&lt;p&gt;分开跑两个 Agent 是为了隔离上下文和环境。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;核心纪律：码卷儿绝不写代码。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;所有编码委托给 Codex CLI 执行。码卷儿只做 Product Owner 的事：写需求定义、做架构决策、验收成果。Codex 做实现者：读 spec、写代码、跑测试。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;角色&lt;/th&gt;
+ &lt;th&gt;产出&lt;/th&gt;
+ &lt;th&gt;负责&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;码卷儿（Hermes PO）&lt;/td&gt;
+ &lt;td&gt;feature doc + 验收&lt;/td&gt;
+ &lt;td&gt;需求定义、架构决策、质量把控&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Codex CLI（实现者）&lt;/td&gt;
+ &lt;td&gt;代码 + 测试&lt;/td&gt;
+ &lt;td&gt;技术方案、编码实现、自测&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;流程很简单。用户说&amp;quot;我要一个功能&amp;quot;，码卷儿写一份 feature doc，里面只有需求描述和可验收条件。每一条验收条件必须可验证——&amp;ldquo;点击后 URL 变为 /zh/monaco&amp;rdquo; 而不是&amp;quot;跳转正确&amp;quot;。然后 Codex 读这份 doc，plan 模式出技术 spec，build 模式实现加测试。码卷儿逐条验收，全部通过就部署，有问题汇总退回。&lt;/p&gt;
+&lt;p&gt;码卷儿绝不读代码文件，绝不看完代码告诉 Codex 怎么写。有项目级疑问就委托 Codex plan 模式去调研。Codex 超时就直接汇报，等下一步指示。&lt;/p&gt;
+&lt;p&gt;验收的标准是 npm run build 通过只是最低门槛。行为改动用浏览器完整走一遍用户路径才通知完成。&lt;/p&gt;
+&lt;h2 id="三层闸机"&gt;三层闸机&lt;/h2&gt;
+&lt;p&gt;纪律听起来简单，做起来容易忘。模型在长对话里会 drift，聊了三十轮之后，它可能觉得自己会写代码了，直接上手改文件。我搭了三层防御。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第一层：系统 prompt（最硬，不可绕过）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;config.yaml 里写死：所有编码必须委托 Codex CLI 执行，绝不自己写代码，Codex 失败后报告等待。每轮对话注入，跑不掉。&lt;/p&gt;
+&lt;p&gt;Hermes 里系统 prompt 的生命周期长于 SOUL.md，它不在对话之间重置，所以更能避免长对话后的遗忘。即使模型在几十轮对话后开始漂移，最末端这段指令还在。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二层：SOUL.md + personality（每会话初始加载）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;SOUL.md 定义了人格和信条：惜字如金、结论先行、类型安全大于运行正确大于性能优化。但它的生效范围是每轮对话开始时，强度不如系统 prompt。&lt;/p&gt;
+&lt;p&gt;SOUL 里加载了我和超级卷儿一起制定的 development-workflow skill，定义了接手代码时的前置检查：必须先加载工作流 skill 再做决策，不要跳过。这个文件托管了我的整套编码纪律，作为初始激活导引。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第三层：插件闸机（物理拦截，不可绕过）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;两个插件拦截码卷儿的源码读写。write-code-gate 拦截 write_file 和 patch 对 .ts、.tsx、.py 等源码文件的写入，直接返回拒绝。read-code-gate 拦截 read_file 和 search_files 对源码文件的读取。非源码文件比如 .md、.yaml、.toml 透传。&lt;/p&gt;
+&lt;p&gt;受拦截的扩展名涵盖 30 多种常见语言。豁免路径包括 .hermes/、node_modules/、.next/ 等非项目目录。&lt;/p&gt;
+&lt;p&gt;插件通过 Hermes 的 pre_tool_call hook 加载，session 启动时生效，gateway 重启后可用。&lt;/p&gt;
+&lt;p&gt;三层强度从外到内递增，规则矛盾时以最硬那层为准。系统 prompt 是便利贴，插件是上了锁的门。&lt;/p&gt;
+&lt;p&gt;这些实践不是什么新鲜事。大部分是软件工程几十年积累下来的——角色分离、职责明确、验收先行，只是在 AI 时代换了一层皮，用新的方式落地。&lt;/p&gt;
+&lt;h2 id="双轨工作流"&gt;双轨工作流&lt;/h2&gt;
+&lt;p&gt;根据任务性质走不同轨道。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;线 A：从零到一的新项目或新功能&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;完整管线：Feature Doc → Plan → Build → Verify → Fix（循环）。&lt;/p&gt;
+&lt;p&gt;第一阶段，码卷儿写 feature doc。第二阶段，Codex plan 产出技术 spec，包含文件清单、实现方案、数据结构、测试用例。第三阶段，Codex build 读 spec 实现全部文件，跑测试。第四阶段，码卷儿逐条验收。&lt;/p&gt;
+&lt;p&gt;验收分五层走：数据层（类型定义、状态管理）、逻辑层（hooks、reducer）、表现层（组件渲染、交互绑定）、配置层（静态配置、数据加载）、浏览器验证（路由检查、localStorage 确认、截图对比）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;线 B：修 Bug 或改 Feature&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;大部分项目走线 B。不写 feature doc 只适用于单文件、纯样式、文案、配置微调。多文件改动、涉及数据持久化、状态机、新组件的，必须先写 feature doc 加 spec 再 dispatch Codex。&lt;/p&gt;
+&lt;p&gt;委托 Codex 时只给目标和验收标准，不给实现方案。Codex 自己读代码、做设计。&lt;/p&gt;
+&lt;h2 id="预览隧道"&gt;预览隧道&lt;/h2&gt;
+&lt;p&gt;开发中的网站需要先在手机上看看效果。我用 Cloudflare Tunnel 把本地 Next.js 开发服务器暴露到公网，Cloudflare 分配一个 trycloudflare.com 的临时域名，手机浏览器打开就能预览。&lt;/p&gt;
+&lt;p&gt;早期每次改完就停隧道再重启，结果 Cloudflare 限流。每次停掉再启会分配新 URL，手机上要重新打开，很烦。&lt;/p&gt;
+&lt;p&gt;后来写了一个 tunnel-manager.sh 脚本，首次启动以后台 daemon 跑 cloudflared，后续 build 后只重启 next server，不碰隧道。隧道 daemon 跨预览会话复用，只有机器重启或 cloudflared crash 才重建。同一个 URL 贯穿整个开发周期，省掉大量重复操作。&lt;/p&gt;
+&lt;h2 id="git-加-vercel-部署"&gt;Git 加 Vercel 部署&lt;/h2&gt;
+&lt;p&gt;踩过一个静默的坑：Vercel 的 GitHub 集成校验 commit author 邮箱是不是真实 GitHub 账号邮箱。不匹配时 CLI 报&amp;quot;Your deployment failed&amp;quot;，vercel inspect 显示 Builds: [0ms]——构建从未启动，没有任何日志。&lt;/p&gt;
+&lt;p&gt;修复方案：用系统 git 身份做 commit，不匹配则 rebase 重设作者。&lt;/p&gt;
+&lt;p&gt;部署用 Vercel CLI 加 &amp;ndash;no-wait 避免超时阻塞。GitHub Actions 的 deploy.yml 在 main 分支推送时自动触发。&lt;/p&gt;
+&lt;h2 id="一些感受"&gt;一些感受&lt;/h2&gt;
+&lt;p&gt;说了这么多具体做法，聊聊想法。&lt;/p&gt;
+&lt;p&gt;AI 写代码这件事发展得太快了。年初我还在手动写每一行，年中已经有了一个能独立完成功能、验收、部署的流水线。我做的事情从写代码变成了定规则、设边界、验收结果。&lt;/p&gt;
+&lt;p&gt;工程师的角色在变化。以前你是砖瓦工，一块一块砌墙。现在你是牧场主，把栅栏围好，草料放足，让羊群自己吃草长肉。软件业正在从建筑业变成畜牧业。&lt;/p&gt;
+&lt;p&gt;这个趋势只会加速。更好的模型意味着更简单的 harness，更便宜的执行成本。你不需要成为最好的程序员，你需要成为最好的规则制定者。定义清楚什么能做、什么不能做、怎么才算做好——剩下的交给 agent。&lt;/p&gt;
+&lt;p&gt;我花在定义边界上的时间，回报率远高于花在具体编码上的时间。这是让我最意外的发现。&lt;/p&gt;</description></item><item><title>【译文】运行一个 AI-native 的工程团队</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</link><pubDate>Wed, 03 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  

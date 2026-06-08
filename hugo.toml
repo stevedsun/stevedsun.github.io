@@ -8,6 +8,8 @@ enableRobotsTXT = true
 disableKinds = ["taxonomy"]
 ignoreErrors = ["error-disable-taxonomy"]
 
+googleAnalytics = "G-XJJVVQ0LBH"
+
 [module]
 [[module.imports]]
 path = 'github.com/rokcso/hugo-bearblog-neo'
@@ -31,7 +33,7 @@ images = ["images/share.png"]
 # 默认情况下，此主题以「02 Jan, 2006」的格式显示日期
 # By default, this theme displays dates in the format '02 Jan, 2006'.
 # 但你可以在网站的配置文件中通过设置 `dateFormat` 参数来自定义它
-# But you can customize it by setting the `dateFormat` parameter in the website's configuration file.
+# But you can customize it by setting the `dateFormat` parameter in the website configuration file.
 # 请参见 https://gohugo.io/functions/format
 # Please refer to https://gohugo.io/functions/format.
 # 以下是一个使用 https://en.wikipedia.org/wiki/ISO_8601 格式的 TOML 配置示例

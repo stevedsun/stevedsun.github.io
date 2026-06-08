@@ -4,7 +4,7 @@ title: "Steve Sun"
 
 ![](https://raw.githubusercontent.com/stevedsun/blog-img/main/home-header-900x383.png)
 
-- 拆解复杂问题
+- 拆解复杂问题。
 - 聊聊好的软件设计品味。
 - 探索工程实践。
 

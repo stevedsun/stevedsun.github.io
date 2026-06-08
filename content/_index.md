@@ -10,7 +10,7 @@ title: "Steve Sun"
 
 ---
 
-## My Side Projects
+## 个人项目
 
 - [Notion Graph View](https://github.com/stevedsun/notion-graph-view) - Generating a roam-research like network graph view from your notion pages.
 - [Useless Ideas Public API](https://q24.io/useless) - A public Rest API that provides quotes and ideas. Supported by [灵感买家俱乐部](https://club.q24.io/).
@@ -18,7 +18,7 @@ title: "Steve Sun"
 
 ---
 
-## Contact Me
+## 联系我
 
 - [Github](https://github.com/stevedsun)
 - [Wechat](https://mp.weixin.qq.com/s/zSNl-n4B9l9wyZYGVcnVJw)

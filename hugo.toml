@@ -2,7 +2,7 @@
 # The basic URL used to generate page links, set it to your website's URL.
 baseURL = "https://sund.site/"
 title = "Steve Sun"
-description = "A blog of Steve Sun"
+description = "Steve Sun 的博客"
 languageCode = "zh-CN"
 enableRobotsTXT = true
 disableKinds = ["taxonomy"]
@@ -36,13 +36,11 @@ images = ["images/share.png"]
 # But you can customize it by setting the `dateFormat` parameter in the website configuration file.
 # 请参见 https://gohugo.io/functions/format
 # Please refer to https://gohugo.io/functions/format.
-# 以下是一个使用 https://en.wikipedia.org/wiki/ISO_8601 格式的 TOML 配置示例
-# The following is an example of a TOML configuration using the ISO 8601 format (https://en.wikipedia.org/wiki/ISO_8601).
-# dateFormat = "1/2"
+dateFormat = "2006-01-02"
 
 # 版权说明文案，将应用到 RSS 和页面底部
 # Copyright notice text, to be applied to RSS and the bottom of the page.
-copyright = "Copyright © 2013-2026, Steve Sun."
+copyright = "版权所有 © 2013-2026, Steve Sun"
 
 # 博客文章列表是否按年份分组，Bear Blog 样式为 false
 # Is the list of blog articles grouped by year, the Bear Blog style is false.

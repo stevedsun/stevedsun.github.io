@@ -1,0 +1,7 @@
+<a href="{{ "" | relURL }}">首页</a>
+{{ range .Site.Menus.main }}
+<a href="{{ .URL }}">{{ .Name }}</a>
+{{ end }}
+{{ with .Site.GetPage "/blog" }}
+<a href="{{ "blog/" | relURL }}">文章</a>
+{{ end }}

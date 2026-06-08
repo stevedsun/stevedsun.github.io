@@ -36,7 +36,7 @@ images = ["images/share.png"]
 # But you can customize it by setting the `dateFormat` parameter in the website configuration file.
 # 请参见 https://gohugo.io/functions/format
 # Please refer to https://gohugo.io/functions/format.
-dateFormat = "2006-01-02"
+dateFormat = "1.2"
 
 # 版权说明文案，将应用到 RSS 和页面底部
 # Copyright notice text, to be applied to RSS and the bottom of the page.

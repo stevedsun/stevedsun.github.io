@@ -71,9 +71,9 @@
         <i>
           <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
             {{ if .Site.Params.groupByYear }}
-            {{ .Date.Format (default "02 Jan." .Site.Params.dateFormat) }}
+            {{ .Date.Format (default "1.2" .Site.Params.dateFormat) }}
             {{ else }}
-            {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+            {{ .Date.Format (default "1.2, 2006" .Site.Params.dateFormat) }}
             {{ end }}
           </time>
         </i>

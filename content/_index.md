@@ -4,17 +4,17 @@ title: "Steve Sun"
 
 ![](https://raw.githubusercontent.com/stevedsun/blog-img/main/home-header-900x383.png)
 
-- Break down complex problems.
-- Discuss what makes good software design taste.
-- Explore engineering practices.
+- 复杂问题，拆解为简。
+- 聊聊好的软件设计品味。
+- 探索工程实践。
 
 ---
 
 ## 个人项目
 
-- [Notion Graph View](https://github.com/stevedsun/notion-graph-view) - Generating a roam-research like network graph view from your notion pages.
-- [Useless Ideas Public API](https://q24.io/useless) - A public Rest API that provides quotes and ideas. Supported by [灵感买家俱乐部](https://club.q24.io/).
-- [Useless Ideas Chrome Extension](https://github.com/stevedsun/useless-idea-chrome-extension) - A Chrome extension that picks a random quote on new-tab page.
+- [Notion Graph View](https://github.com/stevedsun/notion-graph-view) - 从你的 Notion 页面生成类 Roam Research 的网络图视图。
+- [Useless Ideas Public API](https://q24.io/useless) - 一个提供名言与点子的公开 REST API。由 [灵感买家俱乐部](https://club.q24.io/) 支持。
+- [Useless Ideas Chrome Extension](https://github.com/stevedsun/useless-idea-chrome-extension) - 一个 Chrome 扩展，在新建标签页时随机展示一条名言。
 
 ---
 

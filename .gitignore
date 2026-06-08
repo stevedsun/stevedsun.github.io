@@ -3,3 +3,4 @@ resources
 .DS_Store
 .vscode
 .obsidian/
+.hugo_build.lock

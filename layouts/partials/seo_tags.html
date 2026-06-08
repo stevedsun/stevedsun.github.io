@@ -1,0 +1,24 @@
+<!-- Primary Meta Tags -->
+<meta name="title" content="{{ with .Title }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}" />
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ with .Site.Params.Description }}{{ . }}{{ end }}{{ end }}{{ end }}" />
+<meta name="keywords" content="{{ if .IsPage }}{{ range $index, $tag := .Params.tags }}{{ $tag }},{{ end }}{{ else }}{{ range $plural, $terms := .Site.Taxonomies }}{{ range $term, $val := $terms }}{{ printf "%s," $term }}{{ end }}{{ end }}{{ end }}" />
+
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{/*
+  For post pages, custom_head.html renders the OG / Twitter tags
+  (using the first in-content image) plus JSON-LD.
+  For all other pages, fall back to the built-in templates.
+*/}}
+{{ if and .IsPage (eq .Section "posts") }}
+  {{/* OG / Twitter / JSON-LD are emitted by custom_head.html. */}}
+{{ else }}
+  <!-- Open Graph / Facebook -->
+  {{ template "_internal/opengraph.html" . }}
+
+  <!-- Twitter -->
+  {{ template "_internal/twitter_cards.html" . }}
+
+  <!-- Microdata -->
+  {{ template "_internal/schema.html" . }}
+{{ end }}

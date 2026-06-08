@@ -16,6 +16,21 @@
 
 <content> {{ .Content }} </content>
 
+{{/* Related posts (only for posts, and only if there are matches). */}}
+{{ if eq .Type "posts" }}
+  {{ $related := first 3 (.Site.RegularPages.Related .) }}
+  {{ if gt (len $related) 0 }}
+  <section class="related-posts" style="margin-top: 3em;">
+    <h2>相关文章</h2>
+    <ul>
+      {{ range $related }}
+      <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+{{ end }}
+
 <!-- Giscus comments -->
 <div class="giscus-wrapper" style="margin-top: 3em;">
 <script src="https://giscus.app/client.js"

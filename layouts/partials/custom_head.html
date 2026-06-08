@@ -4,8 +4,75 @@ body,div.post-body,h1,h2,h3,h4 {
 }
 </style>
 
-{{ template "_internal/opengraph.html" . }}
-{{ template "_internal/twitter_cards.html" . }}
+{{/*
+  Open Graph / Twitter cards.
+  - For posts: build custom tags using the first image found in the content,
+    then fall back to the site default.
+  - For other pages: delegate to the built-in templates via seo_tags.html.
+*/}}
+{{ $isPost := and .IsPage (eq .Section "posts") }}
+
+{{ if $isPost }}
+  {{ $ogImage := "" }}
+  {{/* Try front-matter images first. */}}
+  {{ with .Params.images }}{{ $ogImage = index . 0 }}{{ end }}
+  {{/* Then scan rendered content for the first <img src="...">. */}}
+  {{ if not $ogImage }}
+    {{ $matches := findRE `(?is)<img[^>]+src=["']([^"']+)["']` .Content 1 }}
+    {{ with index $matches 0 }}
+      {{ $src := replaceRE `(?is)<img[^>]+src=["']([^"']+)["'].*` "$1" . }}
+      {{ $ogImage = $src }}
+    {{ end }}
+  {{ end }}
+  {{/* Normalize: if the path is site-relative, prefix the abs URL. */}}
+  {{ $absImage := $ogImage }}
+  {{ if and $absImage (not (hasPrefix $absImage "http")) (hasPrefix $absImage "/") }}
+    {{ $absImage = printf "%s%s" .Site.BaseURL (strings.TrimPrefix "/" $absImage) }}
+  {{ end }}
+  {{/* Fall back to site default. */}}
+  {{ if not $absImage }}
+    {{ with index .Site.Params.images 0 }}{{ $absImage = . }}{{ end }}
+  {{ end }}
+  {{ if not $absImage }}{{ $absImage = "images/share.png" }}{{ end }}
+
+  {{ $desc := "" }}
+  {{ with .Description }}{{ $desc = . }}{{ else }}{{ $desc = .Summary }}{{ end }}
+  {{ $desc = $desc | plainify | chomp }}
+
+  {{ $authorName := .Site.Title }}
+  {{ with .Site.Params.name }}{{ $authorName = . }}{{ end }}
+  {{ with .Site.Params.RSS.name }}{{ $authorName = . }}{{ end }}
+
+  <meta property="og:title" content="{{ .Title }}" />
+  <meta property="og:description" content="{{ $desc }}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="{{ .Permalink }}" />
+  <meta property="og:site_name" content="{{ .Site.Title }}" />
+  <meta property="og:locale" content="{{ .Site.LanguageCode | default "zh_CN" }}" />
+  <meta property="og:image" content="{{ $absImage }}" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ .Title }}" />
+  <meta name="twitter:description" content="{{ $desc }}" />
+  <meta name="twitter:image" content="{{ $absImage }}" />
+
+  {{/* JSON-LD structured data for the post. */}}
+  {{ $ld := dict
+    "@context" "https://schema.org"
+    "@type" "BlogPosting"
+    "headline" .Title
+    "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
+    "dateModified" ((.Lastmod | default .Date).Format "2006-01-02T15:04:05Z07:00")
+    "author" (dict "@type" "Person" "name" $authorName)
+    "publisher" (dict "@type" "Person" "name" $authorName)
+    "description" $desc
+    "image" $absImage
+    "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+  }}
+  <script type="application/ld+json">
+  {{ $ld | jsonify | safeJS }}
+  </script>
+{{ end }}
 
 {{ partial "chroma-styles.html" . }}
 {{ partial "third-party-scripts.html" . }}

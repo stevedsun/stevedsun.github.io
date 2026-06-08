@@ -114,3 +114,10 @@ endLevel = 4
 # blog = "/p/:slug"
 posts = "/posts/:year/:slug"
 # tags = "/blog/:slug"
+
+[related]
+threshold = 80
+includeNewer = true
+[[related.indices]]
+name = "tags"
+weight = 100

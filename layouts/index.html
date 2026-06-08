@@ -1,0 +1,23 @@
+{{ define "main" }}
+<content>
+  {{ .Content }}
+
+  {{ $posts := first 5 (where .Site.RegularPages "Section" "posts") }}
+  {{ if gt (len $posts) 0 }}
+  <h2>最近文章</h2>
+  <ul>
+    {{ range $posts }}
+    <li>
+      <i>
+        <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+          {{ .Date.Format "2006-01-02" }}
+        </time>
+      </i>
+      &nbsp;
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </li>
+    {{ end }}
+  </ul>
+  {{ end }}
+</content>
+{{ end }}

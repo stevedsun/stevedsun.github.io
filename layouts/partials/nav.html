@@ -1,4 +1,4 @@
-<a href="{{ "" | relURL }}">{{ i18n "home" }}</a>
+<a href="{{ .Site.Home.RelPermalink }}">{{ i18n "home" }}</a>
 {{ range .Site.Menus.main }}
 <a href="{{ .URL }}">{{ .Name }}</a>
 {{ end }}

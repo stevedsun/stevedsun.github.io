@@ -2,13 +2,3 @@
 {{ range .Site.Menus.main }}
 <a href="{{ .URL }}">{{ .Name }}</a>
 {{ end }}
-{{ if not .IsHome }}<span class="lang-nav">
-  {{ range $.Site.Home.AllTranslations }}
-    <a href="{{ .Permalink }}"
-       class="lang-link{{ if eq .Language.Lang $.Language.Lang }} active{{ end }}"
-       hreflang="{{ .Language.Lang }}"
-       onclick="try { localStorage.setItem('preferredLang', '{{ .Language.Lang }}'); } catch(e) {}">
-      {{ upper .Language.Lang }}
-    </a>
-  {{ end }}
-</span>{{ end }}

@@ -1,6 +1,5 @@
 ---
-title: "友链"
-slug: "friends"
+title: "Links"
 menu: "main"
 ---
 

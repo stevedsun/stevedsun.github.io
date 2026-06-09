@@ -2,10 +2,6 @@
 {{ range .Site.Menus.main }}
 <a href="{{ .URL }}">{{ .Name }}</a>
 {{ end }}
-{{ $postsPage := .Site.GetPage "/posts" }}
-{{ if $postsPage }}
-<a href="{{ "posts/" | relURL }}">{{ i18n "posts" }}</a>
-{{ end }}
 <span class="lang-nav">
   {{ range $.Site.Home.AllTranslations }}
     <a href="{{ .Permalink }}"

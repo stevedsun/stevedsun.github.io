@@ -40,7 +40,7 @@
         {{ end }}
 
         {{ if .Site.Params.showPostCount }}
-        const countText = `{{ i18n "post_count" 0 }}`.replace('0', visiblePosts);
+        const countText = '{{ printf (i18n "post_count") 0 }}'.replace('0', visiblePosts);
         document.getElementById('post-count').innerHTML = countText;
         {{ end }}
       }
@@ -53,7 +53,7 @@
   {{ end }}
   {{ if .Site.Params.showPostCount }}
   {{ $visiblePages := where .Pages "Params.hidden" "!=" true }}
-  <p id="post-count">{{ i18n "post_count" (len $visiblePages) }}</p>
+  <p id="post-count">{{ printf (i18n "post_count") (len $visiblePages) }}</p>
   {{ end }}
   <ul class="blog-posts">
     {{ $currentYear := 0 }}

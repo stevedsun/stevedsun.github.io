@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/en/tags/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>en</language><copyright>© 2013-2026, Steve Sun</copyright><lastBuildDate>Sun, 07 Jun 2026 10:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/en/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>How I Use Hermes Agent to Write Code</title><link>https://sund.site/en/posts/2026/how-i-use-hermes-agent/</link><pubDate>Sun, 07 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/en/posts/2026/how-i-use-hermes-agent/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/how-i-use-hermes-agent-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;I run two Hermes Agents in parallel.&lt;/p&gt;
+&lt;p&gt;One is called Super Juaner and handles daily conversation and information retrieval. The other is called Code Juaner and works exclusively on software engineering. Two independent Telegram bots, independent configurations, independent session databases.&lt;/p&gt;
+&lt;p&gt;Running two Agents separately is for context and environment isolation.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Core discipline: Code Juaner never writes code.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;All coding is delegated to Codex CLI for execution. Code Juaner only does the Product Owner work: writing requirement definitions, making architecture decisions, and accepting deliverables. Codex is the implementer: reads the spec, writes code, runs tests.&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Role&lt;/th&gt;
+ &lt;th&gt;Output&lt;/th&gt;
+ &lt;th&gt;Responsibility&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Code Juaner (Hermes PO)&lt;/td&gt;
+ &lt;td&gt;Feature doc + acceptance&lt;/td&gt;
+ &lt;td&gt;Requirement definition, architecture decisions, quality control&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Codex CLI (Implementer)&lt;/td&gt;
+ &lt;td&gt;Code + tests&lt;/td&gt;
+ &lt;td&gt;Technical solution, coding implementation, self-testing&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The flow is simple. The user says &amp;ldquo;I need a feature.&amp;rdquo; Code Juaner writes a feature doc containing only the requirement description and verifiable acceptance criteria. Every acceptance criterion must be verifiable—&amp;ldquo;clicking changes the URL to /zh/monaco&amp;rdquo; rather than &amp;ldquo;navigation is correct.&amp;rdquo; Then Codex reads the doc, plan mode produces a technical spec, and build mode implements plus tests. Code Juaner accepts each criterion one by one; if all pass, deploy; if there are issues, summarize and send back.&lt;/p&gt;
+&lt;p&gt;Code Juaner never reads code files, never finishes reading code to tell Codex how to write. For project-level questions, delegate to Codex plan mode for investigation. Codex timeout means reporting back directly and waiting for next instructions.&lt;/p&gt;
+&lt;p&gt;The acceptance standard is that &lt;code&gt;npm run build&lt;/code&gt; passing is only the minimum bar. For behavior changes, walk through the full user path in the browser before marking complete.&lt;/p&gt;
+&lt;h2 id="the-three-layer-gate"&gt;The Three-Layer Gate&lt;/h2&gt;
+&lt;p&gt;Discipline sounds simple but is easy to forget in practice. The model drifts in long conversations—after thirty turns, it may think it can write code and start modifying files directly. I built three layers of defense.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Layer 1: System prompt (hardest, unbypassable)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Locked in &lt;code&gt;config.yaml&lt;/code&gt;: all coding must be delegated to Codex CLI for execution, never write code yourself, report and wait after Codex fails. Injected every turn, can&amp;rsquo;t be avoided.&lt;/p&gt;
+&lt;p&gt;The system prompt&amp;rsquo;s lifecycle in Hermes is longer than SOUL.md; it doesn&amp;rsquo;t reset between conversations, so it better prevents forgetting after long conversations. Even if the model starts drifting after dozens of turns, this terminal instruction is still there.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Layer 2: SOUL.md + personality (loaded at session start)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;SOUL.md defines personality and creed: terse, conclusion-first, type-safety &amp;gt; runtime correctness &amp;gt; performance optimization. But its effective range is the start of each conversation, weaker than the system prompt.&lt;/p&gt;
+&lt;p&gt;SOUL loads a &lt;code&gt;development-workflow&lt;/code&gt; skill I co-developed with Super Juaner, which defines pre-checks when picking up code: must load the workflow skill first before making decisions, don&amp;rsquo;t skip. This file hosts my entire coding discipline as an initial activation guide.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Layer 3: Plugin gate (physical interception, unbypassable)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Two plugins intercept Code Juaner&amp;rsquo;s source code read/write. &lt;code&gt;write-code-gate&lt;/code&gt; blocks &lt;code&gt;write_file&lt;/code&gt; and &lt;code&gt;patch&lt;/code&gt; on source files like &lt;code&gt;.ts&lt;/code&gt;, &lt;code&gt;.tsx&lt;/code&gt;, &lt;code&gt;.py&lt;/code&gt; and returns refusal. &lt;code&gt;read-code-gate&lt;/code&gt; blocks &lt;code&gt;read_file&lt;/code&gt; and &lt;code&gt;search_files&lt;/code&gt; on source files. Non-source files like &lt;code&gt;.md&lt;/code&gt;, &lt;code&gt;.yaml&lt;/code&gt;, &lt;code&gt;.toml&lt;/code&gt; pass through.&lt;/p&gt;
+&lt;p&gt;The blocked extensions cover 30+ common languages. Exempt paths include &lt;code&gt;.hermes/&lt;/code&gt;, &lt;code&gt;node_modules/&lt;/code&gt;, &lt;code&gt;.next/&lt;/code&gt; and other non-project directories.&lt;/p&gt;
+&lt;p&gt;Plugins are loaded via Hermes&amp;rsquo;s &lt;code&gt;pre_tool_call&lt;/code&gt; hook, take effect at session start, and remain available after gateway restarts.&lt;/p&gt;
+&lt;p&gt;The three layers increase in hardness from outside to inside; when rules conflict, the hardest layer wins. The system prompt is a sticky note; the plugin is a locked door.&lt;/p&gt;
+&lt;p&gt;These practices aren&amp;rsquo;t new. Most of them are decades of accumulated software engineering—separation of roles, clear responsibilities, acceptance-first—just wearing a new skin in the AI era and landing in a new way.&lt;/p&gt;
+&lt;h2 id="dual-track-workflow"&gt;Dual-Track Workflow&lt;/h2&gt;
+&lt;p&gt;Take different tracks based on task nature.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Track A: New project or feature from zero to one&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Full pipeline: Feature Doc → Plan → Build → Verify → Fix (loop).&lt;/p&gt;
+&lt;p&gt;Phase one: Code Juaner writes the feature doc. Phase two: Codex plan produces the technical spec, including file list, implementation plan, data structures, and test cases. Phase three: Codex build reads the spec, implements all files, runs tests. Phase four: Code Juaner accepts each criterion.&lt;/p&gt;
+&lt;p&gt;Acceptance walks through five layers: data layer (type definitions, state management), logic layer (hooks, reducers), presentation layer (component rendering, interaction binding), config layer (static config, data loading), browser verification (route checks, localStorage confirmation, screenshot comparison).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Track B: Bug fixes or feature modifications&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Most projects go through Track B. Skipping the feature doc only applies to single-file, pure styling, copy changes, or minor config tweaks. Multi-file changes, those involving data persistence, state machines, or new components must write a feature doc plus spec before dispatching Codex.&lt;/p&gt;
+&lt;p&gt;When delegating to Codex, give only the goal and acceptance criteria, not the implementation plan. Codex reads the code and designs by itself.&lt;/p&gt;
+&lt;h2 id="preview-tunnel"&gt;Preview Tunnel&lt;/h2&gt;
+&lt;p&gt;In-progress websites need to be previewed on mobile. I use Cloudflare Tunnel to expose the local Next.js dev server to the public internet; Cloudflare assigns a temporary &lt;code&gt;trycloudflare.com&lt;/code&gt; domain, open it in a mobile browser to preview.&lt;/p&gt;
+&lt;p&gt;Early on I stopped and restarted the tunnel after every change, which triggered Cloudflare rate limits. Each stop and restart assigned a new URL, requiring me to reopen it on the phone—annoying.&lt;/p&gt;
+&lt;p&gt;Later I wrote a &lt;code&gt;tunnel-manager.sh&lt;/code&gt; script. The first start runs &lt;code&gt;cloudflared&lt;/code&gt; as a background daemon; subsequent builds only restart the next server, not touching the tunnel. The tunnel daemon is reused across preview sessions; it only rebuilds on machine restart or &lt;code&gt;cloudflared&lt;/code&gt; crash. The same URL persists through the entire development cycle, eliminating a lot of repetitive operations.&lt;/p&gt;
+&lt;h2 id="git-plus-vercel-deployment"&gt;Git plus Vercel Deployment&lt;/h2&gt;
+&lt;p&gt;Hit one silent pitfall: Vercel&amp;rsquo;s GitHub integration checks whether the commit author email is a real GitHub account email. When it doesn&amp;rsquo;t match, the CLI reports &amp;ldquo;Your deployment failed&amp;rdquo; and &lt;code&gt;vercel inspect&lt;/code&gt; shows &lt;code&gt;Builds: [0ms]&lt;/code&gt;—the build never started, no logs at all.&lt;/p&gt;
+&lt;p&gt;Fix: use the system git identity for commit, and rebase to reset the author if there&amp;rsquo;s a mismatch.&lt;/p&gt;
+&lt;p&gt;Deployment uses Vercel CLI with &lt;code&gt;--no-wait&lt;/code&gt; to avoid timeout blocking. GitHub Actions&amp;rsquo; &lt;code&gt;deploy.yml&lt;/code&gt; triggers automatically on push to the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
+&lt;h2 id="some-reflections"&gt;Some Reflections&lt;/h2&gt;
+&lt;p&gt;After all those specific practices, let me share some thoughts.&lt;/p&gt;
+&lt;p&gt;AI writing code has developed too fast. At the start of the year I was still manually writing every line; by mid-year I already had a pipeline that can independently complete features, acceptance, and deployment. What I do has shifted from writing code to defining rules, setting boundaries, and accepting results.&lt;/p&gt;
+&lt;p&gt;The engineer&amp;rsquo;s role is changing. You used to be a bricklayer, placing bricks one by one. Now you&amp;rsquo;re a rancher: set up the fences, put out enough feed, and let the herd graze and grow. The software industry is shifting from construction to animal husbandry.&lt;/p&gt;
+&lt;p&gt;This trend will only accelerate. Better models mean simpler harnesses, cheaper execution costs. You don&amp;rsquo;t need to be the best programmer—you need to be the best rule-maker. Define clearly what&amp;rsquo;s allowed, what&amp;rsquo;s not allowed, and what counts as done—leave the rest to the agent.&lt;/p&gt;
+&lt;p&gt;The time I spend defining boundaries has a much higher return than the time I spend on actual coding. That&amp;rsquo;s the most surprising discovery.&lt;/p&gt;</description></item><item><title>How AI Coding Tools Like Cursor Work Under the Hood</title><link>https://sund.site/en/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/en/posts/2025/ast-chunk/</guid><description>&lt;p&gt;In my previous post, &lt;a href="https://sund.site/en/posts/2025/build-deepwiki/"&gt;How DeepWiki Works&lt;/a&gt;, I shared one possible way DeepWiki is implemented. I left a question there: how does DeepWiki chunk a source code repository?&lt;/p&gt;
+&lt;p&gt;The answer is AST chunking.&lt;/p&gt;
+&lt;p&gt;In this post I want to analyze how two software development aids — Cursor and Cline — implement &amp;ldquo;code indexing.&amp;rdquo; In fact, they are not fundamentally different from DeepWiki; all of them use AST chunking.&lt;/p&gt;
+&lt;h2 id="ast"&gt;AST&lt;/h2&gt;
+&lt;p&gt;An &lt;strong&gt;Abstract Syntax Tree&lt;/strong&gt; (&lt;strong&gt;AST&lt;/strong&gt;) is a tree representation of source code that reflects the code&amp;rsquo;s syntactic structure. When chunking code, ASTs help us better understand the semantic boundaries of the code.&lt;/p&gt;
+&lt;p&gt;ASTs are widely used in compilers and source code analysis tools. For example, in the frontend world, Babel and the TypeScript compiler (TSC) use ASTs to transform ES6 or TypeScript code into JavaScript that browsers can run.&lt;/p&gt;
+&lt;p&gt;Below is a simple example showing how an AST converts TypeScript code into a tree structure. Suppose we have this TypeScript function:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;greet&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;: &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Hello, &amp;#34;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After being processed by an AST tool, it is abstracted into the following tree:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SourceFile
+&lt;ul&gt;
+&lt;li&gt;FunctionDeclaration
+&lt;ul&gt;
+&lt;li&gt;Identifier: &amp;ldquo;greet&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Parameter
+&lt;ul&gt;
+&lt;li&gt;Identifier: &amp;ldquo;name&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Block
+&lt;ul&gt;
+&lt;li&gt;ReturnStatement
+&lt;ul&gt;
+&lt;li&gt;BinaryExpression
+&lt;ul&gt;
+&lt;li&gt;StringLiteral: &amp;ldquo;Hello, &amp;quot;&lt;/li&gt;
+&lt;li&gt;Identifier: &amp;ldquo;name&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A compiler can then walk this tree and translate it node by node into JavaScript code.&lt;/p&gt;
+&lt;p&gt;Once you understand ASTs, you roughly understand how DeepWiki — and even code editors like Cursor — build code indexes.&lt;/p&gt;
+&lt;h2 id="cursor"&gt;Cursor&lt;/h2&gt;
+&lt;p&gt;In &lt;a href="https://www.cursor.com/ja/security#codebase-indexing"&gt;Cursor&amp;rsquo;s official documentation&lt;/a&gt;, you can find a description of how it indexes user code.&lt;/p&gt;
+&lt;p&gt;Cursor scans the user&amp;rsquo;s repository, computes file hashes, and builds a Merkle tree. Similar to the way Git compares file diffs, Cursor uses the Merkle tree to detect file changes in the user&amp;rsquo;s workspace and incrementally uploads modified files to Cursor&amp;rsquo;s servers.&lt;/p&gt;
+&lt;p&gt;Uploaded files are then chunked and embedded, and stored in a Turbopuffer database. This is the process of building a RAG over the source code.&lt;/p&gt;
+&lt;p&gt;The chunking step uses an AST tool to structure the code into a syntax tree, then cuts the serialized tree nodes into small chunks, and finally embeds them as vectors for storage.&lt;/p&gt;
+&lt;p&gt;Turbopuffer does not only store the vectorized code; it also stores metadata such as the line numbers and source file paths of the code segments.&lt;/p&gt;
+&lt;p&gt;When Cursor tries to autocomplete user code or generate new code from context, it queries the Turbopuffer database, finds the vectors with the highest similarity, and gets the file path and line numbers for that segment. Cursor then reads the corresponding source code from the user&amp;rsquo;s repository and puts it into the LLM&amp;rsquo;s system context. Finally, the LLM returns the newly generated code to Cursor.&lt;/p&gt;
+&lt;p&gt;A &lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;user on X&lt;/a&gt; put together this flow diagram:&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline&amp;rsquo;s official blog&lt;/a&gt; offers a glimpse of how it is implemented.&lt;/p&gt;
+&lt;p&gt;Cline is an AI agent that helps with coding. Cline does not upload code and build a RAG; instead, it takes a safer and more reliable approach to managing the user&amp;rsquo;s repository.&lt;/p&gt;
+&lt;p&gt;Here is the developers&amp;rsquo; description of how Cline works:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Cline uses its &lt;code&gt;list_code_definition_names&lt;/code&gt; tool to convert source code into an AST. Cline treats that AST as a &amp;ldquo;map&amp;rdquo; of the entire codebase.&lt;/p&gt;
+&lt;p&gt;When Cline runs a task automatically, it analyzes the file that needs to be modified, builds an AST for that file, and converts the AST into natural-language context (similar to how DeepWiki turns code into documents). It feeds this context to the LLM, letting the LLM decide whether to modify the file or look at another file to gather more context.&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ast-chunk/cline.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;If Cursor compares similarity between vector-space code snippets, Cline converts code snippets into natural-language descriptions and lets the LLM, through semantic understanding, hunt for clues across the repository and compare the semantic similarity of code segments.&lt;/p&gt;
+&lt;p&gt;Cline&amp;rsquo;s approach is clearly safer — enterprise users don&amp;rsquo;t have to worry about Cline abusing the source code. The side effect, however, is higher token consumption. Constantly fetching context across files also takes more time. In some edge cases, Cline may even bounce back and forth between two files, falling into a loop.&lt;/p&gt;
+&lt;p&gt;In my own experience, Cline performs better than Cursor&amp;rsquo;s Agent mode on certain models (Deepseek-r1, OpenAI-4o), because Cline&amp;rsquo;s semantic understanding makes better use of these models&amp;rsquo; natural-language abilities than vector similarity does.&lt;/p&gt;
+&lt;p&gt;For programming-optimized Claude Sonnet, though, there is no significant difference, so users need to choose between higher security and faster response time.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;This post mainly covered how code editors use Abstract Syntax Trees (ASTs) to build code indexes and implement code completion.&lt;/p&gt;
+&lt;p&gt;In general, ASTs are an important tool for understanding the syntactic structure of code, and different implementations have their own trade-offs.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;Further Reading&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Pairing with AI for Programming — Testing</title><link>https://sund.site/en/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/en/posts/2024/pairing-with-ai-01/</guid><description>&lt;p&gt;The future paradigm of software development will be human-AI collaborative programming. This is already an indisputable fact in the software industry. Programming tools like Windsurf, Cursor, and Copilot have, on one hand, improved development efficiency; on the other hand, they&amp;rsquo;ve made code more black-boxed, less readable, and harder to maintain.&lt;/p&gt;
+&lt;p&gt;I try to briefly discuss which software development practices are more suitable for improving the observability and maintainability of AI-generated code in the AI era. All articles titled &amp;ldquo;Pairing with AI for Programming&amp;rdquo; are just thoughts to get the conversation started, not a systematic methodology. I welcome readers&amp;rsquo; corrections for any mistakes.&lt;/p&gt;
+&lt;h2 id="what-are-the-common-problems-with-using-ai-to-write-code"&gt;What Are the Common Problems with Using AI to Write Code?&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Observability problem: AI&amp;rsquo;s implementation is incomplete and often requires manual modification of fragments&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The biggest problem with AI-generated code is that it often introduces subtle errors that are not easily noticed by humans. When humans use prompts to modify code, due to the difficulty of observing AI&amp;rsquo;s behavior, even after fixing a bug, it may lead to other regression issues (causing errors in existing logic).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Context problem: lacking global context, fragmented code lacks connections&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Due to token limits or economic considerations, many editors will optimize the input content, which can easily lead large models to misunderstand local context. They are unable to handle business logic across functional modules. Especially when the project becomes large, complex modules often depend on other modules, and adjusting business logic requires refactoring several code files.&lt;/p&gt;
+&lt;h2 id="solution-approach"&gt;Solution Approach&lt;/h2&gt;
+&lt;p&gt;The core problems of AI-written code can be summarized as low maintainability caused by lack of observability and lack of context. To address these two problems, we need to first review how traditional software processes make code more observable and maintainable.&lt;/p&gt;
+&lt;h3 id="human-led-unit-testing"&gt;Human-Led Unit Testing&lt;/h3&gt;
+&lt;p&gt;Unit tests are the specification for code. Complex business logic usually requires reading a lot of code to understand. But experienced programmers will look at the unit tests first. Good unit tests will completely write the module&amp;rsquo;s expected inputs and outputs into the test cases. In &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt;, the author believes good unit tests should have:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Protection against regressions&lt;/strong&gt;. That is, tests can prevent previously fixed issues from recurring in regression testing.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Resistance to refactoring&lt;/strong&gt;. That is, after code refactoring, tests can correctly identify whether the refactoring has affected existing functionality.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Fast feedback&lt;/strong&gt;. That is, unit tests are easy to run, and when issues are found, they can be quickly located.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Easy to maintain&lt;/strong&gt;. The maintainability of tests, unlike business code, is reflected in correctly handling dependencies and shared code.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The ultimate purpose of these principles is to ensure that the system under test behaves as expected.&lt;/p&gt;
+&lt;p&gt;When AI and humans collaborate on code, I personally believe that in writing unit tests, humans should lead (80%) and AI assist (20%), because unit tests define &amp;ldquo;the behavior I expect.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;Once unit tests are complete, they in turn guide the AI to implement the actual business code. At this point, human involvement decreases and AI takes the lead. Humans repeatedly run unit tests, while passing the test results along with the prompt to the AI, helping AI fix program issues.&lt;/p&gt;
+&lt;h3 id="writing-ai-friendly-tests-requires-good-module-design"&gt;Writing AI-Friendly Tests Requires Good Module Design&lt;/h3&gt;
+&lt;p&gt;When writing good tests, you also need to pay attention to correctly splitting modules. A good test typically gives an input and verifies whether the expected result is output. If a module depends on too many external environments for branching logic, the test output will heavily depend on external state. This reduces the module&amp;rsquo;s observability.&lt;/p&gt;
+&lt;p&gt;The following two pieces of experience can help you write good code:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;When writing tests, test the result of the behavior, not the steps. When writing business code, ask AI to clearly write out the steps.&lt;/p&gt;
+&lt;p&gt;The &amp;ldquo;unit&amp;rdquo; of a unit test doesn&amp;rsquo;t have to be a single class or function. It can be a group of operations completing an atomic piece of business logic. (Of course, there are different schools of thought supporting class-level testing, but that&amp;rsquo;s not the focus of this article.) To make AI-generated business code refactor-resistant, you should verify the result of the AI&amp;rsquo;s behavior, not every implementation step. Coupling test code with implementation steps means that business modifications will break existing tests, making the &amp;ldquo;expected behavior&amp;rdquo; constantly have to be modified along with the &amp;ldquo;specific implementation.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;When AI starts writing business logic, you should drive it step by step, during which humans can correct the AI&amp;rsquo;s code logic for a particular step. But be careful not to break the test logic.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Stateless code (functional) is the easiest to test&lt;/p&gt;
+&lt;p&gt;Because its output is invariant. Core code should be kept as stateless as possible, with state and external system dependencies placed in the application service layer. Deep and hard-to-understand core logic should be placed in the domain service layer. The details here can refer to DDD (Domain Driven Design) thinking.&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/pairing-with-ai-01/functional_core.png" alt="functional_core.png" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;functional_core.png&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;This article, as the beginning of a series on human-AI collaborative programming, attempts from a testing perspective to alleviate the observability issues of AI-generated code.&lt;/p&gt;
+&lt;p&gt;In future articles, I hope to discuss, from an architectural design perspective, how to design AI-friendly architectures that are easy to maintain context for.&lt;/p&gt;
+&lt;p&gt;The content of the article will continue to be updated over time, and discussion is welcome.&lt;/p&gt;</description></item></channel></rss>

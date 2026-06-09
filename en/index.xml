@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Steve Sun</title><link>https://sund.site/en/</link><description>Recent content on Steve Sun</description><generator>Hugo</generator><language>en</language><copyright>© 2013-2026, Steve Sun</copyright><lastBuildDate>Sun, 07 Jun 2026 10:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/en/index.xml" rel="self" type="application/rss+xml"/><item><title>How I Use Hermes Agent to Write Code</title><link>https://sund.site/en/posts/2026/how-i-use-hermes-agent/</link><pubDate>Sun, 07 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/en/posts/2026/how-i-use-hermes-agent/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/how-i-use-hermes-agent-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;I run two Hermes Agents in parallel.&lt;/p&gt;
+&lt;p&gt;One is called Super Juaner and handles daily conversation and information retrieval. The other is called Code Juaner and works exclusively on software engineering. Two independent Telegram bots, independent configurations, independent session databases.&lt;/p&gt;
+&lt;p&gt;Running two Agents separately is for context and environment isolation.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Core discipline: Code Juaner never writes code.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;All coding is delegated to Codex CLI for execution. Code Juaner only does the Product Owner work: writing requirement definitions, making architecture decisions, and accepting deliverables. Codex is the implementer: reads the spec, writes code, runs tests.&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Role&lt;/th&gt;
+ &lt;th&gt;Output&lt;/th&gt;
+ &lt;th&gt;Responsibility&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Code Juaner (Hermes PO)&lt;/td&gt;
+ &lt;td&gt;Feature doc + acceptance&lt;/td&gt;
+ &lt;td&gt;Requirement definition, architecture decisions, quality control&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Codex CLI (Implementer)&lt;/td&gt;
+ &lt;td&gt;Code + tests&lt;/td&gt;
+ &lt;td&gt;Technical solution, coding implementation, self-testing&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The flow is simple. The user says &amp;ldquo;I need a feature.&amp;rdquo; Code Juaner writes a feature doc containing only the requirement description and verifiable acceptance criteria. Every acceptance criterion must be verifiable—&amp;ldquo;clicking changes the URL to /zh/monaco&amp;rdquo; rather than &amp;ldquo;navigation is correct.&amp;rdquo; Then Codex reads the doc, plan mode produces a technical spec, and build mode implements plus tests. Code Juaner accepts each criterion one by one; if all pass, deploy; if there are issues, summarize and send back.&lt;/p&gt;
+&lt;p&gt;Code Juaner never reads code files, never finishes reading code to tell Codex how to write. For project-level questions, delegate to Codex plan mode for investigation. Codex timeout means reporting back directly and waiting for next instructions.&lt;/p&gt;
+&lt;p&gt;The acceptance standard is that &lt;code&gt;npm run build&lt;/code&gt; passing is only the minimum bar. For behavior changes, walk through the full user path in the browser before marking complete.&lt;/p&gt;
+&lt;h2 id="the-three-layer-gate"&gt;The Three-Layer Gate&lt;/h2&gt;
+&lt;p&gt;Discipline sounds simple but is easy to forget in practice. The model drifts in long conversations—after thirty turns, it may think it can write code and start modifying files directly. I built three layers of defense.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Layer 1: System prompt (hardest, unbypassable)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Locked in &lt;code&gt;config.yaml&lt;/code&gt;: all coding must be delegated to Codex CLI for execution, never write code yourself, report and wait after Codex fails. Injected every turn, can&amp;rsquo;t be avoided.&lt;/p&gt;
+&lt;p&gt;The system prompt&amp;rsquo;s lifecycle in Hermes is longer than SOUL.md; it doesn&amp;rsquo;t reset between conversations, so it better prevents forgetting after long conversations. Even if the model starts drifting after dozens of turns, this terminal instruction is still there.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Layer 2: SOUL.md + personality (loaded at session start)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;SOUL.md defines personality and creed: terse, conclusion-first, type-safety &amp;gt; runtime correctness &amp;gt; performance optimization. But its effective range is the start of each conversation, weaker than the system prompt.&lt;/p&gt;
+&lt;p&gt;SOUL loads a &lt;code&gt;development-workflow&lt;/code&gt; skill I co-developed with Super Juaner, which defines pre-checks when picking up code: must load the workflow skill first before making decisions, don&amp;rsquo;t skip. This file hosts my entire coding discipline as an initial activation guide.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Layer 3: Plugin gate (physical interception, unbypassable)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Two plugins intercept Code Juaner&amp;rsquo;s source code read/write. &lt;code&gt;write-code-gate&lt;/code&gt; blocks &lt;code&gt;write_file&lt;/code&gt; and &lt;code&gt;patch&lt;/code&gt; on source files like &lt;code&gt;.ts&lt;/code&gt;, &lt;code&gt;.tsx&lt;/code&gt;, &lt;code&gt;.py&lt;/code&gt; and returns refusal. &lt;code&gt;read-code-gate&lt;/code&gt; blocks &lt;code&gt;read_file&lt;/code&gt; and &lt;code&gt;search_files&lt;/code&gt; on source files. Non-source files like &lt;code&gt;.md&lt;/code&gt;, &lt;code&gt;.yaml&lt;/code&gt;, &lt;code&gt;.toml&lt;/code&gt; pass through.&lt;/p&gt;
+&lt;p&gt;The blocked extensions cover 30+ common languages. Exempt paths include &lt;code&gt;.hermes/&lt;/code&gt;, &lt;code&gt;node_modules/&lt;/code&gt;, &lt;code&gt;.next/&lt;/code&gt; and other non-project directories.&lt;/p&gt;
+&lt;p&gt;Plugins are loaded via Hermes&amp;rsquo;s &lt;code&gt;pre_tool_call&lt;/code&gt; hook, take effect at session start, and remain available after gateway restarts.&lt;/p&gt;
+&lt;p&gt;The three layers increase in hardness from outside to inside; when rules conflict, the hardest layer wins. The system prompt is a sticky note; the plugin is a locked door.&lt;/p&gt;
+&lt;p&gt;These practices aren&amp;rsquo;t new. Most of them are decades of accumulated software engineering—separation of roles, clear responsibilities, acceptance-first—just wearing a new skin in the AI era and landing in a new way.&lt;/p&gt;
+&lt;h2 id="dual-track-workflow"&gt;Dual-Track Workflow&lt;/h2&gt;
+&lt;p&gt;Take different tracks based on task nature.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Track A: New project or feature from zero to one&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Full pipeline: Feature Doc → Plan → Build → Verify → Fix (loop).&lt;/p&gt;
+&lt;p&gt;Phase one: Code Juaner writes the feature doc. Phase two: Codex plan produces the technical spec, including file list, implementation plan, data structures, and test cases. Phase three: Codex build reads the spec, implements all files, runs tests. Phase four: Code Juaner accepts each criterion.&lt;/p&gt;
+&lt;p&gt;Acceptance walks through five layers: data layer (type definitions, state management), logic layer (hooks, reducers), presentation layer (component rendering, interaction binding), config layer (static config, data loading), browser verification (route checks, localStorage confirmation, screenshot comparison).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Track B: Bug fixes or feature modifications&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Most projects go through Track B. Skipping the feature doc only applies to single-file, pure styling, copy changes, or minor config tweaks. Multi-file changes, those involving data persistence, state machines, or new components must write a feature doc plus spec before dispatching Codex.&lt;/p&gt;
+&lt;p&gt;When delegating to Codex, give only the goal and acceptance criteria, not the implementation plan. Codex reads the code and designs by itself.&lt;/p&gt;
+&lt;h2 id="preview-tunnel"&gt;Preview Tunnel&lt;/h2&gt;
+&lt;p&gt;In-progress websites need to be previewed on mobile. I use Cloudflare Tunnel to expose the local Next.js dev server to the public internet; Cloudflare assigns a temporary &lt;code&gt;trycloudflare.com&lt;/code&gt; domain, open it in a mobile browser to preview.&lt;/p&gt;
+&lt;p&gt;Early on I stopped and restarted the tunnel after every change, which triggered Cloudflare rate limits. Each stop and restart assigned a new URL, requiring me to reopen it on the phone—annoying.&lt;/p&gt;
+&lt;p&gt;Later I wrote a &lt;code&gt;tunnel-manager.sh&lt;/code&gt; script. The first start runs &lt;code&gt;cloudflared&lt;/code&gt; as a background daemon; subsequent builds only restart the next server, not touching the tunnel. The tunnel daemon is reused across preview sessions; it only rebuilds on machine restart or &lt;code&gt;cloudflared&lt;/code&gt; crash. The same URL persists through the entire development cycle, eliminating a lot of repetitive operations.&lt;/p&gt;
+&lt;h2 id="git-plus-vercel-deployment"&gt;Git plus Vercel Deployment&lt;/h2&gt;
+&lt;p&gt;Hit one silent pitfall: Vercel&amp;rsquo;s GitHub integration checks whether the commit author email is a real GitHub account email. When it doesn&amp;rsquo;t match, the CLI reports &amp;ldquo;Your deployment failed&amp;rdquo; and &lt;code&gt;vercel inspect&lt;/code&gt; shows &lt;code&gt;Builds: [0ms]&lt;/code&gt;—the build never started, no logs at all.&lt;/p&gt;
+&lt;p&gt;Fix: use the system git identity for commit, and rebase to reset the author if there&amp;rsquo;s a mismatch.&lt;/p&gt;
+&lt;p&gt;Deployment uses Vercel CLI with &lt;code&gt;--no-wait&lt;/code&gt; to avoid timeout blocking. GitHub Actions&amp;rsquo; &lt;code&gt;deploy.yml&lt;/code&gt; triggers automatically on push to the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
+&lt;h2 id="some-reflections"&gt;Some Reflections&lt;/h2&gt;
+&lt;p&gt;After all those specific practices, let me share some thoughts.&lt;/p&gt;
+&lt;p&gt;AI writing code has developed too fast. At the start of the year I was still manually writing every line; by mid-year I already had a pipeline that can independently complete features, acceptance, and deployment. What I do has shifted from writing code to defining rules, setting boundaries, and accepting results.&lt;/p&gt;
+&lt;p&gt;The engineer&amp;rsquo;s role is changing. You used to be a bricklayer, placing bricks one by one. Now you&amp;rsquo;re a rancher: set up the fences, put out enough feed, and let the herd graze and grow. The software industry is shifting from construction to animal husbandry.&lt;/p&gt;
+&lt;p&gt;This trend will only accelerate. Better models mean simpler harnesses, cheaper execution costs. You don&amp;rsquo;t need to be the best programmer—you need to be the best rule-maker. Define clearly what&amp;rsquo;s allowed, what&amp;rsquo;s not allowed, and what counts as done—leave the rest to the agent.&lt;/p&gt;
+&lt;p&gt;The time I spend defining boundaries has a much higher return than the time I spend on actual coding. That&amp;rsquo;s the most surprising discovery.&lt;/p&gt;</description></item><item><title>How to Design an AI Agent</title><link>https://sund.site/en/posts/2026/how-to-make-an-agent/</link><pubDate>Tue, 26 May 2026 16:11:00 +0800</pubDate><guid>https://sund.site/en/posts/2026/how-to-make-an-agent/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-agent-dot-matrix-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;AI Agents will most likely be the paradigm for future AI software design, so for most developers and non-technical people just getting into vibe coding, understanding how they&amp;rsquo;re designed and the principles behind them will help you design next-generation application software more effectively.&lt;/p&gt;
+&lt;p&gt;This post tries to use plain language to help you understand what an AI Agent is, what problems it solves, and which protocols and tools will come into play as part of that infrastructure.&lt;/p&gt;
+&lt;p&gt;Target audience:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Vibe coders (rapid prototyping, build and iterate)&lt;/li&gt;
+&lt;li&gt;Programmers&lt;/li&gt;
+&lt;li&gt;Non-technical users just starting to code&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="first-principles-what-problems-does-an-agent-framework-actually-solve"&gt;First Principles: What Problems Does an Agent Framework Actually Solve?&lt;/h2&gt;
+&lt;h3 id="models-are-powerful-but-unreliable"&gt;Models are powerful, but unreliable&lt;/h3&gt;
+&lt;p&gt;Large Language Models (LLMs) &amp;ldquo;guess&amp;rdquo;; they don&amp;rsquo;t &amp;ldquo;guarantee.&amp;rdquo;
+So you can&amp;rsquo;t treat them as deterministic programs (same input always produces same output).&lt;/p&gt;
+&lt;p&gt;Problems to solve:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;How to bring unstable output into a controllable flow&lt;/li&gt;
+&lt;li&gt;How to know where the failure is when something breaks&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="real-world-task-results-are-usually-not-simple-answers-but-complete-workflow-outputs"&gt;Real-world task results are usually not simple answers, but complete workflow outputs&lt;/h3&gt;
+&lt;p&gt;Real tasks typically involve:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Read information&lt;/li&gt;
+&lt;li&gt;Make decisions&lt;/li&gt;
+&lt;li&gt;Call tools&lt;/li&gt;
+&lt;li&gt;Continue deciding based on tool results&lt;/li&gt;
+&lt;li&gt;Ultimately produce documents, code, or other artifacts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This means an Agent&amp;rsquo;s design goal isn&amp;rsquo;t limited to &amp;ldquo;question and answer,&amp;rdquo; but is a &amp;ldquo;cyclic decision system.&amp;rdquo;&lt;/p&gt;
+&lt;h3 id="users-dont-want-to-wait-until-the-end-to-see-results"&gt;Users don&amp;rsquo;t want to wait until the end to see results&lt;/h3&gt;
+&lt;p&gt;When interacting with AI, users typically want:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Visible process (streaming)&lt;/li&gt;
+&lt;li&gt;Ability to interrupt (abort the current task)&lt;/li&gt;
+&lt;li&gt;Ability to add instructions mid-task (steer, guide while executing)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So the system must natively support real-time interaction, not one-shot black-box execution.&lt;/p&gt;
+&lt;h3 id="context-keeps-growing-costs-keep-growing"&gt;Context keeps growing, costs keep growing&lt;/h3&gt;
+&lt;p&gt;The longer the conversation, the larger the input, the slower the speed, the higher the cost, and it may even exceed limits.
+There must be a mechanism to &amp;ldquo;compress history while preserving key information.&amp;rdquo;&lt;/p&gt;
+&lt;h3 id="one-core-serving-multiple-interaction-modes"&gt;One core serving multiple interaction modes&lt;/h3&gt;
+&lt;p&gt;The same Agent must run on:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Terminal UI (TUI)&lt;/li&gt;
+&lt;li&gt;Remote Procedure Call (RPC)&lt;/li&gt;
+&lt;li&gt;Future Web or App interfaces&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So the &amp;ldquo;intelligent core&amp;rdquo; and &amp;ldquo;presentation layer&amp;rdquo; must be decoupled (independent, not bound together).&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="from-problems-to-requirements-then-to-design"&gt;From Problems to Requirements, Then to Design&lt;/h2&gt;
+&lt;h3 id="requirements-checklist"&gt;Requirements Checklist&lt;/h3&gt;
+&lt;p&gt;A usable Agent framework must at minimum satisfy:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Looping: supports &amp;ldquo;think → call tool → think again&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Observable: every step is visible to UI or logging&lt;/li&gt;
+&lt;li&gt;Controllable: can pause, cancel, interrupt, resume&lt;/li&gt;
+&lt;li&gt;Recoverable: retry on failure, can continue from the last session&lt;/li&gt;
+&lt;li&gt;Extensible: add new tools, new models, new frontends&lt;/li&gt;
+&lt;li&gt;Governable: clear boundaries on cost, context, and permissions&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="end-to-end-flowchart"&gt;End-to-End Flowchart&lt;/h3&gt;
+&lt;p&gt;Going from problems to requirements, and requirements to design, we get the following flowchart:&lt;/p&gt;
+&lt;div class="mermaid"&gt;flowchart TD
+ A[User states goal] --&gt; B[Agent understands current task]
+ B --&gt; C{Need a tool?}
+ C -- No --&gt; D[Give answer directly]
+ C -- Yes --&gt; E[Generate tool call request]
+ E --&gt; F[Execute tool]
+ F --&gt; G[Get tool result]
+ G --&gt; H{Result sufficient?}
+ H -- No --&gt; B
+ H -- Yes --&gt; D
+
+ D --&gt; I[Stream back to user]
+ I --&gt; J[User can interrupt/add requirements]
+ J --&gt; B&lt;/div&gt;
+&lt;p&gt;This diagram expresses:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;An Agent is a closed-loop system, not a single function call.&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;Tools&amp;rdquo; are capability amplifiers, not accessories.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;The user is in the loop, not outside it.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="overall-architecture-diagram"&gt;Overall Architecture Diagram&lt;/h3&gt;
+&lt;div class="mermaid"&gt;graph LR
+ subgraph Interaction Layer
+ UI1[TUI/CLI]
+ UI2[RPC/API]
+ UI3[Web/App]
+ end
+
+ subgraph Runtime Layer
+ SESSION[Session Orchestrator]
+ POLICY[Policy Center: Retry/Compression/Budget]
+ end
+
+ subgraph Core Layer
+ LOOP[Agent Decision Loop]
+ STATE[State Management]
+ EVENTS[Event Bus]
+ end
+
+ subgraph Capability Layer
+ TOOLS[Tool System]
+ MODEL[Model Adapter]
+ MEMORY[Memory and Context Management]
+ end
+
+ UI1 --&gt; SESSION
+ UI2 --&gt; SESSION
+ UI3 --&gt; SESSION
+ SESSION --&gt; LOOP
+ SESSION --&gt; POLICY
+ LOOP &lt;--&gt; STATE
+ LOOP --&gt; EVENTS
+ LOOP --&gt; TOOLS
+ LOOP --&gt; MODEL
+ POLICY &lt;--&gt; MEMORY
+ MODEL --&gt; LLM[External Model Service]&lt;/div&gt;
+&lt;h3 id="component-diagram-understanding-who-owns-what"&gt;Component Diagram (Understanding &amp;ldquo;Who Owns What&amp;rdquo;)&lt;/h3&gt;
+&lt;div class="mermaid"&gt;flowchart LR
+ USER[User]
+ ORCH[Session Orchestrator]
+ CORE[Agent Core]
+ ADAPTER[Model Adapter]
+ TOOLRUN[Tool Executor]
+ OBS[Observation and Events]
+
+ USER &lt;--&gt; ORCH
+ ORCH &lt;--&gt; CORE
+ CORE &lt;--&gt; ADAPTER
+ CORE &lt;--&gt; TOOLRUN
+ CORE --&gt; OBS
+ OBS --&gt; ORCH&lt;/div&gt;
+&lt;p&gt;Responsibility split:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Session Orchestrator: handles user input, session state, retry and compression policies.&lt;/li&gt;
+&lt;li&gt;Agent Core: only does the &amp;ldquo;thinking loop&amp;rdquo; and &amp;ldquo;state advancement.&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Model Adapter: shields differences between model providers.&lt;/li&gt;
+&lt;li&gt;Tool Executor: uniformly executes local or remote tools.&lt;/li&gt;
+&lt;li&gt;Observation and Events: turns the process into visible signals for UI/log systems.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="to-land-these-designs-what-protocols-and-foundational-patterns-are-required"&gt;To Land These Designs, What Protocols and Foundational Patterns Are Required?&lt;/h2&gt;
+&lt;p&gt;This section is the &amp;ldquo;minimum necessities&amp;rdquo; to complete the design above. We need to consider which engineering practices to introduce from a protocols and design-patterns standpoint. (Like building a skyscraper, you need to define the materials, the common engineering designs you can reuse, and how to make the structure mechanically stand the test of time.)&lt;/p&gt;
+&lt;p&gt;Most of these protocols are currently designed and implemented by developers on demand, but standards will likely emerge in the near future.&lt;/p&gt;
+&lt;h3 id="required-protocols-skipping-any-causes-loss-of-control"&gt;Required Protocols (Skipping Any Causes Loss of Control)&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Message Protocol&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Unifies how user messages, assistant messages, and tool results are described.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;Event Protocol&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Unifies how start, update, end, error, and tool execution status are described.&lt;/li&gt;
+&lt;li&gt;Purpose: lets UI and logs see the &amp;ldquo;process,&amp;rdquo; not just the &amp;ldquo;outcome.&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;Tool Contract&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Tool name, parameter structure (Schema), and execution return format must be fixed.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;Streaming Contract&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Supports incremental output (delta) to guarantee real-time user feedback.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="5"&gt;
+&lt;li&gt;Cancellation Contract&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Any link in the chain should respond to abort signals, avoiding &amp;ldquo;can&amp;rsquo;t stop.&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="6"&gt;
+&lt;li&gt;Error Contract&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Failures must be structured (machine-processable), not just string error messages.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="foundational-design-patterns-to-understand"&gt;Foundational Design Patterns to Understand&lt;/h3&gt;
+&lt;p&gt;For readers without programming experience, you&amp;rsquo;ll need to learn about these basic programming design patterns from other sources first.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;State Machine&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;An Agent has state transitions at every step (e.g., waiting for input → generating output → tool execution → back to generating).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;Publish/Subscribe (Pub/Sub)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Core emits events, UI/logs subscribe to events.&lt;/li&gt;
+&lt;li&gt;Benefit: core logic doesn&amp;rsquo;t depend on specific interfaces.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;Adapter&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Wraps different model interfaces into a unified calling convention.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;Strategy&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Retry strategies, tool concurrency strategies, compression strategies are interchangeable.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="5"&gt;
+&lt;li&gt;Pipeline&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Input preprocessing → model call → tool execution → post-processing is a pluggable chain.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="6"&gt;
+&lt;li&gt;Idempotency and Recoverability&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Repeating the same operation should not produce catastrophic side effects; failure should be recoverable.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="case-study-pi-agents-design-philosophy-and-architecture"&gt;Case Study: PI Agent&amp;rsquo;s Design Philosophy and Architecture&lt;/h2&gt;
+&lt;p&gt;The above covers &amp;ldquo;general Agent framework design.&amp;rdquo; Now let&amp;rsquo;s ground it in the recently popular minimalist framework &lt;a href="https://github.com/earendil-works/pi"&gt;PI Agent&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s look at how this framework designs an Agent.&lt;/p&gt;
+&lt;h3 id="design-philosophy"&gt;Design Philosophy&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Minimal Core&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Core only handles the loop, state, events, and tool orchestration.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;Pluggable Periphery&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Models, tools, retries, and context handling are all replaceable.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;Process Over Outcome&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;First ensure the process is visible and controllable, then pursue &amp;ldquo;smart output.&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;Session Over Request&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Treat the Agent as a long-term session system, not a single API call.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="agent-core-logic-flowchart"&gt;Agent Core Logic Flowchart&lt;/h3&gt;
+&lt;div class="mermaid"&gt;flowchart TD
+ START[Start a session turn] --&gt; TURN[Open turn]
+ TURN --&gt; CALL[Call model and stream output]
+ CALL --&gt; CHECK{Tool call in output?}
+
+ CHECK -- No --&gt; STOPCHECK{Stop?}
+ CHECK -- Yes --&gt; TOOL[Execute tool batch]
+ TOOL --&gt; MERGE[Write tool results back to context]
+ MERGE --&gt; STOPCHECK
+
+ STOPCHECK -- Stop --&gt; END[End and emit end event]
+ STOPCHECK -- Continue --&gt; NEXT[Enter next turn]
+ NEXT --&gt; TURN&lt;/div&gt;
+&lt;h3 id="agent-core-component-diagram"&gt;Agent Core Component Diagram&lt;/h3&gt;
+&lt;div class="mermaid"&gt;graph TD
+ CORE[Agent Core]
+ S[State Storage]
+ L[Loop Turn Cycle]
+ E[Events Emission]
+ T[Tool Executor]
+ M[Model Stream Call]
+ Q[Queue: steer/followUp]
+
+ CORE --&gt; S
+ CORE --&gt; L
+ L --&gt; M
+ L --&gt; T
+ L --&gt; E
+ L --&gt; Q
+ T --&gt; E
+ M --&gt; E
+ E --&gt; S&lt;/div&gt;
+&lt;p&gt;The value of this structure:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The interaction layer only sees events, doesn&amp;rsquo;t touch core state.&lt;/li&gt;
+&lt;li&gt;Model replacement doesn&amp;rsquo;t change the loop skeleton.&lt;/li&gt;
+&lt;li&gt;Tool extension doesn&amp;rsquo;t break the core control flow.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;Agent architecture isn&amp;rsquo;t &amp;ldquo;making the model smarter&amp;rdquo;—it&amp;rsquo;s &amp;ldquo;making an uncertain model work reliably inside a controllable system.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;You can remember it as this formula:&lt;/p&gt;
+&lt;p&gt;$$
+\text{Usable Agent} = \text{Model Capability} \times \text{Engineering Control Capability}
+$$&lt;/p&gt;
+&lt;p&gt;Where engineering control capability mainly comes from:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Loop design&lt;/li&gt;
+&lt;li&gt;Protocol design&lt;/li&gt;
+&lt;li&gt;Event observability&lt;/li&gt;
+&lt;li&gt;Recoverability and extensibility&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Judging by current trends, this will very likely be the foundational paradigm for the next generation of application software.&lt;/p&gt;</description></item><item><title>AI Agent Tool Comparison: Why MCP Is Just a Transitional Solution</title><link>https://sund.site/en/posts/2026/ai-agent-tool-comparison-mcp-transitional/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/en/posts/2026/ai-agent-tool-comparison-mcp-transitional/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-agent-mcp-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;ve built AI Agents, you&amp;rsquo;ve likely used MCP and may have come across the concept of Agent Skills. We don&amp;rsquo;t need to re-explain what they are—the question this post answers is: &lt;strong&gt;when both can achieve &amp;ldquo;letting AI call tools,&amp;rdquo; why I think MCP is a transitional approach that will be phased out&lt;/strong&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="the-fundamental-limitation-of-mcp-the-protocol-layer-cant-carry-semantics"&gt;The Fundamental Limitation of MCP: The Protocol Layer Can&amp;rsquo;t Carry Semantics&lt;/h2&gt;
+&lt;p&gt;MCP&amp;rsquo;s design logic is: give AI a structured tool-calling protocol where tool discovery, invocation, and parsing all follow a fixed format.&lt;/p&gt;
+&lt;p&gt;The problem is that &lt;strong&gt;this protocol is designed for humans, not for AI&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;JSON Schema can define parameter types and return value structures, but it cannot convey things like: why this parameter usually takes this value, what prerequisites a tool needs to work, or what its failure modes look like. This context is what AI most needs when making decisions in real scenarios, but the MCP protocol layer simply cannot carry it.&lt;/p&gt;
+&lt;p&gt;The result: tool-calling capabilities built with MCP depend heavily on prompt engineering—you need to supplement in the prompt what the protocol definition doesn&amp;rsquo;t include. This shows the protocol layer has a gap, and that gap can&amp;rsquo;t be fixed by improving the schema, because it&amp;rsquo;s fundamentally a semantic-loss problem, not a format problem.&lt;/p&gt;
+&lt;p&gt;Another practical issue is maintenance cost. Every new capability requires a separate MCP server—you need to maintain server code, schema definitions, and network connections. When the protocol version updates, all servers may need to change too. For individual developers or small teams, this complexity is a significant burden.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="why-skill-is-closer-to-what-ai-actually-needs"&gt;Why Skill Is Closer to What AI Actually Needs&lt;/h2&gt;
+&lt;p&gt;Agent Skill uses Markdown as the core format for capability packaging—using human language to describe what a capability is, when to use it, and how to use it, with scripts and reference templates attached.&lt;/p&gt;
+&lt;p&gt;When AI reads a Skill document, it gets more than &amp;ldquo;this tool&amp;rsquo;s name and accepted parameters&amp;rdquo;—it gets the full decision context: when to use it, when not to, how to handle edge cases. This information was always meant for human developers; now it goes directly to AI without secondary translation.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;For engineers&lt;/strong&gt;, using the file system as the foundation for Skill management brings an extra benefit: this workflow aligns perfectly with an engineer&amp;rsquo;s daily work. Git manages the Skill directory, naturally supporting version control, branching, and PR reviews. AI reads whatever documentation it needs, with no need to understand any protocol layer or maintain a running server process.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;For ordinary users&lt;/strong&gt;, the advantage of Skill is even more direct. Today&amp;rsquo;s Agents are getting more complete, and &amp;ldquo;harness engineering&amp;rdquo; has emerged—users don&amp;rsquo;t need to understand technical details, just describe what capabilities they need. Installing a Skill might be a one-liner: AI automatically reads the Skill document, understands what the capability does and how to configure it, then automatically handles dependency installation, API configuration, and permission verification—tasks that previously required a technical person. For users, a Skill is a manual for a capability, and the Agent is the executor who reads the manual and gets it done. MCP can&amp;rsquo;t do this because it requires users to first understand servers, schemas, and protocol versions—these are engineer language, not user language.&lt;/p&gt;
+&lt;p&gt;Skill&amp;rsquo;s semantic packaging makes this &amp;ldquo;zero-barrier installation&amp;rdquo; possible. When capabilities are described in human-language documents, the Agent can truly make those technical decisions on the user&amp;rsquo;s behalf. The thicker the protocol layer, the higher this delegation cost—and Skill compresses this layer to the minimum.&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;th&gt;MCP&lt;/th&gt;
+ &lt;th&gt;Agent Skill&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Adding a new tool&lt;/td&gt;
+ &lt;td&gt;Write server + schema + config&lt;/td&gt;
+ &lt;td&gt;Write a Markdown file&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Semantic expressiveness&lt;/td&gt;
+ &lt;td&gt;Limited by JSON Schema&lt;/td&gt;
+ &lt;td&gt;Free-form Markdown&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Context information&lt;/td&gt;
+ &lt;td&gt;Needs prompt engineering supplement&lt;/td&gt;
+ &lt;td&gt;Written in the doc, read directly by AI&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Protocol version maintenance&lt;/td&gt;
+ &lt;td&gt;Required&lt;/td&gt;
+ &lt;td&gt;Not required&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Installation for ordinary users&lt;/td&gt;
+ &lt;td&gt;Need to understand server and protocol concepts&lt;/td&gt;
+ &lt;td&gt;Agent reads doc, auto-configures&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Caller configuration&lt;/td&gt;
+ &lt;td&gt;Need to configure server connection&lt;/td&gt;
+ &lt;td&gt;Read files directly&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="mcps-cloud-advantage-is-a-false-premise"&gt;MCP&amp;rsquo;s Cloud Advantage Is a False Premise&lt;/h2&gt;
+&lt;p&gt;One often-cited advantage of MCP is cloud deployment—the server runs independently and multiple Agents can share it.&lt;/p&gt;
+&lt;p&gt;This advantage is real, but it belongs to the &amp;ldquo;network call&amp;rdquo; capability category, not to the MCP protocol itself. Agent Skill can be built entirely on REST API calls, and scripts in Skill documents can call any HTTP endpoint. On cloud deployment, Skill doesn&amp;rsquo;t fall short.&lt;/p&gt;
+&lt;p&gt;For SaaS services that already have REST APIs, the comparison becomes even clearer:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;With MCP: write a server that wraps the REST API, maintain the schema, keep in sync with MCP protocol versions&lt;/li&gt;
+&lt;li&gt;With Skill: write a Markdown document that clearly describes what the API does and how to call it, and AI reads it and uses it directly&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;MCP requires you to maintain an extra protocol system and server process, while Skill covers all these needs at lower cost.&lt;/strong&gt; When a simpler solution can do all the same things, the complex one should step aside.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="skills-form-is-also-evolving"&gt;Skill&amp;rsquo;s Form Is Also Evolving&lt;/h2&gt;
+&lt;p&gt;But I have to admit that Markdown + file system may not be the end state either.&lt;/p&gt;
+&lt;p&gt;This approach has an unsolved problem: &lt;strong&gt;the dynamism of Skill&lt;/strong&gt;. When a Skill&amp;rsquo;s external API dependencies change, or when it needs real-time state, how do static documents in the file system keep up? The current solution is to rely on scripts and templates, but the script execution environment, security boundaries, and state management all lack standard answers.&lt;/p&gt;
+&lt;p&gt;Additionally, dependency relationships between Skills, priority ordering, and decision logic when multiple Skills apply to one request are all open questions.&lt;/p&gt;
+&lt;p&gt;My judgment: &lt;strong&gt;Skill will evolve, possibly no longer centered on static files in the file system&lt;/strong&gt;, with some more dynamic mechanism for capability registration and discovery emerging. But that mechanism will most likely be a continuation of the Skill design philosophy, not a return to MCP&amp;rsquo;s protocol design direction.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="closing-thoughts"&gt;Closing Thoughts&lt;/h2&gt;
+&lt;p&gt;MCP isn&amp;rsquo;t a bad design. It took an important first step in AI tool calling, turning &amp;ldquo;AI connecting to the external world&amp;rdquo; from impossible to possible.&lt;/p&gt;
+&lt;p&gt;But there&amp;rsquo;s still distance between &amp;ldquo;possible&amp;rdquo; and &amp;ldquo;right.&amp;rdquo; When we discover a way to package capabilities that better fits how AI thinks, the transitional approach should exit the stage.&lt;/p&gt;
+&lt;p&gt;Is Agent Skill the final answer? I&amp;rsquo;m not sure. But it&amp;rsquo;s closer to what AI truly needs—semantics, context, flexibility, and a calling experience with no extra protocol layer. This packaging is friendly to engineers and even more friendly to ordinary users, because it hides technical complexity inside the document layer, letting the Agent handle things users shouldn&amp;rsquo;t have to think about.&lt;/p&gt;
+&lt;p&gt;This direction of exploration deserves to be taken seriously.&lt;/p&gt;
+&lt;p&gt;Finally, here&amp;rsquo;s my 2025 dissection (roast) of the MCP concept.&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ai-agent-tool-comparison-mcp-transitonal/x-mcp-thread.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;</description></item><item><title>The Externalized J-Type</title><link>https://sund.site/en/posts/2025/ext-judging/</link><pubDate>Mon, 03 Nov 2025 22:07:40 +0800</pubDate><guid>https://sund.site/en/posts/2025/ext-judging/</guid><description>&lt;p&gt;In life, there&amp;rsquo;s a kind of person who likes to urge others to make plans. As long as something is still up in the air, they feel uneasy.&lt;/p&gt;
+&lt;p&gt;These people aren&amp;rsquo;t necessarily company bosses, nor are they necessarily dominant in personality. They just enjoy asking &amp;ldquo;When can we decide this?&amp;rdquo; or &amp;ldquo;What&amp;rsquo;s the plan for the weekend—where are we going, really?&amp;quot;—seeking certainty from the outside world in that kind of way.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s tentatively call these people the &amp;ldquo;Externalized J-Type&amp;rdquo; or &amp;ldquo;Ex-J.&amp;rdquo; A J-Type in MBTI is someone with a Judging personality, who likes to predict the future and loves making plans. The opposite is the P-Type, who is free-spirited and easygoing.&lt;/p&gt;
+&lt;p&gt;An Ex-J is someone who externalizes this J-trait onto others—a J-Type who assimilates other people into becoming J-Types themselves.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The Ex-J keeps certainty for themselves and passes anxiety out to the world.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;From my observation, these people usually have a strong need for control. A need for control can grow inward—for example, keeping work and life neatly organized, full of a sense of order. It can also grow outward—for example, trying to manipulate others and demanding they stay in tight alignment with you.&lt;/p&gt;
+&lt;p&gt;Ex-Js are the outward-spilling type, but most of the time their need for control grows inward. Once their internal need for control gets too much, it inadvertently spills onto others. When their J-desires fall through and life and work can&amp;rsquo;t be neatly organized, they offload the negative emotions onto the person they see as the source of the uncertainty, and a sense of pressure radiates out.&lt;/p&gt;
+&lt;p&gt;Recently, in both my work and personal life, I&amp;rsquo;ve run into two such people. After reflecting, I also discovered through my own self-audit mechanism (the I-Type&amp;rsquo;s inner search engine) that I&amp;rsquo;ve inadvertently become an Ex-J myself from time to time.&lt;/p&gt;
+&lt;p&gt;How do you avoid becoming an Ex-J?&lt;/p&gt;
+&lt;p&gt;I think the first principle is: don&amp;rsquo;t keep asking the same question. Working at a foreign company, when I communicate with European colleagues, I notice a big difference from Chinese colleagues: beyond &amp;ldquo;yes&amp;rdquo; and &amp;ldquo;no,&amp;rdquo; they have a third response—&amp;ldquo;no response.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;If they haven&amp;rsquo;t figured it out, they have the right not to respond. Not responding is itself a response.&lt;/strong&gt; It means &amp;ldquo;I haven&amp;rsquo;t decided, let me think about it and get back to you.&amp;rdquo; But in our language culture, not responding comes across as impolite, lacking confidence&amp;hellip;&lt;/p&gt;
+&lt;p&gt;You can see it from our exam-oriented education system too—we mass-produce J-Types, and some of them gradually degenerate into more extreme Ex-Js, drifting toward the dark side of harming society (just kidding, it&amp;rsquo;s not actually that serious).&lt;/p&gt;
+&lt;p&gt;So, when someone doesn&amp;rsquo;t respond, treat it as another form of response. Then you won&amp;rsquo;t be an Ex-J.&lt;/p&gt;
+&lt;p&gt;How do you communicate with an Ex-J?&lt;/p&gt;
+&lt;p&gt;I don&amp;rsquo;t know the answer either, so I humbly went to Chat for advice and asked GPT. The answer is: it takes two steps. First, soothe the other person&amp;rsquo;s emotions and express understanding. Then use vague steps in place of precise conclusions—for example, if you can&amp;rsquo;t make a plan, just say you can&amp;rsquo;t decide right now, but if X happens, here&amp;rsquo;s how we can respond. Let them see your thought process.&lt;/p&gt;
+&lt;p&gt;This way, by using rough steps or fuzzy time points instead of exact answers, you ease their need for control without letting them pull you into their pace.&lt;/p&gt;
+&lt;p&gt;Sigh, being a person is exhausting. Finally, I hope you become a P-Type. And if you really can&amp;rsquo;t, please promise me—at least be a good J-Type, okay?&lt;/p&gt;</description></item><item><title>Omarchy: Some Setup Tweaks for a Chinese-Language Environment</title><link>https://sund.site/en/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/en/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;I recently installed DHH&amp;rsquo;s &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt; (an Arch Linux distribution based on the Hyprland desktop environment) on my home computer.&lt;/p&gt;
+&lt;p&gt;After installation, there were a few configuration tweaks I needed to make. I&amp;rsquo;m recording them in this post for reference.&lt;/p&gt;
+&lt;h2 id="4k-monitor-settings"&gt;4K Monitor Settings&lt;/h2&gt;
+&lt;p&gt;Modify the system menu Setup - Monitor, and set the parameters based on your own display&amp;rsquo;s resolution, following the comments in the configuration file. For example, my 27-inch 4K display:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;env = GDK_SCALE,1.75
+monitor=,preferred,auto,1.875
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Add additional scaling settings for QT applications:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;env = QT_AUTO_SCREEN_SCALE_FACTOR,1
+env = QT_SCALE_FACTOR,1.75
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="chinese-input-method"&gt;Chinese Input Method&lt;/h2&gt;
+&lt;p&gt;Refer to &lt;a href="https://manateelazycat.github.io/2024/12/17/fcitx-best-config/"&gt;Fcitx Best Configuration Practices&lt;/a&gt;. The section titled &amp;ldquo;Installing emacs-rime&amp;rdquo; in that article can be skipped if you don&amp;rsquo;t use emacs.&lt;/p&gt;
+&lt;h2 id="terminal-font-settings"&gt;Terminal Font Settings&lt;/h2&gt;
+&lt;p&gt;The default system fonts aren&amp;rsquo;t very friendly to Chinese in the terminal. I like the &lt;code&gt;Maple Mono&lt;/code&gt; font, which you can install via the AUR package &lt;code&gt;maple-mono-nf-cn&lt;/code&gt;. Then modify the font settings in &lt;code&gt;~/.config/alacritty/alacritty.toml&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;font&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;normal&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;family&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;bold&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;family&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;italic&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;family&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;size&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="disable-numlock-by-default"&gt;Disable NumLock by Default&lt;/h2&gt;
+&lt;p&gt;Omarchy enables NumLock on the numpad by default after installation. You can change this in the system menu Setup - Input:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;numlock_by_default = false
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="a-few-neovim-settings"&gt;A Few Neovim Settings&lt;/h2&gt;
+&lt;p&gt;Neovim uses Lazyvim by default. I added a few lines to &lt;code&gt;~/.config/nvim/lua/config/options.lua&lt;/code&gt;—feel free to pick what you need based on the comments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-lua" data-lang="lua"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;-- Fix the issue of Chinese characters showing underlines in the terminal&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;vim.opt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;spelllang&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;en&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;cjk&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;-- Disable syntax checking in markdown files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;vim.api&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nvim_create_autocmd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;FileType&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;markdown&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;callback&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;vim.diagnostic&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;enable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;false&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kr"&gt;end&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then create &lt;code&gt;~/.config/nvim/lua/plugins/flush.lua&lt;/code&gt; with the following content to restore Vim&amp;rsquo;s default behavior for the &lt;code&gt;s&lt;/code&gt; key in normal mode:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-lua" data-lang="lua"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kr"&gt;return&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="s2"&gt;&amp;#34;folke/flash.nvim&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;keys&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;s&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;x&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;o&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="kc"&gt;false&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>AI Agent + Product Manager = QA Test Engineer</title><link>https://sund.site/en/posts/2025/ai-e2e-testing/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/en/posts/2025/ai-e2e-testing/</guid><description>&lt;p&gt;In September, our company organized a discussion on applying AI in the workplace. I happened to be researching end-to-end testing at the time, so I tried OpenCode with Playwright, and the results were astonishingly good.&lt;/p&gt;
+&lt;p&gt;I chose OpenCode over other AI agent frameworks (such as Claude Code) because it can integrate with the company&amp;rsquo;s enterprise GitHub Copilot account, which means we can use models like GPT-4 and Claude Sonnet without limits on the corporate intranet.&lt;/p&gt;
+&lt;p&gt;Playwright, built by Microsoft, is an automation testing framework that can drive browser APIs. Compared to Selenium, it is lighter, the community is more actively maintained, and it pairs better with large language models (there is an official MCP server). Playwright also bundles a webdriver, sparing a lot of environment configuration.&lt;/p&gt;
+&lt;p&gt;With OpenCode and the Playwright MCP server, and a few well-crafted prompt templates, you can run a complete set of web UI end-to-end test cases without writing a single line of test code. That would have been unthinkable in the past.&lt;/p&gt;
+&lt;p&gt;I have long believed that asking programmers to write E2E test code is laborious and more harmful than helpful. For edge cases and performance, unit tests and API tests cover more than 90% of the needs. The real value of E2E testing is in catching issues in UI interaction and integration. Using automated E2E test code to cover integration and UI scenarios carries an extremely high maintenance cost — every tiny UI tweak can break the test code — and statistically, more than half of the failing test cases in a test suite are not caused by functional defects at all, but by UI load latency, renamed frontend variables, slow test environments, and so on. For the real corner cases that threaten the integrated environment — for example, request retries caused by network interruptions, or out-of-range parameters from interface changes — writing E2E tests is less efficient than unit tests and API tests. For these reasons I have always encouraged the team to hire a full-time test engineer rather than reserving part of every sprint for developers to maintain E2E tests.&lt;/p&gt;
+&lt;p&gt;On the other hand, as a project lead, I care more about whether requirements are truly understood and delivered, and how to verify what the engineers actually built.&lt;/p&gt;
+&lt;p&gt;The arrival of AI agents has changed the agile workflow. With a combination like OpenCode + Playwright MCP server, the AI only needs to read user documentation to pick up the basics of UI operations. It can then open a browser, follow the natural-language description of a test case, and click through page elements step by step to complete an entire business flow. With a bit of guidance it can also produce the exact steps it took, the results, the issues it hit, and a complete test report. This is not far from hiring a junior QA engineer.&lt;/p&gt;
+&lt;p&gt;Because the maintenance cost drops dramatically (you only maintain a Markdown file describing the test cases), a lot of detailed UI test scenarios that were previously impractical can now be covered by an AI agent. Most importantly, this work does not depend on engineers at all — product managers, POs, or BAs can write test cases directly in natural language, closing the loop between writing user stories and verifying features, and removing the ambiguity that comes from requirements being relayed between business, engineering, and QA.&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://en.wikipedia.org/wiki/Toyota_Production_System"&gt;Toyota Production System&lt;/a&gt; lists several sources of waste in production:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Overproduction&lt;/li&gt;
+&lt;li&gt;Waiting&lt;/li&gt;
+&lt;li&gt;Unnecessary transport&lt;/li&gt;
+&lt;li&gt;Over-processing&lt;/li&gt;
+&lt;li&gt;Excess inventory&lt;/li&gt;
+&lt;li&gt;Unnecessary motion&lt;/li&gt;
+&lt;li&gt;Defects&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AI agents address, to some extent, three of these wastes: &amp;ldquo;overproduction&amp;rdquo; (writing test code over and over), &amp;ldquo;waiting&amp;rdquo; (waiting from requirements to implementation to test cases before a feature can be verified), and &amp;ldquo;unnecessary transport&amp;rdquo; (business requirements being passed between different people).&lt;/p&gt;</description></item><item><title>What to Do When Your Linux System Hits a Kernel Panic</title><link>https://sund.site/en/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/en/posts/2025/retro-kernel-panic/</guid><description>&lt;p&gt;When I turned on my Beelink Ser6 at home one evening, I was greeted with a Kernel Panic 😱.&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;A lot of people panic at this point, but there&amp;rsquo;s really no need. All you need is a LiveUSB boot stick to fix it.&lt;/p&gt;
+&lt;p&gt;However, my Ubuntu install had been running stably for over a year and I didn&amp;rsquo;t have a LiveUSB lying around at home. Helplessly, I dug out an old computer that had been gathering dust for years, and spent half an hour guessing the login password before finally getting in&amp;hellip; then downloaded the Ubuntu ISO and made a LiveUSB.&lt;/p&gt;
+&lt;p&gt;Below is the troubleshooting process I used after booting from the LiveUSB and entering Try Ubuntu&amp;rsquo;s Terminal, for your reference.&lt;/p&gt;
+&lt;h2 id="1-find-the-root-partition-and-efi-partition"&gt;1. Find the Root Partition and EFI Partition&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;lsblk -f
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This returns something like the following, where the &lt;code&gt;vfat&lt;/code&gt; format is the EFI partition and &lt;code&gt;ext4&lt;/code&gt; is the system root partition:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;NAME FSTYPE LABEL UUID MOUNTPOINT
+nvme0n1 
+├─nvme0n1p1 vfat 1234-5678 /boot/efi
+└─nvme0n1p2 ext4 955b06a9-983d-4e04-b2ef-60b559db46e6 
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="2-use-fsck-to-repair-partition-errors"&gt;2. Use &lt;code&gt;fsck&lt;/code&gt; to Repair Partition Errors&lt;/h2&gt;
+&lt;p&gt;Note: in this step and beyond, the partition path needs to be replaced with the one from your system found in the previous step.&lt;/p&gt;
+&lt;p&gt;First, repair the root partition:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo fsck -f /dev/nvme0n1p2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When prompted, enter &lt;code&gt;y&lt;/code&gt; to allow, or &lt;code&gt;a&lt;/code&gt; to allow all. I discovered several errors at this step and successfully fixed them.&lt;/p&gt;
+&lt;p&gt;Next, check and repair the EFI partition:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo fsck -f /dev/nvme0n1p1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;At this step I got the following prompt:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;there are different between boot sector and it&amp;#39;s backup：
+1) Copy original to backup
+2) Copy backup to original
+3) No action
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Based on what I found online, if the system can boot into GRUB normally, the original sector is good, so I chose &lt;code&gt;1) Copy original to backup&lt;/code&gt; to copy the original boot sector to the backup sector.&lt;/p&gt;
+&lt;h2 id="3-mount-the-original-system-and-rebuild-initramfs"&gt;3. Mount the Original System and Rebuild initramfs&lt;/h2&gt;
+&lt;p&gt;In this step, mount the original system&amp;rsquo;s root partition into the current LiveUSB system. To run the necessary commands, also bind-mount four key directories from the LiveUSB system onto the original system.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mkdir -p /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount /dev/nvme0n1p2 /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount --bind /dev /mnt/ubuntu/dev
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount --bind /proc /mnt/ubuntu/proc
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount --bind /sys /mnt/ubuntu/sys
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount --bind /run /mnt/ubuntu/run
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount /dev/nvme0n1p1 /mnt/ubuntu/boot/efi
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After this, you can switch into the original system&amp;rsquo;s root shell:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo chroot /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then install GRUB and regenerate the initramfs boot image for the system kernel. Adjust the arguments to &lt;code&gt;grub-install&lt;/code&gt; to match your system.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;grub-install --target&lt;span class="o"&gt;=&lt;/span&gt;x86_64-efi --efi-directory&lt;span class="o"&gt;=&lt;/span&gt;/boot/efi --bootloader-id&lt;span class="o"&gt;=&lt;/span&gt;ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;update-initramfs -c -k all
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;update-grub
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, exit the original system&amp;rsquo;s root shell and reboot:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo reboot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Pull out the USB stick and boot into the original system—I was able to log in normally at this point.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Don&amp;rsquo;t panic.&lt;/li&gt;
+&lt;li&gt;Keep a LiveUSB at home.&lt;/li&gt;
+&lt;li&gt;Use the &lt;code&gt;fsck&lt;/code&gt; command to repair partition errors.&lt;/li&gt;
+&lt;li&gt;Use &lt;code&gt;mount&lt;/code&gt; to bind the necessary filesystems onto the original system, enter it, and rebuild initramfs.&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>How to Get Along with the 'Old Guard'</title><link>https://sund.site/en/posts/2025/how-to-deal-with-elders/</link><pubDate>Sun, 13 Jul 2025 12:40:24 +0800</pubDate><guid>https://sund.site/en/posts/2025/how-to-deal-with-elders/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/how-to-deal-with-elders/HollywoodVices.jpg" alt="Thou Shalt Not" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;Thou Shalt Not&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;Every day, we inevitably have to deal with some &amp;ldquo;old guard&amp;rdquo;—people with a bit more seniority (not necessarily referring to age). Most of us, before retirement, have to live in a world where the rules of the game are set by the old guard.&lt;/p&gt;
+&lt;p&gt;How do you navigate such a world? Here&amp;rsquo;s one reference, not advice—please don&amp;rsquo;t imitate.&lt;/p&gt;
+&lt;p&gt;In 1934, the Motion Picture Producers and Distributors of America introduced the most stringent set of film production rules in history—the &lt;strong&gt;Hays Code&lt;/strong&gt;. The code was intended to &lt;strong&gt;raise the moral standards of audiences&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&amp;ldquo;Prohibit nudity, suggestive content, and lustful kisses on screen. Prohibit depictions of religion, drugs, interracial romance, and revenge plots.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;Just as intended, the code promoted the development of the Hollywood film industry&amp;hellip; in a different form.&lt;/p&gt;
+&lt;p&gt;Before long, Hollywood directors discovered that &lt;strong&gt;these strict prohibitions could help them sell tickets, as long as they cleverly evaded the letter of the rules&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;The facts proved that audiences did, in fact, still love watching naughty things. The young guns of Hollywood, caught between compliance and defiance, chose to skirt the edges.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Observe its letter and violate its spirit as much as possible.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Comply with the rules in form, and deviate from their spirit as much as possible.&lt;/strong&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;This is a philosophy of compromise with reality, yet not entirely a compromise.&lt;/p&gt;
+&lt;p&gt;Paramount photographer Whitey Schafer shot a large satirical photograph (the header image for this post) titled &amp;ldquo;Thou Shalt Not,&amp;rdquo; depicting &amp;ldquo;The Ten Things a Producer Must Absolutely Never Do&amp;rdquo;—and then depicted all ten things within the frame.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Law Defeated&lt;/li&gt;
+&lt;li&gt;Inside of Thigh&lt;/li&gt;
+&lt;li&gt;Lace Lingerie&lt;/li&gt;
+&lt;li&gt;Dead Man&lt;/li&gt;
+&lt;li&gt;Narcotics&lt;/li&gt;
+&lt;li&gt;Drinking&lt;/li&gt;
+&lt;li&gt;Exposed Bosom&lt;/li&gt;
+&lt;li&gt;Gambling&lt;/li&gt;
+&lt;li&gt;Pointing Gun&lt;/li&gt;
+&lt;li&gt;Tommy Gun&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Years later, Hollywood scrapped these regulations, replacing them with a more relaxed film rating system. The photo became a classic work of art satirizing that era.&lt;/p&gt;
+&lt;p&gt;Returning to the original question: in a world where the old guard sets the rules, how do you take care of yourself?&lt;/p&gt;
+&lt;p&gt;The answer is: play &lt;a href="https://book.douban.com/subject/25742296/"&gt;an infinite game&lt;/a&gt; (?).&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Finite games are played within boundaries. Infinite games are played with boundaries.&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>How AI Coding Tools Like Cursor Work Under the Hood</title><link>https://sund.site/en/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/en/posts/2025/ast-chunk/</guid><description>&lt;p&gt;In my previous post, &lt;a href="https://sund.site/en/posts/2025/build-deepwiki/"&gt;How DeepWiki Works&lt;/a&gt;, I shared one possible way DeepWiki is implemented. I left a question there: how does DeepWiki chunk a source code repository?&lt;/p&gt;
+&lt;p&gt;The answer is AST chunking.&lt;/p&gt;
+&lt;p&gt;In this post I want to analyze how two software development aids — Cursor and Cline — implement &amp;ldquo;code indexing.&amp;rdquo; In fact, they are not fundamentally different from DeepWiki; all of them use AST chunking.&lt;/p&gt;
+&lt;h2 id="ast"&gt;AST&lt;/h2&gt;
+&lt;p&gt;An &lt;strong&gt;Abstract Syntax Tree&lt;/strong&gt; (&lt;strong&gt;AST&lt;/strong&gt;) is a tree representation of source code that reflects the code&amp;rsquo;s syntactic structure. When chunking code, ASTs help us better understand the semantic boundaries of the code.&lt;/p&gt;
+&lt;p&gt;ASTs are widely used in compilers and source code analysis tools. For example, in the frontend world, Babel and the TypeScript compiler (TSC) use ASTs to transform ES6 or TypeScript code into JavaScript that browsers can run.&lt;/p&gt;
+&lt;p&gt;Below is a simple example showing how an AST converts TypeScript code into a tree structure. Suppose we have this TypeScript function:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;greet&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;: &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Hello, &amp;#34;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After being processed by an AST tool, it is abstracted into the following tree:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SourceFile
+&lt;ul&gt;
+&lt;li&gt;FunctionDeclaration
+&lt;ul&gt;
+&lt;li&gt;Identifier: &amp;ldquo;greet&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Parameter
+&lt;ul&gt;
+&lt;li&gt;Identifier: &amp;ldquo;name&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Block
+&lt;ul&gt;
+&lt;li&gt;ReturnStatement
+&lt;ul&gt;
+&lt;li&gt;BinaryExpression
+&lt;ul&gt;
+&lt;li&gt;StringLiteral: &amp;ldquo;Hello, &amp;quot;&lt;/li&gt;
+&lt;li&gt;Identifier: &amp;ldquo;name&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A compiler can then walk this tree and translate it node by node into JavaScript code.&lt;/p&gt;
+&lt;p&gt;Once you understand ASTs, you roughly understand how DeepWiki — and even code editors like Cursor — build code indexes.&lt;/p&gt;
+&lt;h2 id="cursor"&gt;Cursor&lt;/h2&gt;
+&lt;p&gt;In &lt;a href="https://www.cursor.com/ja/security#codebase-indexing"&gt;Cursor&amp;rsquo;s official documentation&lt;/a&gt;, you can find a description of how it indexes user code.&lt;/p&gt;
+&lt;p&gt;Cursor scans the user&amp;rsquo;s repository, computes file hashes, and builds a Merkle tree. Similar to the way Git compares file diffs, Cursor uses the Merkle tree to detect file changes in the user&amp;rsquo;s workspace and incrementally uploads modified files to Cursor&amp;rsquo;s servers.&lt;/p&gt;
+&lt;p&gt;Uploaded files are then chunked and embedded, and stored in a Turbopuffer database. This is the process of building a RAG over the source code.&lt;/p&gt;
+&lt;p&gt;The chunking step uses an AST tool to structure the code into a syntax tree, then cuts the serialized tree nodes into small chunks, and finally embeds them as vectors for storage.&lt;/p&gt;
+&lt;p&gt;Turbopuffer does not only store the vectorized code; it also stores metadata such as the line numbers and source file paths of the code segments.&lt;/p&gt;
+&lt;p&gt;When Cursor tries to autocomplete user code or generate new code from context, it queries the Turbopuffer database, finds the vectors with the highest similarity, and gets the file path and line numbers for that segment. Cursor then reads the corresponding source code from the user&amp;rsquo;s repository and puts it into the LLM&amp;rsquo;s system context. Finally, the LLM returns the newly generated code to Cursor.&lt;/p&gt;
+&lt;p&gt;A &lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;user on X&lt;/a&gt; put together this flow diagram:&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ast-chunk/cursor.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline&amp;rsquo;s official blog&lt;/a&gt; offers a glimpse of how it is implemented.&lt;/p&gt;
+&lt;p&gt;Cline is an AI agent that helps with coding. Cline does not upload code and build a RAG; instead, it takes a safer and more reliable approach to managing the user&amp;rsquo;s repository.&lt;/p&gt;
+&lt;p&gt;Here is the developers&amp;rsquo; description of how Cline works:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;When you point Cline at a codebase, it doesn&amp;rsquo;t immediately try to read every file. Instead, it begins by understanding the architecture. Using Abstract Syntax Trees (ASTs), Cline extracts a high-level map of your code – the classes, functions, methods, and their relationships. This happens through our list_code_definition_names tool, which provides structural understanding without requiring full implementation details.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Cline uses its &lt;code&gt;list_code_definition_names&lt;/code&gt; tool to convert source code into an AST. Cline treats that AST as a &amp;ldquo;map&amp;rdquo; of the entire codebase.&lt;/p&gt;
+&lt;p&gt;When Cline runs a task automatically, it analyzes the file that needs to be modified, builds an AST for that file, and converts the AST into natural-language context (similar to how DeepWiki turns code into documents). It feeds this context to the LLM, letting the LLM decide whether to modify the file or look at another file to gather more context.&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ast-chunk/cline.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;If Cursor compares similarity between vector-space code snippets, Cline converts code snippets into natural-language descriptions and lets the LLM, through semantic understanding, hunt for clues across the repository and compare the semantic similarity of code segments.&lt;/p&gt;
+&lt;p&gt;Cline&amp;rsquo;s approach is clearly safer — enterprise users don&amp;rsquo;t have to worry about Cline abusing the source code. The side effect, however, is higher token consumption. Constantly fetching context across files also takes more time. In some edge cases, Cline may even bounce back and forth between two files, falling into a loop.&lt;/p&gt;
+&lt;p&gt;In my own experience, Cline performs better than Cursor&amp;rsquo;s Agent mode on certain models (Deepseek-r1, OpenAI-4o), because Cline&amp;rsquo;s semantic understanding makes better use of these models&amp;rsquo; natural-language abilities than vector similarity does.&lt;/p&gt;
+&lt;p&gt;For programming-optimized Claude Sonnet, though, there is no significant difference, so users need to choose between higher security and faster response time.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;This post mainly covered how code editors use Abstract Syntax Trees (ASTs) to build code indexes and implement code completion.&lt;/p&gt;
+&lt;p&gt;In general, ASTs are an important tool for understanding the syntactic structure of code, and different implementations have their own trade-offs.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;Further Reading&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>How DeepWiki Works</title><link>https://sund.site/en/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/en/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWiki&lt;/a&gt; is an AI agent project, provided by Devin.ai, that generates detailed documentation from a source code repository. Ever since it went viral, I have been curious about how it works.&lt;/p&gt;
+&lt;p&gt;I combed through online resources and several open-source projects and arrived at a relatively clear picture of the workflow. For the harder parts, I will follow up with my findings in later posts.&lt;/p&gt;
+&lt;h2 id="building-a-map-of-the-code-structure"&gt;Building a Map of the Code Structure&lt;/h2&gt;
+&lt;p&gt;At its core, DeepWiki is a RAG system. It takes a source code repository as input, parses the code, and converts it into two parts: &lt;strong&gt;metadata representing the syntactic structure and file structure&lt;/strong&gt; and &lt;strong&gt;vector data representing code descriptions and snippets&lt;/strong&gt;. The metadata is stored in a relational database, while the corresponding code snippets are stored in a vector database for later LLM retrieval.&lt;/p&gt;
+&lt;h2 id="generating-wiki-pages"&gt;Generating WIKI Pages&lt;/h2&gt;
+&lt;p&gt;The process of generating a WIKI page is essentially a RAG query:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The program recursively reads the project structure.&lt;/li&gt;
+&lt;li&gt;It queries the metadata database for the current file&amp;rsquo;s metadata, then searches the vector database for the most relevant code and description IDs.&lt;/li&gt;
+&lt;li&gt;It uses those IDs to look up the descriptions in the metadata database, and the corresponding code snippets in the project files.&lt;/li&gt;
+&lt;li&gt;It assembles all of the above as context, picks an appropriate prompt based on the metadata type (architecture, components, etc.), and feeds it to the LLM.&lt;/li&gt;
+&lt;li&gt;A front-end rendering engine then renders the LLM output into a documentation page.&lt;/li&gt;
+&lt;li&gt;Repeat from step 1.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="Image from https://www.gptsecurity.info/2024/05/26/RAG/" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;Image from https://www.gptsecurity.info/2024/05/26/RAG/&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h2 id="difficulty-1-the-chunking-strategy"&gt;Difficulty 1: The Chunking Strategy&lt;/h2&gt;
+&lt;p&gt;A particularly interesting part of the process above is how to chunk code before embedding. For natural language, chunking is usually based on paragraphs, sentences, and punctuation, so each chunk contains the full context of a sentence or paragraph.&lt;/p&gt;
+&lt;p&gt;For code, it is different. A function body, for example, is wrapped in &lt;code&gt;{&lt;/code&gt; and &lt;code&gt;}&lt;/code&gt;. If you tokenize it with a natural-language tokenizer, the context will be split across different chunks, which hurts the accuracy of vector retrieval.&lt;/p&gt;
+&lt;p&gt;There are currently two approaches. The first is to chunk the whole file. In that case, the file size cannot exceed the chunk-size limit, and the chunks lack the real call-relationship context. We know that the unit of code organization is not the file (the file tree is just a human-friendly organization) — it is a graph of class- and function-level dependencies.&lt;/p&gt;
+&lt;p&gt;The second approach is to first use a syntax tool to perform static analysis on the code file, and then split the code along the syntactic structure based on the analysis. This is more complex to implement, and I could not find much material on it online. Fortunately, I came across &lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;, which describes how to use static syntax analysis to chunk code and build an efficient RAG system for a code repository. The article does not provide an open-source implementation, though. Considering that this is a core technology of a commercial product, it is well worth digging deeper into. I will keep following this area of research.&lt;/p&gt;
+&lt;h2 id="difficulty-2-parsing-the-syntax-structure"&gt;Difficulty 2: Parsing the Syntax Structure&lt;/h2&gt;
+&lt;p&gt;Parsing metadata is somewhat simpler than vector data. I found some clues in another open-source project, &lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;That project uses &lt;code&gt;tree-sitter&lt;/code&gt; to analyze the project&amp;rsquo;s syntax structure and produces three types of metadata files:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tag.json&lt;/code&gt;: basic information such as the path, line number, and description of a file, function, or class.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tree_structure.json&lt;/code&gt;: the project&amp;rsquo;s file tree structure.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;*.pkl&lt;/code&gt;: a graph of object dependencies.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;*.pkl&lt;/code&gt; is a graph of object relations that the syntax analyzer obtains by scanning the project&amp;rsquo;s files, then serializes the Python graph object to disk using the pickle library.&lt;/p&gt;
+&lt;p&gt;From this implementation, it looks like the embedding process in Difficulty 1 could also use the code metadata generated by &lt;code&gt;tree-sitter&lt;/code&gt; to chunk the code by line.&lt;/p&gt;
+&lt;h2 id="prompt-engineering"&gt;Prompt Engineering&lt;/h2&gt;
+&lt;p&gt;In the RAG query phase, you need to assemble different prompts based on the type of metadata being processed.&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt; project has plenty of prompts worth referencing:&lt;/p&gt;
+&lt;p&gt;Prompt for generating an overview:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a concise overview of this repository focused primarily on:
+* Purpose and Scope: What is this project&amp;#39;s main purpose?
+* Core Features: What are the key features and capabilities?
+* Target audience/users
+* Main technologies or frameworks used
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Prompt for generating an architecture document:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Create a comprehensive architecture overview for this repository. Include:
+* A high-level description of the system architecture
+* Main components and their roles
+* Data flow between components
+* External dependencies and integrations
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Prompt for generating a components document:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a comprehensive analysis of all key components in this codebase. For each component:
+* Name of the component
+* Purpose and main responsibility
+* How it interacts with other components
+* Design patterns or techniques used
+* Key characteristics
+* File paths that implement this component
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For the rest, please refer to the project files; I won&amp;rsquo;t enumerate them all here.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;DeepWiki is a code documentation generation tool built on a RAG system. It works through the following steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Perform syntactic analysis on the repository to produce metadata and vector data.&lt;/li&gt;
+&lt;li&gt;Query that data through the RAG system to generate documentation.&lt;/li&gt;
+&lt;li&gt;Render the results into readable documentation pages with a front-end engine.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;There are two main difficulties in implementation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The code chunking strategy: it must consider the syntactic structure of the code, not just split it the way you would split natural language.&lt;/li&gt;
+&lt;li&gt;Parsing the syntax structure: tools like &lt;code&gt;tree-sitter&lt;/code&gt; can be used to parse the code&amp;rsquo;s structure.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Although there are some open-source projects to reference, the core chunking strategy implementation still needs to be studied in depth.&lt;/p&gt;
+&lt;h2 id="reference-projects"&gt;Reference Projects&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

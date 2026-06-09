@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vibe Coding on Steve Sun</title><link>https://sund.site/en/tags/vibe-coding/</link><description>Recent content in Vibe Coding on Steve Sun</description><generator>Hugo</generator><language>en</language><copyright>© 2013-2026, Steve Sun</copyright><lastBuildDate>Wed, 08 Oct 2025 20:39:15 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/en/tags/vibe-coding/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent + Product Manager = QA Test Engineer</title><link>https://sund.site/en/posts/2025/ai-e2e-testing/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/en/posts/2025/ai-e2e-testing/</guid><description>&lt;p&gt;In September, our company organized a discussion on applying AI in the workplace. I happened to be researching end-to-end testing at the time, so I tried OpenCode with Playwright, and the results were astonishingly good.&lt;/p&gt;
+&lt;p&gt;I chose OpenCode over other AI agent frameworks (such as Claude Code) because it can integrate with the company&amp;rsquo;s enterprise GitHub Copilot account, which means we can use models like GPT-4 and Claude Sonnet without limits on the corporate intranet.&lt;/p&gt;
+&lt;p&gt;Playwright, built by Microsoft, is an automation testing framework that can drive browser APIs. Compared to Selenium, it is lighter, the community is more actively maintained, and it pairs better with large language models (there is an official MCP server). Playwright also bundles a webdriver, sparing a lot of environment configuration.&lt;/p&gt;
+&lt;p&gt;With OpenCode and the Playwright MCP server, and a few well-crafted prompt templates, you can run a complete set of web UI end-to-end test cases without writing a single line of test code. That would have been unthinkable in the past.&lt;/p&gt;
+&lt;p&gt;I have long believed that asking programmers to write E2E test code is laborious and more harmful than helpful. For edge cases and performance, unit tests and API tests cover more than 90% of the needs. The real value of E2E testing is in catching issues in UI interaction and integration. Using automated E2E test code to cover integration and UI scenarios carries an extremely high maintenance cost — every tiny UI tweak can break the test code — and statistically, more than half of the failing test cases in a test suite are not caused by functional defects at all, but by UI load latency, renamed frontend variables, slow test environments, and so on. For the real corner cases that threaten the integrated environment — for example, request retries caused by network interruptions, or out-of-range parameters from interface changes — writing E2E tests is less efficient than unit tests and API tests. For these reasons I have always encouraged the team to hire a full-time test engineer rather than reserving part of every sprint for developers to maintain E2E tests.&lt;/p&gt;
+&lt;p&gt;On the other hand, as a project lead, I care more about whether requirements are truly understood and delivered, and how to verify what the engineers actually built.&lt;/p&gt;
+&lt;p&gt;The arrival of AI agents has changed the agile workflow. With a combination like OpenCode + Playwright MCP server, the AI only needs to read user documentation to pick up the basics of UI operations. It can then open a browser, follow the natural-language description of a test case, and click through page elements step by step to complete an entire business flow. With a bit of guidance it can also produce the exact steps it took, the results, the issues it hit, and a complete test report. This is not far from hiring a junior QA engineer.&lt;/p&gt;
+&lt;p&gt;Because the maintenance cost drops dramatically (you only maintain a Markdown file describing the test cases), a lot of detailed UI test scenarios that were previously impractical can now be covered by an AI agent. Most importantly, this work does not depend on engineers at all — product managers, POs, or BAs can write test cases directly in natural language, closing the loop between writing user stories and verifying features, and removing the ambiguity that comes from requirements being relayed between business, engineering, and QA.&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://en.wikipedia.org/wiki/Toyota_Production_System"&gt;Toyota Production System&lt;/a&gt; lists several sources of waste in production:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Overproduction&lt;/li&gt;
+&lt;li&gt;Waiting&lt;/li&gt;
+&lt;li&gt;Unnecessary transport&lt;/li&gt;
+&lt;li&gt;Over-processing&lt;/li&gt;
+&lt;li&gt;Excess inventory&lt;/li&gt;
+&lt;li&gt;Unnecessary motion&lt;/li&gt;
+&lt;li&gt;Defects&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AI agents address, to some extent, three of these wastes: &amp;ldquo;overproduction&amp;rdquo; (writing test code over and over), &amp;ldquo;waiting&amp;rdquo; (waiting from requirements to implementation to test cases before a feature can be verified), and &amp;ldquo;unnecessary transport&amp;rdquo; (business requirements being passed between different people).&lt;/p&gt;</description></item><item><title>How DeepWiki Works</title><link>https://sund.site/en/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/en/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWiki&lt;/a&gt; is an AI agent project, provided by Devin.ai, that generates detailed documentation from a source code repository. Ever since it went viral, I have been curious about how it works.&lt;/p&gt;
+&lt;p&gt;I combed through online resources and several open-source projects and arrived at a relatively clear picture of the workflow. For the harder parts, I will follow up with my findings in later posts.&lt;/p&gt;
+&lt;h2 id="building-a-map-of-the-code-structure"&gt;Building a Map of the Code Structure&lt;/h2&gt;
+&lt;p&gt;At its core, DeepWiki is a RAG system. It takes a source code repository as input, parses the code, and converts it into two parts: &lt;strong&gt;metadata representing the syntactic structure and file structure&lt;/strong&gt; and &lt;strong&gt;vector data representing code descriptions and snippets&lt;/strong&gt;. The metadata is stored in a relational database, while the corresponding code snippets are stored in a vector database for later LLM retrieval.&lt;/p&gt;
+&lt;h2 id="generating-wiki-pages"&gt;Generating WIKI Pages&lt;/h2&gt;
+&lt;p&gt;The process of generating a WIKI page is essentially a RAG query:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The program recursively reads the project structure.&lt;/li&gt;
+&lt;li&gt;It queries the metadata database for the current file&amp;rsquo;s metadata, then searches the vector database for the most relevant code and description IDs.&lt;/li&gt;
+&lt;li&gt;It uses those IDs to look up the descriptions in the metadata database, and the corresponding code snippets in the project files.&lt;/li&gt;
+&lt;li&gt;It assembles all of the above as context, picks an appropriate prompt based on the metadata type (architecture, components, etc.), and feeds it to the LLM.&lt;/li&gt;
+&lt;li&gt;A front-end rendering engine then renders the LLM output into a documentation page.&lt;/li&gt;
+&lt;li&gt;Repeat from step 1.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="Image from https://www.gptsecurity.info/2024/05/26/RAG/" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;Image from https://www.gptsecurity.info/2024/05/26/RAG/&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h2 id="difficulty-1-the-chunking-strategy"&gt;Difficulty 1: The Chunking Strategy&lt;/h2&gt;
+&lt;p&gt;A particularly interesting part of the process above is how to chunk code before embedding. For natural language, chunking is usually based on paragraphs, sentences, and punctuation, so each chunk contains the full context of a sentence or paragraph.&lt;/p&gt;
+&lt;p&gt;For code, it is different. A function body, for example, is wrapped in &lt;code&gt;{&lt;/code&gt; and &lt;code&gt;}&lt;/code&gt;. If you tokenize it with a natural-language tokenizer, the context will be split across different chunks, which hurts the accuracy of vector retrieval.&lt;/p&gt;
+&lt;p&gt;There are currently two approaches. The first is to chunk the whole file. In that case, the file size cannot exceed the chunk-size limit, and the chunks lack the real call-relationship context. We know that the unit of code organization is not the file (the file tree is just a human-friendly organization) — it is a graph of class- and function-level dependencies.&lt;/p&gt;
+&lt;p&gt;The second approach is to first use a syntax tool to perform static analysis on the code file, and then split the code along the syntactic structure based on the analysis. This is more complex to implement, and I could not find much material on it online. Fortunately, I came across &lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;, which describes how to use static syntax analysis to chunk code and build an efficient RAG system for a code repository. The article does not provide an open-source implementation, though. Considering that this is a core technology of a commercial product, it is well worth digging deeper into. I will keep following this area of research.&lt;/p&gt;
+&lt;h2 id="difficulty-2-parsing-the-syntax-structure"&gt;Difficulty 2: Parsing the Syntax Structure&lt;/h2&gt;
+&lt;p&gt;Parsing metadata is somewhat simpler than vector data. I found some clues in another open-source project, &lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;That project uses &lt;code&gt;tree-sitter&lt;/code&gt; to analyze the project&amp;rsquo;s syntax structure and produces three types of metadata files:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tag.json&lt;/code&gt;: basic information such as the path, line number, and description of a file, function, or class.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tree_structure.json&lt;/code&gt;: the project&amp;rsquo;s file tree structure.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;*.pkl&lt;/code&gt;: a graph of object dependencies.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;*.pkl&lt;/code&gt; is a graph of object relations that the syntax analyzer obtains by scanning the project&amp;rsquo;s files, then serializes the Python graph object to disk using the pickle library.&lt;/p&gt;
+&lt;p&gt;From this implementation, it looks like the embedding process in Difficulty 1 could also use the code metadata generated by &lt;code&gt;tree-sitter&lt;/code&gt; to chunk the code by line.&lt;/p&gt;
+&lt;h2 id="prompt-engineering"&gt;Prompt Engineering&lt;/h2&gt;
+&lt;p&gt;In the RAG query phase, you need to assemble different prompts based on the type of metadata being processed.&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt; project has plenty of prompts worth referencing:&lt;/p&gt;
+&lt;p&gt;Prompt for generating an overview:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a concise overview of this repository focused primarily on:
+* Purpose and Scope: What is this project&amp;#39;s main purpose?
+* Core Features: What are the key features and capabilities?
+* Target audience/users
+* Main technologies or frameworks used
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Prompt for generating an architecture document:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Create a comprehensive architecture overview for this repository. Include:
+* A high-level description of the system architecture
+* Main components and their roles
+* Data flow between components
+* External dependencies and integrations
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Prompt for generating a components document:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a comprehensive analysis of all key components in this codebase. For each component:
+* Name of the component
+* Purpose and main responsibility
+* How it interacts with other components
+* Design patterns or techniques used
+* Key characteristics
+* File paths that implement this component
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For the rest, please refer to the project files; I won&amp;rsquo;t enumerate them all here.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;DeepWiki is a code documentation generation tool built on a RAG system. It works through the following steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Perform syntactic analysis on the repository to produce metadata and vector data.&lt;/li&gt;
+&lt;li&gt;Query that data through the RAG system to generate documentation.&lt;/li&gt;
+&lt;li&gt;Render the results into readable documentation pages with a front-end engine.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;There are two main difficulties in implementation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The code chunking strategy: it must consider the syntactic structure of the code, not just split it the way you would split natural language.&lt;/li&gt;
+&lt;li&gt;Parsing the syntax structure: tools like &lt;code&gt;tree-sitter&lt;/code&gt; can be used to parse the code&amp;rsquo;s structure.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Although there are some open-source projects to reference, the core chunking strategy implementation still needs to be studied in depth.&lt;/p&gt;
+&lt;h2 id="reference-projects"&gt;Reference Projects&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Why You Shouldn't Let AI Generate Your Unit Tests</title><link>https://sund.site/en/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/en/posts/2025/do-not-vibe-testing/</guid><description>&lt;p&gt;Recently I heard Hailong Zhang, founder of Gru.ai, mention in a &lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9"&gt;podcast&lt;/a&gt; that automatically generating unit tests is the main direction they are pursuing in AI coding.&lt;/p&gt;
+&lt;p&gt;Gru.ai&amp;rsquo;s website has these two lines:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Forget about unit testing – get covered automatically
+Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing efficiency while reducing costs and ensuring top-notch quality.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Zhang&amp;rsquo;s insights on AI coding are inspiring. I am skeptical, though, of the claim that using AI to write tests cuts cost and boosts efficiency. I think they themselves weren&amp;rsquo;t fully confident when writing the second line — they couldn&amp;rsquo;t help tacking on &amp;ldquo;ensuring top-notch quality&amp;rdquo; for reassurance.&lt;/p&gt;
+&lt;p&gt;Unit tests are the concretization of requirements. They are the smallest-grained, closest-to-the-code constraint tool in the entire testing system. Unit tests are used not only to check whether code meets requirements, but more often to detect corner cases — because what makes a program reliable is that it doesn&amp;rsquo;t break at the boundaries. That is also what distinguishes an experienced engineer from a junior one.&lt;/p&gt;
+&lt;p&gt;But what Gru.ai is doing is using &lt;strong&gt;AI to raise unit test coverage&lt;/strong&gt;. As we all know, higher coverage does not equal higher testing efficiency, let alone higher quality.&lt;/p&gt;
+&lt;p&gt;Letting AI automatically write runnable unit tests from a single prompt is very tempting for junior developers. It&amp;rsquo;s like a shooter trying to improve their accuracy by firing the gun first and then drawing the bullseye around the bullet hole.&lt;/p&gt;
+&lt;p&gt;The purpose of improving test coverage is to push human engineers to think carefully about edge cases. Using AI to help humans generate tests as a time-saver is perfectly fine, and Gru.ai instead tells us to &amp;ldquo;forget about unit testing, get covered automatically.&amp;rdquo; But the AI usually doesn&amp;rsquo;t know the edge cases unless a human explicitly tells it. So how does the AI infer the edge cases on its own? And how do we know the AI&amp;rsquo;s inferred edge cases are correct? If the AI tests the code, who tests the AI?&lt;/p&gt;
+&lt;p&gt;If products like Cursor embody the Silicon Valley imagination of vibe coding, then Gru.ai embodies the Chinese programmers&amp;rsquo; &amp;ldquo;rosy expectations&amp;rdquo; of vibe testing.&lt;/p&gt;</description></item><item><title>Pairing with AI for Coding—Pain Points</title><link>https://sund.site/en/posts/2025/pairing-with-ai-02/</link><pubDate>Sun, 23 Mar 2025 00:00:01 +0800</pubDate><guid>https://sund.site/en/posts/2025/pairing-with-ai-02/</guid><description>&lt;p&gt;When pairing with AI for coding, you often run into situations where large models fail to execute tasks correctly. The most common are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Endless task loops&lt;/li&gt;
+&lt;li&gt;Models unable to fix environment issues&lt;/li&gt;
+&lt;li&gt;Models losing context in the second half of a long task&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="a-few-lessons-from-my-use"&gt;A Few Lessons from My Use&lt;/h2&gt;
+&lt;p&gt;For my own use, I often pair Cline with GitHub Copilot. What I really like about Cline is its &lt;code&gt;Checkpoint restore&lt;/code&gt; feature, which lets you re-edit the prompt and resume execution at the point where something went wrong. This lets me call different models for the same task and observe how each handles the problem.&lt;/p&gt;
+&lt;p&gt;For planning (Plan), I usually use Deepseek-R1, Gemini 2.0 Flash Thinking, or Claude 3.7. Among these, only Claude 3.7 can produce a relatively accurate plan; the others are more or less prone to going off-track. For example, Deepseek-R1 likes to do extra work—when you ask it to translate Chinese, it calls an MCP translation service instead of translating it itself.&lt;/p&gt;
+&lt;p&gt;From a cost perspective, Gemini 2.0 Flash Thinking is a fast and economical model for simple problems. For complex problems, going straight to Claude 3.7 may be easier to keep costs under control.&lt;/p&gt;
+&lt;p&gt;For task execution (Act), Deepseek-V3 is very inconsistent—it often gets stuck in loops or loses context. Claude is too expensive, while Gemini 2.0 Flash is a relatively accurate and cost-effective model. The domestic Qwen series doesn&amp;rsquo;t fully support Function Calling, and Cline doesn&amp;rsquo;t support them either, so I can&amp;rsquo;t test them for now.&lt;/p&gt;
+&lt;h2 id="tackling-the-tricky-problems-of-ai-coding"&gt;Tackling the Tricky Problems of AI Coding&lt;/h2&gt;
+&lt;p&gt;I recently read the article &lt;a href="https://ezyang.github.io/ai-blindspots/"&gt;AI Blindspots&lt;/a&gt;. The author systematically catalogs the problems encountered in AI programming and shares his thinking. It was very inspiring to me. I used an Agent to translate it into Chinese and then polished it by hand—you can read it here: &lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5"&gt;AI Programming Blindspots&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In summary, the three key points to solving AI problems are still: more accurate prompts, more complete context, and a smaller problem scope.&lt;/p&gt;
+&lt;p&gt;I believe that as technology evolves, programming paradigms will undergo earth-shaking changes. If refactoring becomes this easy, should Martin Fowler&amp;rsquo;s &lt;em&gt;Refactoring&lt;/em&gt; get a new edition for the AI era? If documentation is no longer read by people but fed to models as context, what should documentation look like? Will providing a vectorized documentation interface for large models to call become the new normal in future programming frameworks?&lt;/p&gt;
+&lt;p&gt;I look forward to the future.&lt;/p&gt;</description></item></channel></rss>

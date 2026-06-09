@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Essays on Steve Sun</title><link>https://sund.site/en/categories/essays/</link><description>Recent content in Essays on Steve Sun</description><generator>Hugo</generator><language>en</language><copyright>© 2013-2026, Steve Sun</copyright><lastBuildDate>Mon, 03 Nov 2025 22:07:40 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/en/categories/essays/index.xml" rel="self" type="application/rss+xml"/><item><title>The Externalized J-Type</title><link>https://sund.site/en/posts/2025/ext-judging/</link><pubDate>Mon, 03 Nov 2025 22:07:40 +0800</pubDate><guid>https://sund.site/en/posts/2025/ext-judging/</guid><description>&lt;p&gt;In life, there&amp;rsquo;s a kind of person who likes to urge others to make plans. As long as something is still up in the air, they feel uneasy.&lt;/p&gt;
+&lt;p&gt;These people aren&amp;rsquo;t necessarily company bosses, nor are they necessarily dominant in personality. They just enjoy asking &amp;ldquo;When can we decide this?&amp;rdquo; or &amp;ldquo;What&amp;rsquo;s the plan for the weekend—where are we going, really?&amp;quot;—seeking certainty from the outside world in that kind of way.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s tentatively call these people the &amp;ldquo;Externalized J-Type&amp;rdquo; or &amp;ldquo;Ex-J.&amp;rdquo; A J-Type in MBTI is someone with a Judging personality, who likes to predict the future and loves making plans. The opposite is the P-Type, who is free-spirited and easygoing.&lt;/p&gt;
+&lt;p&gt;An Ex-J is someone who externalizes this J-trait onto others—a J-Type who assimilates other people into becoming J-Types themselves.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The Ex-J keeps certainty for themselves and passes anxiety out to the world.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;From my observation, these people usually have a strong need for control. A need for control can grow inward—for example, keeping work and life neatly organized, full of a sense of order. It can also grow outward—for example, trying to manipulate others and demanding they stay in tight alignment with you.&lt;/p&gt;
+&lt;p&gt;Ex-Js are the outward-spilling type, but most of the time their need for control grows inward. Once their internal need for control gets too much, it inadvertently spills onto others. When their J-desires fall through and life and work can&amp;rsquo;t be neatly organized, they offload the negative emotions onto the person they see as the source of the uncertainty, and a sense of pressure radiates out.&lt;/p&gt;
+&lt;p&gt;Recently, in both my work and personal life, I&amp;rsquo;ve run into two such people. After reflecting, I also discovered through my own self-audit mechanism (the I-Type&amp;rsquo;s inner search engine) that I&amp;rsquo;ve inadvertently become an Ex-J myself from time to time.&lt;/p&gt;
+&lt;p&gt;How do you avoid becoming an Ex-J?&lt;/p&gt;
+&lt;p&gt;I think the first principle is: don&amp;rsquo;t keep asking the same question. Working at a foreign company, when I communicate with European colleagues, I notice a big difference from Chinese colleagues: beyond &amp;ldquo;yes&amp;rdquo; and &amp;ldquo;no,&amp;rdquo; they have a third response—&amp;ldquo;no response.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;If they haven&amp;rsquo;t figured it out, they have the right not to respond. Not responding is itself a response.&lt;/strong&gt; It means &amp;ldquo;I haven&amp;rsquo;t decided, let me think about it and get back to you.&amp;rdquo; But in our language culture, not responding comes across as impolite, lacking confidence&amp;hellip;&lt;/p&gt;
+&lt;p&gt;You can see it from our exam-oriented education system too—we mass-produce J-Types, and some of them gradually degenerate into more extreme Ex-Js, drifting toward the dark side of harming society (just kidding, it&amp;rsquo;s not actually that serious).&lt;/p&gt;
+&lt;p&gt;So, when someone doesn&amp;rsquo;t respond, treat it as another form of response. Then you won&amp;rsquo;t be an Ex-J.&lt;/p&gt;
+&lt;p&gt;How do you communicate with an Ex-J?&lt;/p&gt;
+&lt;p&gt;I don&amp;rsquo;t know the answer either, so I humbly went to Chat for advice and asked GPT. The answer is: it takes two steps. First, soothe the other person&amp;rsquo;s emotions and express understanding. Then use vague steps in place of precise conclusions—for example, if you can&amp;rsquo;t make a plan, just say you can&amp;rsquo;t decide right now, but if X happens, here&amp;rsquo;s how we can respond. Let them see your thought process.&lt;/p&gt;
+&lt;p&gt;This way, by using rough steps or fuzzy time points instead of exact answers, you ease their need for control without letting them pull you into their pace.&lt;/p&gt;
+&lt;p&gt;Sigh, being a person is exhausting. Finally, I hope you become a P-Type. And if you really can&amp;rsquo;t, please promise me—at least be a good J-Type, okay?&lt;/p&gt;</description></item><item><title>Omarchy: Some Setup Tweaks for a Chinese-Language Environment</title><link>https://sund.site/en/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/en/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;I recently installed DHH&amp;rsquo;s &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt; (an Arch Linux distribution based on the Hyprland desktop environment) on my home computer.&lt;/p&gt;
+&lt;p&gt;After installation, there were a few configuration tweaks I needed to make. I&amp;rsquo;m recording them in this post for reference.&lt;/p&gt;
+&lt;h2 id="4k-monitor-settings"&gt;4K Monitor Settings&lt;/h2&gt;
+&lt;p&gt;Modify the system menu Setup - Monitor, and set the parameters based on your own display&amp;rsquo;s resolution, following the comments in the configuration file. For example, my 27-inch 4K display:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;env = GDK_SCALE,1.75
+monitor=,preferred,auto,1.875
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Add additional scaling settings for QT applications:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;env = QT_AUTO_SCREEN_SCALE_FACTOR,1
+env = QT_SCALE_FACTOR,1.75
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="chinese-input-method"&gt;Chinese Input Method&lt;/h2&gt;
+&lt;p&gt;Refer to &lt;a href="https://manateelazycat.github.io/2024/12/17/fcitx-best-config/"&gt;Fcitx Best Configuration Practices&lt;/a&gt;. The section titled &amp;ldquo;Installing emacs-rime&amp;rdquo; in that article can be skipped if you don&amp;rsquo;t use emacs.&lt;/p&gt;
+&lt;h2 id="terminal-font-settings"&gt;Terminal Font Settings&lt;/h2&gt;
+&lt;p&gt;The default system fonts aren&amp;rsquo;t very friendly to Chinese in the terminal. I like the &lt;code&gt;Maple Mono&lt;/code&gt; font, which you can install via the AUR package &lt;code&gt;maple-mono-nf-cn&lt;/code&gt;. Then modify the font settings in &lt;code&gt;~/.config/alacritty/alacritty.toml&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;font&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;normal&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;family&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;bold&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;family&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;italic&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;family&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Maple Mono NF CN&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;size&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="disable-numlock-by-default"&gt;Disable NumLock by Default&lt;/h2&gt;
+&lt;p&gt;Omarchy enables NumLock on the numpad by default after installation. You can change this in the system menu Setup - Input:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;numlock_by_default = false
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="a-few-neovim-settings"&gt;A Few Neovim Settings&lt;/h2&gt;
+&lt;p&gt;Neovim uses Lazyvim by default. I added a few lines to &lt;code&gt;~/.config/nvim/lua/config/options.lua&lt;/code&gt;—feel free to pick what you need based on the comments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-lua" data-lang="lua"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;-- Fix the issue of Chinese characters showing underlines in the terminal&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;vim.opt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;spelllang&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;en&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;cjk&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;-- Disable syntax checking in markdown files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;vim.api&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nvim_create_autocmd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;FileType&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;markdown&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;callback&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;vim.diagnostic&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;enable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;false&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kr"&gt;end&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then create &lt;code&gt;~/.config/nvim/lua/plugins/flush.lua&lt;/code&gt; with the following content to restore Vim&amp;rsquo;s default behavior for the &lt;code&gt;s&lt;/code&gt; key in normal mode:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-lua" data-lang="lua"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kr"&gt;return&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="s2"&gt;&amp;#34;folke/flash.nvim&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;keys&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;s&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;n&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;x&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;o&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="kc"&gt;false&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>What to Do When Your Linux System Hits a Kernel Panic</title><link>https://sund.site/en/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/en/posts/2025/retro-kernel-panic/</guid><description>&lt;p&gt;When I turned on my Beelink Ser6 at home one evening, I was greeted with a Kernel Panic 😱.&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://fastly.jsdelivr.net/gh/stevedsun/blog-img/kernel-panic-screenshot.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;A lot of people panic at this point, but there&amp;rsquo;s really no need. All you need is a LiveUSB boot stick to fix it.&lt;/p&gt;
+&lt;p&gt;However, my Ubuntu install had been running stably for over a year and I didn&amp;rsquo;t have a LiveUSB lying around at home. Helplessly, I dug out an old computer that had been gathering dust for years, and spent half an hour guessing the login password before finally getting in&amp;hellip; then downloaded the Ubuntu ISO and made a LiveUSB.&lt;/p&gt;
+&lt;p&gt;Below is the troubleshooting process I used after booting from the LiveUSB and entering Try Ubuntu&amp;rsquo;s Terminal, for your reference.&lt;/p&gt;
+&lt;h2 id="1-find-the-root-partition-and-efi-partition"&gt;1. Find the Root Partition and EFI Partition&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;lsblk -f
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This returns something like the following, where the &lt;code&gt;vfat&lt;/code&gt; format is the EFI partition and &lt;code&gt;ext4&lt;/code&gt; is the system root partition:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;NAME FSTYPE LABEL UUID MOUNTPOINT
+nvme0n1 
+├─nvme0n1p1 vfat 1234-5678 /boot/efi
+└─nvme0n1p2 ext4 955b06a9-983d-4e04-b2ef-60b559db46e6 
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="2-use-fsck-to-repair-partition-errors"&gt;2. Use &lt;code&gt;fsck&lt;/code&gt; to Repair Partition Errors&lt;/h2&gt;
+&lt;p&gt;Note: in this step and beyond, the partition path needs to be replaced with the one from your system found in the previous step.&lt;/p&gt;
+&lt;p&gt;First, repair the root partition:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo fsck -f /dev/nvme0n1p2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When prompted, enter &lt;code&gt;y&lt;/code&gt; to allow, or &lt;code&gt;a&lt;/code&gt; to allow all. I discovered several errors at this step and successfully fixed them.&lt;/p&gt;
+&lt;p&gt;Next, check and repair the EFI partition:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo fsck -f /dev/nvme0n1p1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;At this step I got the following prompt:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;there are different between boot sector and it&amp;#39;s backup：
+1) Copy original to backup
+2) Copy backup to original
+3) No action
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Based on what I found online, if the system can boot into GRUB normally, the original sector is good, so I chose &lt;code&gt;1) Copy original to backup&lt;/code&gt; to copy the original boot sector to the backup sector.&lt;/p&gt;
+&lt;h2 id="3-mount-the-original-system-and-rebuild-initramfs"&gt;3. Mount the Original System and Rebuild initramfs&lt;/h2&gt;
+&lt;p&gt;In this step, mount the original system&amp;rsquo;s root partition into the current LiveUSB system. To run the necessary commands, also bind-mount four key directories from the LiveUSB system onto the original system.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mkdir -p /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount /dev/nvme0n1p2 /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount --bind /dev /mnt/ubuntu/dev
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount --bind /proc /mnt/ubuntu/proc
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount --bind /sys /mnt/ubuntu/sys
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount --bind /run /mnt/ubuntu/run
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo mount /dev/nvme0n1p1 /mnt/ubuntu/boot/efi
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After this, you can switch into the original system&amp;rsquo;s root shell:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo chroot /mnt/ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then install GRUB and regenerate the initramfs boot image for the system kernel. Adjust the arguments to &lt;code&gt;grub-install&lt;/code&gt; to match your system.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;grub-install --target&lt;span class="o"&gt;=&lt;/span&gt;x86_64-efi --efi-directory&lt;span class="o"&gt;=&lt;/span&gt;/boot/efi --bootloader-id&lt;span class="o"&gt;=&lt;/span&gt;ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;update-initramfs -c -k all
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;update-grub
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, exit the original system&amp;rsquo;s root shell and reboot:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo reboot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Pull out the USB stick and boot into the original system—I was able to log in normally at this point.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Don&amp;rsquo;t panic.&lt;/li&gt;
+&lt;li&gt;Keep a LiveUSB at home.&lt;/li&gt;
+&lt;li&gt;Use the &lt;code&gt;fsck&lt;/code&gt; command to repair partition errors.&lt;/li&gt;
+&lt;li&gt;Use &lt;code&gt;mount&lt;/code&gt; to bind the necessary filesystems onto the original system, enter it, and rebuild initramfs.&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>How to Get Along with the 'Old Guard'</title><link>https://sund.site/en/posts/2025/how-to-deal-with-elders/</link><pubDate>Sun, 13 Jul 2025 12:40:24 +0800</pubDate><guid>https://sund.site/en/posts/2025/how-to-deal-with-elders/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/how-to-deal-with-elders/HollywoodVices.jpg" alt="Thou Shalt Not" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;Thou Shalt Not&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;Every day, we inevitably have to deal with some &amp;ldquo;old guard&amp;rdquo;—people with a bit more seniority (not necessarily referring to age). Most of us, before retirement, have to live in a world where the rules of the game are set by the old guard.&lt;/p&gt;
+&lt;p&gt;How do you navigate such a world? Here&amp;rsquo;s one reference, not advice—please don&amp;rsquo;t imitate.&lt;/p&gt;
+&lt;p&gt;In 1934, the Motion Picture Producers and Distributors of America introduced the most stringent set of film production rules in history—the &lt;strong&gt;Hays Code&lt;/strong&gt;. The code was intended to &lt;strong&gt;raise the moral standards of audiences&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&amp;ldquo;Prohibit nudity, suggestive content, and lustful kisses on screen. Prohibit depictions of religion, drugs, interracial romance, and revenge plots.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;Just as intended, the code promoted the development of the Hollywood film industry&amp;hellip; in a different form.&lt;/p&gt;
+&lt;p&gt;Before long, Hollywood directors discovered that &lt;strong&gt;these strict prohibitions could help them sell tickets, as long as they cleverly evaded the letter of the rules&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;The facts proved that audiences did, in fact, still love watching naughty things. The young guns of Hollywood, caught between compliance and defiance, chose to skirt the edges.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Observe its letter and violate its spirit as much as possible.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Comply with the rules in form, and deviate from their spirit as much as possible.&lt;/strong&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;This is a philosophy of compromise with reality, yet not entirely a compromise.&lt;/p&gt;
+&lt;p&gt;Paramount photographer Whitey Schafer shot a large satirical photograph (the header image for this post) titled &amp;ldquo;Thou Shalt Not,&amp;rdquo; depicting &amp;ldquo;The Ten Things a Producer Must Absolutely Never Do&amp;rdquo;—and then depicted all ten things within the frame.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Law Defeated&lt;/li&gt;
+&lt;li&gt;Inside of Thigh&lt;/li&gt;
+&lt;li&gt;Lace Lingerie&lt;/li&gt;
+&lt;li&gt;Dead Man&lt;/li&gt;
+&lt;li&gt;Narcotics&lt;/li&gt;
+&lt;li&gt;Drinking&lt;/li&gt;
+&lt;li&gt;Exposed Bosom&lt;/li&gt;
+&lt;li&gt;Gambling&lt;/li&gt;
+&lt;li&gt;Pointing Gun&lt;/li&gt;
+&lt;li&gt;Tommy Gun&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Years later, Hollywood scrapped these regulations, replacing them with a more relaxed film rating system. The photo became a classic work of art satirizing that era.&lt;/p&gt;
+&lt;p&gt;Returning to the original question: in a world where the old guard sets the rules, how do you take care of yourself?&lt;/p&gt;
+&lt;p&gt;The answer is: play &lt;a href="https://book.douban.com/subject/25742296/"&gt;an infinite game&lt;/a&gt; (?).&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Finite games are played within boundaries. Infinite games are played with boundaries.&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>After Reading This Book, Communication Becomes a Process You Can Follow</title><link>https://sund.site/en/posts/2025/super-communicator/</link><pubDate>Tue, 13 May 2025 13:49:37 +0800</pubDate><guid>https://sund.site/en/posts/2025/super-communicator/</guid><description>&lt;p&gt;The ability to communicate can determine whether a person is happy. In an environment where we get along well with those around us, we feel included and understood. The opposite makes us miserable: we&amp;rsquo;re full of goodwill, so why does the conversation always lead to conflict and disagreement? Where exactly is the problem?&lt;/p&gt;
+&lt;p&gt;The book &lt;em&gt;Supercommunicators&lt;/em&gt; has given me a lot of inspiration lately, and I&amp;rsquo;d like to share some communication tips with you. Unlike books that emphasize empathy and negotiation techniques, it offers a deeper insight: &lt;strong&gt;the purpose of conversation is to understand how the people around us see the world, while helping them understand our own thinking.&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="deep-connections-form-only-when-conversation-reaches-the-level-of-personal-feelings"&gt;Deep Connections Form Only When Conversation Reaches the Level of Personal Feelings&lt;/h2&gt;
+&lt;p&gt;Harvard once ran a study on why some meetings can ease the conflicts between participants and build consensus, while others allow participants to build deep connections. The researchers found that these kinds of conversations usually have a high-centrality participant—the &amp;ldquo;supercommunicator&amp;rdquo; from the title—who has the following traits:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;They listen carefully to the other person&amp;rsquo;s words and what&amp;rsquo;s left unsaid.&lt;/li&gt;
+&lt;li&gt;They recognize and respond to the other person&amp;rsquo;s emotions.&lt;/li&gt;
+&lt;li&gt;They ask questions and guide the other person to share their inner feelings.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Furthermore, the study found that the distrust and lack of understanding between people often stem from things like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The conversation stays on the surface; its purpose is vague, or the speaker&amp;rsquo;s true inner thoughts go unexpressed.&lt;/li&gt;
+&lt;li&gt;Emotions go unacknowledged.&lt;/li&gt;
+&lt;li&gt;Identity doesn&amp;rsquo;t receive recognition.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Therefore, to communicate deeply, people usually need to move from surface-level factual questions toward exchanges that focus on inner feelings, viewpoints, life experiences, values, beliefs, and so on. This is what the author calls the learning conversation.&lt;/p&gt;
+&lt;h2 id="learning-conversations"&gt;Learning Conversations&lt;/h2&gt;
+&lt;p&gt;The author proposes the concept of the learning conversation, arguing that a deep communication process revolves around three types of conversation:&lt;/p&gt;
+&lt;p&gt;practical conversation, emotional conversation, and social conversation.&lt;/p&gt;
+&lt;h3 id="practical-conversation"&gt;Practical Conversation&lt;/h3&gt;
+&lt;p&gt;A practical conversation is one aimed at negotiating decisions, or in which the parties participate in order to reach a consensus.&lt;/p&gt;
+&lt;p&gt;These conversations usually follow a rational attitude and a &amp;ldquo;cost-benefit&amp;rdquo; logic. They&amp;rsquo;re the most common kind in workplace meetings, negotiations, and family decision-making. The tricky part is this: although everyone knows to be rational and objective, disagreements often arise over values.&lt;/p&gt;
+&lt;p&gt;For example, you know your parents have your best interests at heart, but some of their expectations are simply impossible for you to fulfill. Or at work, you make a suggestion to a colleague, but they refuse to take it on board because of their past work experience—even though they have no legitimate reason to.&lt;/p&gt;
+&lt;p&gt;At times like these, the way of thinking has to shift from &amp;ldquo;cost-benefit logic&amp;rdquo; to &amp;ldquo;similarity logic.&amp;rdquo; That is, we need to start from lived experience and values, find the similarities we share, and bridge the gap that way.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;To change someone&amp;rsquo;s mind, you have to reach their self-image, help them see the value that comes from changing their view, and let them feel the self-respect that comes from making the right call.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Values are built up over a long period of personal experience and are very hard to change. People feel their beliefs collapsing and their self-esteem being damaged. The key to communication is to start from the other person&amp;rsquo;s underlying values, get them to recognize the value that comes with change, and hand the power of decision back to them.&lt;/p&gt;
+&lt;p&gt;Here are some methods the author suggests you can draw on in conversation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Prepare a topic bank in advance, so that when conversation falls into silence you can pull out a topic and boost your confidence.&lt;/li&gt;
+&lt;li&gt;When you identify a conversation as practical, first use open-ended questions to invite the other person to share their feelings, values, and beliefs.&lt;/li&gt;
+&lt;li&gt;Invite the other person to make a judgment; ask about their experiences.&lt;/li&gt;
+&lt;li&gt;If the other person changes the subject, that means they want to expand the scope of the conversation—encourage them and listen for what&amp;rsquo;s left unsaid.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Imagine a conflict over a family decision. When your parents&amp;rsquo; values are something you can&amp;rsquo;t accept, you can ask about their experiences and beliefs (what would they have done in the past when something similar came up), share your own experiences and feelings, and find the common ground (for example, the shared wish that the family will be better off). Then break through the barrier (if your parents were in your shoes, what would they do?).&lt;/p&gt;
+&lt;p&gt;Even if you can&amp;rsquo;t fully resolve the disagreement in one go, you can still come away from a deep exchange with more understanding and a closer bond.&lt;/p&gt;
+&lt;h3 id="emotional-conversation"&gt;Emotional Conversation&lt;/h3&gt;
+&lt;p&gt;An emotional conversation usually arises when one party wants their feelings to be acknowledged.&lt;/p&gt;
+&lt;p&gt;A common thinking mismatch in everyday life: your girlfriend is sharing her feelings, and you jump in to analyze the problem.&lt;/p&gt;
+&lt;p&gt;Emotional conversation is not about finding a solution or reaching agreement. The purpose of emotional conversation is to trigger emotional contagion. One party feels the other person&amp;rsquo;s vulnerability and responds with their own vulnerability, building trust, understanding, and emotional connection.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The hard part of emotional conversation is recognizing, from the small emotional signals, that this is an emotional conversation, and giving an appropriate response.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;We always hear people talk about empathy and putting yourself in someone else&amp;rsquo;s shoes. In practice, this is very hard. When we have different life experiences from the other person and are in a different situation, it&amp;rsquo;s difficult to truly take their perspective. So the first step into an emotional conversation is to ask questions—use questions to open the other person&amp;rsquo;s heart. &lt;strong&gt;Start with surface-level, safe factual questions, and gradually move toward their beliefs, values, meaning, and lived experience.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;When the other person is willing to share their true inner thoughts, the second step is to give a sufficient response. What does &amp;ldquo;sufficient&amp;rdquo; mean? The emotional energy of your response should match theirs—not too much and not too little. Bring both parties into a resonance of emotional expression. Avoid one-way output; take turns expressing and responding to each other. A classic mistake: when the other person shares a sad experience from their past, in an effort to express understanding, we go on and on about our own experience and steer the conversation back to ourselves. The other person&amp;rsquo;s emotions have nowhere to land. Always aim for &lt;strong&gt;sustained, two-way, deep, and personal expression.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The final step is to build a &amp;ldquo;loop of understanding.&amp;rdquo; After listening, ask whether you&amp;rsquo;ve understood them correctly. Don&amp;rsquo;t try to control the direction and tone of the conversation, and don&amp;rsquo;t try to control the other person.&lt;/p&gt;
+&lt;p&gt;In intimate relationships, struggles over control are common. When one party realizes they can&amp;rsquo;t control something that matters to them, they get angry and may even blame the other. Often this inner desire for control hides in every small detail of life, and mishandling it leads to both parties digging in, triggering a chain reaction called &amp;ldquo;kitchen-sinking&amp;rdquo; that turns into destructive arguing.&lt;/p&gt;
+&lt;p&gt;The book shares a study: happy families and unhappy families alike often argue about internal control, but happy families keep the conflict within reasonable bounds. Their members don&amp;rsquo;t try to control each other—they control themselves, the environment they&amp;rsquo;re in, or the boundaries of the conflict. Then, through conversation, they find things both sides can control together.&lt;/p&gt;
+&lt;p&gt;For example, in a &amp;ldquo;who should do the chores&amp;rdquo; argument, we can control ourselves (don&amp;rsquo;t get angry or blame the other person), control the environment (bring it up when both people are in a good mood), control the bounds of the conflict (don&amp;rsquo;t attack each other&amp;rsquo;s lifestyle habits), and through negotiation find things both sides can work together to control.&lt;/p&gt;
+&lt;p&gt;The author also offers a few small tips:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Be polite.&lt;/li&gt;
+&lt;li&gt;Be wary of sarcasm.&lt;/li&gt;
+&lt;li&gt;Express thanks, greetings, and apologies more often.&lt;/li&gt;
+&lt;li&gt;Avoid making criticism in public.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="social-conversation"&gt;Social Conversation&lt;/h3&gt;
+&lt;p&gt;A social conversation is one in which the participants seek identity recognition and pay attention to social impact. When a doctor explains to a patient why a treatment is necessary using professional knowledge, the explanation is often less effective than if they stepped into the role of a father, a family member, or a friend. That&amp;rsquo;s because the patient&amp;rsquo;s worries usually revolve around the impact on their family. So if in this kind of conversation, you can find the role that matches the other person&amp;rsquo;s deeper concerns, communication becomes much more effective.&lt;/p&gt;
+&lt;p&gt;The hard part of social conversation is finding the other person&amp;rsquo;s deep-seated fears, doubts, and concerns. Each of us has many identities. When talking with others, you have to keep in mind the diversity and complexity of identity, and recognize when to switch roles in order to be on the same channel as the other person.&lt;/p&gt;
+&lt;p&gt;In a diverse society, people tend to lump others together by background, region, gender, and so on. The key to breaking down the divide is to notice the diversity of identity, to recognize that we and they share social and family roles—father, son, and so on—and to avoid vaguely categorizing others or overstating the impact of any one identity trait.&lt;/p&gt;
+&lt;p&gt;When talking with people who hold different views and beliefs, the purpose is more often mutual understanding—sharing experiences and viewpoints—rather than persuading them to change their minds.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;In a recent chat with a friend, I had this realization: a mature person can&amp;rsquo;t stop at &amp;ldquo;respect but don&amp;rsquo;t understand&amp;rdquo; or at &amp;ldquo;who&amp;rsquo;s right and who&amp;rsquo;s wrong.&amp;rdquo; Even if we can&amp;rsquo;t resolve most of our conflicts and misunderstandings, we can still get to &amp;ldquo;I don&amp;rsquo;t entirely agree, but I understand why you did it.&amp;rdquo; Understanding people who see things differently also helps us avoid internal friction and become more open-minded.&lt;/p&gt;
+&lt;p&gt;Looking back at the three types of conversation above: in everyday exchanges, we can switch between different ways of thinking by distinguishing the type of conversation, and gradually move from open-ended topics into exchanges at the level of feeling, building deeper connections with others. Put it into practice, and your life and work will both benefit.&lt;/p&gt;</description></item><item><title>Hand on Enablement</title><link>https://sund.site/en/posts/2025/hand-on-enablement/</link><pubDate>Tue, 29 Apr 2025 10:49:39 +0800</pubDate><guid>https://sund.site/en/posts/2025/hand-on-enablement/</guid><description>&lt;p&gt;I&amp;rsquo;ve been reading &lt;em&gt;The Wharton School&amp;rsquo;s Most Popular Negotiation Course&lt;/em&gt; lately. There are two practical tips you can pick up quickly:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Before doing something you&amp;rsquo;re not sure about, find someone to role-play it with you.&lt;/li&gt;
+&lt;li&gt;Move fast, and don&amp;rsquo;t let anxiety take over.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="the-importance-of-rehearsal"&gt;The Importance of Rehearsal&lt;/h2&gt;
+&lt;p&gt;Practicing with a friend or colleague before an interview or negotiation lets you run through interpersonal scenarios from different perspectives. It can roughly eliminate the 20% of mistakes that come from personal blind spots.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The most important thing in dealing with people isn&amp;rsquo;t expertise—it&amp;rsquo;s perspective.&lt;/strong&gt; The more experienced someone is in a given domain, the more likely they are to overlook the importance of perspective. Studies show that experienced people are particularly unwilling to listen to others&amp;rsquo; views. Those who are good at humbling themselves tend to find more opportunities in social settings—they&amp;rsquo;re more willing to listen, and therefore better understand the other party&amp;rsquo;s needs.&lt;/p&gt;
+&lt;h2 id="jump-into-the-stream-of-information-and-learn-to-swim"&gt;Jump into the Stream of Information and Learn to Swim&lt;/h2&gt;
+&lt;p&gt;Standing on the shore watching won&amp;rsquo;t teach you to swim; sometimes you have to be brave enough to dive in. Often, what you&amp;rsquo;re missing isn&amp;rsquo;t information—it&amp;rsquo;s the action of jumping into the flow.&lt;/p&gt;
+&lt;p&gt;For example, large companies only want to hire people with work experience. The way a company works is a complex flow of information between people, and the best way to understand it is to participate. For a new graduate, the first task is to use internships, freelance gigs, and other opportunities to get involved—not to take more courses.&lt;/p&gt;
+&lt;p&gt;Hand on enablement. The nature of some anxiety is a lack of action. The internet has made people habitually collect information instead of taking action.&lt;/p&gt;
+&lt;p&gt;I was recently going back and forth on whether to buy a car for getting around. I realized the reason I couldn&amp;rsquo;t decide was that I lacked opportunities to drive, and didn&amp;rsquo;t understand my own needs. So the question &amp;ldquo;should I buy a car?&amp;rdquo; could be reframed for me as &amp;ldquo;create conditions to drive.&amp;rdquo; The next step is to rent a car and figure out my own needs.&lt;/p&gt;
+&lt;p&gt;Moving fast also gives you a fresh perspective. You&amp;rsquo;ll find that this shares something in common with the rehearsal we talked about earlier: &lt;strong&gt;a shallow understanding from many perspectives often beats deep research from a single one.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s do it.&lt;/p&gt;</description></item><item><title>Breaking In</title><link>https://sund.site/en/posts/2024/symbiosis/</link><pubDate>Mon, 16 Sep 2024 23:31:14 +0800</pubDate><guid>https://sund.site/en/posts/2024/symbiosis/</guid><description>&lt;p&gt;The other day I bought a road bike. The shop owner said a new bicycle needs to be ridden for a while — it has to be broken in slowly.&lt;/p&gt;
+&lt;p&gt;I don&amp;rsquo;t know whether the &amp;ldquo;breaking in&amp;rdquo; he meant was the rider adapting to the bike, or the bike adapting to the rider. Maybe both.&lt;/p&gt;
+&lt;p&gt;It reminded me of this passage from a book:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I have always spoken of everything mechanical in a highly rational way, because a machine is parts, is relations, is analysis, is combination, is understanding how things work. But it is never really here. It is always elsewhere, and we think that elsewhere is here, when in fact it is thousands of miles away. That is the nature of a machine.
+— Zen and the Art of Motorcycle Maintenance&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;When a rider mounts an unfamiliar bike, the bicycle&amp;rsquo;s mechanical structure is also slowly adapting to the rider: the tightness of the bolts, the meshing of the gears, the lubrication of the pivots — all those countless &amp;ldquo;parameters&amp;rdquo; of the bicycle are reshaped together with the rider. The more you ride, the better the bike fits you. At the same time, the rider&amp;rsquo;s bones and muscles are slowly adapting to the bike.&lt;/p&gt;
+&lt;p&gt;That, I think, is what we call breaking in.&lt;/p&gt;
+&lt;p&gt;A few months ago &lt;a href="https://world.hey.com/dhh/why-don-t-more-people-use-linux-33b75f53"&gt;DHH&lt;/a&gt; started a project where he hacked together an open-source tool that turns a Linux box into a keyboard-shortcut-heavy, productivity-maxed programming environment with a single command. Some programmers abroad criticized him, saying he was just packaging his own habits as an open-source project and making everyone learn them. But DHH calls this design philosophy &amp;ldquo;Omakase&amp;rdquo; (お任せ) — &amp;ldquo;I&amp;rsquo;ll leave it to you&amp;rdquo; — a Japanese restaurant tradition where the diner hands the choice entirely to the chef. I call it a chef-grade ready meal.&lt;/p&gt;
+&lt;p&gt;Starting from zero and tuning everything yourself is too high a barrier for most people. So perhaps following an expert&amp;rsquo;s lead and gradually breaking in something of your own is not such a bad path.&lt;/p&gt;
+&lt;p&gt;DHH is not only the author of the well-known open-source framework Ruby on Rails, he is also a writer and a race-car driver. Maybe, as someone with multiple identities, he has a desire to control his tools and environment — or, rather, a desire to coexist with them.&lt;/p&gt;
+&lt;p&gt;To coexist with something, it first has to be complex enough. It has to require you to understand it, to feel it. If something is simple, it has too few &amp;ldquo;parameters&amp;rdquo; to be fitted to you; you can only be stupidly fitted to it, adapting to it.&lt;/p&gt;
+&lt;p&gt;To bring something to the state you want, you have to go through a long journey called breaking in. Along the way, you see scenery different from what you expected, and the original goal becomes less important. Endless possibilities wait ahead.&lt;/p&gt;
+&lt;p&gt;That is the ideal state. Stop obsessing over perfection — perfection is a balance, and the journey itself is the destination.&lt;/p&gt;
+&lt;p&gt;Friends, train your endurance like a rider and keep breaking in everything around you, because breaking in is the whole meaning of life.&lt;/p&gt;</description></item><item><title>Ricoh GR II: My Experience</title><link>https://sund.site/en/posts/2024/ricoh_gr2_sharing/</link><pubDate>Fri, 17 May 2024 23:07:29 +0800</pubDate><guid>https://sund.site/en/posts/2024/ricoh_gr2_sharing/</guid><description>&lt;p&gt;I have owned the GR II for many years. A few years ago I wrote a post explaining the &lt;a href="https://sund.site/posts/2019/ricoh-gr2-settings/"&gt;Ricoh GR II settings&lt;/a&gt; as a beginner sharing what each parameter does. Today&amp;rsquo;s post is about what I have learned after years of use.&lt;/p&gt;
+&lt;h2 id="in-camera-cropping"&gt;In-Camera Cropping&lt;/h2&gt;
+&lt;p&gt;The GR II is a 28mm camera, and for the average street-shooter the biggest pain point is often missing the right composition. The 28mm advantage is a wider field of view that captures more context, but the trade-off is that it tends to include too many distracting elements in the frame.&lt;/p&gt;
+&lt;p&gt;Fortunately, the GR II supports in-camera cropping, which can crop the 28mm down to a 35mm or 47mm equivalent. This makes street-photography composition much more flexible (at the cost of some image quality).&lt;/p&gt;
+&lt;h2 id="aperture-use-cases"&gt;Aperture Use Cases&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;F2.8 — people and scenes indoors&lt;/li&gt;
+&lt;li&gt;F4 — still life&lt;/li&gt;
+&lt;li&gt;F5.6 — a balanced choice&lt;/li&gt;
+&lt;li&gt;F8 — the sharpest aperture setting&lt;/li&gt;
+&lt;li&gt;F11 — beautiful sunstars&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="custom-profiles"&gt;Custom Profiles&lt;/h2&gt;
+&lt;h3 id="fuji-film-style"&gt;FUJI Film Style&lt;/h3&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%283%29.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Image Control: Positive Film. Saturation: 4, Contrast: 5, Vibrancy: 6&lt;/li&gt;
+&lt;li&gt;White Balance: Multi-Pattern AWB&lt;/li&gt;
+&lt;li&gt;White Balance Compensation: A: 3, G: 4&lt;/li&gt;
+&lt;li&gt;Exposure Compensation: -1.0 ~ -1.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This profile imitates the look of Fuji film. It has high contrast and vibrancy, with a subtle green tone.&lt;/p&gt;
+&lt;h3 id="everyday-cool-blue"&gt;Everyday Cool Blue&lt;/h3&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%282%29.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Image Control: Positive Film. Saturation: 7, Contrast: 3, Vibrancy: 7&lt;/li&gt;
+&lt;li&gt;White Balance: Multi-Pattern AWB&lt;/li&gt;
+&lt;li&gt;White Balance Compensation: B: 7, M: 0&lt;/li&gt;
+&lt;li&gt;Exposure Compensation: -1.0 ~ -1.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This profile gives a clean, calm blue cast. It suits everyday subjects with cool tones.&lt;/p&gt;
+&lt;h3 id="natural--fresh"&gt;Natural &amp;amp; Fresh&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Image Control: Positive Film. Saturation: 2, Contrast: 4, Vibrancy: 3&lt;/li&gt;
+&lt;li&gt;White Balance: Multi-Pattern AWB&lt;/li&gt;
+&lt;li&gt;White Balance Compensation: B: 8, M: 0&lt;/li&gt;
+&lt;li&gt;Exposure Compensation: -1.0 ~ -1.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Good for low-contrast, fresh-looking travel shots.&lt;/p&gt;
+&lt;h3 id="minimalist--cold"&gt;Minimalist / Cold&lt;/h3&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%284%29.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Image Control: Soft. Saturation: 9, Contrast: 5, Vibrancy: 9&lt;/li&gt;
+&lt;li&gt;White Balance: CT: 4200K&lt;/li&gt;
+&lt;li&gt;White Balance Compensation: B: 8, M: 2&lt;/li&gt;
+&lt;li&gt;Exposure Compensation: -0.3 ~ -1.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This profile suits mountains, deserts, and quiet urban scenes with a low-key, low-saturation feel.&lt;/p&gt;
+&lt;p&gt;The two profiles above come from &lt;a href="https://weibo.com/calcas"&gt;霜绝&amp;rsquo;s sharing&lt;/a&gt;. He has a few more profiles on his site.&lt;/p&gt;
+&lt;h2 id="snap-mode"&gt;Snap Mode&lt;/h2&gt;
+&lt;p&gt;Snap Mode is a mode in which, when you fully press the shutter in one quick motion, the GR focuses at a preset distance and captures the frame immediately.&lt;/p&gt;
+&lt;p&gt;Snap Mode works best at F5.6 ~ F6.0. Within this aperture range, the snap focus distance covers 1 to 5 meters or further, so subjects in that range are rendered sharply.&lt;/p&gt;
+&lt;p&gt;For more on this mode, I recommend Ammo&amp;rsquo;s video: &lt;a href="https://www.youtube.com/watch?v=JAZd5cM03NY"&gt;【GR浪漫】 GR III GR IIIx 感性で描く日常スナップ&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="tav-and-p-modes"&gt;TAv and P Modes&lt;/h2&gt;
+&lt;p&gt;TAv and P modes are similar and unique to the GR II. In TAv mode you manually set the aperture and shutter speed, and the camera auto-adjusts ISO. The benefit is that you can use a relatively fast shutter speed (say 1/125) to freeze people moving on the street while easily adjusting the aperture for different depths of field. Just be careful not to let ISO go above 800, or noise becomes very noticeable.&lt;/p&gt;
+&lt;p&gt;P mode is the one I use most for street shooting. It locks ISO, and you choose between aperture and shutter speed, with the camera handling the other. This is great for grab shots in poor light, which is perfect for a perpetually overcast city like Chengdu 🤣&lt;/p&gt;</description></item><item><title>2023 Year-End Personal Summary</title><link>https://sund.site/en/posts/2023/2023-year-summary/</link><pubDate>Mon, 25 Dec 2023 13:05:52 +0800</pubDate><guid>https://sund.site/en/posts/2023/2023-year-summary/</guid><description>&lt;p&gt;It&amp;rsquo;s the end of the year again, and a year now passes as quickly as a month did in my childhood. This year was the first year emerging from the pandemic. It seems things have returned to normal, yet somehow not quite. I can&amp;rsquo;t quite put my finger on what went wrong.&lt;/p&gt;
+&lt;p&gt;In this year-end summary, I&amp;rsquo;ll share some of the questions and confusions I encountered this year. It&amp;rsquo;s both an attempt to organize my life experiences and a chance to share some ways of thinking about problems.&lt;/p&gt;
+&lt;h2 id="blind-dates-marriage-and-what-love-is"&gt;Blind Dates, Marriage, and What Love Is&lt;/h2&gt;
+&lt;p&gt;I went on plenty of blind dates this year, and I can say that every person I met was sincere. But unfortunately, nothing came of it. This matters to me most, so I&amp;rsquo;ll bring it up first.&lt;/p&gt;
+&lt;p&gt;What does the love we want look like? I&amp;rsquo;ve thought about this for a long time and have talked with many people: female friends, male friends, the unmarried, the married, and those on the verge of divorce.&lt;/p&gt;
+&lt;p&gt;Everyone has their own answer. Most lean toward a similar view: love is a kind of equivalent exchange. If I want someone to love me, I should love them first; if I give love, I should receive love in return.&lt;/p&gt;
+&lt;p&gt;A former colleague recommended I read &lt;em&gt;The Art of Loving&lt;/em&gt; by Erich Fromm. The book upended many of my assumptions and made me rethink what a good relationship looks like—whether with family, friends, or strangers.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Love is not an equivalent exchange. A good relationship is mutual giving, a positive action, and through that action, you inspire love in the other person.&lt;/strong&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;In a consumer society, love is treated as a lucky accident that comes through &amp;ldquo;attraction,&amp;rdquo; and people mistake the satisfaction produced by hormones for love. Pursuing this kind of love is, in essence, a form of narcissism—the motive is oneself, the goal is to receive. True love is often overlooked. Love isn&amp;rsquo;t opening a mystery box; it requires constant learning and practice. In other words, love is something you cultivate. Learning to &amp;ldquo;give&amp;rdquo; goes against human nature. Wedding vows like &amp;ldquo;for better or worse, in sickness and in health, I will never leave you&amp;rdquo; are moving precisely because they defy our nature and require effort to fulfill.&lt;/p&gt;
+&lt;p&gt;Love is a process, like growing a flower. The purpose of a blind date is neither love at first sight nor a weighing of both sides&amp;rsquo; conditions on a scale in search of balance. A blind date is simply an opportunity to meet someone who, like me, has the patience to cultivate this flower. Expecting it to bloom too early or too late will cause it to wilt. It&amp;rsquo;s about small, accumulated acts of giving, and keeping an even heart rather than over-demanding.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There are countless roses in the world, but only the rose on the Little Prince&amp;rsquo;s planet is unique. Because the Little Prince spent time watering it, it became one of a kind.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;This is something my former colleague, Teacher Jingzi, taught me.&lt;/p&gt;
+&lt;h2 id="the-virus-pharyngitis-and-caring-for-the-unwell-middle-aged"&gt;The Virus, Pharyngitis, and Caring for the Unwell Middle-Aged&lt;/h2&gt;
+&lt;p&gt;I never used to believe in the notion of &amp;ldquo;clashing with Tai Sui&amp;rdquo; in one&amp;rsquo;s zodiac year.&lt;/p&gt;
+&lt;p&gt;In March, I went to Germany on a business trip. I had dodged two variant waves back in China, but as the saying goes, tempting fate will be answered—I caught a local German strain.&lt;/p&gt;
+&lt;p&gt;For the three days I had a fever, I stayed in my hotel room, repeatedly stepping into the shower to cool down. The German cleaning lady who came by took one look at my state and suspected I was doing drugs in the room.&lt;/p&gt;
+&lt;p&gt;No thermometer, no medicine, no hot water. For three days I ate six apples and a pack of instant noodles. Fortunately, the fever broke before my flight back, and I made it onto the plane. Along the way, due to a rebooking, my visa had expired, and the German customs took me into a small room to sign a &amp;ldquo;confession&amp;rdquo; for overstaying. Compared to that, everything else was trivial.&lt;/p&gt;
+&lt;p&gt;For the next six months or so, my bronchitis and pharyngitis kept flaring up. I suspected I might have a pulmonary nodule (a checkup did find a very small one), but the doctor said pulmonary nodules usually have no symptoms, and that what I had was pharyngitis. I tried many treatments, and the following methods were relatively effective. I hope they&amp;rsquo;re helpful to fellow pharyngitis sufferers.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Determine whether it&amp;rsquo;s a mix of pharyngitis and bronchitis (coughing, chest tightness). Treat the bronchitis first—usually with nebulizer treatments at a small clinic.&lt;/li&gt;
+&lt;li&gt;To clear phlegm, take ambroxol orally. Excessive phlegm in the early stage makes you want to clear your throat and cough, which damages the mucosa&amp;rsquo;s repair. Drink more water, and avoid coughing.&lt;/li&gt;
+&lt;li&gt;After eating spicy food or drinking coffee, rinse your mouth with saline. Caffeine and sweets continue to irritate the throat, causing congestion and excess phlegm.&lt;/li&gt;
+&lt;li&gt;Boost immunity. Another trigger for pharyngitis is allergies: temperature changes, air quality, and sleep all play a role.&lt;/li&gt;
+&lt;li&gt;Niacin and vitamin B2 help repair the mucosa, and vitamin C boosts immunity. The vitamin chewable tablets sold at Chengdu Aotelie cost just a few bucks and work very well.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When the pharyngitis was almost gone, my back started acting up. Years of hunching over a desk, rounded shoulders, a hunched back, an aching waist and neck. This year I bought a sit-stand desk and an ergonomic chair. At the same time, I did some research into methods that could improve posture.&lt;/p&gt;
+&lt;p&gt;For most people, when the arms hang naturally, the palms face the body. But people who use a keyboard for long periods end up with inwardly rotated scapulae and a hunched, rounded back. So the first step is to change the resting position of your arms. At the same time, when training at the gym, make sure the frequency of chest and back muscle training is 1:2—that is, lots of back training—so the back muscles pull the shoulders backward. For more, you can refer to shuaisoserious&amp;rsquo;s video - &lt;a href="https://www.youtube.com/watch?v=sbDWiWyg-QM"&gt;【Fix Your Posture】3 Steps to Quickly Say Goodbye to Rounded Shoulders and Hunchback!&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="housing-wealth-side-projects"&gt;Housing, Wealth, Side Projects&lt;/h2&gt;
+&lt;p&gt;A spring wave of real estate recovery prompted many around me to buy homes in Chengdu. I started paying attention to the property market around May, viewing dozens of places, both resale and new. I&amp;rsquo;m still on the fence (indecision 😂).&lt;/p&gt;
+&lt;p&gt;I used to have a mistaken view of debt: that the less debt, the better. This led me to miss the best window to buy a home. But this year&amp;rsquo;s economy is rough, and everyone&amp;rsquo;s started paying down debt, so the people without debt are breathing a little easier (when the old man lost his horse, who knew if it was a blessing).&lt;/p&gt;
+&lt;p&gt;I can&amp;rsquo;t really give advice on buying a home. My judgment at the start of the year was that the economy would get worse, so waiting is the best investment. I&amp;rsquo;d recommend a podcast episode: &lt;a href="https://www.xiaoyuzhoufm.com/episode/650d22859687557971f61bde"&gt;To Buy or Not to Buy, To Sell or Not to Sell—That Is the Question&lt;/a&gt;. The two guests are &amp;ldquo;old money,&amp;rdquo; who supports property investment, and &amp;ldquo;David Weng,&amp;rdquo; who believes there&amp;rsquo;s no rush to invest in the short term. The clash of these two viewpoints is brilliant. This episode is easily my favorite podcast of the year. If you have questions about real estate, give it a listen.&lt;/p&gt;
+&lt;p&gt;I also studied some macroeconomics this year, from watching Xiaolin Says videos to reading &lt;em&gt;Inside the System&lt;/em&gt;, the book that broke out of its niche. But what helped me most were a series of talks by Mr. Fu Peng of Northeast Securities at an economics forum (especially his macroeconomic predictions at the beginning of the year), and a book recommended by an online friend, &lt;em&gt;The Fiscal Code of the Central Empire&lt;/em&gt;. This book dissects the rise and fall of dynasties from a fiscal perspective, analyzing how patterns of interest and bureaucratic systems shaped the fate of nations, and how later rulers tried to solve the problems left by their predecessors. You can read it as a starting point for understanding real-world economic issues, or as a casual read for leisure. History is a mirror; people are repeaters.&lt;/p&gt;
+&lt;p&gt;As for side projects, not much progress this year. In October, I planned to build a WeChat Reading Notes web app, but later discovered someone had already built one that exceeded my expectations, so I gave up. The one small comfort is that a Python utility library I maintain has crossed 300 GitHub stars and was cited by a French lab, which gave me the energy to occasionally go fix some bugs. In the second half of the year, I met a few indie developer friends, of whom MazzyStar impressed me the most. He used to be an algorithm engineer, quit, and went to live and code in seclusion in South Korea. He&amp;rsquo;s made several AI-related apps whose monthly revenue is enough to cover his daily expenses—truly impressive. In 2024, I hope to have the chance to meet these indie dev friends in person.&lt;/p&gt;
+&lt;p&gt;I also read some books about indie projects this year. I&amp;rsquo;d recommend &lt;em&gt;Simple and Usable: Strategies for Memorable, Effective, User-Centered Design&lt;/em&gt;. If you want to build something small and beautiful, this book is worth a read.&lt;/p&gt;
+&lt;h2 id="work-and-interpersonal-relationships"&gt;Work and Interpersonal Relationships&lt;/h2&gt;
+&lt;p&gt;Work this year was uneventful. My current work environment keeps changing my personality.&lt;/p&gt;
+&lt;p&gt;My previous company had an open, ambitious learning environment that had a very positive influence on me, but I lacked solid project experience. In the two-plus years at my current company, the projects I&amp;rsquo;ve worked on have had increasingly strict industrial standards and higher requirements for software security and compliance. I&amp;rsquo;ve also learned a great deal about European and American industry standards along the way. I often think of a quote from the late Mr. Chen Hao: &amp;ldquo;Aim for the top, settle for the middle.&amp;rdquo; When building software, the first thing is to check whether there&amp;rsquo;s an industrial standard, then refer to industry best practices. You can&amp;rsquo;t fix an entire home renovation with a single nail gun—that&amp;rsquo;s a slapdash approach.&lt;/p&gt;
+&lt;p&gt;My current work environment has plenty of problems, too. The standout one is the extremely high cost of communication. Colleagues in India, Turkey, and Germany collaborate remotely, yet there&amp;rsquo;s no well-defined development process, and the department lacks a culture that encourages sharing knowledge and improving work quality. This means even simple work needs a dozen meetings to inch forward. The upside is that I&amp;rsquo;ve picked up some work techniques in this torturous communication environment. In large enterprises, conflicts of interest are common, and most people&amp;rsquo;s goal is not to do the work well, but to keep their seat secure. So it goes: some are responsible for baking the cake, others for dividing it. To push work forward, it&amp;rsquo;s best to divide the cake in advance. For things that are hard to push through (especially those involving interests), many issues shouldn&amp;rsquo;t be raised in group meetings—such as development or cross-team collaboration. Instead, communicate privately in advance, secure buy-in from key stakeholders, and raise the chances of adoption in the meeting. Additionally, getting interrupted in group meetings is normal. The weight of each person&amp;rsquo;s words differs; the later you speak, the more initiative you have, so it&amp;rsquo;s wise to rein in your urge to speak.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s all I&amp;rsquo;ll share. This year hasn&amp;rsquo;t been easy for anyone, and next year&amp;rsquo;s economy is uncertain too. As individuals, I hope we can all enjoy the process of climbing, stay healthy, and, when the chance comes, do something for the people we love.&lt;/p&gt;</description></item></channel></rss>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agile on Steve Sun</title><link>https://sund.site/en/tags/agile/</link><description>Recent content in Agile on Steve Sun</description><generator>Hugo</generator><language>en</language><copyright>© 2013-2026, Steve Sun</copyright><lastBuildDate>Fri, 07 Apr 2023 06:37:53 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/en/tags/agile/index.xml" rel="self" type="application/rss+xml"/><item><title>User Story Mapping</title><link>https://sund.site/en/posts/2023/user-story-mapping/</link><pubDate>Fri, 07 Apr 2023 06:37:53 +0800</pubDate><guid>https://sund.site/en/posts/2023/user-story-mapping/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;A user story is a common term in software development and project management. Its purpose is to express functionality in everyday or business language—a simple description of a feature. Written from the customer&amp;rsquo;s or user&amp;rsquo;s point of view, it captures valuable features, guidance, and frameworks to interact with users, thereby driving work forward. It can be seen as a kind of specification document, but more precisely, it represents the customer&amp;rsquo;s needs and direction.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;During the requirements analysis phase of agile development, you use process tools such as &lt;strong&gt;user story mapping&lt;/strong&gt; to transform those abstract, vague user requirements into concrete, prioritized, modularized user stories.&lt;/p&gt;
+&lt;p&gt;A user story map looks like this.&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/user-story-mapping/user-story.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h2 id="the-process-of-drawing-a-user-story-map"&gt;The Process of Drawing a User Story Map&lt;/h2&gt;
+&lt;p&gt;Drawing a user story map should follow a few basic principles:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Think and record at the same time; visualize every step on sticky notes&lt;/li&gt;
+&lt;li&gt;Focus on the whole; don&amp;rsquo;t get lost in details too early&lt;/li&gt;
+&lt;li&gt;Prioritize by &lt;strong&gt;outcome&lt;/strong&gt;, not by feature&lt;/li&gt;
+&lt;li&gt;Verify that the problem the product is solving truly exists&lt;/li&gt;
+&lt;li&gt;Use concrete solutions, such as high-fidelity prototypes or hand-drawn sketches&lt;/li&gt;
+&lt;li&gt;Validate ideas with prototypes and user testing&lt;/li&gt;
+&lt;li&gt;The goal of a user story map is to enable the team to communicate effectively, raise questions, and estimate effort&lt;/li&gt;
+&lt;li&gt;The more frequently you measure effort during estimation, the more accurate you&amp;rsquo;ll be&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="use-goal-level-hierarchy"&gt;Use Goal-Level Hierarchy&lt;/h3&gt;
+&lt;p&gt;When breaking down user stories, follow the principle of layer-by-layer decomposition. Each layer should focus on the granularity of that layer&amp;rsquo;s tasks; don&amp;rsquo;t dive into details too early.&lt;/p&gt;
+&lt;p&gt;First, set the macro-level &lt;strong&gt;activities&lt;/strong&gt;. For example, break down user needs into several large activities, such as viewing accounts, depositing money, and so on.&lt;/p&gt;
+&lt;p&gt;Next, lay out the &lt;strong&gt;main backbone stories&lt;/strong&gt;. For each activity, break it down into individual steps—these steps are the backbone stories. Each backbone story:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Is a verb phrase&lt;/li&gt;
+&lt;li&gt;Stories should stay at the same level of granularity as each other&lt;/li&gt;
+&lt;li&gt;Are arranged from left to right in chronological order; any intermediate steps you think of can be inserted or reordered at any time&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Third, for each backbone story, brainstorm to add more smaller user stories, written on sticky notes and placed below.&lt;/p&gt;
+&lt;p&gt;Finally, by priority, put the important user stories on top and the less important ones at the bottom. Then draw horizontal swim lanes to divide the stories into different stages based on specific &lt;strong&gt;target outcomes&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/user-story-mapping/user-story-2.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;For example, if the first stage completes the basic functionality, then all the user stories in the top horizontal row are what the first release needs to deliver.&lt;/p&gt;
+&lt;p&gt;This completes the design of the user stories. Let&amp;rsquo;s recap the process:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Identify the key activities&lt;/li&gt;
+&lt;li&gt;Lay out the backbone stories&lt;/li&gt;
+&lt;li&gt;Refine the user stories&lt;/li&gt;
+&lt;li&gt;Team brainstorming to add missing user stories&lt;/li&gt;
+&lt;li&gt;Prioritize from top to bottom&lt;/li&gt;
+&lt;li&gt;Cut the user stories horizontally to define each iteration&amp;rsquo;s work and key outcomes&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="applying-design-thinking"&gt;Applying Design Thinking&lt;/h2&gt;
+&lt;p&gt;The process for drawing user stories is outlined above, but in fact the hardest part is finding the real user needs. To uncover valuable needs from customers or users in a specific domain, &lt;strong&gt;Design Thinking&lt;/strong&gt; is typically used to help the team communicate and find the focus problem.&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/user-story-mapping/design-thinking.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;Design Thinking has five steps.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Empathize&lt;/strong&gt;: Communicate and find the problem.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Define&lt;/strong&gt;: Narrow down to a few important problems and elaborate.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ideate&lt;/strong&gt;: Come up with multiple solutions for each problem.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Prototype&lt;/strong&gt;: Build concrete, visual prototypes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Test&lt;/strong&gt;: Test with users and gather feedback.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="forming-a-discovery-team"&gt;Forming a Discovery Team&lt;/h2&gt;
+&lt;p&gt;A discovery team consists of three key roles:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A Product Owner who understands the product and the requirements&lt;/li&gt;
+&lt;li&gt;A UX Designer who understands design and interaction&lt;/li&gt;
+&lt;li&gt;A Senior Developer who understands the technology&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The early discovery phase should be carried out by a team of no more than five people, and you should avoid &lt;strong&gt;design by committee&lt;/strong&gt; (i.e., most of the team joining the design process, which leads to chaos and inconsistency).&lt;/p&gt;
+&lt;p&gt;When prioritizing tasks in the early phase, the following priority should be observed:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Business goals &amp;gt; Customer/user goals &amp;gt; Features&lt;/p&gt;&lt;/blockquote&gt;</description></item></channel></rss>

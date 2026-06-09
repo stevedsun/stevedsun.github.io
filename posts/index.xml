@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>文章 on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in 文章 on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sun, 07 Jun 2026 10:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>我怎么用 Hermes Agent 写代码</title><link>https://sund.site/posts/2026/how-i-use-hermes-agent/</link><pubDate>Sun, 07 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/how-i-use-hermes-agent/</guid><description>&lt;p&gt;&lt;figure
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>文章 on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in 文章 on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sun, 07 Jun 2026 10:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>我怎么用 Hermes Agent 写代码</title><link>https://sund.site/posts/2026/how-i-use-hermes-agent/</link><pubDate>Sun, 07 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/how-i-use-hermes-agent/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -72,7 +72,7 @@
 &lt;p&gt;AI 写代码这件事发展得太快了。年初我还在手动写每一行，年中已经有了一个能独立完成功能、验收、部署的流水线。我做的事情从写代码变成了定规则、设边界、验收结果。&lt;/p&gt;
 &lt;p&gt;工程师的角色在变化。以前你是砖瓦工，一块一块砌墙。现在你是牧场主，把栅栏围好，草料放足，让羊群自己吃草长肉。软件业正在从建筑业变成畜牧业。&lt;/p&gt;
 &lt;p&gt;这个趋势只会加速。更好的模型意味着更简单的 harness，更便宜的执行成本。你不需要成为最好的程序员，你需要成为最好的规则制定者。定义清楚什么能做、什么不能做、怎么才算做好——剩下的交给 agent。&lt;/p&gt;
-&lt;p&gt;我花在定义边界上的时间，回报率远高于花在具体编码上的时间。这是让我最意外的发现。&lt;/p&gt;</description></item><item><title>【译文】运行一个 AI-native 的工程团队</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</link><pubDate>Wed, 03 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</guid><description>&lt;p&gt;&lt;figure
+&lt;p&gt;我花在定义边界上的时间，回报率远高于花在具体编码上的时间。这是让我最意外的发现。&lt;/p&gt;</description></item><item><title>【译文】运行一个 AI-native 的工程团队</title><link>https://sund.site/posts/2026/running-an-ai-native-engineering-org/</link><pubDate>Wed, 03 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/running-an-ai-native-engineering-org/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -156,7 +156,7 @@
 &lt;h2 id="如何开始"&gt;如何开始&lt;/h2&gt;
 &lt;p&gt;如果只留一句话：选你团队里最吵的那个 workflow——最贵的、最让人头疼的、团队最不想面对的。然后问：&lt;strong&gt;它还在实现它的目的吗？如果是，能不能自动化它？&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;我以前在一个团队，有个昂贵的周会，一大屋子人。我发现所有人都在低头敲电脑，只有轮到自己汇报时才抬起头说几句，然后又缩回去。我问了一个最简单的问题：&amp;ldquo;我们为什么要开这个会？感觉像是在花很大的成本做没什么价值的事。&amp;ldquo;就这一句话，所有人都意识到这个会没用。我们取消了它。&lt;/p&gt;
-&lt;p&gt;所以，问自己一个问题：你的工程流程里，有什么是可以自动化、甚至直接砍掉的？&lt;/p&gt;</description></item><item><title>【译文】你可以直接这么说</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</link><pubDate>Fri, 29 May 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</guid><description>&lt;p&gt;&lt;figure
+&lt;p&gt;所以，问自己一个问题：你的工程流程里，有什么是可以自动化、甚至直接砍掉的？&lt;/p&gt;</description></item><item><title>【译文】你可以直接这么说</title><link>https://sund.site/posts/2026/you-can-just-say-it/</link><pubDate>Fri, 29 May 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/you-can-just-say-it/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -184,7 +184,7 @@
 &lt;p&gt;&lt;em&gt;&amp;ldquo;人的尊严不依赖于人的能力。&amp;rdquo;&lt;/em&gt; —— Magnifica Humanitas, §50&lt;/p&gt;
 &lt;p&gt;神学中也使用类似的术语。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;本文由 AI 翻译，可能存在错误&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>如何设计一个智能体（AI Agent）</title><link>https://sund.site/posts/2026/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E6%99%BA%E8%83%BD%E4%BD%93ai-agent/</link><pubDate>Tue, 26 May 2026 16:11:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E6%99%BA%E8%83%BD%E4%BD%93ai-agent/</guid><description>&lt;p&gt;&lt;figure
+&lt;p&gt;&lt;strong&gt;本文由 AI 翻译，可能存在错误&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>如何设计一个智能体（AI Agent）</title><link>https://sund.site/posts/2026/how-to-make-an-agent/</link><pubDate>Tue, 26 May 2026 16:11:00 +0800</pubDate><guid>https://sund.site/posts/2026/how-to-make-an-agent/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -496,7 +496,7 @@ $$&lt;/p&gt;
 &lt;li&gt;事件可观察性&lt;/li&gt;
 &lt;li&gt;可恢复与可扩展性&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;从目前的趋势看，这大概率将是下一代应用软件的基础范式。&lt;/p&gt;</description></item><item><title>【译文】为什么你的"AI-First"策略很可能是错的</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E7%9A%84ai-first%E7%AD%96%E7%95%A5%E5%BE%88%E5%8F%AF%E8%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</link><pubDate>Mon, 25 May 2026 23:55:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E7%9A%84ai-first%E7%AD%96%E7%95%A5%E5%BE%88%E5%8F%AF%E8%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</guid><description>&lt;p&gt;&lt;figure
+&lt;p&gt;从目前的趋势看，这大概率将是下一代应用软件的基础范式。&lt;/p&gt;</description></item><item><title>【译文】为什么你的"AI-First"策略很可能是错的</title><link>https://sund.site/posts/2026/why-your-ai-first-strategy-translation/</link><pubDate>Mon, 25 May 2026 23:55:00 +0800</pubDate><guid>https://sund.site/posts/2026/why-your-ai-first-strategy-translation/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -644,7 +644,7 @@ $$&lt;/p&gt;
 &lt;p&gt;这些工具对任何团队都是可用的。我们的栈里没有任何东西是专有的。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;竞争优势在于围绕这些工具重新设计一切的决心，以及承受代价的意愿。&lt;/strong&gt; 代价是真实的：员工的不确定性、CTO 每天工作 18 小时、资深工程师质疑自己的价值、旧系统消失新系统尚未被证明的两周真空期。&lt;/p&gt;
 &lt;p&gt;我们承受了那个代价。两个月后，数字说明了一切。&lt;/p&gt;
-&lt;p&gt;我们是构建 agent 平台的公司。我们用 agent 构建了它。&lt;/p&gt;</description></item><item><title>AI Agent 工具对比：MCP 为什么只是个过渡产物</title><link>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/posts/2026/ai-agent-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94mcp-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E6%98%AF%E4%B8%AA%E8%BF%87%E6%B8%A1%E4%BA%A7%E7%89%A9/</guid><description>&lt;p&gt;&lt;figure
+&lt;p&gt;我们是构建 agent 平台的公司。我们用 agent 构建了它。&lt;/p&gt;</description></item><item><title>AI Agent 工具对比：MCP 为什么只是个过渡产物</title><link>https://sund.site/posts/2026/ai-agent-tool-comparison-mcp-transitional/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/posts/2026/ai-agent-tool-comparison-mcp-transitional/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -740,7 +740,7 @@ $$&lt;/p&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
-&lt;/p&gt;</description></item><item><title>外部化的J人</title><link>https://sund.site/posts/2025/%E5%A4%96%E9%83%A8%E5%8C%96%E7%9A%84j%E4%BA%BA/</link><pubDate>Mon, 03 Nov 2025 22:07:40 +0800</pubDate><guid>https://sund.site/posts/2025/%E5%A4%96%E9%83%A8%E5%8C%96%E7%9A%84j%E4%BA%BA/</guid><description>&lt;p&gt;生活中有一类人，喜欢催促别人制定计划。只要事情还悬在半空，他就感到不安。&lt;/p&gt;
+&lt;/p&gt;</description></item><item><title>外部化的J人</title><link>https://sund.site/posts/2025/ext-judging/</link><pubDate>Mon, 03 Nov 2025 22:07:40 +0800</pubDate><guid>https://sund.site/posts/2025/ext-judging/</guid><description>&lt;p&gt;生活中有一类人，喜欢催促别人制定计划。只要事情还悬在半空，他就感到不安。&lt;/p&gt;
 &lt;p&gt;这种人不一定是公司老板，也不一定多强势，他就是喜欢问“什么时候能定下来？”“周末怎么安排，到底去哪？”，类似这样，向外寻找确定性。&lt;/p&gt;
 &lt;p&gt;这种人，我们暂且叫他们“外部化的 J 人”或“Ex J 人”，J 人就是 MBTI 人格分析中的 Judging 型性格的人，喜欢预判未来走向，热爱制定计划。与之相对的是 P 人，随性自在。&lt;/p&gt;
 &lt;p&gt;Ex J 人，就是把这种 J 属性外溢给他人的人，同化他人成为 J 人的 J 人。&lt;/p&gt;
@@ -756,7 +756,7 @@ $$&lt;/p&gt;
 &lt;p&gt;如何跟 Ex J 人沟通呢？&lt;/p&gt;
 &lt;p&gt;我也不知道答案，所以不耻 Chat 问，请教了 GPT 答案：要分成两步，先缓和对方情绪，表达理解；再用模糊的步骤代替精确的结论，比如你定不出计划，就说现在定不下来，一旦发生什么，就可以如何应对。让对方看到你的思考过程。&lt;/p&gt;
 &lt;p&gt;这样，用大概的步骤，或模糊的时间点，代替精确的回答，让对方的控制欲有所缓解，也没有被对方卷入节奏。&lt;/p&gt;
-&lt;p&gt;啊，做人好累。最后，希望你成为 P 人吧，如果实在不行，也答应我，当个好 J 人，好吗。&lt;/p&gt;</description></item><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-%E4%B8%80%E4%BA%9B%E4%B8%AD%E6%96%87%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E8%AE%BE%E7%BD%AE/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-%E4%B8%80%E4%BA%9B%E4%B8%AD%E6%96%87%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E8%AE%BE%E7%BD%AE/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
+&lt;p&gt;啊，做人好累。最后，希望你成为 P 人吧，如果实在不行，也答应我，当个好 J 人，好吗。&lt;/p&gt;</description></item><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
 &lt;p&gt;装完后有一些需要改造的配置记录在这篇文章中，供大家参考。&lt;/p&gt;
 &lt;h2 id="4k-显示器设置"&gt;4K 显示器设置&lt;/h2&gt;
 &lt;p&gt;修改系统菜单 Setup - Monitor，按照你自己显示器的分辨率，根据配置文件中的注释设置参数，比如我的显示器 27 寸 4k：&lt;/p&gt;
@@ -798,7 +798,7 @@ env = QT_SCALE_FACTOR,1.75
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;},&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;},&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-agent--%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86-%E4%BA%A7%E5%93%81%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-agent--%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86-%E4%BA%A7%E5%93%81%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>AI Agent + 产品经理 = 产品测试工程师</title><link>https://sund.site/posts/2025/ai-e2e-testing/</link><pubDate>Wed, 08 Oct 2025 20:39:15 +0800</pubDate><guid>https://sund.site/posts/2025/ai-e2e-testing/</guid><description>&lt;p&gt;9 月公司组织讨论 AI 在工作场景中的应用。正好我在研究 E2E 测试相关的话题，于是尝试了一下 OpenCode 和 Playwright，发现效果惊人的好。&lt;/p&gt;
 &lt;p&gt;用 OpenCode 而没有选其他 AI Agent 框架（如 Claude Code）是因为它可以集成公司的企业版 Github Copilot 账号，这样我们在公司内网可以无限量调用 GPT-4 和 Claude Sonnet 等大语言模型。&lt;/p&gt;
 &lt;p&gt;其次微软做的 Playwright 是一个可以调用浏览器 API 的自动化测试框架。相比于 Selenium 更轻量，社区维护更积极，和大模型结合也更好（有官方的 MCP Server）。Playwright 还内置了 webdriver，免去了很多环境配置的麻烦。&lt;/p&gt;
 &lt;p&gt;基于 OpenCode 和 Playwright-MCP-Server，稍加少量提示词模板，就可以不写一行测试代码，完整跑通一组 Web UI 的 E2E 测试用例。这在过去简直无法想象。&lt;/p&gt;
@@ -816,7 +816,7 @@ env = QT_SCALE_FACTOR,1.75
 &lt;li&gt;不必要的移动&lt;/li&gt;
 &lt;li&gt;缺陷&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;AI Agent 一定程度上解决了“过度生产（要重复编写测试代码）”，“等待（从需求实现到测试用例实现，最后才能验证功能）”，“不必要的运输（业务需求在不同人员之间的传递）”三个方面的浪费。&lt;/p&gt;</description></item><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/%E9%81%87%E5%88%B0-linux-%E7%B3%BB%E7%BB%9F-kernel-panic-%E4%BA%86%E8%AF%A5%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/%E9%81%87%E5%88%B0-linux-%E7%B3%BB%E7%BB%9F-kernel-panic-%E4%BA%86%E8%AF%A5%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
+&lt;p&gt;AI Agent 一定程度上解决了“过度生产（要重复编写测试代码）”，“等待（从需求实现到测试用例实现，最后才能验证功能）”，“不必要的运输（业务需求在不同人员之间的传递）”三个方面的浪费。&lt;/p&gt;</description></item><item><title>遇到 Linux 系统 Kernel Panic 了该如何应对</title><link>https://sund.site/posts/2025/retro-kernel-panic/</link><pubDate>Sat, 19 Jul 2025 01:06:32 +0800</pubDate><guid>https://sund.site/posts/2025/retro-kernel-panic/</guid><description>&lt;p&gt;晚上打开家里的零刻 Ser6 主机，赫然发现 Kernel Panic 了 😱。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;

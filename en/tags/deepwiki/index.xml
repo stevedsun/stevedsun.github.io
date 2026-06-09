@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Deepwiki on Steve Sun</title><link>https://sund.site/en/tags/deepwiki/</link><description>Recent content in Deepwiki on Steve Sun</description><generator>Hugo</generator><language>en</language><copyright>© 2013-2026, Steve Sun</copyright><lastBuildDate>Sat, 24 May 2025 12:50:40 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/en/tags/deepwiki/index.xml" rel="self" type="application/rss+xml"/><item><title>How DeepWiki Works</title><link>https://sund.site/en/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/en/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWiki&lt;/a&gt; is an AI agent project, provided by Devin.ai, that generates detailed documentation from a source code repository. Ever since it went viral, I have been curious about how it works.&lt;/p&gt;
+&lt;p&gt;I combed through online resources and several open-source projects and arrived at a relatively clear picture of the workflow. For the harder parts, I will follow up with my findings in later posts.&lt;/p&gt;
+&lt;h2 id="building-a-map-of-the-code-structure"&gt;Building a Map of the Code Structure&lt;/h2&gt;
+&lt;p&gt;At its core, DeepWiki is a RAG system. It takes a source code repository as input, parses the code, and converts it into two parts: &lt;strong&gt;metadata representing the syntactic structure and file structure&lt;/strong&gt; and &lt;strong&gt;vector data representing code descriptions and snippets&lt;/strong&gt;. The metadata is stored in a relational database, while the corresponding code snippets are stored in a vector database for later LLM retrieval.&lt;/p&gt;
+&lt;h2 id="generating-wiki-pages"&gt;Generating WIKI Pages&lt;/h2&gt;
+&lt;p&gt;The process of generating a WIKI page is essentially a RAG query:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The program recursively reads the project structure.&lt;/li&gt;
+&lt;li&gt;It queries the metadata database for the current file&amp;rsquo;s metadata, then searches the vector database for the most relevant code and description IDs.&lt;/li&gt;
+&lt;li&gt;It uses those IDs to look up the descriptions in the metadata database, and the corresponding code snippets in the project files.&lt;/li&gt;
+&lt;li&gt;It assembles all of the above as context, picks an appropriate prompt based on the metadata type (architecture, components, etc.), and feeds it to the LLM.&lt;/li&gt;
+&lt;li&gt;A front-end rendering engine then renders the LLM output into a documentation page.&lt;/li&gt;
+&lt;li&gt;Repeat from step 1.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://www.gptsecurity.info/img/in-post/rag_flow.png" alt="Image from https://www.gptsecurity.info/2024/05/26/RAG/" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;Image from https://www.gptsecurity.info/2024/05/26/RAG/&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h2 id="difficulty-1-the-chunking-strategy"&gt;Difficulty 1: The Chunking Strategy&lt;/h2&gt;
+&lt;p&gt;A particularly interesting part of the process above is how to chunk code before embedding. For natural language, chunking is usually based on paragraphs, sentences, and punctuation, so each chunk contains the full context of a sentence or paragraph.&lt;/p&gt;
+&lt;p&gt;For code, it is different. A function body, for example, is wrapped in &lt;code&gt;{&lt;/code&gt; and &lt;code&gt;}&lt;/code&gt;. If you tokenize it with a natural-language tokenizer, the context will be split across different chunks, which hurts the accuracy of vector retrieval.&lt;/p&gt;
+&lt;p&gt;There are currently two approaches. The first is to chunk the whole file. In that case, the file size cannot exceed the chunk-size limit, and the chunks lack the real call-relationship context. We know that the unit of code organization is not the file (the file tree is just a human-friendly organization) — it is a graph of class- and function-level dependencies.&lt;/p&gt;
+&lt;p&gt;The second approach is to first use a syntax tool to perform static analysis on the code file, and then split the code along the syntactic structure based on the analysis. This is more complex to implement, and I could not find much material on it online. Fortunately, I came across &lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;, which describes how to use static syntax analysis to chunk code and build an efficient RAG system for a code repository. The article does not provide an open-source implementation, though. Considering that this is a core technology of a commercial product, it is well worth digging deeper into. I will keep following this area of research.&lt;/p&gt;
+&lt;h2 id="difficulty-2-parsing-the-syntax-structure"&gt;Difficulty 2: Parsing the Syntax Structure&lt;/h2&gt;
+&lt;p&gt;Parsing metadata is somewhat simpler than vector data. I found some clues in another open-source project, &lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;That project uses &lt;code&gt;tree-sitter&lt;/code&gt; to analyze the project&amp;rsquo;s syntax structure and produces three types of metadata files:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tag.json&lt;/code&gt;: basic information such as the path, line number, and description of a file, function, or class.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tree_structure.json&lt;/code&gt;: the project&amp;rsquo;s file tree structure.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;*.pkl&lt;/code&gt;: a graph of object dependencies.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;*.pkl&lt;/code&gt; is a graph of object relations that the syntax analyzer obtains by scanning the project&amp;rsquo;s files, then serializes the Python graph object to disk using the pickle library.&lt;/p&gt;
+&lt;p&gt;From this implementation, it looks like the embedding process in Difficulty 1 could also use the code metadata generated by &lt;code&gt;tree-sitter&lt;/code&gt; to chunk the code by line.&lt;/p&gt;
+&lt;h2 id="prompt-engineering"&gt;Prompt Engineering&lt;/h2&gt;
+&lt;p&gt;In the RAG query phase, you need to assemble different prompts based on the type of metadata being processed.&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt; project has plenty of prompts worth referencing:&lt;/p&gt;
+&lt;p&gt;Prompt for generating an overview:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a concise overview of this repository focused primarily on:
+* Purpose and Scope: What is this project&amp;#39;s main purpose?
+* Core Features: What are the key features and capabilities?
+* Target audience/users
+* Main technologies or frameworks used
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Prompt for generating an architecture document:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Create a comprehensive architecture overview for this repository. Include:
+* A high-level description of the system architecture
+* Main components and their roles
+* Data flow between components
+* External dependencies and integrations
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Prompt for generating a components document:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Provide a comprehensive analysis of all key components in this codebase. For each component:
+* Name of the component
+* Purpose and main responsibility
+* How it interacts with other components
+* Design patterns or techniques used
+* Key characteristics
+* File paths that implement this component
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For the rest, please refer to the project files; I won&amp;rsquo;t enumerate them all here.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;DeepWiki is a code documentation generation tool built on a RAG system. It works through the following steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Perform syntactic analysis on the repository to produce metadata and vector data.&lt;/li&gt;
+&lt;li&gt;Query that data through the RAG system to generate documentation.&lt;/li&gt;
+&lt;li&gt;Render the results into readable documentation pages with a front-end engine.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;There are two main difficulties in implementation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The code chunking strategy: it must consider the syntactic structure of the code, not just split it the way you would split natural language.&lt;/li&gt;
+&lt;li&gt;Parsing the syntax structure: tools like &lt;code&gt;tree-sitter&lt;/code&gt; can be used to parse the code&amp;rsquo;s structure.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Although there are some open-source projects to reference, the core chunking strategy implementation still needs to be studied in depth.&lt;/p&gt;
+&lt;h2 id="reference-projects"&gt;Reference Projects&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

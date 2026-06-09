@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>MCP on Steve Sun</title><link>https://sund.site/en/tags/mcp/</link><description>Recent content in MCP on Steve Sun</description><generator>Hugo</generator><language>en</language><copyright>© 2013-2026, Steve Sun</copyright><lastBuildDate>Mon, 20 Apr 2026 12:37:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/en/tags/mcp/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent Tool Comparison: Why MCP Is Just a Transitional Solution</title><link>https://sund.site/en/posts/2026/ai-agent-tool-comparison-mcp-transitional/</link><pubDate>Mon, 20 Apr 2026 12:37:00 +0800</pubDate><guid>https://sund.site/en/posts/2026/ai-agent-tool-comparison-mcp-transitional/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-agent-mcp-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;ve built AI Agents, you&amp;rsquo;ve likely used MCP and may have come across the concept of Agent Skills. We don&amp;rsquo;t need to re-explain what they are—the question this post answers is: &lt;strong&gt;when both can achieve &amp;ldquo;letting AI call tools,&amp;rdquo; why I think MCP is a transitional approach that will be phased out&lt;/strong&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="the-fundamental-limitation-of-mcp-the-protocol-layer-cant-carry-semantics"&gt;The Fundamental Limitation of MCP: The Protocol Layer Can&amp;rsquo;t Carry Semantics&lt;/h2&gt;
+&lt;p&gt;MCP&amp;rsquo;s design logic is: give AI a structured tool-calling protocol where tool discovery, invocation, and parsing all follow a fixed format.&lt;/p&gt;
+&lt;p&gt;The problem is that &lt;strong&gt;this protocol is designed for humans, not for AI&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;JSON Schema can define parameter types and return value structures, but it cannot convey things like: why this parameter usually takes this value, what prerequisites a tool needs to work, or what its failure modes look like. This context is what AI most needs when making decisions in real scenarios, but the MCP protocol layer simply cannot carry it.&lt;/p&gt;
+&lt;p&gt;The result: tool-calling capabilities built with MCP depend heavily on prompt engineering—you need to supplement in the prompt what the protocol definition doesn&amp;rsquo;t include. This shows the protocol layer has a gap, and that gap can&amp;rsquo;t be fixed by improving the schema, because it&amp;rsquo;s fundamentally a semantic-loss problem, not a format problem.&lt;/p&gt;
+&lt;p&gt;Another practical issue is maintenance cost. Every new capability requires a separate MCP server—you need to maintain server code, schema definitions, and network connections. When the protocol version updates, all servers may need to change too. For individual developers or small teams, this complexity is a significant burden.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="why-skill-is-closer-to-what-ai-actually-needs"&gt;Why Skill Is Closer to What AI Actually Needs&lt;/h2&gt;
+&lt;p&gt;Agent Skill uses Markdown as the core format for capability packaging—using human language to describe what a capability is, when to use it, and how to use it, with scripts and reference templates attached.&lt;/p&gt;
+&lt;p&gt;When AI reads a Skill document, it gets more than &amp;ldquo;this tool&amp;rsquo;s name and accepted parameters&amp;rdquo;—it gets the full decision context: when to use it, when not to, how to handle edge cases. This information was always meant for human developers; now it goes directly to AI without secondary translation.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;For engineers&lt;/strong&gt;, using the file system as the foundation for Skill management brings an extra benefit: this workflow aligns perfectly with an engineer&amp;rsquo;s daily work. Git manages the Skill directory, naturally supporting version control, branching, and PR reviews. AI reads whatever documentation it needs, with no need to understand any protocol layer or maintain a running server process.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;For ordinary users&lt;/strong&gt;, the advantage of Skill is even more direct. Today&amp;rsquo;s Agents are getting more complete, and &amp;ldquo;harness engineering&amp;rdquo; has emerged—users don&amp;rsquo;t need to understand technical details, just describe what capabilities they need. Installing a Skill might be a one-liner: AI automatically reads the Skill document, understands what the capability does and how to configure it, then automatically handles dependency installation, API configuration, and permission verification—tasks that previously required a technical person. For users, a Skill is a manual for a capability, and the Agent is the executor who reads the manual and gets it done. MCP can&amp;rsquo;t do this because it requires users to first understand servers, schemas, and protocol versions—these are engineer language, not user language.&lt;/p&gt;
+&lt;p&gt;Skill&amp;rsquo;s semantic packaging makes this &amp;ldquo;zero-barrier installation&amp;rdquo; possible. When capabilities are described in human-language documents, the Agent can truly make those technical decisions on the user&amp;rsquo;s behalf. The thicker the protocol layer, the higher this delegation cost—and Skill compresses this layer to the minimum.&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;th&gt;MCP&lt;/th&gt;
+ &lt;th&gt;Agent Skill&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Adding a new tool&lt;/td&gt;
+ &lt;td&gt;Write server + schema + config&lt;/td&gt;
+ &lt;td&gt;Write a Markdown file&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Semantic expressiveness&lt;/td&gt;
+ &lt;td&gt;Limited by JSON Schema&lt;/td&gt;
+ &lt;td&gt;Free-form Markdown&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Context information&lt;/td&gt;
+ &lt;td&gt;Needs prompt engineering supplement&lt;/td&gt;
+ &lt;td&gt;Written in the doc, read directly by AI&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Protocol version maintenance&lt;/td&gt;
+ &lt;td&gt;Required&lt;/td&gt;
+ &lt;td&gt;Not required&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Installation for ordinary users&lt;/td&gt;
+ &lt;td&gt;Need to understand server and protocol concepts&lt;/td&gt;
+ &lt;td&gt;Agent reads doc, auto-configures&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Caller configuration&lt;/td&gt;
+ &lt;td&gt;Need to configure server connection&lt;/td&gt;
+ &lt;td&gt;Read files directly&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="mcps-cloud-advantage-is-a-false-premise"&gt;MCP&amp;rsquo;s Cloud Advantage Is a False Premise&lt;/h2&gt;
+&lt;p&gt;One often-cited advantage of MCP is cloud deployment—the server runs independently and multiple Agents can share it.&lt;/p&gt;
+&lt;p&gt;This advantage is real, but it belongs to the &amp;ldquo;network call&amp;rdquo; capability category, not to the MCP protocol itself. Agent Skill can be built entirely on REST API calls, and scripts in Skill documents can call any HTTP endpoint. On cloud deployment, Skill doesn&amp;rsquo;t fall short.&lt;/p&gt;
+&lt;p&gt;For SaaS services that already have REST APIs, the comparison becomes even clearer:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;With MCP: write a server that wraps the REST API, maintain the schema, keep in sync with MCP protocol versions&lt;/li&gt;
+&lt;li&gt;With Skill: write a Markdown document that clearly describes what the API does and how to call it, and AI reads it and uses it directly&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;MCP requires you to maintain an extra protocol system and server process, while Skill covers all these needs at lower cost.&lt;/strong&gt; When a simpler solution can do all the same things, the complex one should step aside.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="skills-form-is-also-evolving"&gt;Skill&amp;rsquo;s Form Is Also Evolving&lt;/h2&gt;
+&lt;p&gt;But I have to admit that Markdown + file system may not be the end state either.&lt;/p&gt;
+&lt;p&gt;This approach has an unsolved problem: &lt;strong&gt;the dynamism of Skill&lt;/strong&gt;. When a Skill&amp;rsquo;s external API dependencies change, or when it needs real-time state, how do static documents in the file system keep up? The current solution is to rely on scripts and templates, but the script execution environment, security boundaries, and state management all lack standard answers.&lt;/p&gt;
+&lt;p&gt;Additionally, dependency relationships between Skills, priority ordering, and decision logic when multiple Skills apply to one request are all open questions.&lt;/p&gt;
+&lt;p&gt;My judgment: &lt;strong&gt;Skill will evolve, possibly no longer centered on static files in the file system&lt;/strong&gt;, with some more dynamic mechanism for capability registration and discovery emerging. But that mechanism will most likely be a continuation of the Skill design philosophy, not a return to MCP&amp;rsquo;s protocol design direction.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="closing-thoughts"&gt;Closing Thoughts&lt;/h2&gt;
+&lt;p&gt;MCP isn&amp;rsquo;t a bad design. It took an important first step in AI tool calling, turning &amp;ldquo;AI connecting to the external world&amp;rdquo; from impossible to possible.&lt;/p&gt;
+&lt;p&gt;But there&amp;rsquo;s still distance between &amp;ldquo;possible&amp;rdquo; and &amp;ldquo;right.&amp;rdquo; When we discover a way to package capabilities that better fits how AI thinks, the transitional approach should exit the stage.&lt;/p&gt;
+&lt;p&gt;Is Agent Skill the final answer? I&amp;rsquo;m not sure. But it&amp;rsquo;s closer to what AI truly needs—semantics, context, flexibility, and a calling experience with no extra protocol layer. This packaging is friendly to engineers and even more friendly to ordinary users, because it hides technical complexity inside the document layer, letting the Agent handle things users shouldn&amp;rsquo;t have to think about.&lt;/p&gt;
+&lt;p&gt;This direction of exploration deserves to be taken seriously.&lt;/p&gt;
+&lt;p&gt;Finally, here&amp;rsquo;s my 2025 dissection (roast) of the MCP concept.&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://sund.site/images/ai-agent-tool-comparison-mcp-transitonal/x-mcp-thread.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;</description></item></channel></rss>

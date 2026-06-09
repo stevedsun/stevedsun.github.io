@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on Steve Sun</title><link>https://sund.site/en/categories/python/</link><description>Recent content in Python on Steve Sun</description><generator>Hugo</generator><language>en</language><copyright>© 2013-2026, Steve Sun</copyright><lastBuildDate>Thu, 19 Jan 2023 08:05:27 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/en/categories/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Research on Python Dependency Management Tools</title><link>https://sund.site/en/posts/2023/python-packaging/</link><pubDate>Thu, 19 Jan 2023 08:05:27 +0800</pubDate><guid>https://sund.site/en/posts/2023/python-packaging/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;If you&amp;rsquo;re working on an engineering project, &lt;a href="https://python-poetry.org/"&gt;poetry&lt;/a&gt; is currently the best solution. But if you don&amp;rsquo;t like Python&amp;rsquo;s virtualenv, give &lt;a href="https://pdm.fming.dev/latest/"&gt;pdm&lt;/a&gt; a try.&lt;/p&gt;
+&lt;h2 id="the-mess-that-is-python"&gt;The Mess That Is Python&lt;/h2&gt;
+&lt;p&gt;Python&amp;rsquo;s dependency management tool, &lt;code&gt;pip&lt;/code&gt;, has long been a target of complaints from developers. From my perspective, &lt;code&gt;pip&lt;/code&gt; has three fatal flaws:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It cannot solve the issue of Python dependency environment isolation&lt;/li&gt;
+&lt;li&gt;The dependency file &lt;code&gt;requirements.txt&lt;/code&gt; is not truly plug-and-play&lt;/li&gt;
+&lt;li&gt;Packaging and deployment are very cumbersome, requiring manual configuration&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="the-environment-isolation-problem"&gt;The Environment Isolation Problem&lt;/h3&gt;
+&lt;p&gt;Python&amp;rsquo;s dependency libraries can be installed either globally on the system or in the user directory (&lt;code&gt;/home/${USER}/.local&lt;/code&gt;). But if you&amp;rsquo;re managing multiple Python projects at the same time, you need to split each project&amp;rsquo;s dependencies into separate folders.&lt;/p&gt;
+&lt;p&gt;The traditional approach is to use virtualenv to create isolated Python binaries and a project-specific virtual environment for dependencies (a &amp;ldquo;virtual environment&amp;rdquo; isn&amp;rsquo;t a virtual machine—it&amp;rsquo;s a command environment bound to a terminal session). The downsides of this approach are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Developers constantly have to ask themselves, &amp;ldquo;Which project directory am I in? Do I need to switch into this virtual environment?&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;virtualenv only solves environment isolation; it doesn&amp;rsquo;t synchronize dependency file updates or handle packaging and publishing.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="the-dependency-installation-problem"&gt;The Dependency Installation Problem&lt;/h3&gt;
+&lt;p&gt;Python&amp;rsquo;s earliest way of managing dependencies was to manually run &lt;code&gt;pip install xxx&lt;/code&gt; to install them, and then &lt;code&gt;pip freeze&lt;/code&gt; to export the dependency list to a &lt;code&gt;requirements.txt&lt;/code&gt; file. But this text file is quite confusing.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Unlike Node.js, there&amp;rsquo;s no easy way to upgrade or downgrade a dependency version and have it automatically sync to the text file.&lt;/li&gt;
+&lt;li&gt;It flatly lists all first- and second-level dependencies (i.e., the dependencies of dependencies). Because some Python packages depend on the C libraries installed on the system, running &lt;code&gt;pip install -r requirements.txt&lt;/code&gt; on different systems can produce inconsistent results, often with errors.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="the-packaging-and-deployment-problem"&gt;The Packaging and Deployment Problem&lt;/h3&gt;
+&lt;p&gt;Python generally uses &lt;code&gt;wheel&lt;/code&gt; to package binaries. It only solves the packaging problem; the environment dependencies are handled by pip and setuptools, so even when using wheel, you still have to worry about environment isolation and dependency management.&lt;/p&gt;
+&lt;p&gt;Additionally, due to compatibility issues between Python versions and the uncontrollable forces of low-level implementation, wheel builds can fail inexplicably.&lt;/p&gt;
+&lt;h2 id="existing-solutions"&gt;Existing Solutions&lt;/h2&gt;
+&lt;p&gt;Over time, a number of tools have appeared: &lt;code&gt;pipx&lt;/code&gt;, &lt;code&gt;pipenv&lt;/code&gt;, &lt;code&gt;conda&lt;/code&gt;, &lt;code&gt;poetry&lt;/code&gt;, and the more recent &lt;code&gt;pdm&lt;/code&gt; I&amp;rsquo;ve come across. They all address Python&amp;rsquo;s pain points to some degree. This article:&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging"&gt;How to improve Python packaging, or why fourteen tools are at least twelve too many&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;compares the pros and cons of various tools. The conclusion is that poetry and pdm are the most appropriate tools at present. And pdm is currently the only dependency management tool that supports &lt;a href="https://peps.python.org/pep-0582/"&gt;PEP 582&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="what-is-pep-582"&gt;What Is PEP 582&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This PEP proposes to add to Python a mechanism to automatically recognize a &lt;code&gt;__pypackages__&lt;/code&gt; directory and prefer importing packages installed in this location over user or global site-packages. This will avoid the steps to create, activate or deactivate &amp;ldquo;virtual environments&amp;rdquo;. Python will use the &lt;code&gt;__pypackages__&lt;/code&gt; from the base directory of the script when present.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;The purpose of this PEP is to manage Python dependencies in a single &lt;code&gt;__pypackages__&lt;/code&gt; folder, similar to &lt;code&gt;node_modules&lt;/code&gt; in Node.js. Users no longer need to create virtual environments to isolate dependency packages. Python will automatically recognize and install dependencies.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Updated July 2, 2023: The PEP 582 proposal has been rejected. PDM still supports it for now, but it&amp;rsquo;s not recommended for developers to use this feature.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id="pdm"&gt;PDM&lt;/h3&gt;
+&lt;p&gt;PDM implements PEP 582! This means we no longer have to think about virtual environments when solving Python dependency issues.&lt;/p&gt;
+&lt;h4 id="initialize-a-project"&gt;Initialize a Project&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pdm init
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;PDM will then ask a few questions. Be sure to choose &lt;strong&gt;not to use a virtual environment&lt;/strong&gt;, so PDM uses the PEP 582 solution by default, generating a &lt;code&gt;__pypackages__&lt;/code&gt; folder in the project similar to Node.js&amp;rsquo;s &lt;code&gt;node_modules&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The rest of the operations are very similar to Node.js&amp;rsquo;s npm.&lt;/p&gt;
+&lt;p&gt;After adding a dependency, PDM will automatically update the &lt;code&gt;pyproject.toml&lt;/code&gt; file.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pdm add requests
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="install-project-dependencies"&gt;Install Project Dependencies&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pdm install
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="run-the-project"&gt;Run the Project&lt;/h4&gt;
+&lt;p&gt;First, add the following to &lt;code&gt;pyproject.toml&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;tool.pdm.scripts&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;start&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;flask run -p 54321&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then run:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pdm run start
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="build-and-publish"&gt;Build and Publish&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pdm build
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pdm publish
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;If you&amp;rsquo;re doing scientific research, use &lt;code&gt;conda&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re working on an engineering project, &lt;code&gt;poetry&lt;/code&gt; is currently the most widely adopted solution in the industry and is usually a solid dependency management tool. But if you don&amp;rsquo;t like Python&amp;rsquo;s virtualenv, &lt;code&gt;pdm&lt;/code&gt; is the better choice.&lt;/p&gt;</description></item></channel></rss>

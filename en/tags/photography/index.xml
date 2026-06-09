@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Photography on Steve Sun</title><link>https://sund.site/en/tags/photography/</link><description>Recent content in Photography on Steve Sun</description><generator>Hugo</generator><language>en</language><copyright>© 2013-2026, Steve Sun</copyright><lastBuildDate>Fri, 17 May 2024 23:07:29 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/en/tags/photography/index.xml" rel="self" type="application/rss+xml"/><item><title>Ricoh GR II: My Experience</title><link>https://sund.site/en/posts/2024/ricoh_gr2_sharing/</link><pubDate>Fri, 17 May 2024 23:07:29 +0800</pubDate><guid>https://sund.site/en/posts/2024/ricoh_gr2_sharing/</guid><description>&lt;p&gt;I have owned the GR II for many years. A few years ago I wrote a post explaining the &lt;a href="https://sund.site/posts/2019/ricoh-gr2-settings/"&gt;Ricoh GR II settings&lt;/a&gt; as a beginner sharing what each parameter does. Today&amp;rsquo;s post is about what I have learned after years of use.&lt;/p&gt;
+&lt;h2 id="in-camera-cropping"&gt;In-Camera Cropping&lt;/h2&gt;
+&lt;p&gt;The GR II is a 28mm camera, and for the average street-shooter the biggest pain point is often missing the right composition. The 28mm advantage is a wider field of view that captures more context, but the trade-off is that it tends to include too many distracting elements in the frame.&lt;/p&gt;
+&lt;p&gt;Fortunately, the GR II supports in-camera cropping, which can crop the 28mm down to a 35mm or 47mm equivalent. This makes street-photography composition much more flexible (at the cost of some image quality).&lt;/p&gt;
+&lt;h2 id="aperture-use-cases"&gt;Aperture Use Cases&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;F2.8 — people and scenes indoors&lt;/li&gt;
+&lt;li&gt;F4 — still life&lt;/li&gt;
+&lt;li&gt;F5.6 — a balanced choice&lt;/li&gt;
+&lt;li&gt;F8 — the sharpest aperture setting&lt;/li&gt;
+&lt;li&gt;F11 — beautiful sunstars&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="custom-profiles"&gt;Custom Profiles&lt;/h2&gt;
+&lt;h3 id="fuji-film-style"&gt;FUJI Film Style&lt;/h3&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%283%29.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Image Control: Positive Film. Saturation: 4, Contrast: 5, Vibrancy: 6&lt;/li&gt;
+&lt;li&gt;White Balance: Multi-Pattern AWB&lt;/li&gt;
+&lt;li&gt;White Balance Compensation: A: 3, G: 4&lt;/li&gt;
+&lt;li&gt;Exposure Compensation: -1.0 ~ -1.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This profile imitates the look of Fuji film. It has high contrast and vibrancy, with a subtle green tone.&lt;/p&gt;
+&lt;h3 id="everyday-cool-blue"&gt;Everyday Cool Blue&lt;/h3&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%282%29.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Image Control: Positive Film. Saturation: 7, Contrast: 3, Vibrancy: 7&lt;/li&gt;
+&lt;li&gt;White Balance: Multi-Pattern AWB&lt;/li&gt;
+&lt;li&gt;White Balance Compensation: B: 7, M: 0&lt;/li&gt;
+&lt;li&gt;Exposure Compensation: -1.0 ~ -1.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This profile gives a clean, calm blue cast. It suits everyday subjects with cool tones.&lt;/p&gt;
+&lt;h3 id="natural--fresh"&gt;Natural &amp;amp; Fresh&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Image Control: Positive Film. Saturation: 2, Contrast: 4, Vibrancy: 3&lt;/li&gt;
+&lt;li&gt;White Balance: Multi-Pattern AWB&lt;/li&gt;
+&lt;li&gt;White Balance Compensation: B: 8, M: 0&lt;/li&gt;
+&lt;li&gt;Exposure Compensation: -1.0 ~ -1.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Good for low-contrast, fresh-looking travel shots.&lt;/p&gt;
+&lt;h3 id="minimalist--cold"&gt;Minimalist / Cold&lt;/h3&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/Pasted%20image%20%284%29.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Image Control: Soft. Saturation: 9, Contrast: 5, Vibrancy: 9&lt;/li&gt;
+&lt;li&gt;White Balance: CT: 4200K&lt;/li&gt;
+&lt;li&gt;White Balance Compensation: B: 8, M: 2&lt;/li&gt;
+&lt;li&gt;Exposure Compensation: -0.3 ~ -1.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This profile suits mountains, deserts, and quiet urban scenes with a low-key, low-saturation feel.&lt;/p&gt;
+&lt;p&gt;The two profiles above come from &lt;a href="https://weibo.com/calcas"&gt;霜绝&amp;rsquo;s sharing&lt;/a&gt;. He has a few more profiles on his site.&lt;/p&gt;
+&lt;h2 id="snap-mode"&gt;Snap Mode&lt;/h2&gt;
+&lt;p&gt;Snap Mode is a mode in which, when you fully press the shutter in one quick motion, the GR focuses at a preset distance and captures the frame immediately.&lt;/p&gt;
+&lt;p&gt;Snap Mode works best at F5.6 ~ F6.0. Within this aperture range, the snap focus distance covers 1 to 5 meters or further, so subjects in that range are rendered sharply.&lt;/p&gt;
+&lt;p&gt;For more on this mode, I recommend Ammo&amp;rsquo;s video: &lt;a href="https://www.youtube.com/watch?v=JAZd5cM03NY"&gt;【GR浪漫】 GR III GR IIIx 感性で描く日常スナップ&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="tav-and-p-modes"&gt;TAv and P Modes&lt;/h2&gt;
+&lt;p&gt;TAv and P modes are similar and unique to the GR II. In TAv mode you manually set the aperture and shutter speed, and the camera auto-adjusts ISO. The benefit is that you can use a relatively fast shutter speed (say 1/125) to freeze people moving on the street while easily adjusting the aperture for different depths of field. Just be careful not to let ISO go above 800, or noise becomes very noticeable.&lt;/p&gt;
+&lt;p&gt;P mode is the one I use most for street shooting. It locks ISO, and you choose between aperture and shutter speed, with the camera handling the other. This is great for grab shots in poor light, which is perfect for a perpetually overcast city like Chengdu 🤣&lt;/p&gt;</description></item></channel></rss>

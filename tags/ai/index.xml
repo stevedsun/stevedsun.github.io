@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/tags/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh-CN</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sun, 07 Jun 2026 10:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>我怎么用 Hermes Agent 写代码</title><link>https://sund.site/posts/2026/how-i-use-hermes-agent/</link><pubDate>Sun, 07 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/how-i-use-hermes-agent/</guid><description>&lt;p&gt;&lt;figure
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/tags/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sun, 07 Jun 2026 10:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>我怎么用 Hermes Agent 写代码</title><link>https://sund.site/posts/2026/how-i-use-hermes-agent/</link><pubDate>Sun, 07 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/how-i-use-hermes-agent/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -72,7 +72,7 @@
 &lt;p&gt;AI 写代码这件事发展得太快了。年初我还在手动写每一行，年中已经有了一个能独立完成功能、验收、部署的流水线。我做的事情从写代码变成了定规则、设边界、验收结果。&lt;/p&gt;
 &lt;p&gt;工程师的角色在变化。以前你是砖瓦工，一块一块砌墙。现在你是牧场主，把栅栏围好，草料放足，让羊群自己吃草长肉。软件业正在从建筑业变成畜牧业。&lt;/p&gt;
 &lt;p&gt;这个趋势只会加速。更好的模型意味着更简单的 harness，更便宜的执行成本。你不需要成为最好的程序员，你需要成为最好的规则制定者。定义清楚什么能做、什么不能做、怎么才算做好——剩下的交给 agent。&lt;/p&gt;
-&lt;p&gt;我花在定义边界上的时间，回报率远高于花在具体编码上的时间。这是让我最意外的发现。&lt;/p&gt;</description></item><item><title>【译文】运行一个 AI-native 的工程团队</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</link><pubDate>Wed, 03 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA-ai-native-%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9B%A2%E9%98%9F/</guid><description>&lt;p&gt;&lt;figure
+&lt;p&gt;我花在定义边界上的时间，回报率远高于花在具体编码上的时间。这是让我最意外的发现。&lt;/p&gt;</description></item><item><title>【译文】运行一个 AI-native 的工程团队</title><link>https://sund.site/posts/2026/running-an-ai-native-engineering-org/</link><pubDate>Wed, 03 Jun 2026 10:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/running-an-ai-native-engineering-org/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -156,7 +156,7 @@
 &lt;h2 id="如何开始"&gt;如何开始&lt;/h2&gt;
 &lt;p&gt;如果只留一句话：选你团队里最吵的那个 workflow——最贵的、最让人头疼的、团队最不想面对的。然后问：&lt;strong&gt;它还在实现它的目的吗？如果是，能不能自动化它？&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;我以前在一个团队，有个昂贵的周会，一大屋子人。我发现所有人都在低头敲电脑，只有轮到自己汇报时才抬起头说几句，然后又缩回去。我问了一个最简单的问题：&amp;ldquo;我们为什么要开这个会？感觉像是在花很大的成本做没什么价值的事。&amp;ldquo;就这一句话，所有人都意识到这个会没用。我们取消了它。&lt;/p&gt;
-&lt;p&gt;所以，问自己一个问题：你的工程流程里，有什么是可以自动化、甚至直接砍掉的？&lt;/p&gt;</description></item><item><title>【译文】你可以直接这么说</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</link><pubDate>Fri, 29 May 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%99%E4%B9%88%E8%AF%B4/</guid><description>&lt;p&gt;&lt;figure
+&lt;p&gt;所以，问自己一个问题：你的工程流程里，有什么是可以自动化、甚至直接砍掉的？&lt;/p&gt;</description></item><item><title>【译文】你可以直接这么说</title><link>https://sund.site/posts/2026/you-can-just-say-it/</link><pubDate>Fri, 29 May 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/you-can-just-say-it/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -184,7 +184,7 @@
 &lt;p&gt;&lt;em&gt;&amp;ldquo;人的尊严不依赖于人的能力。&amp;rdquo;&lt;/em&gt; —— Magnifica Humanitas, §50&lt;/p&gt;
 &lt;p&gt;神学中也使用类似的术语。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;本文由 AI 翻译，可能存在错误&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>【译文】为什么你的"AI-First"策略很可能是错的</title><link>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E7%9A%84ai-first%E7%AD%96%E7%95%A5%E5%BE%88%E5%8F%AF%E8%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</link><pubDate>Mon, 25 May 2026 23:55:00 +0800</pubDate><guid>https://sund.site/posts/2026/%E8%AF%91%E6%96%87%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E7%9A%84ai-first%E7%AD%96%E7%95%A5%E5%BE%88%E5%8F%AF%E8%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</guid><description>&lt;p&gt;&lt;figure
+&lt;p&gt;&lt;strong&gt;本文由 AI 翻译，可能存在错误&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>【译文】为什么你的"AI-First"策略很可能是错的</title><link>https://sund.site/posts/2026/why-your-ai-first-strategy-translation/</link><pubDate>Mon, 25 May 2026 23:55:00 +0800</pubDate><guid>https://sund.site/posts/2026/why-your-ai-first-strategy-translation/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -332,7 +332,7 @@
 &lt;p&gt;这些工具对任何团队都是可用的。我们的栈里没有任何东西是专有的。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;竞争优势在于围绕这些工具重新设计一切的决心，以及承受代价的意愿。&lt;/strong&gt; 代价是真实的：员工的不确定性、CTO 每天工作 18 小时、资深工程师质疑自己的价值、旧系统消失新系统尚未被证明的两周真空期。&lt;/p&gt;
 &lt;p&gt;我们承受了那个代价。两个月后，数字说明了一切。&lt;/p&gt;
-&lt;p&gt;我们是构建 agent 平台的公司。我们用 agent 构建了它。&lt;/p&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/cursor%E7%AD%89ai%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E7%9A%84%E8%83%8C%E5%90%8E%E5%8E%9F%E7%90%86/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/cursor%E7%AD%89ai%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E7%9A%84%E8%83%8C%E5%90%8E%E5%8E%9F%E7%90%86/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
+&lt;p&gt;我们是构建 agent 平台的公司。我们用 agent 构建了它。&lt;/p&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki/"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
 &lt;p&gt;这个问题的答案就是 AST 分块。&lt;/p&gt;
 &lt;p&gt;这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p&gt;
 &lt;h2 id="ast"&gt;AST&lt;/h2&gt;
@@ -419,7 +419,7 @@
 &lt;h2 id="扩展阅读"&gt;扩展阅读&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/%E4%B8%8Eai%E5%8D%8F%E4%BD%9C%E7%BC%96%E7%A8%8B%E6%B5%8B%E8%AF%95%E7%AF%87/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/%E4%B8%8Eai%E5%8D%8F%E4%BD%9C%E7%BC%96%E7%A8%8B%E6%B5%8B%E8%AF%95%E7%AF%87/</guid><description>&lt;p&gt;未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>与AI协作编程──测试篇</title><link>https://sund.site/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/posts/2024/pairing-with-ai-01/</guid><description>&lt;p&gt;未来的程序开发范式，将是人与 AI 协作编程。这已经是软件行业不争的事实。像 Windsurf，Cusor，Copilot 之类的编程工具一方面提高了开发效率，另一方面也让代码变得更黑盒，更不易阅读和维护。&lt;/p&gt;
 &lt;p&gt;我试图浅显地讨论一下哪些软件开发的手段更适合在 AI 时代提高 AI 编写代码的可观测性和维护性。接下来所有以「与 AI 协作编程」为标题的文章都只是抛砖引玉，并未形成系统化方法论。期望任何错误之处，读者不吝赐教。&lt;/p&gt;
 &lt;h2 id="使用-ai-编写代码有哪些常见问题"&gt;使用 AI 编写代码有哪些常见问题？&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;可观测性问题：AI 实现的功能不完备，经常要手动修改片段&lt;/strong&gt;&lt;/p&gt;

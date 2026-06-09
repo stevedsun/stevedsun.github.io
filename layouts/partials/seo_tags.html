@@ -8,10 +8,31 @@
 {{/*
   For post pages, custom_head.html renders the OG / Twitter tags
   (using the first in-content image) plus JSON-LD.
+  For list pages (the /posts/ section), render custom OG / Twitter tags
+  with site defaults so social previews aren't empty.
   For all other pages, fall back to the built-in templates.
 */}}
 {{ if and .IsPage (eq .Section "posts") }}
   {{/* OG / Twitter / JSON-LD are emitted by custom_head.html. */}}
+{{ else if and .IsNode (eq .Section "posts") }}
+  {{ $desc := "" }}
+  {{ with .Description }}{{ $desc = . }}{{ end }}
+  {{ if not $desc }}{{ with .Site.Params.Description }}{{ $desc = . }}{{ end }}{{ end }}
+  {{ $absImage := "" }}
+  {{ with index .Site.Params.images 0 }}{{ $absImage = . | absURL }}{{ end }}
+  {{ $title := or .Title .Site.Title }}
+
+  <meta property="og:title" content="{{ $title }}" />
+  <meta property="og:description" content="{{ $desc }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{ .Permalink }}" />
+  <meta property="og:site_name" content="{{ .Site.Title }}" />
+  {{ if $absImage }}<meta property="og:image" content="{{ $absImage }}" />{{ end }}
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ $title }}" />
+  <meta name="twitter:description" content="{{ $desc }}" />
+  {{ if $absImage }}<meta name="twitter:image" content="{{ $absImage }}" />{{ end }}
 {{ else }}
   <!-- Open Graph / Facebook -->
   {{ template "_internal/opengraph.html" . }}

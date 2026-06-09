@@ -11,6 +11,7 @@ body,div.post-body,h1,h2,h3,h4 {
   - For other pages: delegate to the built-in templates via seo_tags.html.
 */}}
 {{ $isPost := and .IsPage (eq .Section "posts") }}
+{{ $isHome := .IsHome }}
 
 {{ if $isPost }}
   {{ $ogImage := "" }}
@@ -43,6 +44,15 @@ body,div.post-body,h1,h2,h3,h4 {
   {{ with .Site.Params.name }}{{ $authorName = . }}{{ end }}
   {{ with .Site.Params.RSS.name }}{{ $authorName = . }}{{ end }}
 
+  {{/* Publisher logo (absolute URL). */}}
+  {{ $publisherLogo := "" }}
+  {{ with .Site.Params.logo }}
+    {{ $publisherLogo = . | absURL }}
+  {{ end }}
+
+  {{/* Author profile URL. */}}
+  {{ $authorURL := "https://github.com/stevedsun" }}
+
   {{/* Per-language og:locale */}}
   {{ $locale := "zh_CN" }}
   {{ if eq .Language.Lang "en" }}{{ $locale = "en_US" }}{{ end }}
@@ -54,6 +64,12 @@ body,div.post-body,h1,h2,h3,h4 {
   <meta property="og:site_name" content="{{ .Site.Title }}" />
   <meta property="og:locale" content="{{ $locale }}" />
   <meta property="og:image" content="{{ $absImage }}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="{{ .Title }}" />
+  <meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" />
+  <meta property="article:modified_time" content="{{ (.Lastmod | default .Date).Format "2006-01-02T15:04:05Z07:00" }}" />
+  <meta property="article:author" content="{{ $authorURL }}" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{{ .Title }}" />
@@ -72,20 +88,112 @@ body,div.post-body,h1,h2,h3,h4 {
   <link rel="alternate" hreflang="x-default" href="{{ .Site.BaseURL }}" />
 
   {{/* JSON-LD structured data for the post. */}}
-  {{ $ld := dict
+  {{ $keywords := "" }}
+  {{ with .Params.tags }}
+    {{ $keywords = delimit . "," }}
+  {{ end }}
+  {{ $articleSection := "" }}
+  {{ with index .Params.categories 0 }}{{ $articleSection = . }}{{ end }}
+  {{ $timeRequired := printf "PT%dM" .ReadingTime }}
+
+  {{ $publisherDict := dict "@type" "Organization" "name" .Site.Title "url" .Site.BaseURL }}
+  {{ if $publisherLogo }}
+    {{ $publisherDict = merge $publisherDict (dict "logo" (dict "@type" "ImageObject" "url" $publisherLogo)) }}
+  {{ end }}
+
+  {{ $authorDict := dict "@type" "Person" "name" $authorName "url" $authorURL }}
+
+  {{ $postLD := dict
     "@context" "https://schema.org"
     "@type" "BlogPosting"
     "headline" .Title
     "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
     "dateModified" ((.Lastmod | default .Date).Format "2006-01-02T15:04:05Z07:00")
-    "author" (dict "@type" "Person" "name" $authorName)
-    "publisher" (dict "@type" "Person" "name" $authorName)
+    "author" $authorDict
+    "publisher" $publisherDict
     "description" $desc
     "image" $absImage
     "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+    "wordCount" .WordCount
+    "timeRequired" $timeRequired
+    "inLanguage" .Language.Lang
+  }}
+  {{ if $keywords }}
+    {{ $postLD = merge $postLD (dict "keywords" $keywords) }}
+  {{ end }}
+  {{ if $articleSection }}
+    {{ $postLD = merge $postLD (dict "articleSection" $articleSection) }}
+  {{ end }}
+  <script type="application/ld+json">
+  {{ $postLD | jsonify | safeJS }}
+  </script>
+
+  {{/* BreadcrumbList JSON-LD. */}}
+  {{ $listURL := printf "/%s/posts/" .Language.Lang }}
+  {{ if eq .Language.Lang "zh" }}{{ $listURL = "/posts/" }}{{ end }}
+  {{ $breadcrumbLD := dict
+    "@context" "https://schema.org"
+    "@type" "BreadcrumbList"
+    "itemListElement" (slice
+      (dict "@type" "ListItem" "position" 1 "name" (i18n "home" | default "Home") "item" .Site.BaseURL)
+      (dict "@type" "ListItem" "position" 2 "name" (i18n "posts" | default "Posts") "item" (printf "%s%s" .Site.BaseURL (strings.TrimPrefix "/" $listURL)))
+      (dict "@type" "ListItem" "position" 3 "name" .Title "item" .Permalink)
+    )
   }}
   <script type="application/ld+json">
-  {{ $ld | jsonify | safeJS }}
+  {{ $breadcrumbLD | jsonify | safeJS }}
+  </script>
+{{ end }}
+
+{{/* WebSite + Organization JSON-LD for the homepage. */}}
+{{ if $isHome }}
+  {{ $siteDesc := .Site.Params.description }}
+  {{ if not $siteDesc }}{{ $siteDesc = "Steve Sun's blog" }}{{ end }}
+
+  {{ $orgLogo := "" }}
+  {{ with .Site.Params.logo }}
+    {{ $orgLogo = . | absURL }}
+  {{ end }}
+
+  {{ $sameAs := slice }}
+  {{ with .Site.Params.social }}
+    {{ range . }}{{ $sameAs = $sameAs | append . }}{{ end }}
+  {{ end }}
+
+  {{ $orgDict := dict
+    "@context" "https://schema.org"
+    "@type" "Person"
+    "name" (or .Site.Params.name .Site.Title)
+    "url" .Site.BaseURL
+    "description" $siteDesc
+  }}
+  {{ if $orgLogo }}
+    {{ $orgDict = merge $orgDict (dict "image" $orgLogo) }}
+  {{ end }}
+  {{ if gt (len $sameAs) 0 }}
+    {{ $orgDict = merge $orgDict (dict "sameAs" $sameAs) }}
+  {{ end }}
+
+  {{ $searchURL := printf "%s/search?q={search_term_string}" (strings.TrimSuffix "/" .Site.BaseURL) }}
+  {{ $websiteLD := dict
+    "@context" "https://schema.org"
+    "@type" "WebSite"
+    "url" .Site.BaseURL
+    "name" .Site.Title
+    "description" $siteDesc
+    "inLanguage" .Language.Lang
+    "potentialAction" (dict
+      "@type" "SearchAction"
+      "target" (dict "@type" "EntryPoint" "urlTemplate" $searchURL)
+      "query-input" "required name=search_term_string"
+    )
+  }}
+
+  <script type="application/ld+json">
+  {{ $websiteLD | jsonify | safeJS }}
+  </script>
+  <script type="application/ld+json">
+  {{ $orgDict | jsonify | safeJS }}
   </script>
 {{ end }}
 

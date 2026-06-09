@@ -1,11 +1,11 @@
 ---
 title: "《Python源码剖析》第二部分——Python虚拟机基础"
+slug: "python-2"
 date: 2017-07-13T00:00:00
 categories: [Python]
 tags: [python]
 aliases: [/posts/python-2/]
 ---
-
 ## Python 执行环境
 
 > 在编译过程中，这些包含在 Python 源代码中的静态信息都会被 Python 编译器收集起来，编译的结果中包含了字符串，常量值，字节码等在源代码中出现的一切有用的静态信息。在 Python 运行期间，这些源文件中提供的静态信息最终会被存储在一个运行时的对象中，当 Python 运行结束后，这个运行时对象中所包含的信息甚至还会被存储在一种文件中。这个对象和文件就是我们这章探索的重点：PyCodeObject 对象和 pyc 文件。

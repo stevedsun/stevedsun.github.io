@@ -1,5 +1,6 @@
 ---
 title: "外部化的J人"
+slug: "ext-judging"
 date: 2025-11-03T22:07:40+08:00
 categories: [随笔]
 tags: []

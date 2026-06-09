@@ -1,5 +1,6 @@
 ---
 title: '【译文】为什么你的"AI-First"策略很可能是错的'
+slug: "why-your-ai-first-strategy-translation"
 date: 2026-05-25T23:55:00+08:00
 categories: [AI]
 tags: [AI, AI-First, Engineering, Translation, AI Agent]

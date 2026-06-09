@@ -1,9 +1,9 @@
 ---
 title: "8月做了什么"
+slug: "aug-routine"
 date: 2019-09-02T15:52:58+08:00
 categories: [随笔]
 ---
-
 准备新开一个话题，用每个月的总结替代年度总结。这是第一篇。
 
 最近国内国际上大事不断，在这个历史转折点当口，每个从互联网汲取信息的人都应该有点独立思考能力。「第一性原理」（first principles thinking）是伊隆·马斯克在 TED 演讲时回答「为什么能够在不同的领域都能够取得成功？」时给出的答案。第一性原则要求我们剔除用「比较」来权衡事物好坏的思维方式，转而选择一层层向下探求本质，再由本质反推出认识。这里有篇[博客文章](https://neilkakkar.com/A-framework-for-First-Principles-Thinking.html)做了细致的讲解。

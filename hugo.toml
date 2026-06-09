@@ -4,6 +4,28 @@ baseURL = "https://sund.site/"
 title = "Steve Sun"
 description = "Steve Sun 的博客"
 languageCode = "zh-CN"
+
+defaultContentLanguage = "zh"
+
+[languages]
+  [languages.zh]
+    languageName = "中文"
+    weight = 1
+    contentDir = "content"
+    title = "Steve Sun"
+    [languages.zh.params]
+      description = "Steve Sun 的博客"
+      copyright = "版权所有 © 2013-2026, Steve Sun"
+
+  [languages.en]
+    languageName = "English"
+    weight = 2
+    contentDir = "content"
+    title = "Steve Sun"
+    [languages.en.params]
+      description = "Steve Sun's Blog"
+      copyright = "© 2013-2026, Steve Sun"
+
 enableRobotsTXT = true
 disableKinds = ["taxonomy"]
 ignoreErrors = ["error-disable-taxonomy"]

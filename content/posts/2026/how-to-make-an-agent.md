@@ -1,5 +1,6 @@
 ---
 title: "如何设计一个智能体（AI Agent）"
+slug: "how-to-make-an-agent"
 date: 2026-05-26T16:11:00+08:00
 draft: false
 categories: [AI]

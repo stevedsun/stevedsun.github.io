@@ -1,13 +1,13 @@
 {{ define "main" }}
 <content>
   {{ if .Data.Singular }}
-  <h3 style="margin-bottom:0">筛选："{{ .Title }}"</h3>
+  <h3 style="margin-bottom:0">{{ i18n "filter" }}："{{ .Title }}"</h3>
   <small>
-    <a href="{{ "blog" | relURL }}">清除筛选</a>
+    <a href="{{ "blog" | relURL }}">{{ i18n "clear_filter" }}</a>
   </small>
   {{ end }}
   {{ if .Site.Params.postSearch }}
-  <input id="search-input" type="text" placeholder="搜索..." style="margin-top: 16px" />
+  <input id="search-input" type="text" placeholder="{{ i18n "search_placeholder" }}" style="margin-top: 16px" />
   <script>
     // 等待 DOM 完全加载后执行
     document.addEventListener('DOMContentLoaded', function () {
@@ -40,7 +40,7 @@
         {{ end }}
 
         {{ if .Site.Params.showPostCount }}
-        const countText = `共 ${visiblePosts} 篇`;
+        const countText = `{{ i18n "post_count" 0 }}`.replace('0', visiblePosts);
         document.getElementById('post-count').innerHTML = countText;
         {{ end }}
       }
@@ -53,7 +53,7 @@
   {{ end }}
   {{ if .Site.Params.showPostCount }}
   {{ $visiblePages := where .Pages "Params.hidden" "!=" true }}
-  <p id="post-count">共 {{ len $visiblePages }} 篇</p>
+  <p id="post-count">{{ i18n "post_count" (len $visiblePages) }}</p>
   {{ end }}
   <ul class="blog-posts">
     {{ $currentYear := 0 }}
@@ -83,7 +83,7 @@
     {{ end }}
     {{ else }}
     <li>
-      暂无文章
+      {{ i18n "no_posts" }}
     </li>
     {{ end }}
   </ul>

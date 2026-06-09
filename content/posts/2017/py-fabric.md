@@ -1,12 +1,12 @@
 ---
 title: "Python Fabric库无法启动后台进程的问题和解决办法"
+slug: "py-fabric"
 date: 2016-10-19T16:25:51
 categories: [Python]
 tags: [python]
 description: "近期在调试fabric执行远程脚本时遇到的问题和产生原因"
 aliases: [/posts/py-fabric/]
 ---
-
 ## 问题和处理方法
 
 Python 的 Fabric 库能够方便的远程操作 Linux 主机执行命令或传输文件。其实现方式就是底层实现 ssh 协议，例如执行下面代码的 run 方法，在目标主机上启动一个 zabbix 后台服务：

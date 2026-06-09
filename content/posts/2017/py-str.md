@@ -1,12 +1,12 @@
 ---
 title: "Python2 中字符类型的一些坑"
+slug: "py-str"
 date: 2017-01-11T11:09:00
 categories: [Python]
 tags: [python]
 description: "Python 2.x对str类型的双重标准"
 aliases: [/posts/py-str/]
 ---
-
 ## 问题
 
 有一道面试题是这样的：

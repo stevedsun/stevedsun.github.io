@@ -1,5 +1,6 @@
 ---
 title: "监控系统项目复盘"
+slug: "metrics-project-retro"
 date: 2024-10-24T15:52:22+08:00
 categories: [Software Architecture]
 tags: [边缘计算]

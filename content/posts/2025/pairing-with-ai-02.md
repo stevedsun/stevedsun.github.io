@@ -1,5 +1,6 @@
 ---
 title: "与AI协作编程──痛点篇"
+slug: "pairing-with-ai-02"
 date: 2025-03-23T00:00:01+08:00
 categories: [AI]
 tags: [vibe coding]

@@ -1,12 +1,12 @@
 ---
 title: "Go 内存泄漏常见模式"
+slug: "goroutine-leak"
 date: 2023-06-27T14:46:59+08:00
 categories: [Go]
 tags: [go, memory leak]
 aliases: [/posts/goroutine-leak/]
 description: ""
 ---
-
 最近在工作中排查 Go 语言内存泄漏问题时，发现[这篇 Uber 写的博客](https://www.uber.com/blog/leakprof-featherlight-in-production-goroutine-leak-detection/)，其中分享了几种常见的 goroutine 内存泄漏模式，于是把整理了 goroutine 的相关问题，希望更多人搜索到到这篇文章，帮助大家快速定位内存泄漏问题。
 
 ## Goroutine 内存泄漏的原因

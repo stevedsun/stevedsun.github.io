@@ -43,18 +43,33 @@ body,div.post-body,h1,h2,h3,h4 {
   {{ with .Site.Params.name }}{{ $authorName = . }}{{ end }}
   {{ with .Site.Params.RSS.name }}{{ $authorName = . }}{{ end }}
 
+  {{/* Per-language og:locale */}}
+  {{ $locale := "zh_CN" }}
+  {{ if eq .Language.Lang "en" }}{{ $locale = "en_US" }}{{ end }}
+
   <meta property="og:title" content="{{ .Title }}" />
   <meta property="og:description" content="{{ $desc }}" />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="{{ .Permalink }}" />
   <meta property="og:site_name" content="{{ .Site.Title }}" />
-  <meta property="og:locale" content="{{ .Site.LanguageCode | default "zh_CN" }}" />
+  <meta property="og:locale" content="{{ $locale }}" />
   <meta property="og:image" content="{{ $absImage }}" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{{ .Title }}" />
   <meta name="twitter:description" content="{{ $desc }}" />
   <meta name="twitter:image" content="{{ $absImage }}" />
+
+  {{/* hreflang alternates for translated pages */}}
+  {{ if .IsTranslated }}
+    {{ range .Translations }}
+    <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
+    {{ end }}
+    <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
+  {{ else }}
+    <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
+  {{ end }}
+  <link rel="alternate" hreflang="x-default" href="{{ .Site.BaseURL }}" />
 
   {{/* JSON-LD structured data for the post. */}}
   {{ $ld := dict
@@ -78,3 +93,32 @@ body,div.post-body,h1,h2,h3,h4 {
 {{ partial "third-party-scripts.html" . }}
 
 {{- if not hugo.IsServer }} {{ template "_internal/google_analytics_async.html" . }} {{- end }}
+
+{{/*
+  Browser language auto-detection.
+  - First visit: if browser is English and the current page has an English
+    translation, jump to the English version.
+  - After the user manually picks a language (via the switcher), we store
+    their preference in localStorage and skip auto-detection.
+*/}}
+<script>
+(function() {
+  try {
+    var preferredLang = localStorage.getItem('preferredLang');
+    if (preferredLang) return;
+  } catch (e) { return; }
+
+  var navLang = (navigator.language || navigator.userLanguage || '').substring(0, 2).toLowerCase();
+  var currentLang = '{{ .Language.Lang }}';
+
+  if (navLang === 'en' && currentLang !== 'en') {
+    {{ if .IsTranslated }}
+      {{ range .Translations }}
+        {{ if eq .Language.Lang "en" }}
+          window.location.replace('{{ .Permalink }}');
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  }
+})();
+</script>

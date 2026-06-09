@@ -1,11 +1,11 @@
 ---
 title: "《Python源码剖析》第一部分——Python对象基础"
+slug: "python"
 date: 2017-07-12T00:00:00
 categories: [Python]
 tags: [python]
 aliases: [/posts/python/]
 ---
-
 ## Python 的对象初始化
 
 > 在 Python 中，对象就是为 C 中的结构体在堆上申请的一块内存，一般来说，对象是不能被静态初始化的，并且也不能在栈空间上生存。唯一的例外就是类型对象，Python 中所有的内建的类型对象（如整数类型对象，字符串类型对象）都是被静态初始化的。

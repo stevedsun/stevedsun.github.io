@@ -1,5 +1,6 @@
 ---
 title: "Hand on Enablement"
+slug: "hand-on-enablement"
 date: 2025-04-29T10:49:39+08:00
 categories: [随笔]
 tags: []

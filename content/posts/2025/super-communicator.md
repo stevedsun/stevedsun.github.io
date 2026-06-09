@@ -1,5 +1,6 @@
 ---
 title: "读完这本书，沟通将是一个有迹可循的过程"
+slug: "super-communicator"
 date: 2025-05-13T13:49:37+08:00
 categories: [随笔]
 tags: [读书，沟通，软技能]

@@ -1,5 +1,6 @@
 ---
 title: "Go服务端性能的一般解决思路"
+slug: "go-performance"
 date: 2025-05-06T10:35:41+08:00
 categories: [Software Architecture]
 tags: [Go]

@@ -1,5 +1,6 @@
 ---
 title: "遇到 Linux 系统 Kernel Panic 了该如何应对"
+slug: "retro-kernel-panic"
 date: 2025-07-19T01:06:32+08:00
 categories: [随笔]
 tags: [Linux]

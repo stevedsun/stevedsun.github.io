@@ -1,12 +1,12 @@
 ---
 title: "Go 语言的依赖倒置"
+slug: "go-dependency-inject"
 date: 2024-11-21T11:26:22+08:00
 categories: [Software Architecture]
 tags: [go]
 aliases: [/posts/go-dependency-inject/]
 description: ""
 ---
-
 > 这篇文章比较基础，是我在给 Java 程序员做 go 语言培训时用到的。
 
 ## 为什么要做依赖倒置（DIP）？

@@ -1,12 +1,12 @@
 ---
 title: "Nintendo Switch 联机优化策略"
+slug: "nintendo-switch-network-opt"
 date: 2019-10-07T22:18:00+08:00
 description: "这篇文章旨在帮助苦于Nintendo Switch联机延迟大，速度慢的玩家，提高游玩体验。"
 categories: [Efficiency]
 tags: [Nintendo]
 aliases: [/posts/nintendo-switch-network-opt]
 ---
-
 ## 简单方法
 
 首先介绍下 Nintendo Switch 在哪里设置网络，如下图，设置界面=>互联网设置里，可以修改 IP，DNS 等常用网络配置。修改之后点击「链接测试」，可以测试你的 NAT 和下载、上传速度。

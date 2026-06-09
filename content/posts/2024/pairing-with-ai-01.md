@@ -1,5 +1,6 @@
 ---
 title: "与AI协作编程──测试篇"
+slug: "pairing-with-ai-01"
 date: 2024-12-11T17:02:43+08:00
 categories: [Software Architecture]
 tags: [ai, unit test]

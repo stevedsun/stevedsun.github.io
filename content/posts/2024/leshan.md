@@ -1,5 +1,6 @@
 ---
 title: "乐山游记"
+slug: "leshan"
 date: 2024-06-23T18:50:51+08:00
 categories: [随笔]
 tags: []

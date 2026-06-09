@@ -1,5 +1,6 @@
 ---
 title: "磨合"
+slug: "symbiosis"
 date: 2024-09-16T23:31:14+08:00
 categories: [随笔]
 tags: []

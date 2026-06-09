@@ -1,5 +1,6 @@
 ---
 title: "Ricoh GR 2 使用心得"
+slug: "ricoh_gr2_sharing"
 date: 2024-05-17T23:07:29+08:00
 categories: [随笔]
 tags: [摄影]

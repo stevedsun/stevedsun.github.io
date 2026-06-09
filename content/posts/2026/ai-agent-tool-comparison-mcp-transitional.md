@@ -1,5 +1,6 @@
 ---
 title: "AI Agent 工具对比：MCP 为什么只是个过渡产物"
+slug: "ai-agent-tool-comparison-mcp-transitional"
 date: 2026-04-20T12:37:00+08:00
 categories: [AI]
 tags: [AI Agent, MCP, Skill, Tool Calling]

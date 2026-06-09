@@ -1,12 +1,12 @@
 ---
 title: "一些投资知识"
+slug: "investment"
 date: 2017-01-19T13:25:55+08:00
 description: ""
 categories: [Efficiency]
 tags: [投资]
 aliases: [/posts/investment/]
 ---
-
 ## 资产配置
 
 债、股、基金等综合配置。基金有的偏股，有的偏债，有的偏另类。看清楚哪些基金适合自己。

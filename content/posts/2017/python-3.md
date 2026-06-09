@@ -1,11 +1,11 @@
 ---
 title: "《Python源码剖析》第三部分——Python虚拟机进阶"
+slug: "python-3"
 date: 2017-07-14T00:00:00
 categories: [Python]
 tags: [python]
 aliases: [/posts/python-3/]
 ---
-
 ## Python 环境初始化
 
 进程启动后创建 PyInterpreterObject，PyInterpreterObject 里面维护了全局 module 映射表`interp->modules`，该表默认初始化为**buildin**模块，

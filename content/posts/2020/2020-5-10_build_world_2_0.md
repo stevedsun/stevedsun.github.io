@@ -1,11 +1,11 @@
 ---
 title: "译文：重建世界2.0"
+slug: "2020-5-10_build_world_2_0"
 date: 2020-05-10T20:22:53+08:00
 description: "世界1.0正在衰退，大自然打破了常规，我们必须重新建立秩序。"
 categories: [翻译]
 aliases: [/posts/2020-5-10_build_world_2_0/]
 ---
-
 这是一篇投资人[Daniel Gross](https://twitter.com/danielgross)发表在自己博客的文章，讨论了新冠疫情后期的世界如何进入 2.0 新模式，以及有哪些机会和挑战。我把它翻译过来，希望大家也能从中获得启发。
 
 # 重建世界 2.0

@@ -1,10 +1,10 @@
 ---
 title: "Kevin Kelly's Hacking 和 《列子天瑞》的盗亦有道"
+slug: "what-is-hacking"
 date: 2019-12-05T23:15:43+08:00
 categories: [随笔]
 aliases: [/posts/what-is-hacking/]
 ---
-
 [凯文凯利](https://kk.org/)在《失控》中有一句话：
 
 > The nature of life is to delight in all possible loopholes. Every creature is in some way hacking a living by reinterpreting the rules.

@@ -1,11 +1,11 @@
 ---
 title: "Ricoh GR2 参数说明"
+slug: "ricoh-gr2-settings"
 date: 2019-11-14T14:46:00+08:00
 categories: [随笔]
 tags: [摄影]
 description: "最后更新于2022年8月20日"
 ---
-
 ## 常用相机术语
 
 **包围曝光**：同时使用不同曝光参数或滤镜拍摄三张照片或是合成一张。

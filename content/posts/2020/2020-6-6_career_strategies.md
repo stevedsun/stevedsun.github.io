@@ -1,12 +1,12 @@
 ---
 title: "职业生涯说明书"
+slug: "2020-6-6_career_strategies"
 date: 2020-06-06T19:30:43+08:00
 description: "工作对于人的健康、幸福感都发挥着决定性作用"
 categories: [随笔]
 tags: [职业规划]
 aliases: [/posts/2020-6-6_career_strategies/]
 ---
-
 对于大部分人来说，工作贯穿一生，工作对于人的健康、幸福感都发挥着决定性作用。
 
 今天的话题就是关于如何规划职业生涯。

@@ -1,11 +1,11 @@
 ---
 title: "Python 依赖管理工具的研究"
+slug: "python-packaging"
 date: 2023-01-19T08:05:27+08:00
 categories: [Python]
 tags: [python]
 aliases: [/posts/python-packaging/]
 ---
-
 ## 太长不读
 
 如果你从事工程项目，[poetry](https://python-poetry.org/) 是目前最好的方案，但是如果你不喜欢 Python 的 virtualenv，可以试试 [pdm](https://pdm.fming.dev/latest/)。

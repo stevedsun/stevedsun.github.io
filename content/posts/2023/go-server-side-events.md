@@ -1,12 +1,12 @@
 ---
 title: "Go Server Side Events"
+slug: "go-server-side-events"
 date: 2023-09-13T09:19:18+08:00
 categories: [Go]
 tags: [go, sse]
 aliases: [/posts/go-server-side-events/]
 description: ""
 ---
-
 Server-Sent Events (**SSE**) is a technology that enables real-time communication between a web browser and a server. It allows the server to send updates or event notifications to the browser without the need for the browser to repeatedly make requests.
 
 SSE is often used in applications that require real-time updates, such as chat applications, social media feeds, stock market tickers, or notifications systems. It provides a lightweight and efficient way to deliver server-side updates to clients, improving responsiveness and reducing unnecessary network traffic.

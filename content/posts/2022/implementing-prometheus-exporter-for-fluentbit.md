@@ -1,12 +1,12 @@
 ---
 title: "Implementing a Prometheus Exporter for Fluent-bit"
+slug: "implementing-prometheus-exporter-for-fluentbit"
 date: 2022-11-24T12:26:23+08:00
 categories: [Go]
 tags: [go, fluentbit, prometheus]
 aliases: [/posts/implementing-prometheus-exporter-for-fluentbit/]
 description: "We want to export specific input data into Prometheus, therefore we have to implement our Prometheus exporter in a customized Fluent-bit output plugin."
 ---
-
 ## Background
 
 Fluent-bit is a great tool for logging and monitoring, many teams are using it to collect metrics and logs. Prometheus is also a popular tool for metrics analysis, but if you want to output Fluent-bit data to Prometheus, the only way is to use the node-exporter input plugin, which has fixed metrics and data format.

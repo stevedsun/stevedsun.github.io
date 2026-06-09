@@ -1,7 +1,18 @@
-<a href="{{ "" | relURL }}">首页</a>
+<a href="{{ "" | relURL }}">{{ i18n "home" }}</a>
 {{ range .Site.Menus.main }}
 <a href="{{ .URL }}">{{ .Name }}</a>
 {{ end }}
-{{ with .Site.GetPage "/blog" }}
-<a href="{{ "blog/" | relURL }}">文章</a>
+{{ $postsPage := .Site.GetPage "/posts" }}
+{{ if $postsPage }}
+<a href="{{ "posts/" | relURL }}">{{ i18n "posts" }}</a>
 {{ end }}
+<span class="lang-nav">
+  {{ range $.Site.Home.AllTranslations }}
+    <a href="{{ .Permalink }}"
+       class="lang-link{{ if eq .Language.Lang $.Language.Lang }} active{{ end }}"
+       hreflang="{{ .Language.Lang }}"
+       onclick="try { localStorage.setItem('preferredLang', '{{ .Language.Lang }}'); } catch(e) {}">
+      {{ if eq .Language.Lang "zh" }}中文{{ else }}EN{{ end }}
+    </a>
+  {{ end }}
+</span>

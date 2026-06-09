@@ -1,12 +1,12 @@
 ---
 title: Python 巧妙地将rpc接口封装成pythonic的链式调用
+slug: "py-pythonic"
 date: 2016-10-25T15:40:43
 categories: [Python]
 tags: [python]
 description: ""
 aliases: [/posts/py-pythonic/]
 ---
-
 这是一个外国人实现的 Zabbix(一个开源监控工具)的 Python Client——pyzabbix 里的代码片段。
 
 ## RPC 调用

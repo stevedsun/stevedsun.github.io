@@ -1,0 +1,12 @@
+{{ if .IsTranslated }}
+<div class="language-switcher" style="margin: 1em 0;">
+  {{ range .Translations }}
+  <a href="{{ .Permalink }}"
+     class="lang-btn"
+     hreflang="{{ .Language.Lang }}"
+     onclick="try { localStorage.setItem('preferredLang', '{{ .Language.Lang }}'); } catch(e) {}">
+    {{ if eq .Language.Lang "zh" }}中文{{ else }}English{{ end }}
+  </a>
+  {{ end }}
+</div>
+{{ end }}

@@ -1,5 +1,6 @@
 ---
 title: '【译文】你可以直接这么说'
+slug: "you-can-just-say-it"
 date: 2026-05-29T17:00:00+08:00
 categories: [AI]
 tags: [AI, Human Value, Translation, Philosophy]

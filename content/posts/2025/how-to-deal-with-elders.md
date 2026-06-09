@@ -1,5 +1,6 @@
 ---
 title: "如何与「老登」相处"
+slug: "how-to-deal-with-elders"
 date: 2025-07-13T12:40:24+08:00
 categories: [随笔]
 tags: []

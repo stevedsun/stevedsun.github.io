@@ -1,31 +1,25 @@
 {{ if ne .Site.Params.Footer.hideRSSAndEmail true }}
-<!-- Enable RSS and email exists -->
 {{ if and ( ne .Site.Params.RSS.enableRSS false ) .Site.Params.Author.email }}
-订阅 <a href="/index.xml">RSS</a> 或 <a href="mailto:{{ .Site.Params.Author.email }}">发送邮件</a>。
+{{ i18n "subscribe_rss" }} <a href="/index.xml">RSS</a> {{ i18n "or_email" }} <a href="mailto:{{ .Site.Params.Author.email }}">。</a>
 <br />
 {{ end }}
-<!-- Enable RSS and email does not exists -->
 {{ if and ( ne .Site.Params.RSS.enableRSS false ) (not .Site.Params.Author.email) }}
-订阅 <a href="/index.xml">RSS</a>。
+{{ i18n "subscribe_rss" }} <a href="/index.xml">RSS</a>。
 <br />
 {{ end }}
-<!-- Do not enable RSS and email exists -->
 {{ if and ( ne .Site.Params.RSS.enableRSS true ) .Site.Params.Author.email }}
-通过 <a href="mailto:{{ .Site.Params.Author.email }}">发送邮件</a> 与我联系。
+{{ i18n "contact_email" }} <a href="mailto:{{ .Site.Params.Author.email }}">。</a>
 <br />
 {{ end }}
 {{ end }}
 
-<!-- Made with line -->
-{{ if ne .Site.Params.Footer.hideMadeWithLine true }}由
-<a href="https://github.com/rokcso/hugo-bearneo/">Hugo Bear Neo</a> 驱动。
+{{ if ne .Site.Params.Footer.hideMadeWithLine true }}{{ i18n "powered_by" }}
 <br />
 {{ end }}
 
-<!-- Sitemap -->
 {{ if ne .Site.Params.Footer.hideCopyright true }}
-{{ .Site.Params.copyright }}
+{{ i18n "copyright" }}
 {{ end }}
 {{ if ne .Site.Params.Footer.hideSitemap true }}
-🗺️ <a href="/sitemap.xml">站点地图</a>。
+🗺️ <a href="/sitemap.xml">{{ i18n "sitemap" }}</a>。
 {{ end }}

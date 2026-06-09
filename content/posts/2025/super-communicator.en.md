@@ -1,0 +1,105 @@
+---
+title: "After Reading This Book, Communication Becomes a Process You Can Follow"
+slug: "super-communicator"
+date: 2025-05-13T13:49:37+08:00
+categories: [Essays]
+tags: [reading, communication, soft skills]
+aliases: [/posts/super-communicator/]
+description: ""
+---
+
+The ability to communicate can determine whether a person is happy. In an environment where we get along well with those around us, we feel included and understood. The opposite makes us miserable: we're full of goodwill, so why does the conversation always lead to conflict and disagreement? Where exactly is the problem?
+
+The book *Supercommunicators* has given me a lot of inspiration lately, and I'd like to share some communication tips with you. Unlike books that emphasize empathy and negotiation techniques, it offers a deeper insight: **the purpose of conversation is to understand how the people around us see the world, while helping them understand our own thinking.**
+
+## Deep Connections Form Only When Conversation Reaches the Level of Personal Feelings
+
+Harvard once ran a study on why some meetings can ease the conflicts between participants and build consensus, while others allow participants to build deep connections. The researchers found that these kinds of conversations usually have a high-centrality participant—the "supercommunicator" from the title—who has the following traits:
+
+- They listen carefully to the other person's words and what's left unsaid.
+- They recognize and respond to the other person's emotions.
+- They ask questions and guide the other person to share their inner feelings.
+
+Furthermore, the study found that the distrust and lack of understanding between people often stem from things like:
+
+- The conversation stays on the surface; its purpose is vague, or the speaker's true inner thoughts go unexpressed.
+- Emotions go unacknowledged.
+- Identity doesn't receive recognition.
+
+Therefore, to communicate deeply, people usually need to move from surface-level factual questions toward exchanges that focus on inner feelings, viewpoints, life experiences, values, beliefs, and so on. This is what the author calls the learning conversation.
+
+## Learning Conversations
+
+The author proposes the concept of the learning conversation, arguing that a deep communication process revolves around three types of conversation:
+
+practical conversation, emotional conversation, and social conversation.
+
+### Practical Conversation
+
+A practical conversation is one aimed at negotiating decisions, or in which the parties participate in order to reach a consensus.
+
+These conversations usually follow a rational attitude and a "cost-benefit" logic. They're the most common kind in workplace meetings, negotiations, and family decision-making. The tricky part is this: although everyone knows to be rational and objective, disagreements often arise over values.
+
+For example, you know your parents have your best interests at heart, but some of their expectations are simply impossible for you to fulfill. Or at work, you make a suggestion to a colleague, but they refuse to take it on board because of their past work experience—even though they have no legitimate reason to.
+
+At times like these, the way of thinking has to shift from "cost-benefit logic" to "similarity logic." That is, we need to start from lived experience and values, find the similarities we share, and bridge the gap that way.
+
+**To change someone's mind, you have to reach their self-image, help them see the value that comes from changing their view, and let them feel the self-respect that comes from making the right call.**
+
+Values are built up over a long period of personal experience and are very hard to change. People feel their beliefs collapsing and their self-esteem being damaged. The key to communication is to start from the other person's underlying values, get them to recognize the value that comes with change, and hand the power of decision back to them.
+
+Here are some methods the author suggests you can draw on in conversation:
+
+- Prepare a topic bank in advance, so that when conversation falls into silence you can pull out a topic and boost your confidence.
+- When you identify a conversation as practical, first use open-ended questions to invite the other person to share their feelings, values, and beliefs.
+- Invite the other person to make a judgment; ask about their experiences.
+- If the other person changes the subject, that means they want to expand the scope of the conversation—encourage them and listen for what's left unsaid.
+
+Imagine a conflict over a family decision. When your parents' values are something you can't accept, you can ask about their experiences and beliefs (what would they have done in the past when something similar came up), share your own experiences and feelings, and find the common ground (for example, the shared wish that the family will be better off). Then break through the barrier (if your parents were in your shoes, what would they do?).
+
+Even if you can't fully resolve the disagreement in one go, you can still come away from a deep exchange with more understanding and a closer bond.
+
+### Emotional Conversation
+
+An emotional conversation usually arises when one party wants their feelings to be acknowledged.
+
+A common thinking mismatch in everyday life: your girlfriend is sharing her feelings, and you jump in to analyze the problem.
+
+Emotional conversation is not about finding a solution or reaching agreement. The purpose of emotional conversation is to trigger emotional contagion. One party feels the other person's vulnerability and responds with their own vulnerability, building trust, understanding, and emotional connection.
+
+**The hard part of emotional conversation is recognizing, from the small emotional signals, that this is an emotional conversation, and giving an appropriate response.**
+
+We always hear people talk about empathy and putting yourself in someone else's shoes. In practice, this is very hard. When we have different life experiences from the other person and are in a different situation, it's difficult to truly take their perspective. So the first step into an emotional conversation is to ask questions—use questions to open the other person's heart. **Start with surface-level, safe factual questions, and gradually move toward their beliefs, values, meaning, and lived experience.**
+
+When the other person is willing to share their true inner thoughts, the second step is to give a sufficient response. What does "sufficient" mean? The emotional energy of your response should match theirs—not too much and not too little. Bring both parties into a resonance of emotional expression. Avoid one-way output; take turns expressing and responding to each other. A classic mistake: when the other person shares a sad experience from their past, in an effort to express understanding, we go on and on about our own experience and steer the conversation back to ourselves. The other person's emotions have nowhere to land. Always aim for **sustained, two-way, deep, and personal expression.**
+
+The final step is to build a "loop of understanding." After listening, ask whether you've understood them correctly. Don't try to control the direction and tone of the conversation, and don't try to control the other person.
+
+In intimate relationships, struggles over control are common. When one party realizes they can't control something that matters to them, they get angry and may even blame the other. Often this inner desire for control hides in every small detail of life, and mishandling it leads to both parties digging in, triggering a chain reaction called "kitchen-sinking" that turns into destructive arguing.
+
+The book shares a study: happy families and unhappy families alike often argue about internal control, but happy families keep the conflict within reasonable bounds. Their members don't try to control each other—they control themselves, the environment they're in, or the boundaries of the conflict. Then, through conversation, they find things both sides can control together.
+
+For example, in a "who should do the chores" argument, we can control ourselves (don't get angry or blame the other person), control the environment (bring it up when both people are in a good mood), control the bounds of the conflict (don't attack each other's lifestyle habits), and through negotiation find things both sides can work together to control.
+
+The author also offers a few small tips:
+
+- Be polite.
+- Be wary of sarcasm.
+- Express thanks, greetings, and apologies more often.
+- Avoid making criticism in public.
+
+### Social Conversation
+
+A social conversation is one in which the participants seek identity recognition and pay attention to social impact. When a doctor explains to a patient why a treatment is necessary using professional knowledge, the explanation is often less effective than if they stepped into the role of a father, a family member, or a friend. That's because the patient's worries usually revolve around the impact on their family. So if in this kind of conversation, you can find the role that matches the other person's deeper concerns, communication becomes much more effective.
+
+The hard part of social conversation is finding the other person's deep-seated fears, doubts, and concerns. Each of us has many identities. When talking with others, you have to keep in mind the diversity and complexity of identity, and recognize when to switch roles in order to be on the same channel as the other person.
+
+In a diverse society, people tend to lump others together by background, region, gender, and so on. The key to breaking down the divide is to notice the diversity of identity, to recognize that we and they share social and family roles—father, son, and so on—and to avoid vaguely categorizing others or overstating the impact of any one identity trait.
+
+When talking with people who hold different views and beliefs, the purpose is more often mutual understanding—sharing experiences and viewpoints—rather than persuading them to change their minds.
+
+## Summary
+
+In a recent chat with a friend, I had this realization: a mature person can't stop at "respect but don't understand" or at "who's right and who's wrong." Even if we can't resolve most of our conflicts and misunderstandings, we can still get to "I don't entirely agree, but I understand why you did it." Understanding people who see things differently also helps us avoid internal friction and become more open-minded.
+
+Looking back at the three types of conversation above: in everyday exchanges, we can switch between different ways of thinking by distinguishing the type of conversation, and gradually move from open-ended topics into exchanges at the level of feeling, building deeper connections with others. Put it into practice, and your life and work will both benefit.

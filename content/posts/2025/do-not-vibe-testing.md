@@ -1,5 +1,6 @@
 ---
 title: "为什么不应该让AI生成单元测试"
+slug: "do-not-vibe-testing"
 date: 2025-05-01T09:27:36+08:00
 categories: [AI]
 tags: [vibe coding, testing]

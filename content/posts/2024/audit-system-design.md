@@ -1,12 +1,12 @@
 ---
 title: "如何设计一个符合工业标准的审计系统"
+slug: "audit-system-design"
 date: 2024-04-15T16:44:40+08:00
 categories: [Software Architecture]
 tags: [audit]
 aliases: [/posts/audit-system-design/]
 description: ""
 ---
-
 审计追踪（Audit Trail）是指一个系统中用于记录用户行为日志、控制组件的活动日志等关键安全信息的服务。日志通常以时间顺序排列，记录了“谁在什么时间做了什么”。
 
 下面是 kubernetes 官方文档对其审计服务的描述：

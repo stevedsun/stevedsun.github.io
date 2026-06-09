@@ -1,5 +1,6 @@
 ---
 title: '【译文】运行一个 AI-native 的工程团队'
+slug: "running-an-ai-native-engineering-org"
 date: 2026-06-03T10:00:00+08:00
 draft: false
 categories: [AI, Engineering]

@@ -1,12 +1,12 @@
 ---
 title: "抛弃笔记本，完全用标签管理笔记有什么需要注意的"
+slug: "all-tag-in-evernote"
 date: 2019-11-18T13:49:00+08:00
 description: "分析检索分类的难题"
 categories: [Efficiency]
 tags: [evernote]
 aliases: [/posts/all-tag-in-evernote/]
 ---
-
 日常工作中经常会出现这样的情况：
 
 1. 小张怎么也想不起来上次收藏的一篇健身饮食相关的文章，到底是在印象笔记的「健身」分类下，还是在「健康」或者「饮食」分类下，跨分类的文章太多，小张感到头秃

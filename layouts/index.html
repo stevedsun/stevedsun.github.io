@@ -4,7 +4,7 @@
 
   {{ $posts := first 5 (where .Site.RegularPages "Section" "posts") }}
   {{ if gt (len $posts) 0 }}
-  <h2>最近文章</h2>
+  <h2>{{ i18n "recent_posts" }}</h2>
   <ul>
     {{ range $posts }}
     <li>

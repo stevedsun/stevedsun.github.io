@@ -1,5 +1,6 @@
 ---
 title: "RESTful Web Service Cookbook 笔记"
+slug: "restful-api-cookbook"
 date: 2024-07-13T16:12:34+08:00
 categories: [Software Architecture]
 tags: [api]

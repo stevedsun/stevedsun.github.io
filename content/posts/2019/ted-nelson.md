@@ -1,11 +1,11 @@
 ---
 title: "互联网曾经有另一种可能"
+slug: "ted-nelson"
 date: 2019-12-15T16:42:22+08:00
 description: "一个失落的平行世界里，有着万维网的另一种可能。"
 categories: [随笔]
 aliases: [/posts/ted-nelson/]
 ---
-
 ![《Computer Lib》](/images/ted-nelson/computer-lib.png)
 
 _1965 年，泰德·尼尔森（Ted Nelson）在提交给美国计算机协会的论文中提到一种将各种内容链接在一起的技术——超文本（Hypertext），如今超文本俨然已是互联网大厦的基石。但人们熟知的超文本和当初尼尔森预想的样子却有着天壤之别——在尼尔森的脑海中，一个失落的平行世界里，有着万维网的另一种可能。_

@@ -1,5 +1,6 @@
 ---
 title: "Cursor等AI编程工具的背后原理"
+slug: "ast-chunk"
 date: 2025-06-02T07:58:17+08:00
 categories: [Software Architecture]
 tags: [AI]

@@ -1,5 +1,6 @@
 ---
 title: "Omarchy 一些中文环境下的设置"
+slug: "omarchy-cn-setup"
 date: 2025-10-22T23:21:21+08:00
 categories: [随笔]
 tags: ["Linux"]

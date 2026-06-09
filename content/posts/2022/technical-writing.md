@@ -1,12 +1,12 @@
 ---
 title: "技术文档写作指南"
+slug: "technical-writing"
 date: 2022-08-21T15:29:00+08:00
 description: "谷歌技术文档写作指南"
 categories: [技术规范]
 tags: [写作, 技术文档]
 aliases: [/posts/technical-writing/]
 ---
-
 本文内容摘录自 [Technical Writing](https://developers.google.com/tech-writing/overview) （谷歌技术文档写作指南）的第一部分。
 
 本文适用于想要提高技术文档写作、技术领域日常沟通能力的读者，对于一些商务的、非文学性质的英语办公场景沟通，也能起一定帮助作用。

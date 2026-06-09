@@ -1,11 +1,11 @@
 ---
 title: "注意力的边缘"
+slug: "attention-model"
 date: 2019-11-14T15:29:00+08:00
 description: "处于我们注意力中心的事物最容易被我们感知，而处于注意力边缘的事物，往往被我们的视线边缘、听觉、嗅觉等知觉感受到。"
 categories: [随笔]
 aliases: [/posts/attention-model/]
 ---
-
 阅读几分钟就忍不住打开微信；
 
 计划在家办公却浏览了一上午购物网站；

@@ -5,6 +5,7 @@ date: 2019-11-14T14:46:00+08:00
 categories: [随笔]
 tags: [摄影]
 description: "最后更新于2022年8月20日"
+aliases: [/posts/ricoh-gr2-settings/]
 ---
 ## 常用相机术语
 

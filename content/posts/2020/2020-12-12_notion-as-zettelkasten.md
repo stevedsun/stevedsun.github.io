@@ -5,6 +5,7 @@ date: 2020-12-12T22:42:53+08:00
 categories: [Efficiency]
 tags: [notion, zettelkasten]
 description: "卡片盒笔记法（Zettelkasten）是一种将零散的想法、笔记和文献，通过编号、引用、索引等方式彼此关联起来，形成知识网络并提取有效信息的方法。"
+aliases: [/posts/2020-12-12_notion-as-zettelkasten/]
 ---
 今天给大家介绍一种整理和回顾碎片知识的方法——卡片盒笔记法。
 

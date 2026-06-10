@@ -3,6 +3,7 @@ title: "8月做了什么"
 slug: "aug-routine"
 date: 2019-09-02T15:52:58+08:00
 categories: [随笔]
+aliases: [/posts/aug-routine/]
 ---
 准备新开一个话题，用每个月的总结替代年度总结。这是第一篇。
 

@@ -5,6 +5,7 @@ date: 2021-03-18T15:32:57+08:00
 categories: [Software Architecture]
 tags: [缓存, 分布式, redis]
 description: "这是一篇关于Redis构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。"
+aliases: [/posts/distributed-cache/]
 ---
 很久不写技术文章了。这是一篇关于 Redis 构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。
 

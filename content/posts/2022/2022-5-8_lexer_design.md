@@ -4,6 +4,7 @@ date: 2022-05-08T14:00:00+08:00
 categories: [Go]
 tags: [go, fluentbit]
 description: "Thinking in lexer for any format configuration file."
+aliases: [/posts/2022-5-8_lexer_design/]
 ---
 
 Last week, after reading this article - [How to Write a Lexer in Go](https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go), I found that it is not so difficult to design a configuration file parser by this article's mindset. Then I tried to write a fluent-bit configuration parser and finally got this [Fluent-Bit configuration parser for Golang](https://github.com/stevedsun/go-fluentbit-conf-parser).

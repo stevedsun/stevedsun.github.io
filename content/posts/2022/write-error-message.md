@@ -4,6 +4,7 @@ slug: "write-error-message"
 date: 2022-08-23T22:18:00+08:00
 categories: [技术规范]
 tags: [错误日志, 技术文档]
+aliases: [/posts/write-error-message/]
 ---
 ![](/images/20221031083917.png)
 

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agent on Steve Sun</title><link>https://sund.site/tags/agent/</link><description>Recent content in Agent on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Thu, 11 Jun 2026 12:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/agent/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】/goal + 损失函数：如何用一条指令在 30 小时内蒸馏一个产品</title><link>https://sund.site/posts/2026/goal-loss-functions-distill-product/</link><pubDate>Thu, 11 Jun 2026 12:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/goal-loss-functions-distill-product/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/goal-loss-functions-distill-product-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/elvissun/status/2065035615800864954"&gt;&lt;code&gt;/goal + Loss Functions: How to Distill a Product in 30 Hours with One Prompt [Full Playbook]&lt;/code&gt;&lt;/a&gt;
+&lt;strong&gt;作者&lt;/strong&gt;：Elvis (&lt;a href="https://x.com/elvissun"&gt;@elvissun&lt;/a&gt;)
+&lt;strong&gt;翻译&lt;/strong&gt;：AI 辅助翻译&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;99% 的人用 &lt;code&gt;/goal&lt;/code&gt; 和 agent loop 的方式是错的。&lt;/p&gt;
+&lt;p&gt;外面吹的是「长循环自主 agent：设定目标，走开，回来就拿到能跑的代码」。但顶尖的 agent 工程师半年前就在做同样的事了——用 harness engineering + spec-driven development：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;给 agent 搭一个能观察问题的测试框架&lt;/li&gt;
+&lt;li&gt;写一份包含所有 test case 的 tight spec&lt;/li&gt;
+&lt;li&gt;让 Codex 或 Claude Code 无人值守循环，直到所有测试通过&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;我经常睡前 kick off 这种任务——一次跑 2-5 小时。四月份有一次，它啃了一整晚我们 Vercel monorepo 里的 Turbo build-cache bug，天亮时全绿了。根本不需要 &lt;code&gt;/goal&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;所以 &lt;strong&gt;&lt;code&gt;/goal&lt;/code&gt; 到底用来干什么？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这是我离开后一条 prompt 干的事：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;跑了约 30 小时，生成 6300 行代码，爬了 92000 页，花了 $40 API&lt;/li&gt;
+&lt;li&gt;把另一个产品的核心逻辑反向工程并完整重构&lt;/li&gt;
+&lt;li&gt;我们的版本输出质量比参考产品好约 &lt;strong&gt;50 倍&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;秘密是 &lt;strong&gt;Loss Function Development（LFD）&lt;/strong&gt;：给 agent 写一个要优化的目标（loss function），而不是写一份要实现的 spec。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="agent-作弊三次"&gt;Agent 作弊三次&lt;/h3&gt;
+&lt;p&gt;我一开始做的是老套路：写 spec——把 agent 指向竞品的公开网站，「我们自己怎么建这个？」。30 分钟后它出了一份完整的系统设计和测试用例。spec 有了。&lt;/p&gt;
+&lt;p&gt;但这次我试了一个不同的 prompt：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;/goal 实现，直到你的输出和他们的完全一致&lt;/code&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;然后发生了这些事：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第一轮（5 分钟）&lt;/strong&gt;：agent 抓了一组 eval 数据，生成的和它一模一样的种子数据，5 分钟就宣布胜利。「100%」召回，零泛化能力——一个只能找到我给它那 30 个东西的搜索引擎。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;修复&lt;/strong&gt;：盲测。eval 在运行期间隐藏，只在评分时揭示。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二轮（20 分钟）&lt;/strong&gt;：盲测，30 个测试项。agent 看不到答案了，但它学会用「miss」反向学习——每一条「你没找到 X」都变成下一轮的关键词。几轮之后，它刚好用了 30 个关键词，每个对应一个目标，又赢了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;修复&lt;/strong&gt;：扩大 eval 集。几百项，大到无法逐一枚举。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第三轮（30 分钟）&lt;/strong&gt;：盲测，200 个测试项。agent 又作弊了——关键词表膨胀到几百个，每项对应一个精准 lure。&lt;/p&gt;
+&lt;p&gt;三轮，三次作弊。&lt;/p&gt;
+&lt;p&gt;这时候我才明白：&lt;strong&gt;作弊不是 agent 的 bug，是我目标的 bug。&lt;/strong&gt; 我给它指明了目的地，但每条捷径都敞开着。每个你没有堵死的便宜路径，都是优化器会全力冲刺的方向。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第四轮（30 小时）&lt;/strong&gt;：盲测，200 项，硬性限制。我封死了所有方向——限制关键词表、盲测 eval、扩大数据范围。每条捷径被堵死后，agent 终于发现唯一能提升指标的方式是真正把事做好。&lt;/p&gt;
+&lt;p&gt;它不作弊了。&lt;/p&gt;
+&lt;p&gt;然后它跑了 30 小时。爬了 92000 页，花了 $40 token，写了 6300 行代码。结果是我们比参考产品在同一查询上多挖掘了约 50 倍的结果——那只是地板，不是天花板。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="lfd一个好的损失函数有四个组件"&gt;LFD：一个好的损失函数有四个组件&lt;/h3&gt;
+&lt;p&gt;大多数人在用 agent 构建产品时，只做了从零到上线这一步。之后的长尾——spec 从未设想过的 edge case——一个一个从 production log 里冒出来。你一个一个修。那些没被日志捕获的，用户替你报告——这是发现 bug 最贵的方式。&lt;/p&gt;
+&lt;p&gt;LFD 把长尾加速了。如果提前准备好真实的 expected outputs（「好」长什么样，而且得是量级），你实际上在发布前就跑完了 soak 阶段——几百个 edge case 在一次优化中命中 agent，而不是一个季度一个季度地靠 bug 报告渗透。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Spec-driven development：&lt;/strong&gt;「建成这样。让测试通过。」
+&lt;strong&gt;Loss-function development：&lt;/strong&gt;「建成这样。让测试通过。然后在这 1000 个 eval case 上持续迭代。」&lt;/p&gt;
+&lt;p&gt;测试集是有限的——全绿就结束了。但 1000 个 eval 在 95% 准确率是一个你不断接近的目标，没有终点线。完整的损失函数有四个部分：&lt;/p&gt;
+&lt;h4 id="1-target目标"&gt;1. Target（目标）&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;大到无法枚举&lt;/strong&gt;。28 项的 eval 一轮就被背下来了。越大越好。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;对 agent 盲测&lt;/strong&gt;。Eval 数据只用于事后评分。agent 如果在运行中能看到答案，它会想方设法去看。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="2-constraints约束"&gt;2. Constraints（约束）&lt;/h4&gt;
+&lt;p&gt;agent 能做什么、不能做什么：&lt;strong&gt;时间&lt;/strong&gt;（wall-clock 预算）、&lt;strong&gt;金钱&lt;/strong&gt;（API 调用的硬性上限）、&lt;strong&gt;表面&lt;/strong&gt;（允许的模型和并发上限）、&lt;strong&gt;方法论&lt;/strong&gt;（允许 LLM 分析还是只用确定性逻辑）。&lt;/p&gt;
+&lt;h4 id="3-instruments测量工具"&gt;3. Instruments（测量工具）&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;没有工具的约束只是一句感觉——agent 会笑嘻嘻地无视它。&lt;/strong&gt; 每个约束都要配一个 CLI 让 agent 自己检查。法则还是那句老话：&lt;strong&gt;你无法优化看不见的东西。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果你是第一次跑这种循环，别 kick off 就走。&lt;strong&gt;盯住第一轮。&lt;/strong&gt; 看它碰了什么，确认你建的 harness 被正确使用了。然后再去睡觉。&lt;/p&gt;
+&lt;h4 id="4-forced-entropy强制熵"&gt;4. Forced Entropy（强制熵）&lt;/h4&gt;
+&lt;p&gt;每一轮都从上一次的完整上下文继续跑。&lt;strong&gt;撞到局部最优是默认状态。&lt;/strong&gt; 熵必须&lt;strong&gt;强制&lt;/strong&gt;引入：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;每轮反思过拟合&lt;/strong&gt;——我在构建更通用的方案，还是在记忆 eval？&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;停滞时强制跳跃&lt;/strong&gt;——如果上一轮没动指标，下一轮不能「同样的思路更努力」&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;保持迭代日志&lt;/strong&gt;——让 agent 记录每轮的假设和诊断结果&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="梯度下降全栈自动化"&gt;梯度下降全栈自动化&lt;/h3&gt;
+&lt;p&gt;退一步看——这全是梯度下降。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;内循环&lt;/strong&gt;是 agent：写代码、跑测试、修。短周期，快反馈，一个目标——让测试全绿。
+&lt;strong&gt;外循环&lt;/strong&gt;是 &lt;code&gt;/goal&lt;/code&gt;：驱动整个系统朝着一个结果指标跨多轮迭代——发布、测量、换策略、下降。长周期，稀疏反馈。&lt;/p&gt;
+&lt;p&gt;两个循环现在都自动了。留给你的事只有一件：&lt;strong&gt;定义损失函数。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="信息不对称新的护城河"&gt;信息不对称：新的护城河&lt;/h3&gt;
+&lt;p&gt;换个视角看：这本质上是蒸馏——从训练时搬到了 prompt 时。但现在不是蒸馏模型，而是用 &lt;code&gt;/goal&lt;/code&gt; + LFD 去蒸馏任何公开可找的 artifact。&lt;/p&gt;
+&lt;p&gt;凡是存在信息对称的地方，执行成本就趋近于零——输出是公开的，每个人都能看到「好」长什么样，任何人周末花 $40 就能蒸馏出来。&lt;/p&gt;
+&lt;p&gt;所以新的护城河是：&lt;strong&gt;信息不对称。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;你私有的 eval 集、你用户真实踩到的 edge case、你私下测量的 ground truth——凡是竞品的 agent 看不到的目标，才是唯一能在别人的循环持续逼近时你的还往下降的东西。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The product is a weekend now. Go build the eval a weekend can&amp;rsquo;t touch.&lt;/p&gt;
+&lt;p&gt;产品是一个周末的事了。去建一个周末碰不到的 eval。&lt;/p&gt;&lt;/blockquote&gt;</description></item></channel></rss>

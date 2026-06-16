@@ -10,8 +10,8 @@ description: "Seth Rosen 回应 Satya Nadella 的爆文，提出长期 AI 战略
 
 ![](https://raw.githubusercontent.com/stevedsun/blog-img/main/dont-implement-company-brain-header-900x383.png)
 
-> **原文**：[Please don't implement a "company brain" and expect a learning loop](https://x.com/sethrosen/status/2066534763511316540)
-> **作者**：Seth Rosen
+> **原文**：[Please don't implement a "company brain" and expect a learning loop](https://x.com/sethrosen/status/2066534763511316540)  
+> **作者**：Seth Rosen  
 > **声明**：本文由 AI 翻译，可能包含错误
 
 Satya 的那篇[推文](https://x.com/satyanadella/status/2066182223213293753?s=20)爆了，不奇怪。

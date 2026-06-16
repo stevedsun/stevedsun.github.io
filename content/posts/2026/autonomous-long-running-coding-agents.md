@@ -10,9 +10,9 @@ description: "自主编程正从更好的提示词转向更好的控制系统。
 
 ![](https://raw.githubusercontent.com/stevedsun/blog-img/main/autonomous-long-running-coding-agents-header.png)
 
-> **原文：** [Autonomous Long-Running Coding Agents](https://x.com/omarsar0/status/2065880971031834786)
-> **作者：** Elvis (@omarsar0)，DAIR.AI Academy
-> **翻译声明：** AI 翻译，如有不准确之处请以原文为准。
+> **原文**：[Autonomous Long-Running Coding Agents](https://x.com/omarsar0/status/2065880971031834786)
+> **作者**：Elvis（@omarsar0），DAIR.AI Academy
+> **声明**：本文由 AI 翻译，可能包含错误
 
 ![](https://raw.githubusercontent.com/stevedsun/blog-img/main/autonomous-coding-cover.jpg)
 

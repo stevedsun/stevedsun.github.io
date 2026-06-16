@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Organizational AI on Steve Sun</title><link>https://sund.site/tags/organizational-ai/</link><description>Recent content in Organizational AI on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Tue, 16 Jun 2026 23:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/organizational-ai/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】请不要搞个"企业大脑"就指望自动形成学习循环</title><link>https://sund.site/posts/2026/dont-implement-company-brain-expect-learning-loop/</link><pubDate>Tue, 16 Jun 2026 23:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/dont-implement-company-brain-expect-learning-loop/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/dont-implement-company-brain-header-900x383.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;: &lt;a href="https://x.com/sethrosen/status/2066534763511316540"&gt;Please don&amp;rsquo;t implement a &amp;ldquo;company brain&amp;rdquo; and expect a learning loop&lt;/a&gt; — Seth Rosen&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;声明&lt;/strong&gt;: 本文由 AI 翻译，经作者校对。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Satya 的那篇&lt;a href="https://x.com/satyanadella/status/2066182223213293753?s=20"&gt;推文&lt;/a&gt;爆了，不奇怪。&lt;/p&gt;
+&lt;p&gt;他把两件事联系在了一起——人力资本和算力资本——通过一个学习循环：人类如何引导 AI，AI 如何让人类更聪明，以及整个系统如何滚雪球。&lt;/p&gt;
+&lt;p&gt;我们团队花了九个月研究和构建这个东西。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;学习循环是你的长期 AI 战略。&lt;/strong&gt; 没有它，AI 在当下很惊艳，但长期来看会无声地衰减。&lt;/p&gt;
+&lt;p&gt;长期 AI 工作远不止一次 Codex 或 Claude 会话。它是每个员工每天早上醒来，都在迭代团队和组织的整体目标。&lt;/p&gt;
+&lt;p&gt;你的长期学习循环有四个属性。&lt;/p&gt;
+&lt;h3 id="1-最小可行上下文minimum-viable-context"&gt;1. 最小可行上下文（Minimum Viable Context）&lt;/h3&gt;
+&lt;p&gt;给系统注入你公司独有的判断力，而不是你公司说过的所有话。&lt;/p&gt;
+&lt;h3 id="2-结构化可溯源多人协作"&gt;2. 结构化、可溯源、多人协作&lt;/h3&gt;
+&lt;p&gt;每个人和每个 Agent 都建立在同一个共享基础上，中间决策可以追溯和评判。&lt;/p&gt;
+&lt;h3 id="3-可执行"&gt;3. 可执行&lt;/h3&gt;
+&lt;p&gt;一旦工作变得可见，Agent 就能直接在上面操作。&lt;/p&gt;
+&lt;h3 id="4-复利效应"&gt;4. 复利效应&lt;/h3&gt;
+&lt;p&gt;用越多，系统就越好。AI 衰减的反面。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="从最小可行上下文开始"&gt;从最小可行上下文开始&lt;/h3&gt;
+&lt;p&gt;上下文是你最宝贵的资产，也是最危险的资产。所以，不要把整个公司的东西都灌进一个共享知识图谱。不要搞什么&amp;quot;全企业大脑&amp;quot;。&lt;/p&gt;
+&lt;p&gt;从一个精挑细选的共享知识集开始，花时间把它精简到最小。从你公司 expertise 真正重要的决策入手：战略、产品权衡、客户理解、风险评估、市场解读、销售判断、工程架构、运营手册。机会不是自动化通用工作，而是找到人力资本能创造差异化判断的地方。&lt;/p&gt;
+&lt;p&gt;人类可以通过会议、Offsite 和深度工作来过滤上下文、结合自己的世界认知。AI 不能来参加你的 Offsite。你需要像 onboarding 新员工那样构建干净的上下文——你不会让新同事第一天就访问所有东西，然后说&amp;quot;开始干吧&amp;quot;。&lt;/p&gt;
+&lt;p&gt;这就是共享系统的起点。&lt;/p&gt;
+&lt;h3 id="让工作结构化多人协作"&gt;让工作结构化、多人协作&lt;/h3&gt;
+&lt;p&gt;一旦每个人和每个 Agent 都基于同一个最小可行上下文工作，所有未来的工作都对这个上下文进行构建和评估。&lt;/p&gt;
+&lt;p&gt;这意味着要把你的最小可行上下文变成：假设、源上下文、中间推理、示例、约束条件、评价标准、决策和产出。&lt;strong&gt;不要把你公司的学习埋藏在 prompt、聊天记录或个人记忆里。&lt;/strong&gt; 让推理可见、可编辑、可复用，跨人、跨 Agent、跨团队。&lt;/p&gt;
+&lt;h3 id="让系统可执行"&gt;让系统可执行&lt;/h3&gt;
+&lt;p&gt;一旦工作可见，Agent 就能操作了。把产出物组织成可重复的回路——有依赖、输入、中间产出、最终交付物。现在 AI 不再只是回答问题，而是参与一个可回放、可审查、可改进的治理式工作系统。&lt;/p&gt;
+&lt;p&gt;大量的组织工作是相互依赖的：产品、工程、市场、支持都在依赖彼此的产出。一个重要的产出物通常会在下游被多个领域复用，远超最初生产它的团队。如果 AI 只用来生产最终产出物——一份市场简报、一段代码、一篇技术支持文章——那么它们背后的所有中间工作，每个部门都要重做一遍。&lt;/p&gt;
+&lt;p&gt;这些中间产出物也是可溯源的。人和 AI 都能看到一个决策或文档是如何被实际生产出来的——这是学习循环的基础。&lt;/p&gt;
+&lt;p&gt;概念上，这跟数据工程非常像——像 dbt 这类工具就是用来建模组织业务逻辑的。有很多模式可以借鉴。&lt;/p&gt;
+&lt;h3 id="一切天然产生复利"&gt;一切天然产生复利&lt;/h3&gt;
+&lt;p&gt;我们称之为&lt;strong&gt;看护模式（stewardship pattern）&lt;/strong&gt;，也是系统产生复利的方式。&lt;/p&gt;
+&lt;p&gt;每个人都可以保留自己的个人工具——Claude、Codex、随便什么。约束只有一个：&lt;strong&gt;每次会话结束时，共享结构要比开始时更好&lt;/strong&gt;——更新结构、补充缺失、审查产物。这样个人工具才能在组织层面产生复利。没有这个契约，它们只会碎片化组织。这既是人的问题，也是 AI 的问题。&lt;/p&gt;
+&lt;p&gt;当一个基本原则被添加或修改时，明确的结构知道哪些需要更新、哪些不再对齐。这就是 AI 衰减的反面。&lt;/p&gt;
+&lt;h3 id="然后改变你奖励的东西"&gt;然后，改变你奖励的东西&lt;/h3&gt;
+&lt;p&gt;你必须奖励那些推动这件事的人。&lt;/p&gt;
+&lt;p&gt;大多数组织把精力花在采购 AI 工具上，结果只培养出一小撮精英早期采用者。&lt;/p&gt;
+&lt;p&gt;如果每个员工都有自己的聊天、自己的记忆、自己的文件——少数人会私下变强，组织什么都没有。甚至可能加速走向冲突的方向。这叫 &lt;strong&gt;&amp;ldquo;AI 英雄主义&amp;rdquo;&lt;/strong&gt;，靠英雄球拿不了冠军。&lt;/p&gt;
+&lt;p&gt;忽略那些不使用或不改进组织系统的 AI 输出。奖励构建系统的人，和使用系统的人。&lt;/p&gt;</description></item></channel></rss>

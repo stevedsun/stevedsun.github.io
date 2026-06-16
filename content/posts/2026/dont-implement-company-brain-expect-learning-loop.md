@@ -1,7 +1,7 @@
 ---
 title: '【译文】请不要搞个"企业大脑"就指望自动形成学习循环'
 slug: "dont-implement-company-brain-expect-learning-loop"
-date: 2026-06-17T10:00:00+08:00
+date: 2026-06-16T23:00:00+08:00
 categories: [AI]
 tags: [AI, Learning Loop, Company Brain, Translation, Seth Rosen, Organizational AI]
 aliases: [/posts/dont-implement-company-brain-expect-learning-loop/]

@@ -8,8 +8,9 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;: &lt;a href="https://x.com/sethrosen/status/2066534763511316540"&gt;Please don&amp;rsquo;t implement a &amp;ldquo;company brain&amp;rdquo; and expect a learning loop&lt;/a&gt; — Seth Rosen&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;声明&lt;/strong&gt;: 本文由 AI 翻译，经作者校对。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sethrosen/status/2066534763511316540"&gt;Please don&amp;rsquo;t implement a &amp;ldquo;company brain&amp;rdquo; and expect a learning loop&lt;/a&gt;
+&lt;strong&gt;作者&lt;/strong&gt;：Seth Rosen
+&lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;Satya 的那篇&lt;a href="https://x.com/satyanadella/status/2066182223213293753?s=20"&gt;推文&lt;/a&gt;爆了，不奇怪。&lt;/p&gt;
 &lt;p&gt;他把两件事联系在了一起——人力资本和算力资本——通过一个学习循环：人类如何引导 AI，AI 如何让人类更聪明，以及整个系统如何滚雪球。&lt;/p&gt;
 &lt;p&gt;我们团队花了九个月研究和构建这个东西。&lt;/p&gt;
@@ -56,9 +57,9 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文：&lt;/strong&gt; &lt;a href="https://x.com/omarsar0/status/2065880971031834786"&gt;Autonomous Long-Running Coding Agents&lt;/a&gt;
-&lt;strong&gt;作者：&lt;/strong&gt; Elvis (@omarsar0)，DAIR.AI Academy
-&lt;strong&gt;翻译声明：&lt;/strong&gt; AI 翻译，如有不准确之处请以原文为准。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/omarsar0/status/2065880971031834786"&gt;Autonomous Long-Running Coding Agents&lt;/a&gt;
+&lt;strong&gt;作者&lt;/strong&gt;：Elvis（@omarsar0），DAIR.AI Academy
+&lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -789,8 +790,9 @@ $$&lt;/p&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/intuitiveml/status/2043545596699750791"&gt;Why Your &amp;ldquo;AI-First&amp;rdquo; Strategy Is Probably Wrong&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Peter Pang（&lt;a href="https://x.com/intuitiveml"&gt;@intuitiveml&lt;/a&gt;），CREAO CTO，前 Meta GenAI tech lead、Apple AI Scientist&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/intuitiveml/status/2043545596699750791"&gt;Why Your &amp;ldquo;AI-First&amp;rdquo; Strategy Is Probably Wrong&lt;/a&gt;
+&lt;strong&gt;作者&lt;/strong&gt;：Peter Pang
+&lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;
 &lt;p&gt;我们 99% 的生产代码由 AI 编写。上周二，我们上午 10 点发布了一个新功能，中午做了 A/B 测试，下午 3 点因为数据不通过把它下线了。下午 5 点，我们发布了更好的版本。三个月前，这样一个循环需要六周。&lt;/p&gt;
 &lt;p&gt;我们不是通过给 IDE 装上 Copilot 走到这一步的。我们拆掉了原有的工程流程，围绕 AI 重新搭建。我们改变了计划、构建、测试、部署和组织团队的方式。我们改变了公司里每个人的角色。&lt;/p&gt;

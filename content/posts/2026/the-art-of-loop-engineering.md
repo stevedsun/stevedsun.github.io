@@ -1,5 +1,5 @@
 ---
-title: "循环工程的艺术"
+title: "【译文】循环工程的艺术"
 slug: "the-art-of-loop-engineering"
 date: 2026-06-18T00:00:01+08:00
 categories: [AI]

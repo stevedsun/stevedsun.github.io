@@ -1,4 +1,136 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>文章 on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in 文章 on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Tue, 16 Jun 2026 23:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】请不要搞个"企业大脑"就指望自动形成学习循环</title><link>https://sund.site/posts/2026/dont-implement-company-brain-expect-learning-loop/</link><pubDate>Tue, 16 Jun 2026 23:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/dont-implement-company-brain-expect-learning-loop/</guid><description>&lt;p&gt;&lt;figure
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>文章 on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in 文章 on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Thu, 18 Jun 2026 00:00:01 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>循环工程的艺术</title><link>https://sund.site/posts/2026/the-art-of-loop-engineering/</link><pubDate>Thu, 18 Jun 2026 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2026/the-art-of-loop-engineering/</guid><description>&lt;p&gt;&lt;em&gt;原文：&lt;a href="https://x.com/sydneyrunkle/status/2066928783534289358"&gt;The Art of Loop Engineering&lt;/a&gt;&lt;/em&gt;··
+&lt;em&gt;作者：Sydney Runkle (LangChain)&lt;/em&gt;··
+&lt;em&gt;声明：本文由AI翻译&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Agent 之所以有用，是因为它们能通过在真实世界中采取行动来帮我们自动化工作。但要让 agent 可靠地完成有价值的工作，光有一个好模型是不够的——还需要一个精心设计的 harness（控制框架），且这个 harness 要适配具体的任务集。&lt;/p&gt;
+&lt;p&gt;核心 agent 算法很简单：给 LLM 上下文，让它在一个循环里反复调用工具，直到任务完成。这是最基本的循环。但远非驱动 agent 的唯一循环。@swyx 最近写了篇好文章叫 &lt;a href="https://www.latent.space/p/ainews-loopcraft-the-art-of-stacking"&gt;loopcraft：堆叠循环的艺术&lt;/a&gt;，核心思想是你可以通过堆叠和扩展循环来构建更有效的 agent。&lt;/p&gt;
+&lt;p&gt;下面是我们对这个堆栈的理解，以及如何用 LangChain 的各个原语来装备每一层。&lt;/p&gt;
+&lt;h2 id="循环-1agent"&gt;循环 1：Agent&lt;/h2&gt;
+&lt;p&gt;在最底层，agent 就是一个模型在循环里反复调工具，直到任务完成。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://pbs.twimg.com/media/HK8cVApXsAE94vJ.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;这就是 LangChain 的 &lt;a href="https://docs.langchain.com/oss/python/langchain/agents"&gt;create_agent&lt;/a&gt; 给你的东西。选任意模型，接入工具，就有了一个可以工作的 agent 循环。工具赋予了 agent 在真实世界采取行动的能力。&lt;/p&gt;
+&lt;p&gt;拿我们内部的文档 agent 举例（后面整篇文章都用它来做例子）。在第一层循环里，它收到一个文档改进的请求，模型规划并起草修改，然后用工具来克隆仓库、读文件、写文档、开 PR 等等。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://pbs.twimg.com/media/HK8cXkUXgAEnJXz.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h2 id="循环-2验证循环"&gt;循环 2：验证循环&lt;/h2&gt;
+&lt;p&gt;agent 循环能把事情做完，但第一次跑的结果不一定总是正确或一致的。当一致性重要时，通常有必要在外面包一层验证循环：检查输出，不合格就把反馈送回模型重做。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://pbs.twimg.com/media/HK8cZ8PWwAA3eD6.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;验证循环增加了一个评分器（grader）：按评分标准检查 agent 的输出，如果不合格，带上反馈信息把结果发回去。评分器可以是确定性的，也可以是 agentic 的（LLM 当评委是经典案例）。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/rubric"&gt;RubricMiddleware&lt;/a&gt; 处理这个模式，或者你也可以在 create_agent 上用 after_agent hook 来对接。&lt;/p&gt;
+&lt;p&gt;拿我们的文档 agent 来说，评分器在每次尝试后跑测试，检查所有链接是否能解析、所有 CI 检查是否通过、diff 的范围是否真的只是请求的内容。这类错误不需要人工审阅就能捕获。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://pbs.twimg.com/media/HK8cckrWIAAVLHk.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;一个权衡：加入验证会增加每次运行的延迟和成本。当质量比速度重要时值得——而大多数生产场景正是如此。&lt;/p&gt;
+&lt;h2 id="循环-3事件驱动循环"&gt;循环 3：事件驱动循环&lt;/h2&gt;
+&lt;p&gt;agent 开发中最重要的一部分是集成层：把你的 agent 接入生态系统，让它能在后台运行。&lt;/p&gt;
+&lt;p&gt;事件驱动循环把你的 agent 连到生态系统里。事件触发——新文档落地、定时任务触发、webhook 到达——agent 就开始运行。agent 不是你手动调用的东西；它是一个持续运行在更大系统内部的组件。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://pbs.twimg.com/media/HK8ch69XcAAcM5g.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://info.langchain.com/agent-development-platform"&gt;LangSmith Deployment&lt;/a&gt; 提供了触发器基础设施，包括 cron 定时和 webhook 支持。openclaw 中&amp;quot;心跳&amp;quot;（heartbeats）是 crons 的一个流行用法，它把你的 agent 变成了一个永远在线、主动出击的助手。&lt;/p&gt;
+&lt;p&gt;我们的文档 agent 由 &lt;a href="https://www.langchain.com/langsmith/fleet"&gt;Fleet&lt;/a&gt; 驱动，这是一个无代码 agent 构建器。Fleet 的 &lt;a href="https://docs.langchain.com/langsmith/fleet/channels"&gt;channels&lt;/a&gt; 和 &lt;a href="https://docs.langchain.com/langsmith/fleet/schedules"&gt;schedules&lt;/a&gt; 处理事件驱动和 cron 类的触发器。我们用一个 channel，当 #docs-plz Slack 频道里有消息发出时，就触发文档 agent。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://pbs.twimg.com/media/HK8ckp_WIAAzLhp.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h2 id="循环-4爬坡循环hill-climbing-loop"&gt;循环 4：爬坡循环（Hill Climbing Loop）&lt;/h2&gt;
+&lt;p&gt;前三个循环自动化工作。第四个——可以说最重要的——自动化改进本身！&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://pbs.twimg.com/media/HK8coslWMAAyYLu.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;每次 agent 运行都会产生一条 trace（追踪记录）：记录了模型做了什么、调用了哪些工具、评分器的反馈等等。这些 trace 里包含了关于什么在起作用、什么不起作用的高价值信号。爬坡循环运行一个分析 agent 来分析这些 trace，并根据发现重写 harness 的配置。这可以包括 prompt 调整、工具调整或评分器调整。&lt;/p&gt;
+&lt;p&gt;在 LangSmith 中，你可以用 &lt;a href="https://www.langchain.com/langsmith/engine"&gt;Engine&lt;/a&gt;（我们的 trace 分析 agent）来装备这第四层循环。&lt;/p&gt;
+&lt;p&gt;回到文档 agent 的例子：我们在文档 agent 的 trace 上跑 Engine 来检测问题。当多条 trace 指示出潜在问题时，就会开一个 issue，要求修改有问题的 prompt 或工具。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://pbs.twimg.com/media/HK8czWeXQAAYMu7.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;关键点在于：返回箭头不只是回到顶层——它向内伸进去，直接更新 agent 循环本身。外循环的每轮迭代都让内循环变得更好。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;展望：prompt 和工具配置是最容易改进的东西，但并非唯一选项。对于跑开源模型的团队，爬坡循环可以喂给 RL 微调管线，用 trace 或评估结果作为训练信号来改进模型本身。辅助上下文（如记忆层和检索技能）也可以用同样的方式改进。循环是模式；它优化什么，取决于你。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id="人的参与和判断力"&gt;人的参与和判断力&lt;/h2&gt;
+&lt;p&gt;自动化不意味着把人从循环中移除。在每一层，都有自然的位置让人参与进来产生价值。自动评分器能检查链接是否能解析；但需要人来发现框架对受众来说不对味。这种判断力——来自上下文、经验和品味的积累——正是人工审阅不可替代的地方。&lt;/p&gt;
+&lt;p&gt;一些专业知识应该固化到 prompt/工具本身，但对于敏感操作，实时人工审阅是必要的（想想金融交易、数据库操作等）。LangChain 在每个循环中都提供了简单的方式来设置这些接触点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在 agent 循环中，要求人在敏感操作/工具调用前确认&lt;/li&gt;
+&lt;li&gt;在验证循环中，对于敏感工作流，人可以充当评分器&lt;/li&gt;
+&lt;li&gt;在应用循环中，输出在返回给终端用户前可以经过人工审批&lt;/li&gt;
+&lt;li&gt;在爬坡循环中，harness 的改进在部署前可以经过人工审查&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;LangChain 的所有开源框架都把&amp;quot;人在回路&amp;quot;作为&lt;a href="https://docs.langchain.com/oss/python/deepagents/human-in-the-loop"&gt;一等公民原语&lt;/a&gt;来支持。&lt;/p&gt;
+&lt;h2 id="总结"&gt;总结&lt;/h2&gt;
+&lt;p&gt;为了方便，这里用列表来展示四个循环如何堆叠：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;循环 1：Agent 循环&lt;/strong&gt;（模型 + 工具）— 模型反复调用工具直到任务完成 — 自动化工作 — &lt;code&gt;create_agent&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;循环 2：验证循环&lt;/strong&gt;（agent + 评分器）— agent 运行，输出按评分标准打分，不合格带反馈重试 — 确保质量 — &lt;code&gt;RubricMiddleware&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;循环 3：事件循环&lt;/strong&gt;（验证 + 系统）— 事件触发 agent 运行，更新真实系统 — 规模化工作 — LangSmith Deployment / Fleet channels&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;循环 4：爬坡循环&lt;/strong&gt;（系统 + 分析引擎）— 生产 trace 喂给分析 agent，改进 harness 配置 — 持续改进 — LangSmith Engine&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这就是 loop engineering——或者说 @swyx 称之为 loopcraft——在实际中的样子。AI 领域的前沿人物如 &lt;a href="https://x.com/steipete/status/2063697162748260627"&gt;Steipete&lt;/a&gt;、&lt;a href="https://x.com/0xwhrrari/status/2064804504608887040"&gt;Boris&lt;/a&gt; 和 &lt;a href="https://www.youtube.com/watch?v=kwSVtQ7dziU"&gt;Andrej&lt;/a&gt; 都得出了相同的结论：agent 的潜力在于你围绕它们构建的循环。&lt;/p&gt;
+&lt;p&gt;我们思考循环 1 和 2 已经有一段时间了。但焦点应该转向循环 3 和 4——通过将 agent 嵌入你的生态系统并让它们根据你的标准持续改进，价值在这里复利增长。&lt;/p&gt;
+&lt;p&gt;Satya &lt;a href="https://x.com/satyanadella/status/2066182223213293753"&gt;点出了这个组织层面的意义&lt;/a&gt;：那些早期就构建学习循环的公司——人的判断和 token 资本在其中复合增长——将建立难以复制的优势。&lt;/p&gt;
+&lt;h2 id="致谢"&gt;致谢&lt;/h2&gt;
+&lt;p&gt;感谢 @Vtrivedy10、@masondrxy、@hwchase17 和 @huntlovell 的有益审阅。&lt;/p&gt;
+&lt;h2 id="参考链接"&gt;参考链接&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/quickstart"&gt;deepagents quickstart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/langchain/agents"&gt;create_agent docs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/rubric"&gt;rubric middleware&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/langsmith/cron-jobs"&gt;cron jobs&lt;/a&gt;, &lt;a href="https://docs.langchain.com/langsmith/use-webhooks"&gt;webhooks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.langchain.com/langsmith/engine"&gt;langsmith engine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/langsmith/fleet/channels"&gt;fleet channels&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>【译文】请不要搞个"企业大脑"就指望自动形成学习循环</title><link>https://sund.site/posts/2026/dont-implement-company-brain-expect-learning-loop/</link><pubDate>Tue, 16 Jun 2026 23:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/dont-implement-company-brain-expect-learning-loop/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -1025,20 +1157,4 @@ $$&lt;/p&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
-&lt;/p&gt;</description></item><item><title>外部化的J人</title><link>https://sund.site/posts/2025/ext-judging/</link><pubDate>Mon, 03 Nov 2025 22:07:40 +0800</pubDate><guid>https://sund.site/posts/2025/ext-judging/</guid><description>&lt;p&gt;生活中有一类人，喜欢催促别人制定计划。只要事情还悬在半空，他就感到不安。&lt;/p&gt;
-&lt;p&gt;这种人不一定是公司老板，也不一定多强势，他就是喜欢问“什么时候能定下来？”“周末怎么安排，到底去哪？”，类似这样，向外寻找确定性。&lt;/p&gt;
-&lt;p&gt;这种人，我们暂且叫他们“外部化的 J 人”或“Ex J 人”，J 人就是 MBTI 人格分析中的 Judging 型性格的人，喜欢预判未来走向，热爱制定计划。与之相对的是 P 人，随性自在。&lt;/p&gt;
-&lt;p&gt;Ex J 人，就是把这种 J 属性外溢给他人的人，同化他人成为 J 人的 J 人。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Ex J 人把确定性留给自己，把焦虑传给世界&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;我观察这类人通常控制欲较强。控制欲有向内生长的控制欲，比如让工作和生活都井井有条，充满秩序感。也有向外生长的控制欲，比如试图操纵别人，要求他人跟自己保持高度一致。&lt;/p&gt;
-&lt;p&gt;Ex J 人是控制欲外溢型，他们的控制欲大多时候是向内生长的。当他们内部的控制欲过多时，就不经意间外溢给别人。一旦他们的 J 望落空，生活和工作无法井井有条时，他们就把负面情绪传递到不确定的根源的那个人，展现出压迫感。&lt;/p&gt;
-&lt;p&gt;我最近工作和生活中遇到两个这样的人。反思之后，我也通过自查机制（I 人的内心搜索引擎）发现我自己也不经意间成为过 Ex J 人。&lt;/p&gt;
-&lt;p&gt;如何避免自己成为 Ex J 人呢？&lt;/p&gt;
-&lt;p&gt;我想第一条原则是不要重复追问。我在外企里跟欧洲同事沟通，发现他们与中国同事很大的一点不同：他们除了“肯定”和“否定”回应之外，还有一种“不回应”。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;如果他没想好，他有权不回应。不回应也是一种回应&lt;/strong&gt;。代表“我没想好，等我想好了再说”。但在我们的语言体系里，不回应显得不礼貌，没自信……&lt;/p&gt;
-&lt;p&gt;从咱们的应试教育体系也能看出来，我们是盛产 J 人的，这些 J 人有一些逐渐蜕化为更极端的 Ex J 人，走向危害社会的一面（开玩笑，其实也没有那么严重）。&lt;/p&gt;
-&lt;p&gt;所以，别人不回应时，你当作是另一种回应。你就不是 Ex J 人了。&lt;/p&gt;
-&lt;p&gt;如何跟 Ex J 人沟通呢？&lt;/p&gt;
-&lt;p&gt;我也不知道答案，所以不耻 Chat 问，请教了 GPT 答案：要分成两步，先缓和对方情绪，表达理解；再用模糊的步骤代替精确的结论，比如你定不出计划，就说现在定不下来，一旦发生什么，就可以如何应对。让对方看到你的思考过程。&lt;/p&gt;
-&lt;p&gt;这样，用大概的步骤，或模糊的时间点，代替精确的回答，让对方的控制欲有所缓解，也没有被对方卷入节奏。&lt;/p&gt;
-&lt;p&gt;啊，做人好累。最后，希望你成为 P 人吧，如果实在不行，也答应我，当个好 J 人，好吗。&lt;/p&gt;</description></item></channel></rss>
+&lt;/p&gt;</description></item></channel></rss>

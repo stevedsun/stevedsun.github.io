@@ -1,6 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/categories/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Thu, 18 Jun 2026 00:00:01 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>循环工程的艺术</title><link>https://sund.site/posts/2026/the-art-of-loop-engineering/</link><pubDate>Thu, 18 Jun 2026 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2026/the-art-of-loop-engineering/</guid><description>&lt;p&gt;&lt;em&gt;原文：&lt;a href="https://x.com/sydneyrunkle/status/2066928783534289358"&gt;The Art of Loop Engineering&lt;/a&gt;&lt;/em&gt;··
-&lt;em&gt;作者：Sydney Runkle (LangChain)&lt;/em&gt;··
-&lt;em&gt;声明：本文由AI翻译&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Steve Sun</title><link>https://sund.site/categories/ai/</link><description>Recent content in AI on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Thu, 18 Jun 2026 00:00:01 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>循环工程的艺术</title><link>https://sund.site/posts/2026/the-art-of-loop-engineering/</link><pubDate>Thu, 18 Jun 2026 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2026/the-art-of-loop-engineering/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/the-art-of-loop-engineering-header.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sydneyrunkle/status/2066928783534289358"&gt;The Art of Loop Engineering&lt;/a&gt;··
+&lt;strong&gt;作者&lt;/strong&gt;：Sydney Runkle (LangChain)··
+&lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;Agent 之所以有用，是因为它们能通过在真实世界中采取行动来帮我们自动化工作。但要让 agent 可靠地完成有价值的工作，光有一个好模型是不够的——还需要一个精心设计的 harness（控制框架），且这个 harness 要适配具体的任务集。&lt;/p&gt;
 &lt;p&gt;核心 agent 算法很简单：给 LLM 上下文，让它在一个循环里反复调用工具，直到任务完成。这是最基本的循环。但远非驱动 agent 的唯一循环。@swyx 最近写了篇好文章叫 &lt;a href="https://www.latent.space/p/ainews-loopcraft-the-art-of-stacking"&gt;loopcraft：堆叠循环的艺术&lt;/a&gt;，核心思想是你可以通过堆叠和扩展循环来构建更有效的 agent。&lt;/p&gt;
 &lt;p&gt;下面是我们对这个堆栈的理解，以及如何用 LangChain 的各个原语来装备每一层。&lt;/p&gt;
@@ -10,7 +20,7 @@
  class="image-caption"
 &gt;
  
- &lt;img src="https://pbs.twimg.com/media/HK8cVApXsAE94vJ.jpg" alt="" loading="lazy" /&gt;
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/loop-engineering-agent-loop.jpg" alt="" loading="lazy" /&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -21,7 +31,7 @@
  class="image-caption"
 &gt;
  
- &lt;img src="https://pbs.twimg.com/media/HK8cXkUXgAEnJXz.jpg" alt="" loading="lazy" /&gt;
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/loop-engineering-agent-example.jpg" alt="" loading="lazy" /&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -32,7 +42,7 @@
  class="image-caption"
 &gt;
  
- &lt;img src="https://pbs.twimg.com/media/HK8cZ8PWwAA3eD6.jpg" alt="" loading="lazy" /&gt;
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/loop-engineering-verification.jpg" alt="" loading="lazy" /&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -44,7 +54,7 @@
  class="image-caption"
 &gt;
  
- &lt;img src="https://pbs.twimg.com/media/HK8cckrWIAAVLHk.jpg" alt="" loading="lazy" /&gt;
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/loop-engineering-verification-example.jpg" alt="" loading="lazy" /&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -57,7 +67,7 @@
  class="image-caption"
 &gt;
  
- &lt;img src="https://pbs.twimg.com/media/HK8ch69XcAAcM5g.jpg" alt="" loading="lazy" /&gt;
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/loop-engineering-event-driven.jpg" alt="" loading="lazy" /&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -68,7 +78,7 @@
  class="image-caption"
 &gt;
  
- &lt;img src="https://pbs.twimg.com/media/HK8ckp_WIAAzLhp.jpg" alt="" loading="lazy" /&gt;
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/loop-engineering-event-example.jpg" alt="" loading="lazy" /&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -79,7 +89,7 @@
  class="image-caption"
 &gt;
  
- &lt;img src="https://pbs.twimg.com/media/HK8coslWMAAyYLu.jpg" alt="" loading="lazy" /&gt;
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/loop-engineering-hill-climbing.jpg" alt="" loading="lazy" /&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -91,7 +101,7 @@
  class="image-caption"
 &gt;
  
- &lt;img src="https://pbs.twimg.com/media/HK8czWeXQAAYMu7.jpg" alt="" loading="lazy" /&gt;
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/loop-engineering-hill-example.jpg" alt="" loading="lazy" /&gt;
  
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;

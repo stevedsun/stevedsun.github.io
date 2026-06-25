@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Automated Development on Steve Sun</title><link>https://sund.site/tags/automated-development/</link><description>Recent content in Automated Development on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Thu, 25 Jun 2026 17:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/automated-development/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】我们现在是工厂工程师，不是产品工程师</title><link>https://sund.site/posts/2026/factory-engineers/</link><pubDate>Thu, 25 Jun 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/factory-engineers/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/factory-engineers-header.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/zachlloydtweets/status/2069789929073262945"&gt;We are now factory engineers, not product engineers&lt;/a&gt;··
+&lt;strong&gt;作者&lt;/strong&gt;：Zach Lloyd··
+&lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/factory-cover.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;这是我们与 Warp 团队分享的一篇备忘——关于构建 Warp 这件事应该如何重新理解。它混合了我们从客户那里听到的反馈、我对开发未来的判断、以及 Warp 团队要如何调整才能保持领先。&lt;/p&gt;
+&lt;p&gt;过去一年里，我们经历了从 AI 自动补全到交互式编码 Agent 的跨越。未来六个月，范式将再次进化到 &lt;strong&gt;Automated Development&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;在 Automated Development 的世界里，工程师的工作不再是写代码。甚至不再是直接构建产品。而是构建一套内部的机器——一座云端的软件工厂——让这座工厂来替你生产产品。工厂的目标是交付卓越的产品，但工程师的日常工作不是直接造产品，而是造那个造产品的系统。&lt;/p&gt;
+&lt;p&gt;成功的衡量标准不是某个工程师交付了多少功能——那是一个失败的指标。真正的尺度是：多大比例的变更实现了全自动交付，以及成本是多少。&amp;ldquo;全自动&amp;quot;意味着一个 agent 完成了所有工作：从 Triaging、写规格说明、实现、审查、验证到监控。如果一个变更还不能全自动地交付（当前很多还不能做到），那目标就是半自动化——即使人类仍然需要在审查环节介入，也让 agent 去做 triage 或验证。尽一切可能让 agent 来完成。&lt;/p&gt;
+&lt;p&gt;每个工程师的职责是提升他们团队的产品工厂（Product Factory）的效率。工厂效率大约等于：交付的产品 ÷（推理成本 + 人工时间成本）。&lt;/p&gt;
+&lt;p&gt;公司会用 ROI 来评估工厂的效果：如果在自动化上花了一美元，业务能否收回超过一美元的价值？交付产品并非衡量价值的完美尺度，但现阶段够用了。&lt;/p&gt;
+&lt;p&gt;给所有工程师无限 token 预算、让他们随意使用交互式编码 Agent 的日子正在终结。取而代之，公司会把软件生产视为可变成本，而不是研发费用。它将出现在利润表的 COGS（销货成本）行上——因为公司想知道，在软件工厂上投入越多，边际收益是多少。&lt;/p&gt;
+&lt;p&gt;我写这些是因为，这就是 Warp 需要拥抱的心态。每个工程师必须停止认为自己是在直接修改代码库和产品，而应该通过&amp;quot;改善工厂&amp;quot;的视角来看待一切。&lt;/p&gt;
+&lt;p&gt;当然，在建设和改进工厂的过程中，你仍然需要直接改善产品——毕竟我们交付的产品才是为客户和用户创造价值的东西。但每当我们的工厂失败时，我们需要从中学习，下一次再往自动化的方向推进一步。随着时间的推移，自动化的比例会越来越高，直到我们的工作纯粹是提升效率，而不是把车从流水线上搬下来自己去造。&lt;/p&gt;
+&lt;p&gt;这对 Warp 尤其重要，因为我们的公司现在本身就是做工厂的生意。我们运营着一座工厂来改进开源的 Warp 终端——近百万开发者依赖它持续变好。同时我们也在推出一个叫 &lt;a href="http://www.oz.dev/"&gt;Oz&lt;/a&gt; 的平台，帮助其他公司把同样的工作流复用到他们最重要的产品上。工厂生意将是唯一重要的软件生产力生意——既然我们在卖这个，我们最好自己先拥抱它。&lt;/p&gt;
+&lt;h2 id="需要改变什么自动化审计"&gt;需要改变什么：自动化审计&lt;/h2&gt;
+&lt;p&gt;第一，我们必须衡量吞吐量和效率。我们必须严格审视产品中有多少比例是自主交付的、成本是多少。我们现在还没有做到。当前最需要追踪的指标是：全自动完成任务的比例，以及完成这些任务的成本。&lt;/p&gt;
+&lt;p&gt;第二，我们必须强迫自己以&amp;quot;自动化优先&amp;quot;的思维方式面对一切。也就是说，每次使用交互式 agent（即人类在回路中）写代码，都要把它视为一个需要学习的失败。对每项任务，都应该遵循工厂的工作流，只在真正需要的时候才把东西从流水线上搬下来。现阶段我们经常需要这么做，没问题。但目标是越来越少。&lt;/p&gt;
+&lt;p&gt;工厂工作流很简单：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Triage Agent&lt;/strong&gt; 运行，尝试理解和复现问题
+&lt;ul&gt;
+&lt;li&gt;如果判定任务可以自动化 → 交给 Implementation Agent&lt;/li&gt;
+&lt;li&gt;如果因为模糊性或范围问题需要规格说明 → 交给 Spec Agent&lt;/li&gt;
+&lt;li&gt;如果仍不明确 → 获取人类输入并重试，或暂缓处理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;[如果需要] Spec Agent&lt;/strong&gt; 运行
+&lt;ul&gt;
+&lt;li&gt;人类审查规格说明，然后交给 Implementation Agent&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Implementation Agent&lt;/strong&gt; 写代码&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Code Review Agent&lt;/strong&gt; 审查代码&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Verification Agent&lt;/strong&gt; 通过计算机使用或其他方式进行验证&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;人类&lt;/strong&gt;审查代码和验证输出
+&lt;ul&gt;
+&lt;li&gt;如果需要，回到步骤 2、3、4 或 5&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CI / CD&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;交付&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Monitor Agent&lt;/strong&gt; 运行，如果有问题则创建 issue，完成闭环&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这个工作流应该看起来很熟悉——它就是我们为拥有 60k star 的&lt;a href="https://github.com/warpdotdev/warp"&gt;开源项目&lt;/a&gt;建立的流程。你可以在 &lt;a href="http://build.warp.dev/"&gt;build.warp.dev&lt;/a&gt; 看到它的实际运行状态。我的判断是，它发挥了大概一半的效用，但我们还没有真正全身心投入。我看到 build.warp.dev 上的 ready-to-implement 状态里堆积了 1300 个 issue，心里想的是：&amp;ldquo;我们还等什么？让 agent 去实现它们。&amp;rdquo; 我们必须让它完全跑起来。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/factory-build-dashboard.jpg" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;每当我们不得不让人类介入流程，我们的平台 Oz 就需要记录这一点，并且让&lt;a href="https://www.warp.dev/blog/self-improvement-loop-for-skills"&gt;自我改进 agent&lt;/a&gt; 尝试优化流程，减少人类再次干预的概率。同样，我们需要自我改进 agent 持续监视工厂相关的对话，寻找 token 浪费的模式并建议效率提升方案。我们应该定期评估不同的 harness 和 prompt，记录哪些在下一次执行中表现更好。&lt;/p&gt;
+&lt;p&gt;作为 Warp 的工程师，我们的首要工作是确保这套工作流顺畅运行，并让 Oz 提供尽可能最好的支持体验。如果我们做到了，工厂最终将达到递归自我改进的状态。这是黄金路径。&lt;/p&gt;
+&lt;p&gt;这听起来可能像是对苦差事的拥抱，或者是一个理想主义但不切实际的愿景——好像我们不能再摆弄代码了，或者要把所有时间花在审查 agent 生成的垃圾上。&lt;/p&gt;
+&lt;p&gt;我的看法不同。我认为这是软件工程最后一个、也是最重要的一个问题——可以称之为&lt;strong&gt;元工程&lt;/strong&gt;：设计一个让 coding agent 能够最高效地构建和交付有用东西的系统。&lt;/p&gt;
+&lt;p&gt;是的，短期内会有一大堆痛苦——agent 失败，我们不得不审查它们的垃圾代码。但我们必须让自己经历这些痛苦，这样才能找到自动化解决它们的方法。如果我们不做，别人会做。&lt;/p&gt;
+&lt;p&gt;我们的使命始终是赋能开发者更快地交付更好的软件。让所有人学会构建、管理和调优云端的软件工厂——就是这个使命的最终形态。&lt;/p&gt;</description></item></channel></rss>

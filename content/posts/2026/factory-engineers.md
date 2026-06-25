@@ -1,7 +1,7 @@
 ---
 title: "【译文】我们现在是工厂工程师，不是产品工程师"
 slug: "factory-engineers"
-date: 2026-06-25T17:30:00+08:00
+date: 2026-06-25T17:00:00+08:00
 categories: [AI]
 tags: [AI, Automated Development, Engineering, Warp]
 description: "Warp CEO Zach Lloyd 的全员信——在 Automated Development 范式下，工程师的角色正从「写代码的人」转变为「造工厂的人」"

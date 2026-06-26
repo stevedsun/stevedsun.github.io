@@ -2,7 +2,7 @@
 # The basic URL used to generate page links, set it to your website's URL.
 baseURL = "https://sund.site/"
 title = "Steve Sun"
-description = "Steve Sun 的博客"
+description = "拆解复杂问题，聊聊软件设计品味，探索工程实践。AI Agent、Go 编程、软件工程。"
 languageCode = "zh-CN"
 
 defaultContentLanguage = "zh"
@@ -14,7 +14,7 @@ defaultContentLanguage = "zh"
     contentDir = "content"
     title = "Steve Sun"
     [languages.zh.params]
-      description = "Steve Sun 的博客"
+      description = "拆解复杂问题，聊聊软件设计品味，探索工程实践。AI Agent、Go 编程、软件工程。"
       copyright = "版权所有 © 2013-2026, Steve Sun"
 
   [languages.en]

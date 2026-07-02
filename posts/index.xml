@@ -1,4 +1,347 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>文章 on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in 文章 on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Thu, 25 Jun 2026 17:00:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】我们现在是工厂工程师，不是产品工程师</title><link>https://sund.site/posts/2026/factory-engineers/</link><pubDate>Thu, 25 Jun 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/factory-engineers/</guid><description>&lt;p&gt;&lt;figure
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>文章 on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in 文章 on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Thu, 02 Jul 2026 00:00:01 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】每个 AI 工程师都应该知道的 20 个循环设计模式</title><link>https://sund.site/posts/2026/20-loop-design-patterns-every-ai-engineer-should-know/</link><pubDate>Thu, 02 Jul 2026 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2026/20-loop-design-patterns-every-ai-engineer-should-know/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/20-loop-patterns-swirl-v2-header.png" alt="header" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;header&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sairahul1/status/2072258045460226373"&gt;20 Loop Design Patterns Every AI Engineer Should Know&lt;/a&gt;··
+&lt;strong&gt;作者&lt;/strong&gt;：Rahul (@sairahul1)··
+&lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;大多数 AI 工程师知道如何构建一个 agent。&lt;/p&gt;
+&lt;p&gt;但很少有人知道如何构建一个能在首次尝试后不断变好的系统。&lt;/p&gt;
+&lt;p&gt;这个差距值六位数美金。&lt;/p&gt;
+&lt;p&gt;区别在哪里：&lt;/p&gt;
+&lt;p&gt;Agent 是一个工人。&lt;/p&gt;
+&lt;p&gt;Loop（循环）是让工人进步的机制。&lt;/p&gt;
+&lt;p&gt;当今生产环境中最强大的 AI 系统，不是单次模型调用。&lt;/p&gt;
+&lt;p&gt;它们是循环。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;生成 → 评估 → 学习 → 改进。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;一遍又一遍。&lt;/p&gt;
+&lt;p&gt;直到输出真正变好。&lt;/p&gt;
+&lt;p&gt;以下是生产级 AI 系统中反复出现的 20 个循环设计模式。&lt;/p&gt;
+&lt;p&gt;收藏这篇文章。你会用到它们的。&lt;/p&gt;
+&lt;h2 id="agent-vs-loop"&gt;Agent vs Loop&lt;/h2&gt;
+&lt;p&gt;旧方式：Prompt → Response → Done。&lt;/p&gt;
+&lt;p&gt;新方式：Generate → Critique → Rewrite → Score → Retry → Remember → Improve。&lt;/p&gt;
+&lt;p&gt;一个是流水线工人，做一次就完事。&lt;/p&gt;
+&lt;p&gt;另一个是流水线工人，研究每一个错误，重写操作手册，每个班次进步 3%。&lt;/p&gt;
+&lt;p&gt;现在能交付生产级 AI 的团队，他们不是在写更好的 prompt。&lt;/p&gt;
+&lt;p&gt;他们在构建更好的循环。&lt;/p&gt;
+&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/20-loop-patterns-agents-vs-loops.jpg" alt="Agents vs Loops" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;Agents vs Loops&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;h2 id="类别-1--质量改进循环让输出在离开系统前就变好"&gt;类别 1 — 质量改进循环（让输出在离开系统前就变好）&lt;/h2&gt;
+&lt;h3 id="1-generate--critique--rewrite"&gt;1. Generate → Critique → Rewrite&lt;/h3&gt;
+&lt;p&gt;AI 工程中最重要的循环。&lt;/p&gt;
+&lt;p&gt;生成输出。评论家审阅。生成器根据反馈重写。重复直到质量达标。&lt;/p&gt;
+&lt;p&gt;不是一个模型。两个角色。一条流水线。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[Generator] → 初稿
+[Critic] → &amp;#34;第三段含糊不清，缺少证据，语气不对&amp;#34;
+[Generator] → 根据批评重写
+[Critic] → &amp;#34;好多了，但结尾还是薄弱&amp;#34;
+[Generator] → 最终重写
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;适用于：写作、代码审查、报告、策略文档、销售邮件。&lt;/p&gt;
+&lt;p&gt;洞察：负责生成的模型不是自己输出的最佳评判者。&lt;/p&gt;
+&lt;p&gt;独立的评论家每次都能发现生成器遗漏的问题。&lt;/p&gt;
+&lt;h3 id="2-score-and-retry-loop"&gt;2. Score-and-Retry Loop&lt;/h3&gt;
+&lt;p&gt;生成。打分。低于阈值就重试。&lt;/p&gt;
+&lt;p&gt;简单。强大。被严重低估。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;score = evaluate(output)
+
+while score &amp;lt; threshold:
+ output = generate(prompt)
+ score = evaluate(output)
+ attempts += 1
+ if attempts &amp;gt; max_retries:
+ return best_so_far
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;最适合质量可衡量的场景——提取准确率、格式合规性、事实正确性、线索评分。&lt;/p&gt;
+&lt;p&gt;生成器不知道自己在被评分。&lt;/p&gt;
+&lt;p&gt;评估者知道。&lt;/p&gt;
+&lt;p&gt;这个分离就是模式本身。&lt;/p&gt;
+&lt;h3 id="3-multi-critic-loop"&gt;3. Multi-Critic Loop&lt;/h3&gt;
+&lt;p&gt;一个评论家有盲点。&lt;/p&gt;
+&lt;p&gt;那就用四个。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;正确性评论家&lt;/strong&gt;：事实准确吗？&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;风格评论家&lt;/strong&gt;：清晰且文笔好吗？&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全评论家&lt;/strong&gt;：合适且安全吗？&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;领域评论家&lt;/strong&gt;：符合专业标准吗？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;每个独立评估。&lt;/p&gt;
+&lt;p&gt;最终输出必须同时满足四个才能放行。&lt;/p&gt;
+&lt;p&gt;用于：医疗 AI、法律文档审查、金融分析、受监管内容。&lt;/p&gt;
+&lt;h3 id="4-adversarial-critique-loop"&gt;4. Adversarial Critique Loop&lt;/h3&gt;
+&lt;p&gt;评论家唯一的任务是打破这个答案。&lt;/p&gt;
+&lt;p&gt;不是改进它。是打破它。&lt;/p&gt;
+&lt;p&gt;对抗性评论家会问的问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;这里什么假设会失效？&lt;/li&gt;
+&lt;li&gt;缺少什么证据？&lt;/li&gt;
+&lt;li&gt;怀疑论者会说什么？&lt;/li&gt;
+&lt;li&gt;什么地方自信地错了？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;生成器随后要么辩护，要么重写。&lt;/p&gt;
+&lt;p&gt;最好的答案在攻击中存活下来。&lt;/p&gt;
+&lt;p&gt;用于：研究综合、投资论点评审、战略规划、风险分析。&lt;/p&gt;
+&lt;h3 id="5-judge-ensemble-loop"&gt;5. Judge Ensemble Loop&lt;/h3&gt;
+&lt;p&gt;一个评委打分有噪声。&lt;/p&gt;
+&lt;p&gt;五个评委平均掉噪声。&lt;/p&gt;
+&lt;p&gt;将同一个输出送进多个评估器。&lt;/p&gt;
+&lt;p&gt;汇总分数。&lt;/p&gt;
+&lt;p&gt;只有高共识的输出才晋级。&lt;/p&gt;
+&lt;p&gt;用于：单一模型评估不可靠、风险高、边界情况重要的场景。&lt;/p&gt;
+&lt;h2 id="类别-2--记忆循环从发生过的事情中学习"&gt;类别 2 — 记忆循环（从发生过的事情中学习）&lt;/h2&gt;
+&lt;h3 id="6-reflexion-loop"&gt;6. Reflexion Loop&lt;/h3&gt;
+&lt;p&gt;这是最重要的自我改进模式，没有之一。&lt;/p&gt;
+&lt;p&gt;Agent 失败。Agent 分析失败原因。Agent 存储教训。Agent 带着教训重新尝试。&lt;/p&gt;
+&lt;p&gt;每一次迭代都比上一次更聪明。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;attempt 1: 失败
+reflection: &amp;#34;我以为 X 是对的，但 X 是错的。下次先验证 X。&amp;#34;
+attempt 2: 融入教训 → 部分成功
+reflection: &amp;#34;好多了。但我跳过了 Y。加上 Y 检查。&amp;#34;
+attempt 3: 成功
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;一个系统&amp;quot;失败一次&amp;quot;和&amp;quot;只失败一次&amp;quot;之间的区别。&lt;/p&gt;
+&lt;h3 id="7-memory-update-loop"&gt;7. Memory Update Loop&lt;/h3&gt;
+&lt;p&gt;每次任务完成后存储三样东西：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;做了什么决定&lt;/li&gt;
+&lt;li&gt;结果是什么&lt;/li&gt;
+&lt;li&gt;下次会怎么不同做&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;未来的运行继承这些知识。&lt;/p&gt;
+&lt;p&gt;第 6 个月的系统已经不是第 1 个月的那个系统了。&lt;/p&gt;
+&lt;p&gt;它读了 6 个月的自己历史。&lt;/p&gt;
+&lt;h3 id="8-error-library-loop"&gt;8. Error Library Loop&lt;/h3&gt;
+&lt;p&gt;存储每一次失败。&lt;/p&gt;
+&lt;p&gt;错误答案。糟糕输出。执行失败。边界情况。&lt;/p&gt;
+&lt;p&gt;在处理新任务之前：&lt;/p&gt;
+&lt;p&gt;先搜索错误库。&lt;/p&gt;
+&lt;p&gt;如果类似的失败存在 → 在开始之前就应用已知修复。&lt;/p&gt;
+&lt;p&gt;系统不再重复犯同一个错误。&lt;/p&gt;
+&lt;p&gt;这是生产级 AI 中最被低估的模式。&lt;/p&gt;
+&lt;h3 id="9-success-pattern-loop"&gt;9. Success Pattern Loop&lt;/h3&gt;
+&lt;p&gt;大多数工程师只存失败。&lt;/p&gt;
+&lt;p&gt;也要存成功。&lt;/p&gt;
+&lt;p&gt;当任务顺利时：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;保存方法&lt;/li&gt;
+&lt;li&gt;保存上下文&lt;/li&gt;
+&lt;li&gt;保存什么让它奏效&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;遇到类似任务时检索成功模式。&lt;/p&gt;
+&lt;p&gt;从胜利中学习，而不仅仅是错误。&lt;/p&gt;
+&lt;h3 id="10-memory-compression-loop"&gt;10. Memory Compression Loop&lt;/h3&gt;
+&lt;p&gt;记忆永远在增长。&lt;/p&gt;
+&lt;p&gt;无限记忆 = 不可用的记忆。&lt;/p&gt;
+&lt;p&gt;当积累到 N 条之后：&lt;/p&gt;
+&lt;p&gt;压缩它们。&lt;/p&gt;
+&lt;p&gt;将许多具体记忆 → 变成少数高层抽象。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;压缩前：
+&amp;#34;任务 A 因为 X 失败了&amp;#34;
+&amp;#34;任务 B 因为 X 失败了&amp;#34;
+&amp;#34;任务 C 因为 X 失败了&amp;#34;
+
+压缩后：
+&amp;#34;模式：X 导致失败。总是先检查 X。&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上下文保持可控。模式保持可访问。系统保持快。&lt;/p&gt;
+&lt;h2 id="类别-3--规划循环当现实变化时调整计划"&gt;类别 3 — 规划循环（当现实变化时调整计划）&lt;/h2&gt;
+&lt;h3 id="11-plan--execute--replan"&gt;11. Plan → Execute → Replan&lt;/h3&gt;
+&lt;p&gt;AI Agent 设计中最常见的错误：&lt;/p&gt;
+&lt;p&gt;把计划当作固定的。&lt;/p&gt;
+&lt;p&gt;计划在接触现实时会破裂。&lt;/p&gt;
+&lt;p&gt;模式：&lt;/p&gt;
+&lt;p&gt;制定计划 → 执行步骤 → 观察结果 → 更新计划 → 继续&lt;/p&gt;
+&lt;p&gt;不是瀑布。&lt;/p&gt;
+&lt;p&gt;是螺旋。&lt;/p&gt;
+&lt;p&gt;每一圈收紧方法。&lt;/p&gt;
+&lt;p&gt;用于：环境变化、任务有依赖关系、长期目标。&lt;/p&gt;
+&lt;h3 id="12-dynamic-workflow-loop"&gt;12. Dynamic Workflow Loop&lt;/h3&gt;
+&lt;p&gt;大多数流水线是固定的。&lt;/p&gt;
+&lt;p&gt;Step 1 → Step 2 → Step 3。永远如此。&lt;/p&gt;
+&lt;p&gt;动态工作流根据结果改变：&lt;/p&gt;
+&lt;p&gt;如果输出 A → 走分支 X；如果输出 B → 走分支 Y；如果输出 C → 跳到步骤 5。&lt;/p&gt;
+&lt;p&gt;流水线在运行时决定自己的形状。&lt;/p&gt;
+&lt;p&gt;用于：多文档研究、客服路由、自适应内容流水线。&lt;/p&gt;
+&lt;h3 id="13-goal-decomposition-loop"&gt;13. Goal Decomposition Loop&lt;/h3&gt;
+&lt;p&gt;大目标进入。&lt;/p&gt;
+&lt;p&gt;系统分解为子目标。&lt;/p&gt;
+&lt;p&gt;每个子目标分解为任务。&lt;/p&gt;
+&lt;p&gt;每个任务分解为步骤。&lt;/p&gt;
+&lt;p&gt;持续分解直到每个单元小到一次调用可以完成。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;目标：&amp;#34;写一份全面的竞争分析&amp;#34;
+↓
+子目标 1：&amp;#34;识别前 5 名竞争对手&amp;#34;
+子目标 2：&amp;#34;分析每个竞争对手的产品&amp;#34;
+子目标 3：&amp;#34;对比定价模式&amp;#34;
+子目标 4：&amp;#34;识别差距&amp;#34;
+↓
+每个子目标 → 任务 → 单独的模型调用
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;循环持续分解，直到系统可以行动。&lt;/p&gt;
+&lt;h3 id="14-progress-evaluation-loop"&gt;14. Progress Evaluation Loop&lt;/h3&gt;
+&lt;p&gt;每 N 步：停下来问：&lt;/p&gt;
+&lt;p&gt;&amp;ldquo;我们真的在接近目标吗？&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;如果是：继续当前策略。
+如果不是：改变策略、工具或计划。&lt;/p&gt;
+&lt;p&gt;系统监控自己的进度。&lt;/p&gt;
+&lt;p&gt;而不是盲目执行。&lt;/p&gt;
+&lt;p&gt;用于：长时间运行的研究 agent、多天自主任务、调试 agent。&lt;/p&gt;
+&lt;h3 id="15-constraint-satisfaction-loop"&gt;15. Constraint Satisfaction Loop&lt;/h3&gt;
+&lt;p&gt;持续运行直到所有约束被满足。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;while not all_constraints_satisfied(output):
+ output = improve(output, unsatisfied_constraints)
+
+constraints = [
+ budget_under_limit,
+ quality_above_threshold,
+ latency_under_200ms,
+ tone_matches_brand,
+ no_hallucinations
+]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在生产系统中非常常见。&lt;/p&gt;
+&lt;p&gt;输出在每一条业务规则通过之前都不算完成。&lt;/p&gt;
+&lt;h2 id="类别-4--探索循环通过尝试多条路径找到最佳答案"&gt;类别 4 — 探索循环（通过尝试多条路径找到最佳答案）&lt;/h2&gt;
+&lt;h3 id="16-branch-and-explore-loop"&gt;16. Branch-and-Explore Loop&lt;/h3&gt;
+&lt;p&gt;不要只走一条路。&lt;/p&gt;
+&lt;p&gt;同时探索多条路径。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;paths = [
+ generate(approach=&amp;#34;conservative&amp;#34;),
+ generate(approach=&amp;#34;aggressive&amp;#34;),
+ generate(approach=&amp;#34;creative&amp;#34;)
+]
+
+scores = [evaluate(p) for p in paths]
+best = paths[scores.index(max(scores))]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;对比结果。选择最佳分支。丢弃其余。&lt;/p&gt;
+&lt;p&gt;用于：内容变体、架构决策、多假设调试、A/B 生成。&lt;/p&gt;
+&lt;h3 id="17-tree-search-loop"&gt;17. Tree Search Loop&lt;/h3&gt;
+&lt;p&gt;Branch-and-Explore 只深入一层。&lt;/p&gt;
+&lt;p&gt;Tree Search 需要多深就走多深。&lt;/p&gt;
+&lt;p&gt;扩展最有希望的节点。剪掉最弱的。持续探索直到找到解。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;root → [A, B, C]
+A → [A1, A2] # A 看起来有希望，扩展它
+B → prune # B 太弱，停在这里
+A1 → [A1a, A1b]
+A1a → solution ✓
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;用于：复杂推理链、多步规划、代码调试、研究综合。&lt;/p&gt;
+&lt;p&gt;计算成本高，但能找到单次调用无法找到的解。&lt;/p&gt;
+&lt;h3 id="18-debate-loop"&gt;18. Debate Loop&lt;/h3&gt;
+&lt;p&gt;两个 agent。一个话题。相反的立场。&lt;/p&gt;
+&lt;p&gt;Agent A 为答案辩护。Agent B 反对它。&lt;/p&gt;
+&lt;p&gt;每一轮挑战假设、要求证据、暴露逻辑漏洞。&lt;/p&gt;
+&lt;p&gt;最终答案通过分歧产生。&lt;/p&gt;
+&lt;p&gt;不是通过一致。&lt;/p&gt;
+&lt;p&gt;对抗性压力能发现自信的单 agent 答案遗漏的东西。&lt;/p&gt;
+&lt;p&gt;用于：投资决策、战略规划、风险评估、研究评论。&lt;/p&gt;
+&lt;h2 id="类别-5--系统优化循环循环改进循环本身"&gt;类别 5 — 系统优化循环（循环改进循环本身）&lt;/h2&gt;
+&lt;h3 id="19-prompt-optimization-loop"&gt;19. Prompt Optimization Loop&lt;/h3&gt;
+&lt;p&gt;大多数工程师写一个 prompt 就不再碰它。&lt;/p&gt;
+&lt;p&gt;Prompt 优化循环改变了这一点。&lt;/p&gt;
+&lt;p&gt;系统：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在测试集上运行 prompt&lt;/li&gt;
+&lt;li&gt;对每个输出评分&lt;/li&gt;
+&lt;li&gt;识别 prompt 失败的地方&lt;/li&gt;
+&lt;li&gt;重写 prompt 修复这些失败&lt;/li&gt;
+&lt;li&gt;重新运行并重新评分&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Prompt 自动变好。&lt;/p&gt;
+&lt;p&gt;不需要人碰。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;current_prompt = &amp;#34;Summarize this document.&amp;#34;
+
+for iteration in range(max_iterations):
+ outputs = [run(current_prompt, doc) for doc in test_set]
+ scores = [evaluate(o) for o in outputs]
+ avg_score = mean(scores)
+
+ if avg_score &amp;gt;= target:
+ break
+
+ failures = [o for o, s in zip(outputs, scores) if s &amp;lt; threshold]
+ current_prompt = improve_prompt(current_prompt, failures)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;用于：生产流水线、自动化内容系统、分类任务。&lt;/p&gt;
+&lt;p&gt;生产级 AI 中最好的 prompt 不是人写的。&lt;/p&gt;
+&lt;p&gt;它们是进化出来的。&lt;/p&gt;
+&lt;h3 id="20-workflow-optimization-loop"&gt;20. Workflow Optimization Loop&lt;/h3&gt;
+&lt;p&gt;这才是真正有趣的地方。&lt;/p&gt;
+&lt;p&gt;循环改进循环本身。&lt;/p&gt;
+&lt;p&gt;系统测量自己的性能：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;延迟&lt;/strong&gt;：每一步花了多久？&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;成本&lt;/strong&gt;：每次调用用了多少 token？&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;质量&lt;/strong&gt;：每个阶段的输出得分多少？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;然后它修改自己的工作流。&lt;/p&gt;
+&lt;p&gt;太慢了？并行化两个步骤。
+太贵了？在质量能保持的地方用一个更小的模型替换 GPT-4 调用。
+质量下降了？在最终输出前加一个评论家。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;metrics = measure_workflow(outputs, latency, cost)
+
+if metrics.latency &amp;gt; target_latency:
+ workflow = parallelize(slow_steps)
+
+if metrics.cost &amp;gt; budget:
+ workflow = replace_with_cheaper_model(high_cost_steps)
+
+if metrics.quality &amp;lt; threshold:
+ workflow = add_critic_before(final_output_step)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这就是真正的自我改进系统的起点。&lt;/p&gt;
+&lt;p&gt;不只是输出在改进。&lt;/p&gt;
+&lt;p&gt;是系统在重新设计自己。&lt;/p&gt;
+&lt;h2 id="所有-20-个模式背后的统一模式"&gt;所有 20 个模式背后的统一模式&lt;/h2&gt;
+&lt;p&gt;每一个循环都共享一个结构：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Act → Observe → Evaluate → Adjust&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这就是完整的配方。&lt;/p&gt;
+&lt;p&gt;输出在第一次尝试时从来不是最终的。&lt;/p&gt;
+&lt;p&gt;输出是一个起点。&lt;/p&gt;
+&lt;p&gt;循环才是把起点变成生产级作品的东西。&lt;/p&gt;
+&lt;h2 id="全景图"&gt;全景图&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;类别 1 — 质量循环&lt;/strong&gt;（让输出在离开前变好）&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Generate → Critique → Rewrite&lt;/li&gt;
+&lt;li&gt;Score-and-Retry&lt;/li&gt;
+&lt;li&gt;Multi-Critic&lt;/li&gt;
+&lt;li&gt;Adversarial Critique&lt;/li&gt;
+&lt;li&gt;Judge Ensemble&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;类别 2 — 记忆循环&lt;/strong&gt;（从发生过的事情中学习）
+6. Reflexion
+7. Memory Update
+8. Error Library
+9. Success Pattern
+10. Memory Compression&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;类别 3 — 规划循环&lt;/strong&gt;（当现实变化时适应）
+11. Plan → Execute → Replan
+12. Dynamic Workflow
+13. Goal Decomposition
+14. Progress Evaluation
+15. Constraint Satisfaction&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;类别 4 — 探索循环&lt;/strong&gt;（通过尝试多条路径找到最佳答案）
+16. Branch-and-Explore
+17. Tree Search
+18. Debate&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;类别 5 — 系统优化循环&lt;/strong&gt;（循环改进循环）
+19. Prompt Optimization
+20. Workflow Optimization&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;大多数工程师认为 agent 是未来。&lt;/p&gt;
+&lt;p&gt;Agent 只是工人。&lt;/p&gt;
+&lt;p&gt;循环才是让工人进步的东西。&lt;/p&gt;
+&lt;p&gt;AI 领域正在发生的最大的转变不是更好的模型。&lt;/p&gt;
+&lt;p&gt;是从 &lt;strong&gt;Prompt → Response&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;转向 &lt;strong&gt;Generate → Evaluate → Learn → Improve&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;掌握循环设计的团队不会写出更好的 prompt。&lt;/p&gt;
+&lt;p&gt;他们会构建出每天都在变好的系统。&lt;/p&gt;
+&lt;p&gt;部署之后，不需要任何人碰它们。&lt;/p&gt;</description></item><item><title>【译文】我们现在是工厂工程师，不是产品工程师</title><link>https://sund.site/posts/2026/factory-engineers/</link><pubDate>Thu, 25 Jun 2026 17:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/factory-engineers/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -998,153 +1341,4 @@ $$&lt;/p&gt;
 &lt;li&gt;事件可观察性&lt;/li&gt;
 &lt;li&gt;可恢复与可扩展性&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;从目前的趋势看，这大概率将是下一代应用软件的基础范式。&lt;/p&gt;</description></item><item><title>【译文】为什么你的"AI-First"策略很可能是错的</title><link>https://sund.site/posts/2026/why-your-ai-first-strategy-translation/</link><pubDate>Mon, 25 May 2026 23:55:00 +0800</pubDate><guid>https://sund.site/posts/2026/why-your-ai-first-strategy-translation/</guid><description>&lt;p&gt;&lt;figure
- class="image-caption"
-&gt;
- 
- &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-first-strategy-header-900x383.png" alt="" loading="lazy" /&gt;
- 
- &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/intuitiveml/status/2043545596699750791"&gt;Why Your &amp;ldquo;AI-First&amp;rdquo; Strategy Is Probably Wrong&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;作者&lt;/strong&gt;：Peter Pang&lt;br&gt;
-&lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
-&lt;hr&gt;
-&lt;p&gt;我们 99% 的生产代码由 AI 编写。上周二，我们上午 10 点发布了一个新功能，中午做了 A/B 测试，下午 3 点因为数据不通过把它下线了。下午 5 点，我们发布了更好的版本。三个月前，这样一个循环需要六周。&lt;/p&gt;
-&lt;p&gt;我们不是通过给 IDE 装上 Copilot 走到这一步的。我们拆掉了原有的工程流程，围绕 AI 重新搭建。我们改变了计划、构建、测试、部署和组织团队的方式。我们改变了公司里每个人的角色。&lt;/p&gt;
-&lt;p&gt;CREAO 是一个 agent 平台。25 名员工，10 名工程师。我们从 2025 年 11 月开始构建 agent，两个月前我从零重构了整个产品架构和工程工作流。&lt;/p&gt;
-&lt;p&gt;OpenAI 在 2026 年 2 月发表的一个概念恰好描述了我们在做的事情。他们称之为 &lt;strong&gt;harness engineering（缰绳工程）&lt;/strong&gt;：工程团队的首要工作不再是写代码，而是让 agent 能做有用的工作。出了问题，修正方案不是&amp;quot;再努力一点&amp;quot;，而是：缺少什么能力？如何让这种能力对 agent 来说是清晰可执行且有约束的？&lt;/p&gt;
-&lt;p&gt;我们自己得出了这个结论。当时我们不知道它叫什么。&lt;/p&gt;
-&lt;h2 id="ai-first--使用-ai"&gt;AI-First ≠ 使用 AI&lt;/h2&gt;
-&lt;p&gt;大多数公司只是在现有流程上嫁接 AI。工程师打开 Cursor。PM 用 ChatGPT 写需求。QA 尝试用 AI 做测试生成。工作流保持不变。效率提升了 10% 到 20%。没有任何结构性的改变。&lt;/p&gt;
-&lt;p&gt;那是 &lt;strong&gt;AI 辅助（AI-assisted）&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;AI-First&lt;/strong&gt; 意味着你以 AI 是主要建造者为前提，重新设计流程、架构和组织。你不再问&amp;quot;AI 如何帮助我们工程师？&amp;quot;，而是问&amp;quot;我们如何重构一切，让 AI 负责建造，工程师提供方向和判断？&amp;quot;&lt;/p&gt;
-&lt;p&gt;区别是乘数级的。&lt;/p&gt;
-&lt;p&gt;我看到很多团队声称 AI-first，但依然在用同样的 sprint 周期、同样的 Jira 面板、同样的周会、同样的 QA 签字流程。他们把 AI 加进了循环，但没有重新设计循环。&lt;/p&gt;
-&lt;p&gt;另一个常见版本是所谓的&amp;quot;&lt;strong&gt;氛围编码（vibe coding）&lt;/strong&gt;&amp;quot;——打开 Cursor，不断写提示词直到跑通，提交，重复。这能产出原型。但生产系统需要稳定、可靠、安全。你需要一个能在 AI 写代码时保证这些属性的系统。你构建的是系统。提示词是可丢弃的。&lt;/p&gt;
-&lt;h2 id="我们为什么必须改变"&gt;我们为什么必须改变&lt;/h2&gt;
-&lt;p&gt;去年，我观察了自己的团队，看到了三个会扼杀我们的瓶颈。&lt;/p&gt;
-&lt;h3 id="产品管理瓶颈"&gt;产品管理瓶颈&lt;/h3&gt;
-&lt;p&gt;我们的 PM 花几周时间做调研、设计、编写需求规格。产品管理几十年来一直是这样工作的。但 agent 两个小时就能实现一个功能。当构建时间从几个月压缩到几小时，数周的计划周期就成了瓶颈。&lt;/p&gt;
-&lt;p&gt;花几个月思考一个东西，然后用两个小时构建它——这没有意义。&lt;/p&gt;
-&lt;p&gt;PM 需要进化为具备产品思维的架构师，以迭代的速度工作，或者离开构建循环。设计需要通过快速的&amp;quot;原型-发布-测试-迭代&amp;quot;循环完成，而不是在评审委员会上审阅规格文档。&lt;/p&gt;
-&lt;h3 id="qa-瓶颈"&gt;QA 瓶颈&lt;/h3&gt;
-&lt;p&gt;同样的动态。agent 发布一个功能后，我们的 QA 团队花好几天测试边界情况。构建时间：两小时。测试时间：三天。&lt;/p&gt;
-&lt;p&gt;我们用 AI 构建的测试平台替换了手动 QA，用来测试 AI 写的代码。验证的速度必须跟上实现的速度。否则你只是在下游十英尺处新造了一个瓶颈。&lt;/p&gt;
-&lt;h3 id="人员规模瓶颈"&gt;人员规模瓶颈&lt;/h3&gt;
-&lt;p&gt;我们的竞争对手有 100 倍甚至更多的人力在做类似的工作。我们只有 25 人。我们无法靠招人追赶。我们必须靠重新设计来达到同等水平。&lt;/p&gt;
-&lt;p&gt;三个系统需要 AI 贯穿其中：如何设计产品、如何实现产品、如何测试产品。只要其中一个环节是手动的，它就会制约整个流水线。&lt;/p&gt;
-&lt;h2 id="大胆的决策统一架构"&gt;大胆的决策：统一架构&lt;/h2&gt;
-&lt;p&gt;我得先解决代码库的问题。&lt;/p&gt;
-&lt;p&gt;我们旧的架构分散在多个独立的系统中。一次改动可能需要涉及三四个仓库。从人类工程师的角度看，这还可以管理。但从 AI agent 的角度看，这是不透明的。agent 看不到全貌，无法推理跨服务的影响，无法在本地跑集成测试。&lt;/p&gt;
-&lt;p&gt;我必须把所有代码统一到单个 monorepo 里。原因只有一个：让 AI 能看见一切。&lt;/p&gt;
-&lt;p&gt;这是 harness engineering 原则的实践。你越是把系统的各部分拉到 agent 可以审查、验证和修改的形式中，你获得的杠杆就越大。碎片化的代码库对 agent 来说是隐形的。统一后的代码库是可读的。&lt;/p&gt;
-&lt;p&gt;我用一周设计新系统：规划阶段、实现阶段、测试阶段、集成测试阶段。然后用另一周用 agent 重构了整个代码库。&lt;/p&gt;
-&lt;p&gt;CREAO 是一个 agent 平台。我们用自己的 agent 来重建运行 agent 的平台。如果产品能自己建造自己，它就真的管用。&lt;/p&gt;
-&lt;h2 id="技术栈"&gt;技术栈&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;基础设施：AWS&lt;/strong&gt;。我们运行 AWS 上的自动扩缩容器服务，带断路回滚机制。部署后如果指标恶化，系统自动回退。&lt;/p&gt;
-&lt;p&gt;CloudWatch 是中枢神经系统。所有服务的结构化日志、超过 25 个告警、每天由自动化工作流查询的自定义指标。每一块基础设施都暴露结构化、可查询的信号。如果 AI 读不了日志，它就诊断不了问题。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;CI/CD：GitHub Actions&lt;/strong&gt;。每次代码变更经过六阶段流水线：&lt;/p&gt;
-&lt;p&gt;Verify CI → Build and Deploy Dev → Test Dev → Deploy Prod → Test Prod → Release&lt;/p&gt;
-&lt;p&gt;每个 PR 的 CI 关卡强制执行类型检查、linting、单元和集成测试、Docker 构建、Playwright 端到端测试和环境一致性检查。没有阶段是可选的。没有手动绕过。流水线是可确定的，agent 可以预测结果并推理失败原因。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;AI 代码评审：Claude&lt;/strong&gt;。每条 PR 触发三轮并行的 AI 评审，使用 Claude Opus 4.6：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;第一轮：代码质量——逻辑错误、性能问题、可维护性。&lt;/li&gt;
-&lt;li&gt;第二轮：安全——漏洞扫描、认证边界检查、注入风险。&lt;/li&gt;
-&lt;li&gt;第三轮：依赖扫描——供应链风险、版本冲突、许可证问题。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;这些是评审关卡，不是建议。它们和人类评审并行运行，以量捕捉人类遗漏的问题。当你每天部署八次时，没有人类评审员能在每条 PR 上保持注意力。&lt;/p&gt;
-&lt;p&gt;工程师也可以在 GitHub issue 或 PR 中 @claude 请求实现方案、调试会议或代码分析。agent 能看到整个 monorepo。上下文在对话间延续。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;自愈反馈环&lt;/strong&gt;——这是核心。&lt;/p&gt;
-&lt;p&gt;每天 UTC 时间 9:00 AM，一个自动化健康工作流启动。Claude Sonnet 4.6 查询 CloudWatch，分析所有服务的错误模式，生成一份执行级健康摘要，通过 Microsoft Teams 发送给团队。没有人需要去问。&lt;/p&gt;
-&lt;p&gt;一小时后，分类引擎启动。它将 CloudWatch 和 Sentry 中的生产错误聚类，按九个严重维度打分，然后在 Linear 中自动生成调查工单。每个工单包含示例日志、受影响用户、受影响端点和建议的调查路径。&lt;/p&gt;
-&lt;p&gt;系统会自动去重。如果已开的 issue 覆盖了相同的错误模式，它会更新该 issue。如果已关闭的 issue 复发，它会检测到回归并重新打开。&lt;/p&gt;
-&lt;p&gt;当工程师推送修复时，同一套流水线处理一切。三轮 Claude 评审评估 PR。CI 验证。六阶段部署流水线在 dev 和 prod 间推进，每阶段都有测试。部署完成后，分类引擎重新检查 CloudWatch。如果原始错误已解决，Linear 工单自动关闭。&lt;/p&gt;
-&lt;p&gt;每个工具只处理一个阶段。没有一个工具试图做所有事情。每日循环创造了一个自愈闭环：错误被检测、分类、修复和验证，只需要最少的人工干预。&lt;/p&gt;
-&lt;p&gt;我对 Business Insider 的记者说：&amp;ldquo;AI 会创建 PR，人类只需要评审是否存在风险。&amp;rdquo;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Feature Flags 与支撑栈&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Statsig 管理 feature flag。每个功能在开关后面发布。发布模式：先开放给团队内部，然后逐步百分比开放，最后全面发布或下线。kill switch（紧急下线开关）可以立即关闭一个功能，无需重新部署。如果一个功能导致指标恶化，几小时内就能撤销。不好的功能在发布当天就死掉。A/B 测试通过同一套系统运行。&lt;/p&gt;
-&lt;p&gt;Graphite 管理 PR 分支：合并队列自动 rebase 到主分支，重新跑 CI，仅当所有检查通过时才合并。堆叠式 PR（stacked PRs）支持增量评审，在高吞吐场景下保持 review 质量。&lt;/p&gt;
-&lt;p&gt;Sentry 收集所有服务的结构化异常，由分类引擎与 CloudWatch 数据合并以实现跨工具上下文。Linear 是人类面对的一层：带有严重性评分、示例日志和建议调查方案的自动创建工单。去重防止噪音。跟进验证自动关闭已解决 issue。&lt;/p&gt;
-&lt;h2 id="一个功能从想法到上线"&gt;一个功能从想法到上线&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;新功能路径：&lt;/strong&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;架构师将任务定义为结构化提示词（附代码库上下文、目标和约束）&lt;/li&gt;
-&lt;li&gt;agent 分解任务，规划实现，写代码并生成自己的测试&lt;/li&gt;
-&lt;li&gt;打开 PR。三轮 Claude 评审评估。人类评审者检查的是战略风险，不是逐行正确性&lt;/li&gt;
-&lt;li&gt;CI 验证：类型检查、linting、单元测试、集成测试、端到端测试&lt;/li&gt;
-&lt;li&gt;Graphite 的合并队列 rebase，重跑 CI，通过后合并&lt;/li&gt;
-&lt;li&gt;六阶段部署流水线在 dev 和 prod 间推进，每阶段有测试&lt;/li&gt;
-&lt;li&gt;功能开关先对团队开放。逐步百分比开放。监控指标&lt;/li&gt;
-&lt;li&gt;如有任何指标恶化，kill switch 可立即下线。严重问题用断路器自动回滚&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;strong&gt;Bug 修复路径：&lt;/strong&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;CloudWatch 和 Sentry 检测到错误&lt;/li&gt;
-&lt;li&gt;Claude 分类引擎打分严重性，创建包含完整调查上下文的 Linear issue&lt;/li&gt;
-&lt;li&gt;工程师调查。AI 已经做了诊断。工程师验证并推送修复&lt;/li&gt;
-&lt;li&gt;同样的评审、CI、部署和监控流水线&lt;/li&gt;
-&lt;li&gt;分类引擎重新验证。如果已解决，工单自动关闭&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;两条路径使用同一套流水线。一个系统。一个标准。&lt;/p&gt;
-&lt;h2 id="结果"&gt;结果&lt;/h2&gt;
-&lt;p&gt;14 天内，我们平均每天 3 到 8 次生产部署。在旧模式下，整个两周的时间连一次生产发布都做不到。&lt;/p&gt;
-&lt;p&gt;不好的功能在发布当天就被撤回。新功能在构思当天就上线。A/B 测试实时验证影响。&lt;/p&gt;
-&lt;p&gt;人们以为我们在用速度换质量。但用户参与度上升了。支付转化率上升了。我们产出的结果比以前更好，因为反馈环更紧密了。你每天发布学到的东西比每月发布多得多。&lt;/p&gt;
-&lt;h2 id="新的工程组织"&gt;新的工程组织&lt;/h2&gt;
-&lt;p&gt;将来只会存在两类工程师。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;架构师（Architect）&lt;/strong&gt;——一到两个人。他们设计标准操作流程（SOP），教 AI 如何工作。他们构建测试基础设施、集成系统、分类系统。他们决定架构和系统边界。他们定义什么对 agent 来说是&amp;quot;好&amp;quot;的。&lt;/p&gt;
-&lt;p&gt;这个角色需要深度批判性思维。你批评 AI，而不是跟随 AI。当 agent 提出一个方案时，架构师找出漏洞。它遗漏了什么失败模式？它越过了什么安全边界？它在积累什么技术债？&lt;/p&gt;
-&lt;p&gt;我有物理学博士学位。读博对我最有用的训练是如何质疑假设、压力测试论点、寻找缺失的东西。批评 AI 的能力将比产生代码的能力更有价值。&lt;/p&gt;
-&lt;p&gt;这也是最难填补的岗位。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;操作员（Operator）&lt;/strong&gt;——其他所有人。工作本身仍然重要，但结构不同了。&lt;/p&gt;
-&lt;p&gt;AI 给人类分配任务。分类系统发现 bug，创建工单，呈现诊断结论，分配给合适的人。这个人调查、验证、批准修复。AI 创建 PR。人类评审是否存在风险。&lt;/p&gt;
-&lt;p&gt;任务是 bug 调查、UI 打磨、CSS 改进、PR 评审、验证。它们需要技能和注意力。它们不再需要旧模型下的架构推理能力。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;谁适应得最快？&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;我注意到了一个意料之外的模式。初级工程师比高级工程师适应得更快。&lt;/p&gt;
-&lt;p&gt;传统实践经验较少的初级工程师感到更有力量。他们获得了能放大自己影响力的工具。他们没有携带十年需要卸载的习惯。&lt;/p&gt;
-&lt;p&gt;拥有深厚传统实践经验的高级工程师最难受。他们两个月的工作量，AI 一个小时就能完成。在花了多年时间建立一项稀缺技能之后，接受这个事实很难。&lt;/p&gt;
-&lt;p&gt;我不是在评判谁对谁错。我只是在描述我观察到的事实。在这个转型中，适应性比积累的技能更重要。&lt;/p&gt;
-&lt;h2 id="人的一面"&gt;人的一面&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;管理消失了。&lt;/strong&gt; 两个月前，我 60% 的时间花在管理人上：对齐优先级、开会、给反馈、指导工程师。今天：不到 10%。&lt;/p&gt;
-&lt;p&gt;传统的 CTO 模式说你要赋能团队——让他们做架构工作、培训他们、授权他们。但如果系统只需要一到两个架构师，我得先自己来做。我从管理变成了建造。大多数日子里我从早上 9 点写到凌晨 3 点。我设计 SOP 和系统架构。我维护缰绳（harness）。&lt;/p&gt;
-&lt;p&gt;更有压力。但我享受建造本身，而不是对齐工作。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;少争吵，更好的关系。&lt;/strong&gt; 我和联合创始人及工程师的关系比以前更好了。&lt;/p&gt;
-&lt;p&gt;转型之前，我和团队的大部分互动都是对齐会议：讨论权衡、争论优先级、对技术决策有分歧。这些对话在传统模型中是必要的，但也很消耗人。&lt;/p&gt;
-&lt;p&gt;现在我仍然和团队聊天。我们聊其他事情——非工作话题、闲聊、团建出行。我们关系更好了，因为不再争论那些系统能轻松完成的工作。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;不确定性是真实的。&lt;/strong&gt; 我不会假装每个人都开心。&lt;/p&gt;
-&lt;p&gt;当我停止每天和团队交流后，一些团队成员感到不安。CTO 不和我说话意味着什么？在这个新世界里我的价值是什么？这些都是合理的担忧。&lt;/p&gt;
-&lt;p&gt;有些人花更多时间辩论 AI 是否能做他们的工作，而不是实际去做工作。转型期会制造焦虑。我没有一个干净利落的答案。&lt;/p&gt;
-&lt;p&gt;但我有一个原则：我们不会因为工程师引入了一个生产 bug 就开除他。我们会改进评审流程、加强测试、增加护栏。对 AI 也是一样。如果 AI 犯了错，我们就建更好的验证、更清晰的约束、更强的可观测性。&lt;/p&gt;
-&lt;h2 id="超越工程"&gt;超越工程&lt;/h2&gt;
-&lt;p&gt;我看到其他公司采用 AI-first 工程，但留下所有其他环节还是手动的。&lt;/p&gt;
-&lt;p&gt;如果工程几小时就能交付功能，但市场部要花一周来发布公告，那么市场部就是瓶颈。如果产品团队仍然跑月度计划周期，那么计划就是瓶颈。&lt;/p&gt;
-&lt;p&gt;在 CREAO，我们把 AI-native 操作推到了每个职能：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;产品发布说明：AI 从 changelog 和功能描述中自动生成&lt;/li&gt;
-&lt;li&gt;功能介绍视频：AI 生成动态图形&lt;/li&gt;
-&lt;li&gt;社交媒体日常帖子：AI 编排并自动发布&lt;/li&gt;
-&lt;li&gt;健康报告和分析摘要：AI 从 CloudWatch 和生产数据库生成&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;工程、产品、市场和增长运行在同一个 AI-native 工作流中。如果一个职能以 agent 速度运行，另一个以人类速度运行，那么人类速度的职能就会制约一切。&lt;/p&gt;
-&lt;h2 id="这意味着什么"&gt;这意味着什么&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;对工程师而言：&lt;/strong&gt; 你的价值正从代码产出转向决策质量。快速写代码的能力每个月都在贬值。评估、批评和指导 AI 的能力每个月都在升值。&lt;/p&gt;
-&lt;p&gt;产品感或品味很重要。你能看一眼生成的 UI，在用户告诉你之前就发现不对吗？你能看一眼架构方案，就发现 agent 遗漏的失败模式吗？&lt;/p&gt;
-&lt;p&gt;我告诉我们 19 岁的实习生：训练批判性思维。学会评估论点、找漏洞、质疑假设。学会什么是好的设计。这些技能会持续复利。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;对 CTO 和创始人而言：&lt;/strong&gt; 如果你的 PM 流程比构建时间还长，从那里开始改。&lt;/p&gt;
-&lt;p&gt;在规模化 agent 之前先建好测试缰绳。没有快速验证的快速 AI 是快速流动的技术债。&lt;/p&gt;
-&lt;p&gt;从一个架构师开始。一个人搭建系统并证明它能跑。系统跑起来后再把其他人引入操作员角色。&lt;/p&gt;
-&lt;p&gt;把 AI-native 推入每个职能。&lt;/p&gt;
-&lt;p&gt;做好遇到抵抗的准备。有些人会反弹。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;对行业而言：&lt;/strong&gt; OpenAI、Anthropic 和多个独立团队都收敛到了相同的原理上：结构化上下文、专用 agent、持久化记忆和执行循环。Harness engineering 正在成为一个标准。&lt;/p&gt;
-&lt;p&gt;模型能力是驱动这一切的时钟。我把 CREAO 的全部转变归因于最近两个月。Opus 4.5 做不到 Opus 4.6 能做的事。下一代模型会加速得更多。&lt;/p&gt;
-&lt;p&gt;我相信单人公司将会变得普遍。如果一个架构师加 agent 能做 100 人的工作，很多公司不再需要第二个员工。&lt;/p&gt;
-&lt;h2 id="我们还早"&gt;我们还早&lt;/h2&gt;
-&lt;p&gt;我交谈过的大多数创始人和工程师仍然在以传统方式运作。有些人考虑过转型。很少有人已经做了。&lt;/p&gt;
-&lt;p&gt;一个记者朋友告诉我她大约和五个人聊过这个话题。她说我们比任何人都走得更远：&amp;ldquo;我觉得没有人像你们这样彻底地重建了全套工作流。&amp;rdquo;&lt;/p&gt;
-&lt;p&gt;这些工具对任何团队都是可用的。我们的栈里没有任何东西是专有的。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;竞争优势在于围绕这些工具重新设计一切的决心，以及承受代价的意愿。&lt;/strong&gt; 代价是真实的：员工的不确定性、CTO 每天工作 18 小时、资深工程师质疑自己的价值、旧系统消失新系统尚未被证明的两周真空期。&lt;/p&gt;
-&lt;p&gt;我们承受了那个代价。两个月后，数字说明了一切。&lt;/p&gt;
-&lt;p&gt;我们是构建 agent 平台的公司。我们用 agent 构建了它。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;从目前的趋势看，这大概率将是下一代应用软件的基础范式。&lt;/p&gt;</description></item></channel></rss>

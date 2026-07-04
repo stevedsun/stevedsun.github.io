@@ -201,32 +201,3 @@ body,div.post-body,h1,h2,h3,h4 {
 {{ partial "third-party-scripts.html" . }}
 
 {{- if not hugo.IsServer }} {{ template "_internal/google_analytics_async.html" . }} {{- end }}
-
-{{/*
-  Browser language auto-detection.
-  - First visit: if browser is English and the current page has an English
-    translation, jump to the English version.
-  - After the user manually picks a language (via the switcher), we store
-    their preference in localStorage and skip auto-detection.
-*/}}
-<script>
-(function() {
-  try {
-    var preferredLang = localStorage.getItem('preferredLang');
-    if (preferredLang) return;
-  } catch (e) { return; }
-
-  var navLang = (navigator.language || navigator.userLanguage || '').substring(0, 2).toLowerCase();
-  var currentLang = '{{ .Language.Lang }}';
-
-  if (navLang === 'en' && currentLang !== 'en') {
-    {{ if .IsTranslated }}
-      {{ range .Translations }}
-        {{ if eq .Language.Lang "en" }}
-          window.location.replace('{{ .Permalink }}');
-        {{ end }}
-      {{ end }}
-    {{ end }}
-  }
-})();
-</script>

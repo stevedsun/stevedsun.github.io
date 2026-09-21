@@ -1,0 +1,63 @@
+<!-- Paper-texture overlay (decorative, aria-hidden so screen readers skip it) -->
+<div aria-hidden="true" id="paper-texture"></div>
+<style>
+#paper-texture {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: var(--paper-texture-opacity, 0.06);
+    mix-blend-mode: var(--paper-blend, multiply);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.15  0 0 0 0 0.13  0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-repeat: repeat;
+}
+</style>
+
+<!-- Dark-mode toggle button -->
+<button class="theme-toggle" id="theme-toggle" type="button"
+        aria-label="Toggle dark mode" title="Toggle dark mode">
+    <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+    </svg>
+</button>
+
+<script>
+(function () {
+    var STORAGE_KEY = 'theme-preference';
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+
+    // Apply stored preference as early as possible (before paint flicker)
+    try {
+        var stored = localStorage.getItem(STORAGE_KEY);
+        if (stored === 'dark' || stored === 'light') {
+            root.setAttribute('data-theme', stored);
+        }
+    } catch (e) { /* localStorage may be unavailable */ }
+
+    btn.addEventListener('click', function () {
+        var current = root.getAttribute('data-theme');
+        var resolved;
+        if (current === 'dark') {
+            root.removeAttribute('data-theme');
+            resolved = 'light';
+        } else if (current === 'light') {
+            root.setAttribute('data-theme', 'dark');
+            resolved = 'dark';
+        } else {
+            // No explicit preference yet — flip relative to system
+            var sysDark = window.matchMedia &&
+                          window.matchMedia('(prefers-color-scheme: dark)').matches;
+            resolved = sysDark ? 'light' : 'dark';
+            root.setAttribute('data-theme', resolved);
+        }
+        try { localStorage.setItem(STORAGE_KEY, resolved); } catch (e) {}
+    });
+})();
+</script>

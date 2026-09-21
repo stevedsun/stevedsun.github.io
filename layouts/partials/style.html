@@ -1,0 +1,669 @@
+<style>
+/* ============================================================
+   Medium × Notion — 极致阅读契合版 (Variant 2)
+   Palette is warm paper-cream in light mode, ink-black in dark.
+   ============================================================ */
+
+:root {
+    --width-max: 720px;
+
+    /* Typography */
+    --font-primary: 'Charter', 'Bitstream Charter', 'Source Serif 4', 'Lora',
+                     'Source Han Serif SC', 'Noto Serif SC', serif;
+    --font-secondary: 'JetBrains Mono', 'Source Code Pro', 'SF Mono', Menlo,
+                       Consolas, monospace;
+
+    --font-size-primary: 18px;
+    --font-size-secondary: 0.85em;
+
+    /* Light (paper) palette */
+    --bg-color-primary: #FAF8F3;
+    --bg-color-secondary: #F0EBE0;   /* code-block bg, one notch darker than primary */
+    --bg-color-tertiary: #F5F1E8;    /* blockquote / aside bg */
+    --text-color-primary: #2A2722;
+    --text-color-secondary: #5C5750;
+    --text-color-tertiary: #8C8780;
+    --link-color: #2A2722;
+    --link-visited-color: #6B6259;
+    --border-color: rgba(42, 39, 34, 0.12);   /* hairline */
+    --border-color-strong: rgba(42, 39, 34, 0.22);
+    --upvoted-color: #C9A66B;       /* minimal use accent (warm sand) */
+    --accent: #C9A66B;
+
+    --paper-texture-opacity: 0.06;
+    --paper-blend: multiply;
+}
+
+/* Dark (ink) palette */
+[data-theme="dark"],
+:root[data-theme="dark"] {
+    --bg-color-primary: #1A1814;
+    --bg-color-secondary: #25221C;
+    --bg-color-tertiary: #2C2820;
+    --text-color-primary: #E8E4DC;
+    --text-color-secondary: #B8B2A8;
+    --text-color-tertiary: #807A72;
+    --link-color: #C9A66B;
+    --link-visited-color: #B8956A;
+    --border-color: rgba(232, 228, 220, 0.14);
+    --border-color-strong: rgba(232, 228, 220, 0.24);
+    --upvoted-color: #C9A66B;
+    --accent: #C9A66B;
+    --paper-texture-opacity: 0.08;
+    --paper-blend: screen;
+}
+
+/* System-preference fallback if user hasn't toggled */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --bg-color-primary: #1A1814;
+        --bg-color-secondary: #25221C;
+        --bg-color-tertiary: #2C2820;
+        --text-color-primary: #E8E4DC;
+        --text-color-secondary: #B8B2A8;
+        --text-color-tertiary: #807A72;
+        --link-color: #C9A66B;
+        --link-visited-color: #B8956A;
+        --border-color: rgba(232, 228, 220, 0.14);
+        --border-color-strong: rgba(232, 228, 220, 0.24);
+        --upvoted-color: #C9A66B;
+        --accent: #C9A66B;
+        --paper-texture-opacity: 0.08;
+        --paper-blend: screen;
+    }
+}
+
+/* ----- Paper texture overlay — rendered by #paper-texture div in custom_body.html ----- */
+
+/* ============================================================
+   Body — serif everywhere, comfortable reading
+   ============================================================ */
+body {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-primary);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width-max);
+    text-align: left;
+    background-color: var(--bg-color-primary);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    color: var(--text-color-primary);
+    position: relative;
+    z-index: 1;
+    /* No transition: CSS custom-property changes don't animate var()
+       in a smooth way across browsers, so an instantaneous swap
+       keeps light/dark in lock-step with the toggle. */
+}
+
+/* All headings: serif, weight 700, NOT sans-serif */
+h1, h2, h3, h4, h5, h6, strong, b {
+    color: var(--text-color-primary);
+    font-family: var(--font-primary);
+    font-weight: 700;
+    letter-spacing: -0.005em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 1.6em 0 0.6em;
+    line-height: 1.25;
+}
+
+h1 { font-size: 2rem; margin-top: 0; }
+h2 { font-size: 1.55rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.1rem; color: var(--text-color-secondary); }
+
+/* ============================================================
+   Links — dashed underline, the Notion touch
+   ============================================================ */
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-decoration-color: var(--border-color-strong);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s ease, color 0.15s ease;
+}
+
+a:hover {
+    text-decoration: solid;
+    text-decoration-color: var(--accent);
+    color: var(--accent);
+}
+
+a:visited {
+    color: var(--link-visited-color);
+}
+
+/* ============================================================
+   Title (header) & nav
+   ============================================================ */
+.title {
+    text-decoration: none;
+    border: 0;
+    color: var(--text-color-primary);
+}
+
+.title:hover {
+    text-decoration: none;
+    color: var(--accent);
+}
+
+.title span {
+    font-weight: 400;
+}
+
+nav a {
+    margin-right: 12px;
+    text-decoration: none;
+    color: var(--text-color-secondary);
+}
+
+nav a:hover {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+textarea {
+    width: 100%;
+    font-size: 16px;
+}
+
+input {
+    font-size: 14px;
+}
+
+content {
+    line-height: 1.7;
+}
+
+/* ============================================================
+   Tables
+   ============================================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+th, td {
+    border: 1px solid var(--border-color);
+    padding: 8px 10px;
+}
+
+th {
+    background-color: var(--bg-color-secondary);
+    font-weight: 700;
+    text-align: left;
+}
+
+/* ============================================================
+   Horizontal rule — hairline solid, not dashed
+   ============================================================ */
+hr {
+    border: 0;
+    border-top: 1px solid var(--border-color);
+    margin: 2.2em 0;
+}
+
+/* ============================================================
+   Images — no 1px border, gentle hover lift
+   ============================================================ */
+img {
+    max-width: 100%;
+    display: block;
+    margin: 1.6em auto;
+    border: none;                /* override theme's 1px border */
+    border-radius: 6px;
+    content-visibility: auto;
+}
+
+img[src*="#minipic"] {
+    max-width: 50%;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.image-caption figcaption {
+    text-align: center;
+    font-style: italic;
+    font-size: 0.85em;
+    margin-top: 0.6em;
+    color: var(--text-color-secondary);
+}
+
+.image-caption {
+    margin: auto;
+}
+
+i { font-style: normal; }
+
+time {
+    font-family: var(--font-secondary);
+    font-size: 14px;
+    color: var(--text-color-tertiary);
+}
+
+/* ============================================================
+   Code — inline & block
+   ============================================================ */
+code {
+    font-family: var(--font-secondary);
+    background-color: var(--bg-color-secondary);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: var(--text-color-primary);
+}
+
+pre code {
+    display: block;
+    padding: 16px;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    line-height: 1.55;
+}
+
+div.highlight pre {
+    border-radius: 4px;
+    background-color: var(--bg-color-secondary);
+}
+
+div.highlight code {
+    background-color: var(--bg-color-secondary);
+}
+
+/* ============================================================
+   Blockquote — Notion-style with vertical accent bar
+   ============================================================ */
+blockquote {
+    border-left: 3px solid var(--accent);
+    color: var(--text-color-secondary);
+    margin: 1.4em 0;
+    padding: 0.2em 0 0.2em 1em;
+    font-style: normal;
+    background-color: var(--bg-color-tertiary);
+    border-radius: 0 4px 4px 0;
+}
+
+blockquote p {
+    margin: 0;
+}
+
+/* ============================================================
+   Lists — readable rhythm
+   ============================================================ */
+ul, ol {
+    padding-left: 1.4em;
+}
+
+li {
+    margin: 0.35em 0;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+footer {
+    padding: 32px 0;
+    text-align: center;
+    font-size: var(--font-size-secondary);
+    color: var(--text-color-tertiary);
+    margin-top: 4em;
+    border-top: 1px solid var(--border-color);
+}
+
+ul li:has(input) {
+    list-style-type: none;
+    margin-left: -25.5px;
+}
+
+/* ============================================================
+   Blog post list
+   ============================================================ */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+    color: var(--text-color-tertiary);
+}
+
+ul.blog-posts li span.grouped {
+    flex: 0 0 80px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--link-visited-color);
+}
+
+/* ============================================================
+   TOC sidebar (preserved from theme) — adjust colors for serif
+   ============================================================ */
+div.toc {
+    position: fixed;
+    top: 50%;
+    left: calc((100vw + var(--width-max)) / 2);
+    transform: translateY(-50%);
+    width: calc((90vw - var(--width-max)) / 2);
+    max-height: 80vh;
+    overflow-y: auto;
+    border: none;
+    padding: 0;
+    margin: 0;
+    z-index: 99;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+div.toc::-webkit-scrollbar {
+    display: none;
+}
+
+.toc-nav {
+    padding: 1.5rem;
+}
+
+.toc-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-nav li {
+    margin: 8px 0;
+}
+
+.toc-nav a {
+    display: block;
+    text-decoration: none;
+    color: transparent;
+    padding: 0 12px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    font-family: var(--font-primary);
+}
+
+.toc-nav:hover a {
+    color: var(--text-color-tertiary);
+}
+
+.toc-nav a::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 4px;
+    background-color: var(--text-color-tertiary);
+    border-radius: 16px;
+    margin-right: 12px;
+    vertical-align: middle;
+}
+
+.toc-nav ul ul a::before {
+    width: 12px;
+    margin-right: 16px;
+}
+
+.toc-nav ul ul ul a::before {
+    width: 8px;
+    margin-right: 20px;
+}
+
+.toc-nav a.active,
+.toc-nav a:hover {
+    text-decoration: none;
+    color: var(--text-color-primary);
+}
+
+.toc-nav a.active::before,
+.toc-nav a:hover::before {
+    background-color: var(--accent);
+}
+
+/* ============================================================
+   Upvote button (preserved from theme)
+   ============================================================ */
+button.upvote-btn {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-color-primary);
+}
+
+button.upvoted {
+    color: var(--upvoted-color);
+}
+
+span.upvote-count {
+    margin-top: -4px;
+    font-size: smaller;
+}
+
+/* ============================================================
+   Image zoom — CSS-only (preserved from theme)
+   ============================================================ */
+body:has(.image-zoom-toggle:checked) {
+    overflow: hidden;
+}
+
+.image-zoom-container {
+    position: relative;
+    display: block;
+}
+
+.image-zoom-toggle {
+    display: none;
+}
+
+.image-zoom-label {
+    cursor: zoom-in;
+    display: block;
+    position: relative;
+}
+
+.image-zoom-label:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.zoomable-image {
+    transition: transform 0.3s ease;
+}
+
+.image-zoom-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin: 0;
+}
+
+.image-zoom-toggle:checked ~ .image-zoom-overlay {
+    display: flex;
+    cursor: zoom-out;
+}
+
+.image-zoom-toggle:checked ~ .image-zoom-label {
+    cursor: default;
+}
+
+.image-zoom-toggle:checked ~ .image-zoom-overlay .zoomable-image {
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    transform: scale(1);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.image-zoom-toggle:checked ~ .image-zoom-overlay::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.image-zoom-toggle:checked ~ .image-zoom-overlay::after {
+    content: "✕";
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    z-index: 1002;
+}
+
+.image-zoom-toggle:checked ~ .image-zoom-overlay figcaption {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1001;
+    max-width: 80vw;
+    text-align: center;
+}
+
+/* ============================================================
+   Dark mode toggle button (rendered by custom_body.html)
+   ============================================================ */
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color-primary);
+    color: var(--text-color-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+                transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 0;
+}
+
+.theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: scale(1.05);
+}
+
+.theme-toggle svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+/* ============================================================
+   Mobile breakpoint (preserved from theme, ≤800px)
+   ============================================================ */
+@media (max-width: 800px) {
+    body {
+        padding: 16px;
+        font-size: 17px;
+    }
+
+    img[src*="#minipic"] {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    div.toc {
+        display: none;
+    }
+
+    .image-zoom-label {
+        cursor: pointer;
+    }
+
+    .image-zoom-toggle:checked ~ .image-zoom-overlay {
+        padding: 10px;
+    }
+
+    .image-zoom-toggle:checked ~ .image-zoom-overlay::before,
+    .image-zoom-toggle:checked ~ .image-zoom-overlay::after {
+        top: 10px;
+        right: 10px;
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+
+    .image-zoom-toggle:checked ~ .image-zoom-overlay figcaption {
+        bottom: 10px;
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .theme-toggle {
+        bottom: 14px;
+        right: 14px;
+        width: 36px;
+        height: 36px;
+    }
+}
+</style>

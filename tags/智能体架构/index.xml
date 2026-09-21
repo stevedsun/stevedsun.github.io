@@ -230,7 +230,8 @@
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;h2 id="以-pi-agent-为例设计理念与架构"&gt;以 PI Agent 为例：设计理念与架构&lt;/h2&gt;
-&lt;p&gt;前面是“通用 Agent 框架设计”。现在落到最近很火的极简框架 &lt;a href="https://github.com/earendil-works/pi"&gt;PI Agent&lt;/a&gt; 。&lt;/p&gt;
+&lt;p&gt;前面是“通用 Agent 框架设计”。现在落到最近很火的极简框架 &lt;a href="https://github.com/earendil-works/pi" rel="noopener noreferrer"&gt;PI Agent&lt;/a&gt;
+ 。&lt;/p&gt;
 &lt;p&gt;一起来看看这个框架是如何设计 Agent 的。&lt;/p&gt;
 &lt;h3 id="设计理念"&gt;设计理念&lt;/h3&gt;
 &lt;ol&gt;

@@ -13,7 +13,8 @@
 &lt;li&gt;写出风格统一、用户友好的错误信息&lt;/li&gt;
 &lt;li&gt;提高代码的可维护性，降低沟通成本&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Google 文档原文：&lt;a href="https://developers.google.com/tech-writing/error-messages"&gt;Error Messages&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Google 文档原文：&lt;a href="https://developers.google.com/tech-writing/error-messages" rel="noopener noreferrer"&gt;Error Messages&lt;/a&gt;
+&lt;/p&gt;
 &lt;h2 id="基本原则"&gt;基本原则&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;错误不应该被掩盖 (Don&amp;rsquo;t fail silently)&lt;/li&gt;
@@ -45,7 +46,8 @@
 &lt;/ul&gt;
 &lt;h2 id="清晰的错误信息"&gt;清晰的错误信息&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;简明扼要，使用主动语态。（这方面内容可以参考&lt;a href="https://sund.site/posts/2022/technical-writing/"&gt;技术文档写作指南&lt;/a&gt;）&lt;/li&gt;
+&lt;li&gt;简明扼要，使用主动语态。（这方面内容可以参考&lt;a href="https://sund.site/posts/2022/technical-writing/"&gt;技术文档写作指南&lt;/a&gt;
+）&lt;/li&gt;
 &lt;li&gt;避免出现双重否定句式。&lt;/li&gt;
 &lt;li&gt;让目标用户能够理解，即根据用户掌握的知识，提供有帮助的内容。&lt;/li&gt;
 &lt;li&gt;专业术语应前后一致。&lt;/li&gt;

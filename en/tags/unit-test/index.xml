@@ -8,7 +8,8 @@
 &lt;h2 id="solution-approach"&gt;Solution Approach&lt;/h2&gt;
 &lt;p&gt;The core problems of AI-written code can be summarized as low maintainability caused by lack of observability and lack of context. To address these two problems, we need to first review how traditional software processes make code more observable and maintainable.&lt;/p&gt;
 &lt;h3 id="human-led-unit-testing"&gt;Human-Led Unit Testing&lt;/h3&gt;
-&lt;p&gt;Unit tests are the specification for code. Complex business logic usually requires reading a lot of code to understand. But experienced programmers will look at the unit tests first. Good unit tests will completely write the module&amp;rsquo;s expected inputs and outputs into the test cases. In &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt;, the author believes good unit tests should have:&lt;/p&gt;
+&lt;p&gt;Unit tests are the specification for code. Complex business logic usually requires reading a lot of code to understand. But experienced programmers will look at the unit tests first. Good unit tests will completely write the module&amp;rsquo;s expected inputs and outputs into the test cases. In &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279" rel="noopener noreferrer"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt;
+, the author believes good unit tests should have:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Protection against regressions&lt;/strong&gt;. That is, tests can prevent previously fixed issues from recurring in regression testing.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Resistance to refactoring&lt;/strong&gt;. That is, after code refactoring, tests can correctly identify whether the refactoring has affected existing functionality.&lt;/li&gt;

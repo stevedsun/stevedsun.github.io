@@ -80,13 +80,17 @@
 &lt;h2 id="what-protocols-or-standards-should-audit-log-format-follow"&gt;What Protocols or Standards Should Audit Log Format Follow?&lt;/h2&gt;
 &lt;p&gt;For locally running software, Syslog typically has better system compatibility. For projects using ELK to collect logs, CEF is more suitable. In other cases, custom JSON is recommended.&lt;/p&gt;
 &lt;p&gt;Below is a comparison of the three formats (protocols).&lt;/p&gt;
-&lt;h3 id="common-event-format-cef"&gt;&lt;a href="https://docs.elastic.co/en/integrations/cef"&gt;Common Event Format (CEF)&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="common-event-format-cef"&gt;&lt;a href="https://docs.elastic.co/en/integrations/cef" rel="noopener noreferrer"&gt;Common Event Format (CEF)&lt;/a&gt;
+&lt;/h3&gt;
 &lt;p&gt;A log format used by Elastic-Search, designed based on event-sourcing principles. The advantage is less redundant information, suitable for building monitoring systems in conjunction with the ELK stack. Its transport is based on the Syslog protocol while extending readable key-value pairs. The text-based design also allows CEF-format logs to be written to files. Overall, it is the most balanced of these formats in terms of readability, efficiency, and standardization.&lt;/p&gt;
-&lt;h3 id="syslog"&gt;&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424"&gt;Syslog&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="syslog"&gt;&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424" rel="noopener noreferrer"&gt;Syslog&lt;/a&gt;
+&lt;/h3&gt;
 &lt;p&gt;Syslog is the default audit log format for Linux operating systems, typically using its RFC 5424 version. Most SIEM&lt;sup id="fnref:1"&gt;&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref"&gt;1&lt;/a&gt;&lt;/sup&gt; systems support importing this format.
 The Syslog protocol has great adaptability, and mTLS-based Syslog transport can maximize system security while remaining compatible with traditional software. However, for microservices, implementing and maintaining the standard protocol is costly. Therefore, services like AWS CloudTrail and OpenTelemetry have opted for the simpler HTTPS + JSON format.&lt;/p&gt;
-&lt;h3 id="json-lines"&gt;&lt;a href="https://jsonlines.org/"&gt;JSON Lines&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Most SaaS products use JSON—it&amp;rsquo;s simple and efficient. JSON has the characteristic of more redundant information, but the structure is easy to parse. For example, below are the fields in the log model mentioned in the &lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/"&gt;OpenTelemetry official documentation&lt;/a&gt;:&lt;/p&gt;
+&lt;h3 id="json-lines"&gt;&lt;a href="https://jsonlines.org/" rel="noopener noreferrer"&gt;JSON Lines&lt;/a&gt;
+&lt;/h3&gt;
+&lt;p&gt;Most SaaS products use JSON—it&amp;rsquo;s simple and efficient. JSON has the characteristic of more redundant information, but the structure is easy to parse. For example, below are the fields in the log model mentioned in the &lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/" rel="noopener noreferrer"&gt;OpenTelemetry official documentation&lt;/a&gt;
+:&lt;/p&gt;
 &lt;table&gt;
  &lt;thead&gt;
  &lt;tr&gt;
@@ -167,7 +171,8 @@ The Syslog protocol has great adaptability, and mTLS-based Syslog transport can 
 &lt;p&gt;The audit service should cache audit-related context, such as the mapping between service names and IDs, event IDs and descriptions, etc. When different services send messages to the audit service, the message structure should be designed with minimal length as a principle. The audit service&amp;rsquo;s policy should allow users to configure log levels, filter rules, etc., to reduce system burden.&lt;/p&gt;
 &lt;h2 id="log-export"&gt;Log Export&lt;/h2&gt;
 &lt;p&gt;In addition to exporting file-format logs, the audit service usually needs to support export to third-party systems. We typically refer to third-party services that analyze and store logs as SIEM (Security Information and Event Management). In Kubernetes, the module that exports logs to third-party web services is called a webhook.&lt;/p&gt;
-&lt;p&gt;Exporting to third-party systems can typically use the standard Syslog format or JSON Lines, which has the widest support. Additionally, you need to consider log truncation, and the configuration of third-party systems&amp;rsquo; batch and stream processing. You can refer to &lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/#webhook-backend"&gt;this Kubernetes document&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Exporting to third-party systems can typically use the standard Syslog format or JSON Lines, which has the widest support. Additionally, you need to consider log truncation, and the configuration of third-party systems&amp;rsquo; batch and stream processing. You can refer to &lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/#webhook-backend" rel="noopener noreferrer"&gt;this Kubernetes document&lt;/a&gt;
+.&lt;/p&gt;
 &lt;h2 id="architecture-designs-of-open-source-projects"&gt;Architecture Designs of Open-Source Projects&lt;/h2&gt;
 &lt;p&gt;Due to different design focuses, each of the following open-source projects needs careful consideration of its advantages and disadvantages, whether its features meet your needs, and whether the system environment is distributed or monolithic.&lt;/p&gt;
 &lt;h3 id="auditd"&gt;Auditd&lt;/h3&gt;
@@ -215,7 +220,8 @@ The Syslog protocol has great adaptability, and mTLS-based Syslog transport can 
 &lt;li&gt;ResponseComplete - When the response message body is complete and no more data needs to be transmitted.&lt;/li&gt;
 &lt;li&gt;Panic - Generated when a panic occurs.&lt;/li&gt;
 &lt;/ul&gt;&lt;/blockquote&gt;
-&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/"&gt;Kubernetes audit events&lt;/a&gt; use a different message structure from the Event API&lt;sup id="fnref:3"&gt;&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref"&gt;3&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/" rel="noopener noreferrer"&gt;Kubernetes audit events&lt;/a&gt;
+ use a different message structure from the Event API&lt;sup id="fnref:3"&gt;&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref"&gt;3&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 &lt;p&gt;In summary, the cloud platform&amp;rsquo;s audit service design can be summarized as:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Advantages: microservice design, more flexible JSON format logs, centralized log collection service easily integrates with more application services and exports to open-source data processing tools.&lt;/li&gt;
@@ -262,13 +268,16 @@ The Syslog protocol has great adaptability, and mTLS-based Syslog transport can 
 &lt;hr&gt;
 &lt;ol&gt;
 &lt;li id="fn:1"&gt;
-&lt;p&gt;SIEM stands for Security Information and Event Management. &lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem"&gt;https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a&gt;&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;SIEM stands for Security Information and Event Management. &lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem" rel="noopener noreferrer"&gt;https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a&gt;
+&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:2"&gt;
-&lt;p&gt;For log encryption, the server typically adds an additional checksum chain to logs for verification. You can refer to Amazon&amp;rsquo;s implementation of &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html"&gt;server-side encryption (SSE-S3)&lt;/a&gt;.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;For log encryption, the server typically adds an additional checksum chain to logs for verification. You can refer to Amazon&amp;rsquo;s implementation of &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html" rel="noopener noreferrer"&gt;server-side encryption (SSE-S3)&lt;/a&gt;
+.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:3"&gt;
-&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event"&gt;Kubernetes audit event structure definition&lt;/a&gt;&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event" rel="noopener noreferrer"&gt;Kubernetes audit event structure definition&lt;/a&gt;
+&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;</description></item></channel></rss>

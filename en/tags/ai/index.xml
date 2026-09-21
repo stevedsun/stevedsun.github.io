@@ -72,7 +72,8 @@
 &lt;p&gt;AI writing code has developed too fast. At the start of the year I was still manually writing every line; by mid-year I already had a pipeline that can independently complete features, acceptance, and deployment. What I do has shifted from writing code to defining rules, setting boundaries, and accepting results.&lt;/p&gt;
 &lt;p&gt;The engineer&amp;rsquo;s role is changing. You used to be a bricklayer, placing bricks one by one. Now you&amp;rsquo;re a rancher: set up the fences, put out enough feed, and let the herd graze and grow. The software industry is shifting from construction to animal husbandry.&lt;/p&gt;
 &lt;p&gt;This trend will only accelerate. Better models mean simpler harnesses, cheaper execution costs. You don&amp;rsquo;t need to be the best programmer—you need to be the best rule-maker. Define clearly what&amp;rsquo;s allowed, what&amp;rsquo;s not allowed, and what counts as done—leave the rest to the agent.&lt;/p&gt;
-&lt;p&gt;The time I spend defining boundaries has a much higher return than the time I spend on actual coding. That&amp;rsquo;s the most surprising discovery.&lt;/p&gt;</description></item><item><title>How AI Coding Tools Like Cursor Work Under the Hood</title><link>https://sund.site/en/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/en/posts/2025/ast-chunk/</guid><description>&lt;p&gt;In my previous post, &lt;a href="https://sund.site/en/posts/2025/build-deepwiki/"&gt;How DeepWiki Works&lt;/a&gt;, I shared one possible way DeepWiki is implemented. I left a question there: how does DeepWiki chunk a source code repository?&lt;/p&gt;
+&lt;p&gt;The time I spend defining boundaries has a much higher return than the time I spend on actual coding. That&amp;rsquo;s the most surprising discovery.&lt;/p&gt;</description></item><item><title>How AI Coding Tools Like Cursor Work Under the Hood</title><link>https://sund.site/en/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/en/posts/2025/ast-chunk/</guid><description>&lt;p&gt;In my previous post, &lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;How DeepWiki Works&lt;/a&gt;
+, I shared one possible way DeepWiki is implemented. I left a question there: how does DeepWiki chunk a source code repository?&lt;/p&gt;
 &lt;p&gt;The answer is AST chunking.&lt;/p&gt;
 &lt;p&gt;In this post I want to analyze how two software development aids — Cursor and Cline — implement &amp;ldquo;code indexing.&amp;rdquo; In fact, they are not fundamentally different from DeepWiki; all of them use AST chunking.&lt;/p&gt;
 &lt;h2 id="ast"&gt;AST&lt;/h2&gt;
@@ -116,13 +117,15 @@
 &lt;p&gt;A compiler can then walk this tree and translate it node by node into JavaScript code.&lt;/p&gt;
 &lt;p&gt;Once you understand ASTs, you roughly understand how DeepWiki — and even code editors like Cursor — build code indexes.&lt;/p&gt;
 &lt;h2 id="cursor"&gt;Cursor&lt;/h2&gt;
-&lt;p&gt;In &lt;a href="https://www.cursor.com/ja/security#codebase-indexing"&gt;Cursor&amp;rsquo;s official documentation&lt;/a&gt;, you can find a description of how it indexes user code.&lt;/p&gt;
+&lt;p&gt;In &lt;a href="https://www.cursor.com/ja/security#codebase-indexing" rel="noopener noreferrer"&gt;Cursor&amp;rsquo;s official documentation&lt;/a&gt;
+, you can find a description of how it indexes user code.&lt;/p&gt;
 &lt;p&gt;Cursor scans the user&amp;rsquo;s repository, computes file hashes, and builds a Merkle tree. Similar to the way Git compares file diffs, Cursor uses the Merkle tree to detect file changes in the user&amp;rsquo;s workspace and incrementally uploads modified files to Cursor&amp;rsquo;s servers.&lt;/p&gt;
 &lt;p&gt;Uploaded files are then chunked and embedded, and stored in a Turbopuffer database. This is the process of building a RAG over the source code.&lt;/p&gt;
 &lt;p&gt;The chunking step uses an AST tool to structure the code into a syntax tree, then cuts the serialized tree nodes into small chunks, and finally embeds them as vectors for storage.&lt;/p&gt;
 &lt;p&gt;Turbopuffer does not only store the vectorized code; it also stores metadata such as the line numbers and source file paths of the code segments.&lt;/p&gt;
 &lt;p&gt;When Cursor tries to autocomplete user code or generate new code from context, it queries the Turbopuffer database, finds the vectors with the highest similarity, and gets the file path and line numbers for that segment. Cursor then reads the corresponding source code from the user&amp;rsquo;s repository and puts it into the LLM&amp;rsquo;s system context. Finally, the LLM returns the newly generated code to Cursor.&lt;/p&gt;
-&lt;p&gt;A &lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;user on X&lt;/a&gt; put together this flow diagram:&lt;/p&gt;
+&lt;p&gt;A &lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934" rel="noopener noreferrer"&gt;user on X&lt;/a&gt;
+ put together this flow diagram:&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -133,7 +136,8 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline&amp;rsquo;s official blog&lt;/a&gt; offers a glimpse of how it is implemented.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing" rel="noopener noreferrer"&gt;Cline&amp;rsquo;s official blog&lt;/a&gt;
+ offers a glimpse of how it is implemented.&lt;/p&gt;
 &lt;p&gt;Cline is an AI agent that helps with coding. Cline does not upload code and build a RAG; instead, it takes a safer and more reliable approach to managing the user&amp;rsquo;s repository.&lt;/p&gt;
 &lt;p&gt;Here is the developers&amp;rsquo; description of how Cline works:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -158,7 +162,8 @@
 &lt;p&gt;In general, ASTs are an important tool for understanding the syntactic structure of code, and different implementations have their own trade-offs.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;Further Reading&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/" rel="noopener noreferrer"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>Pairing with AI for Programming — Testing</title><link>https://sund.site/en/posts/2024/pairing-with-ai-01/</link><pubDate>Wed, 11 Dec 2024 17:02:43 +0800</pubDate><guid>https://sund.site/en/posts/2024/pairing-with-ai-01/</guid><description>&lt;p&gt;The future paradigm of software development will be human-AI collaborative programming. This is already an indisputable fact in the software industry. Programming tools like Windsurf, Cursor, and Copilot have, on one hand, improved development efficiency; on the other hand, they&amp;rsquo;ve made code more black-boxed, less readable, and harder to maintain.&lt;/p&gt;
 &lt;p&gt;I try to briefly discuss which software development practices are more suitable for improving the observability and maintainability of AI-generated code in the AI era. All articles titled &amp;ldquo;Pairing with AI for Programming&amp;rdquo; are just thoughts to get the conversation started, not a systematic methodology. I welcome readers&amp;rsquo; corrections for any mistakes.&lt;/p&gt;
 &lt;h2 id="what-are-the-common-problems-with-using-ai-to-write-code"&gt;What Are the Common Problems with Using AI to Write Code?&lt;/h2&gt;
@@ -169,7 +174,8 @@
 &lt;h2 id="solution-approach"&gt;Solution Approach&lt;/h2&gt;
 &lt;p&gt;The core problems of AI-written code can be summarized as low maintainability caused by lack of observability and lack of context. To address these two problems, we need to first review how traditional software processes make code more observable and maintainable.&lt;/p&gt;
 &lt;h3 id="human-led-unit-testing"&gt;Human-Led Unit Testing&lt;/h3&gt;
-&lt;p&gt;Unit tests are the specification for code. Complex business logic usually requires reading a lot of code to understand. But experienced programmers will look at the unit tests first. Good unit tests will completely write the module&amp;rsquo;s expected inputs and outputs into the test cases. In &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt;, the author believes good unit tests should have:&lt;/p&gt;
+&lt;p&gt;Unit tests are the specification for code. Complex business logic usually requires reading a lot of code to understand. But experienced programmers will look at the unit tests first. Good unit tests will completely write the module&amp;rsquo;s expected inputs and outputs into the test cases. In &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279" rel="noopener noreferrer"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt;
+, the author believes good unit tests should have:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Protection against regressions&lt;/strong&gt;. That is, tests can prevent previously fixed issues from recurring in regression testing.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Resistance to refactoring&lt;/strong&gt;. That is, after code refactoring, tests can correctly identify whether the refactoring has affected existing functionality.&lt;/li&gt;

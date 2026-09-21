@@ -80,13 +80,17 @@
 &lt;h2 id="审计日志的格式应遵循哪些协议或标准"&gt;审计日志的格式应遵循哪些协议或标准？&lt;/h2&gt;
 &lt;p&gt;对于本地运行的软件，通常 Syslog 具有更好的系统兼容性。对于使用 ELK 采集日志的项目更适合用 CEF，其他情况建议使用自定义的 JSON。&lt;/p&gt;
 &lt;p&gt;下面是三种格式（协议）的对比。&lt;/p&gt;
-&lt;h3 id="common-event-format-cef"&gt;&lt;a href="https://docs.elastic.co/en/integrations/cef"&gt;Common Event Format (CEF)&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="common-event-format-cef"&gt;&lt;a href="https://docs.elastic.co/en/integrations/cef" rel="noopener noreferrer"&gt;Common Event Format (CEF)&lt;/a&gt;
+&lt;/h3&gt;
 &lt;p&gt;Elastic-Search 使用的、一种基于 Event-souring 思想设计的日志格式。优点是冗余信息少，适合配合 ELK 体系构建监控系统。 它的传输基于 Syslog 协议，同时扩展了可读性的 key-value，基于文本的设计也可以让 CEF 格式的日志写入到文件。总体来说，它是这几种格式中在可读性、效率和标准三方面最平衡的一个。&lt;/p&gt;
-&lt;h3 id="syslog"&gt;&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424"&gt;Syslog&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="syslog"&gt;&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424" rel="noopener noreferrer"&gt;Syslog&lt;/a&gt;
+&lt;/h3&gt;
 &lt;p&gt;Syslog 是 Linux 操作系统默认的审计日志格式，通常采用其 RFC5424 版本。大部分 SIEM&lt;sup id="fnref:1"&gt;&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref"&gt;1&lt;/a&gt;&lt;/sup&gt; 系统都支持这种格式的导入。
 Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传统软件的同时，最大程度保证系统的安全性。但是对于微服务来说，实现和维护标准协议成本较高。所以如 AWS CloudTrail, OpenTelemetry 等都选择更简单的 HTTPS + JSON 格式。&lt;/p&gt;
-&lt;h3 id="json-lines"&gt;&lt;a href="https://jsonlines.org/"&gt;JSON Lines&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;大部分 SaaS 产品都是用 JSON，简单高效。JSON 的特点是冗余信息多，结构容易解析。例如，下面是&lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/"&gt;OpenTelemetry 官方文档&lt;/a&gt;提到的日志模型中的字段：&lt;/p&gt;
+&lt;h3 id="json-lines"&gt;&lt;a href="https://jsonlines.org/" rel="noopener noreferrer"&gt;JSON Lines&lt;/a&gt;
+&lt;/h3&gt;
+&lt;p&gt;大部分 SaaS 产品都是用 JSON，简单高效。JSON 的特点是冗余信息多，结构容易解析。例如，下面是&lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/" rel="noopener noreferrer"&gt;OpenTelemetry 官方文档&lt;/a&gt;
+提到的日志模型中的字段：&lt;/p&gt;
 &lt;table&gt;
  &lt;thead&gt;
  &lt;tr&gt;
@@ -247,7 +251,8 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
 &lt;p&gt;&lt;strong&gt;审计上下文&lt;/strong&gt;：记录审计日志会显著增加系统内存和流量的使用。所以审计服务应该缓存审计相关的上下文，如服务名称和 ID 的映射关系、事件 ID 和描述等。不同服务向审计服务发送消息时应以最小长度为原则设计消息结构。审计服务的策略中应该允许用户配置日志级别，过滤规则等以减少系统负担。&lt;/p&gt;
 &lt;h2 id="日志的导出"&gt;日志的导出&lt;/h2&gt;
 &lt;p&gt;审计服务除了导出文件格式的日志，通常也要支持第三方系统的导出。我们通常把分析、存储日志的第三方服务称为 SIEM （Security information and event management）。在 kubernetes 中，导出日志到第三方 web 服务的模块称为 webhook。&lt;/p&gt;
-&lt;p&gt;导出到第三方系统通常可以采用标准的 Syslog 格式或是 JSON Lines，支持范围最广。此外，需要考虑日志截断、第三方系统批处理和流处理的配置等，可以参考 kubernetes 的&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/#webhook-backend"&gt;这篇文档&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;导出到第三方系统通常可以采用标准的 Syslog 格式或是 JSON Lines，支持范围最广。此外，需要考虑日志截断、第三方系统批处理和流处理的配置等，可以参考 kubernetes 的&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/#webhook-backend" rel="noopener noreferrer"&gt;这篇文档&lt;/a&gt;
+。&lt;/p&gt;
 &lt;h2 id="开源项目的架构设计"&gt;开源项目的架构设计&lt;/h2&gt;
 &lt;p&gt;由于设计侧重点不同，下面提供的每种开源项目都需要慎重考虑其优点和不足，其特性是否满足自身需要、系统的环境是分布式还是单体应用。&lt;/p&gt;
 &lt;h3 id="auditd"&gt;Auditd&lt;/h3&gt;
@@ -295,7 +300,8 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
 &lt;li&gt;ResponseComplete - 当响应消息体完成并且没有更多数据需要传输的时候。&lt;/li&gt;
 &lt;li&gt;Panic - 当 panic 发生时生成。&lt;/li&gt;
 &lt;/ul&gt;&lt;/blockquote&gt;
-&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/"&gt;kubernetes 审计事件&lt;/a&gt; 使用和 Event API 不同的消息结构&lt;sup id="fnref:3"&gt;&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref"&gt;3&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/" rel="noopener noreferrer"&gt;kubernetes 审计事件&lt;/a&gt;
+ 使用和 Event API 不同的消息结构&lt;sup id="fnref:3"&gt;&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref"&gt;3&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
 &lt;p&gt;综上，云平台的审计服务设计可以总结为：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;优点：微服务设计，JSON 格式日志更灵活，中心化的日志收集服务易于集成更多应用服务和导出到开源数据处理工具。&lt;/li&gt;
@@ -342,13 +348,16 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
 &lt;hr&gt;
 &lt;ol&gt;
 &lt;li id="fn:1"&gt;
-&lt;p&gt;SIEM 是安全信息和事件管理(Security Information and Event Management)的缩写。&lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem"&gt;https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a&gt;&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;SIEM 是安全信息和事件管理(Security Information and Event Management)的缩写。&lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem" rel="noopener noreferrer"&gt;https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a&gt;
+&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:2"&gt;
-&lt;p&gt;对于日志的加密，一般在服务端会对日志额外添加 checksum 链来校验。可以参考亚马逊的实现 &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html"&gt;server-side encryption (SSE-S3)&lt;/a&gt;.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;对于日志的加密，一般在服务端会对日志额外添加 checksum 链来校验。可以参考亚马逊的实现 &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html" rel="noopener noreferrer"&gt;server-side encryption (SSE-S3)&lt;/a&gt;
+.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:3"&gt;
-&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event"&gt;kubernetes 审计事件结构定义&lt;/a&gt;&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event" rel="noopener noreferrer"&gt;kubernetes 审计事件结构定义&lt;/a&gt;
+&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;</description></item></channel></rss>

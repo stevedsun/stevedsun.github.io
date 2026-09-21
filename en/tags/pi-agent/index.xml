@@ -230,7 +230,8 @@ There must be a mechanism to &amp;ldquo;compress history while preserving key in
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;h2 id="case-study-pi-agents-design-philosophy-and-architecture"&gt;Case Study: PI Agent&amp;rsquo;s Design Philosophy and Architecture&lt;/h2&gt;
-&lt;p&gt;The above covers &amp;ldquo;general Agent framework design.&amp;rdquo; Now let&amp;rsquo;s ground it in the recently popular minimalist framework &lt;a href="https://github.com/earendil-works/pi"&gt;PI Agent&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The above covers &amp;ldquo;general Agent framework design.&amp;rdquo; Now let&amp;rsquo;s ground it in the recently popular minimalist framework &lt;a href="https://github.com/earendil-works/pi" rel="noopener noreferrer"&gt;PI Agent&lt;/a&gt;
+.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s look at how this framework designs an Agent.&lt;/p&gt;
 &lt;h3 id="design-philosophy"&gt;Design Philosophy&lt;/h3&gt;
 &lt;ol&gt;

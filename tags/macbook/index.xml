@@ -35,7 +35,8 @@
 &lt;li&gt;选择&lt;code&gt;其他选项&lt;/code&gt;，可以自己手动分区，我一般是选这个来手动分区。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;假设你选了&lt;code&gt;其他选项&lt;/code&gt;就会进入分区的窗口，这时你就会看到所有磁盘分区的情况，刚才在 mac 下给 ubuntu 预先分好一块空闲分区也在其中，名字可能叫 disk02，或者 disk03 什么的。
-接下来要进行四次分区。这一段分区方法参考了百度经验上一个网友的教程，我进行了 2 处修改，原帖地址&lt;a href="http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html"&gt;http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html&lt;/a&gt;&lt;/p&gt;
+接下来要进行四次分区。这一段分区方法参考了百度经验上一个网友的教程，我进行了 2 处修改，原帖地址&lt;a href="http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html" rel="noopener noreferrer"&gt;http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html&lt;/a&gt;
+&lt;/p&gt;
 &lt;p&gt;第一次分区：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;点你刚才留出来的“空闲”分区，点“+”，进行如下设置：
 挂载点：“/”
@@ -106,4 +107,5 @@
 &lt;pre&gt;&lt;code&gt;echo 1 &amp;gt; /sys/class/leds/smc::kbd_backlight/brightness
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3 id="附录-1"&gt;附录 1&lt;/h3&gt;
-&lt;p&gt;&lt;a href="https://help.ubuntu.com/community/MacBookPro11-1/Saucy"&gt;https://help.ubuntu.com/community/MacBookPro11-1/Saucy&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;&lt;a href="https://help.ubuntu.com/community/MacBookPro11-1/Saucy" rel="noopener noreferrer"&gt;https://help.ubuntu.com/community/MacBookPro11-1/Saucy&lt;/a&gt;
+&lt;/p&gt;</description></item></channel></rss>

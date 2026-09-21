@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Notion on Steve Sun</title><link>https://sund.site/tags/notion/</link><description>Recent content in Notion on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sun, 31 Jul 2022 21:01:56 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/notion/index.xml" rel="self" type="application/rss+xml"/><item><title>Notion as a Dashboard</title><link>https://sund.site/posts/2022/notion-as-a-dashboard/</link><pubDate>Sun, 31 Jul 2022 21:01:56 +0800</pubDate><guid>https://sund.site/posts/2022/notion-as-a-dashboard/</guid><description>&lt;p&gt;I have built a Chrome extension &lt;a href="https://chrome.google.com/webstore/detail/%E6%97%A0%E7%94%A8%E4%B8%BB%E6%84%8F%E6%A0%87%E7%AD%BE%E9%A1%B5/lieiofhdejclfpflofeooilpeaphlcgd?hl=zh-CN"&gt;无用主意&lt;/a&gt; during the last month. The backend service implemented by Flask is using Notion as a dashboard.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Notion on Steve Sun</title><link>https://sund.site/tags/notion/</link><description>Recent content in Notion on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sun, 31 Jul 2022 21:01:56 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/notion/index.xml" rel="self" type="application/rss+xml"/><item><title>Notion as a Dashboard</title><link>https://sund.site/posts/2022/notion-as-a-dashboard/</link><pubDate>Sun, 31 Jul 2022 21:01:56 +0800</pubDate><guid>https://sund.site/posts/2022/notion-as-a-dashboard/</guid><description>&lt;p&gt;I have built a Chrome extension &lt;a href="https://chrome.google.com/webstore/detail/%E6%97%A0%E7%94%A8%E4%B8%BB%E6%84%8F%E6%A0%87%E7%AD%BE%E9%A1%B5/lieiofhdejclfpflofeooilpeaphlcgd?hl=zh-CN" rel="noopener noreferrer"&gt;无用主意&lt;/a&gt;
+ during the last month. The backend service implemented by Flask is using Notion as a dashboard.&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -9,7 +10,8 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;h2 id="notion-api"&gt;Notion API&lt;/h2&gt;
-&lt;p&gt;If you want your service to connect to Notion, you have to create a Notion integration on &lt;a href="https://www.notion.so/my-integrations"&gt;this page&lt;/a&gt;. Afterward, you have to share a specific Notion page with the integration you just created.&lt;/p&gt;
+&lt;p&gt;If you want your service to connect to Notion, you have to create a Notion integration on &lt;a href="https://www.notion.so/my-integrations" rel="noopener noreferrer"&gt;this page&lt;/a&gt;
+. Afterward, you have to share a specific Notion page with the integration you just created.&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -19,7 +21,8 @@
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;Now, you can call &lt;a href="https://developers.notion.com/reference/intro"&gt;Notion API&lt;/a&gt; to visit your page.&lt;/p&gt;
+&lt;p&gt;Now, you can call &lt;a href="https://developers.notion.com/reference/intro" rel="noopener noreferrer"&gt;Notion API&lt;/a&gt;
+ to visit your page.&lt;/p&gt;
 &lt;p&gt;Once the service has permission to write and read data to Notion, we can sync data between them.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m using a &lt;code&gt;status&lt;/code&gt; column to let me know which row has been updated in the service&amp;rsquo;s SQLite database.&lt;/p&gt;
 &lt;p&gt;&lt;figure
@@ -33,9 +36,12 @@
 &lt;/p&gt;
 &lt;p&gt;And also, I can update this row&amp;rsquo;s content, then mark the &lt;code&gt;status&lt;/code&gt; as &amp;ldquo;To Update&amp;rdquo; to tell Flask service to sync this line later. Every night, the Flask service sync data from the Notion page to SQLite and marks the &lt;code&gt;status&lt;/code&gt; as &amp;ldquo;Done&amp;rdquo;.&lt;/p&gt;
 &lt;p&gt;In this way, I am making Notion my backend service dashboard.&lt;/p&gt;</description></item><item><title>用 Notion 实践卡片盒笔记法</title><link>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</link><pubDate>Sat, 12 Dec 2020 22:42:53 +0800</pubDate><guid>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</guid><description>&lt;p&gt;今天给大家介绍一种整理和回顾碎片知识的方法——卡片盒笔记法。&lt;/p&gt;
-&lt;p&gt;应该不少人都读过少数派作者玉树芝兰老师写的&lt;a href="https://sspai.com/post/59109"&gt;关于卡片盒笔记法的文章&lt;/a&gt;。&lt;a href="https://pmthinking.com/"&gt;产品沉思录&lt;/a&gt;的主理人少楠也写过很多相关的内容，最近他们还出了一个工具（Flomo - 浮墨笔记）也是基于这套方法论的。&lt;/p&gt;
+&lt;p&gt;应该不少人都读过少数派作者玉树芝兰老师写的&lt;a href="https://sspai.com/post/59109" rel="noopener noreferrer"&gt;关于卡片盒笔记法的文章&lt;/a&gt;
+。&lt;a href="https://pmthinking.com/" rel="noopener noreferrer"&gt;产品沉思录&lt;/a&gt;
+的主理人少楠也写过很多相关的内容，最近他们还出了一个工具（Flomo - 浮墨笔记）也是基于这套方法论的。&lt;/p&gt;
 &lt;p&gt;在这篇文章中，我会结合自己用 Notion 的经验，分享一下我如何用 Notion 做卡片笔记。&lt;/p&gt;
-&lt;p&gt;本文参考了 &lt;a href="https://www.youtube.com/channel/UC66w1T4oMv66Jn1LR5CW2yg"&gt;Youtube 频道 Mukul Khanna&lt;/a&gt; 关于 Notion 的一系列使用方法。&lt;/p&gt;
+&lt;p&gt;本文参考了 &lt;a href="https://www.youtube.com/channel/UC66w1T4oMv66Jn1LR5CW2yg" rel="noopener noreferrer"&gt;Youtube 频道 Mukul Khanna&lt;/a&gt;
+ 关于 Notion 的一系列使用方法。&lt;/p&gt;
 &lt;h2 id="什么是卡片盒笔记法"&gt;什么是卡片盒笔记法&lt;/h2&gt;
 &lt;p&gt;卡片盒笔记法（Zettelkasten）是一种将零散的想法、笔记和文献，通过编号、引用、索引等方式彼此关联起来，形成知识网络并提取有效信息的方法。其著名使用者——社会学家 Niklas Luhmann 一生创建了 9 万多张索引卡片，发布了 70 多本专著和 400 多篇学术论文。&lt;/p&gt;
 &lt;p&gt;卡片盒笔记法可以类比为人类大脑记忆和归纳知识的回路。&lt;/p&gt;
@@ -68,7 +74,8 @@
 &lt;h2 id="notion-为什么适合做卡片盒笔记法"&gt;Notion 为什么适合做卡片盒笔记法&lt;/h2&gt;
 &lt;p&gt;Notion 在前一段时间更新了 Backlinks （反向链接）功能，这一功能的推出，把 Notion 和新晋的几款网状知识管理工具（Roam Search、Obsidian）的差异大大缩小，成为了做卡片盒笔记法的合适工具。相对于专注做卡片笔记的软件来说，Notion 的优势是更加灵活的配置和用途广泛的页面元素。&lt;/p&gt;
 &lt;h2 id="用-notion-实践卡片盒笔记法"&gt;用 Notion 实践卡片盒笔记法&lt;/h2&gt;
-&lt;p&gt;我们首先脱离 Notion 这个软件，看看通常情况下一张卡片由哪些部分组成。下图是来自 &lt;a href="https://zettelkasten.de/introduction/"&gt;Introduction to the Zettelkasten&lt;/a&gt; 文章的配图，呈现了一张卡片的样子：&lt;/p&gt;
+&lt;p&gt;我们首先脱离 Notion 这个软件，看看通常情况下一张卡片由哪些部分组成。下图是来自 &lt;a href="https://zettelkasten.de/introduction/" rel="noopener noreferrer"&gt;Introduction to the Zettelkasten&lt;/a&gt;
+ 文章的配图，呈现了一张卡片的样子：&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -121,7 +128,8 @@
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;为了从网页上剪藏这样一篇文章，我在 Chrome 浏览器里安装了 &lt;a href="https://chrome.google.com/webstore/detail/ldmmifpegigmeammaeckplhnjbbpccmm"&gt;Save to Notion&lt;/a&gt; 这个扩展，它的优点就是可以在剪藏网页内容同时设置好笔记的属性。把 Save to Notion 保存位置设置成你已经建立好的文献库，就可以一键保存到 Notion 了。&lt;/p&gt;
+&lt;p&gt;为了从网页上剪藏这样一篇文章，我在 Chrome 浏览器里安装了 &lt;a href="https://chrome.google.com/webstore/detail/ldmmifpegigmeammaeckplhnjbbpccmm" rel="noopener noreferrer"&gt;Save to Notion&lt;/a&gt;
+ 这个扩展，它的优点就是可以在剪藏网页内容同时设置好笔记的属性。把 Save to Notion 保存位置设置成你已经建立好的文献库，就可以一键保存到 Notion 了。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -209,8 +217,13 @@
 &lt;p&gt;卡片盒笔记法的核心是构筑彼此关联的笔记网络，在此基础上通过顺序、发散的回顾方式不断产生新的回路，抽象成为创作的素材。借助 Notion 的特性，我们可以在多个页面之间关联、跳转、搭建属于自己的高速公路。&lt;/p&gt;
 &lt;p&gt;以上就是本文的内容，希望对你有用，你可以在延伸阅读里找到更多相关文章，也欢迎你关注我的公众号随时订阅我的新发现。&lt;/p&gt;
 &lt;h2 id="延伸阅读"&gt;延伸阅读&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://index.pmthinking.com/effa3aa294af4d07ac279e74aec69602"&gt;花园与溪流的隐喻&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://sspai.com/post/61886"&gt;Matrix 圆桌 | 网状结构笔记工具是一阵风吗？&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://zettelkasten.de/"&gt;Zettelkasten 介绍&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://takesmartnotes.com/"&gt;Take Smart Notes&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=lOY-drtTJX0&amp;amp;feature=youtu.be"&gt;How I use Zettelkasten in Notion | Best note-taking knowledge-management system 📝&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;&lt;a href="https://index.pmthinking.com/effa3aa294af4d07ac279e74aec69602" rel="noopener noreferrer"&gt;花园与溪流的隐喻&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://sspai.com/post/61886" rel="noopener noreferrer"&gt;Matrix 圆桌 | 网状结构笔记工具是一阵风吗？&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://zettelkasten.de/" rel="noopener noreferrer"&gt;Zettelkasten 介绍&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://takesmartnotes.com/" rel="noopener noreferrer"&gt;Take Smart Notes&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=lOY-drtTJX0&amp;feature=youtu.be" rel="noopener noreferrer"&gt;How I use Zettelkasten in Notion | Best note-taking knowledge-management system 📝&lt;/a&gt;
+&lt;/p&gt;</description></item></channel></rss>

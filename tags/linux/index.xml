@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Steve Sun</title><link>https://sund.site/tags/linux/</link><description>Recent content in Linux on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Wed, 22 Oct 2025 23:21:21 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt;（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Steve Sun</title><link>https://sund.site/tags/linux/</link><description>Recent content in Linux on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Wed, 22 Oct 2025 23:21:21 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Omarchy 一些中文环境下的设置</title><link>https://sund.site/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;最近把家里电脑装上了 DHH 的 &lt;a href="https://omarchy.org/" rel="noopener noreferrer"&gt;Omarchy&lt;/a&gt;
+（一个基于 Hyprland 桌面环境的 Arch Linux 发行版）。&lt;/p&gt;
 &lt;p&gt;装完后有一些需要改造的配置记录在这篇文章中，供大家参考。&lt;/p&gt;
 &lt;h2 id="4k-显示器设置"&gt;4K 显示器设置&lt;/h2&gt;
 &lt;p&gt;修改系统菜单 Setup - Monitor，按照你自己显示器的分辨率，根据配置文件中的注释设置参数，比如我的显示器 27 寸 4k：&lt;/p&gt;
@@ -8,7 +9,8 @@ monitor=,preferred,auto,1.875
 &lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;env = QT_AUTO_SCREEN_SCALE_FACTOR,1
 env = QT_SCALE_FACTOR,1.75
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="中文输入法"&gt;中文输入法&lt;/h2&gt;
-&lt;p&gt;参考 &lt;a href="https://manateelazycat.github.io/2024/12/17/fcitx-best-config/"&gt;Fcitx 最佳配置实践&lt;/a&gt;。文章中“安装 emacs-rime”这一章节如果不使用 emacs 可以忽略。&lt;/p&gt;
+&lt;p&gt;参考 &lt;a href="https://manateelazycat.github.io/2024/12/17/fcitx-best-config/" rel="noopener noreferrer"&gt;Fcitx 最佳配置实践&lt;/a&gt;
+。文章中“安装 emacs-rime”这一章节如果不使用 emacs 可以忽略。&lt;/p&gt;
 &lt;h2 id="终端字体修改设置"&gt;终端字体修改设置&lt;/h2&gt;
 &lt;p&gt;系统自带字体在终端环境下对中文都不太友好。我喜欢用&lt;code&gt;Maple Mono&lt;/code&gt;这个字体，可以安装 AUR 包&lt;code&gt;maple-mono-nf-cn&lt;/code&gt;这个库。然后在&lt;code&gt;~/.config/alacritty/alacritty.toml&lt;/code&gt;中修改字体设置：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;font&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
@@ -147,7 +149,8 @@ nvme0n1
 &lt;li&gt;选择&lt;code&gt;其他选项&lt;/code&gt;，可以自己手动分区，我一般是选这个来手动分区。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;假设你选了&lt;code&gt;其他选项&lt;/code&gt;就会进入分区的窗口，这时你就会看到所有磁盘分区的情况，刚才在 mac 下给 ubuntu 预先分好一块空闲分区也在其中，名字可能叫 disk02，或者 disk03 什么的。
-接下来要进行四次分区。这一段分区方法参考了百度经验上一个网友的教程，我进行了 2 处修改，原帖地址&lt;a href="http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html"&gt;http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html&lt;/a&gt;&lt;/p&gt;
+接下来要进行四次分区。这一段分区方法参考了百度经验上一个网友的教程，我进行了 2 处修改，原帖地址&lt;a href="http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html" rel="noopener noreferrer"&gt;http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html&lt;/a&gt;
+&lt;/p&gt;
 &lt;p&gt;第一次分区：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;点你刚才留出来的“空闲”分区，点“+”，进行如下设置：
 挂载点：“/”
@@ -218,4 +221,5 @@ nvme0n1
 &lt;pre&gt;&lt;code&gt;echo 1 &amp;gt; /sys/class/leds/smc::kbd_backlight/brightness
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3 id="附录-1"&gt;附录 1&lt;/h3&gt;
-&lt;p&gt;&lt;a href="https://help.ubuntu.com/community/MacBookPro11-1/Saucy"&gt;https://help.ubuntu.com/community/MacBookPro11-1/Saucy&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;&lt;a href="https://help.ubuntu.com/community/MacBookPro11-1/Saucy" rel="noopener noreferrer"&gt;https://help.ubuntu.com/community/MacBookPro11-1/Saucy&lt;/a&gt;
+&lt;/p&gt;</description></item></channel></rss>

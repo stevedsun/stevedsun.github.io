@@ -8,11 +8,13 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sydneyrunkle/status/2066928783534289358"&gt;The Art of Loop Engineering&lt;/a&gt;··
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sydneyrunkle/status/2066928783534289358" rel="noopener noreferrer"&gt;The Art of Loop Engineering&lt;/a&gt;
+··
 &lt;strong&gt;作者&lt;/strong&gt;：Sydney Runkle (LangChain)··
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;Agent 之所以有用，是因为它们能通过在真实世界中采取行动来帮我们自动化工作。但要让 agent 可靠地完成有价值的工作，光有一个好模型是不够的——还需要一个精心设计的 harness（控制框架），且这个 harness 要适配具体的任务集。&lt;/p&gt;
-&lt;p&gt;核心 agent 算法很简单：给 LLM 上下文，让它在一个循环里反复调用工具，直到任务完成。这是最基本的循环。但远非驱动 agent 的唯一循环。@swyx 最近写了篇好文章叫 &lt;a href="https://www.latent.space/p/ainews-loopcraft-the-art-of-stacking"&gt;loopcraft：堆叠循环的艺术&lt;/a&gt;，核心思想是你可以通过堆叠和扩展循环来构建更有效的 agent。&lt;/p&gt;
+&lt;p&gt;核心 agent 算法很简单：给 LLM 上下文，让它在一个循环里反复调用工具，直到任务完成。这是最基本的循环。但远非驱动 agent 的唯一循环。@swyx 最近写了篇好文章叫 &lt;a href="https://www.latent.space/p/ainews-loopcraft-the-art-of-stacking" rel="noopener noreferrer"&gt;loopcraft：堆叠循环的艺术&lt;/a&gt;
+，核心思想是你可以通过堆叠和扩展循环来构建更有效的 agent。&lt;/p&gt;
 &lt;p&gt;下面是我们对这个堆栈的理解，以及如何用 LangChain 的各个原语来装备每一层。&lt;/p&gt;
 &lt;h2 id="循环-1agent"&gt;循环 1：Agent&lt;/h2&gt;
 &lt;p&gt;在最底层，agent 就是一个模型在循环里反复调工具，直到任务完成。&lt;/p&gt;
@@ -25,7 +27,8 @@
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;这就是 LangChain 的 &lt;a href="https://docs.langchain.com/oss/python/langchain/agents"&gt;create_agent&lt;/a&gt; 给你的东西。选任意模型，接入工具，就有了一个可以工作的 agent 循环。工具赋予了 agent 在真实世界采取行动的能力。&lt;/p&gt;
+&lt;p&gt;这就是 LangChain 的 &lt;a href="https://docs.langchain.com/oss/python/langchain/agents" rel="noopener noreferrer"&gt;create_agent&lt;/a&gt;
+ 给你的东西。选任意模型，接入工具，就有了一个可以工作的 agent 循环。工具赋予了 agent 在真实世界采取行动的能力。&lt;/p&gt;
 &lt;p&gt;拿我们内部的文档 agent 举例（后面整篇文章都用它来做例子）。在第一层循环里，它收到一个文档改进的请求，模型规划并起草修改，然后用工具来克隆仓库、读文件、写文档、开 PR 等等。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
@@ -48,7 +51,8 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;验证循环增加了一个评分器（grader）：按评分标准检查 agent 的输出，如果不合格，带上反馈信息把结果发回去。评分器可以是确定性的，也可以是 agentic 的（LLM 当评委是经典案例）。&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/rubric"&gt;RubricMiddleware&lt;/a&gt; 处理这个模式，或者你也可以在 create_agent 上用 after_agent hook 来对接。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/rubric" rel="noopener noreferrer"&gt;RubricMiddleware&lt;/a&gt;
+ 处理这个模式，或者你也可以在 create_agent 上用 after_agent hook 来对接。&lt;/p&gt;
 &lt;p&gt;拿我们的文档 agent 来说，评分器在每次尝试后跑测试，检查所有链接是否能解析、所有 CI 检查是否通过、diff 的范围是否真的只是请求的内容。这类错误不需要人工审阅就能捕获。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
@@ -72,8 +76,12 @@
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;&lt;a href="https://info.langchain.com/agent-development-platform"&gt;LangSmith Deployment&lt;/a&gt; 提供了触发器基础设施，包括 cron 定时和 webhook 支持。openclaw 中&amp;quot;心跳&amp;quot;（heartbeats）是 crons 的一个流行用法，它把你的 agent 变成了一个永远在线、主动出击的助手。&lt;/p&gt;
-&lt;p&gt;我们的文档 agent 由 &lt;a href="https://www.langchain.com/langsmith/fleet"&gt;Fleet&lt;/a&gt; 驱动，这是一个无代码 agent 构建器。Fleet 的 &lt;a href="https://docs.langchain.com/langsmith/fleet/channels"&gt;channels&lt;/a&gt; 和 &lt;a href="https://docs.langchain.com/langsmith/fleet/schedules"&gt;schedules&lt;/a&gt; 处理事件驱动和 cron 类的触发器。我们用一个 channel，当 #docs-plz Slack 频道里有消息发出时，就触发文档 agent。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://info.langchain.com/agent-development-platform" rel="noopener noreferrer"&gt;LangSmith Deployment&lt;/a&gt;
+ 提供了触发器基础设施，包括 cron 定时和 webhook 支持。openclaw 中&amp;quot;心跳&amp;quot;（heartbeats）是 crons 的一个流行用法，它把你的 agent 变成了一个永远在线、主动出击的助手。&lt;/p&gt;
+&lt;p&gt;我们的文档 agent 由 &lt;a href="https://www.langchain.com/langsmith/fleet" rel="noopener noreferrer"&gt;Fleet&lt;/a&gt;
+ 驱动，这是一个无代码 agent 构建器。Fleet 的 &lt;a href="https://docs.langchain.com/langsmith/fleet/channels" rel="noopener noreferrer"&gt;channels&lt;/a&gt;
+ 和 &lt;a href="https://docs.langchain.com/langsmith/fleet/schedules" rel="noopener noreferrer"&gt;schedules&lt;/a&gt;
+ 处理事件驱动和 cron 类的触发器。我们用一个 channel，当 #docs-plz Slack 频道里有消息发出时，就触发文档 agent。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -95,7 +103,8 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;每次 agent 运行都会产生一条 trace（追踪记录）：记录了模型做了什么、调用了哪些工具、评分器的反馈等等。这些 trace 里包含了关于什么在起作用、什么不起作用的高价值信号。爬坡循环运行一个分析 agent 来分析这些 trace，并根据发现重写 harness 的配置。这可以包括 prompt 调整、工具调整或评分器调整。&lt;/p&gt;
-&lt;p&gt;在 LangSmith 中，你可以用 &lt;a href="https://www.langchain.com/langsmith/engine"&gt;Engine&lt;/a&gt;（我们的 trace 分析 agent）来装备这第四层循环。&lt;/p&gt;
+&lt;p&gt;在 LangSmith 中，你可以用 &lt;a href="https://www.langchain.com/langsmith/engine" rel="noopener noreferrer"&gt;Engine&lt;/a&gt;
+（我们的 trace 分析 agent）来装备这第四层循环。&lt;/p&gt;
 &lt;p&gt;回到文档 agent 的例子：我们在文档 agent 的 trace 上跑 Engine 来检测问题。当多条 trace 指示出潜在问题时，就会开一个 issue，要求修改有问题的 prompt 或工具。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
@@ -118,7 +127,8 @@
 &lt;li&gt;在应用循环中，输出在返回给终端用户前可以经过人工审批&lt;/li&gt;
 &lt;li&gt;在爬坡循环中，harness 的改进在部署前可以经过人工审查&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;LangChain 的所有开源框架都把&amp;quot;人在回路&amp;quot;作为&lt;a href="https://docs.langchain.com/oss/python/deepagents/human-in-the-loop"&gt;一等公民原语&lt;/a&gt;来支持。&lt;/p&gt;
+&lt;p&gt;LangChain 的所有开源框架都把&amp;quot;人在回路&amp;quot;作为&lt;a href="https://docs.langchain.com/oss/python/deepagents/human-in-the-loop" rel="noopener noreferrer"&gt;一等公民原语&lt;/a&gt;
+来支持。&lt;/p&gt;
 &lt;h2 id="总结"&gt;总结&lt;/h2&gt;
 &lt;p&gt;为了方便，这里用列表来展示四个循环如何堆叠：&lt;/p&gt;
 &lt;ul&gt;
@@ -127,17 +137,28 @@
 &lt;li&gt;&lt;strong&gt;循环 3：事件循环&lt;/strong&gt;（验证 + 系统）— 事件触发 agent 运行，更新真实系统 — 规模化工作 — LangSmith Deployment / Fleet channels&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;循环 4：爬坡循环&lt;/strong&gt;（系统 + 分析引擎）— 生产 trace 喂给分析 agent，改进 harness 配置 — 持续改进 — LangSmith Engine&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;这就是 loop engineering——或者说 @swyx 称之为 loopcraft——在实际中的样子。AI 领域的前沿人物如 &lt;a href="https://x.com/steipete/status/2063697162748260627"&gt;Steipete&lt;/a&gt;、&lt;a href="https://x.com/0xwhrrari/status/2064804504608887040"&gt;Boris&lt;/a&gt; 和 &lt;a href="https://www.youtube.com/watch?v=kwSVtQ7dziU"&gt;Andrej&lt;/a&gt; 都得出了相同的结论：agent 的潜力在于你围绕它们构建的循环。&lt;/p&gt;
+&lt;p&gt;这就是 loop engineering——或者说 @swyx 称之为 loopcraft——在实际中的样子。AI 领域的前沿人物如 &lt;a href="https://x.com/steipete/status/2063697162748260627" rel="noopener noreferrer"&gt;Steipete&lt;/a&gt;
+、&lt;a href="https://x.com/0xwhrrari/status/2064804504608887040" rel="noopener noreferrer"&gt;Boris&lt;/a&gt;
+ 和 &lt;a href="https://www.youtube.com/watch?v=kwSVtQ7dziU" rel="noopener noreferrer"&gt;Andrej&lt;/a&gt;
+ 都得出了相同的结论：agent 的潜力在于你围绕它们构建的循环。&lt;/p&gt;
 &lt;p&gt;我们思考循环 1 和 2 已经有一段时间了。但焦点应该转向循环 3 和 4——通过将 agent 嵌入你的生态系统并让它们根据你的标准持续改进，价值在这里复利增长。&lt;/p&gt;
-&lt;p&gt;Satya &lt;a href="https://x.com/satyanadella/status/2066182223213293753"&gt;点出了这个组织层面的意义&lt;/a&gt;：那些早期就构建学习循环的公司——人的判断和 token 资本在其中复合增长——将建立难以复制的优势。&lt;/p&gt;
+&lt;p&gt;Satya &lt;a href="https://x.com/satyanadella/status/2066182223213293753" rel="noopener noreferrer"&gt;点出了这个组织层面的意义&lt;/a&gt;
+：那些早期就构建学习循环的公司——人的判断和 token 资本在其中复合增长——将建立难以复制的优势。&lt;/p&gt;
 &lt;h2 id="致谢"&gt;致谢&lt;/h2&gt;
 &lt;p&gt;感谢 @Vtrivedy10、@masondrxy、@hwchase17 和 @huntlovell 的有益审阅。&lt;/p&gt;
 &lt;h2 id="参考链接"&gt;参考链接&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/quickstart"&gt;deepagents quickstart&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/langchain/agents"&gt;create_agent docs&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/rubric"&gt;rubric middleware&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://docs.langchain.com/langsmith/cron-jobs"&gt;cron jobs&lt;/a&gt;, &lt;a href="https://docs.langchain.com/langsmith/use-webhooks"&gt;webhooks&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.langchain.com/langsmith/engine"&gt;langsmith engine&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://docs.langchain.com/langsmith/fleet/channels"&gt;fleet channels&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/quickstart" rel="noopener noreferrer"&gt;deepagents quickstart&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/langchain/agents" rel="noopener noreferrer"&gt;create_agent docs&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/rubric" rel="noopener noreferrer"&gt;rubric middleware&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/langsmith/cron-jobs" rel="noopener noreferrer"&gt;cron jobs&lt;/a&gt;
+, &lt;a href="https://docs.langchain.com/langsmith/use-webhooks" rel="noopener noreferrer"&gt;webhooks&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.langchain.com/langsmith/engine" rel="noopener noreferrer"&gt;langsmith engine&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/langsmith/fleet/channels" rel="noopener noreferrer"&gt;fleet channels&lt;/a&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

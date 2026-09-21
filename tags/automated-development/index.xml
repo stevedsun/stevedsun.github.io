@@ -8,7 +8,8 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/zachlloydtweets/status/2069789929073262945"&gt;We are now factory engineers, not product engineers&lt;/a&gt;··
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/zachlloydtweets/status/2069789929073262945" rel="noopener noreferrer"&gt;We are now factory engineers, not product engineers&lt;/a&gt;
+··
 &lt;strong&gt;作者&lt;/strong&gt;：Zach Lloyd··
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;figure
@@ -29,7 +30,8 @@
 &lt;p&gt;给所有工程师无限 token 预算、让他们随意使用交互式编码 Agent 的日子正在终结。取而代之，公司会把软件生产视为可变成本，而不是研发费用。它将出现在利润表的 COGS（销货成本）行上——因为公司想知道，在软件工厂上投入越多，边际收益是多少。&lt;/p&gt;
 &lt;p&gt;我写这些是因为，这就是 Warp 需要拥抱的心态。每个工程师必须停止认为自己是在直接修改代码库和产品，而应该通过&amp;quot;改善工厂&amp;quot;的视角来看待一切。&lt;/p&gt;
 &lt;p&gt;当然，在建设和改进工厂的过程中，你仍然需要直接改善产品——毕竟我们交付的产品才是为客户和用户创造价值的东西。但每当我们的工厂失败时，我们需要从中学习，下一次再往自动化的方向推进一步。随着时间的推移，自动化的比例会越来越高，直到我们的工作纯粹是提升效率，而不是把车从流水线上搬下来自己去造。&lt;/p&gt;
-&lt;p&gt;这对 Warp 尤其重要，因为我们的公司现在本身就是做工厂的生意。我们运营着一座工厂来改进开源的 Warp 终端——近百万开发者依赖它持续变好。同时我们也在推出一个叫 &lt;a href="http://www.oz.dev/"&gt;Oz&lt;/a&gt; 的平台，帮助其他公司把同样的工作流复用到他们最重要的产品上。工厂生意将是唯一重要的软件生产力生意——既然我们在卖这个，我们最好自己先拥抱它。&lt;/p&gt;
+&lt;p&gt;这对 Warp 尤其重要，因为我们的公司现在本身就是做工厂的生意。我们运营着一座工厂来改进开源的 Warp 终端——近百万开发者依赖它持续变好。同时我们也在推出一个叫 &lt;a href="http://www.oz.dev/" rel="noopener noreferrer"&gt;Oz&lt;/a&gt;
+ 的平台，帮助其他公司把同样的工作流复用到他们最重要的产品上。工厂生意将是唯一重要的软件生产力生意——既然我们在卖这个，我们最好自己先拥抱它。&lt;/p&gt;
 &lt;h2 id="需要改变什么自动化审计"&gt;需要改变什么：自动化审计&lt;/h2&gt;
 &lt;p&gt;第一，我们必须衡量吞吐量和效率。我们必须严格审视产品中有多少比例是自主交付的、成本是多少。我们现在还没有做到。当前最需要追踪的指标是：全自动完成任务的比例，以及完成这些任务的成本。&lt;/p&gt;
 &lt;p&gt;第二，我们必须强迫自己以&amp;quot;自动化优先&amp;quot;的思维方式面对一切。也就是说，每次使用交互式 agent（即人类在回路中）写代码，都要把它视为一个需要学习的失败。对每项任务，都应该遵循工厂的工作流，只在真正需要的时候才把东西从流水线上搬下来。现阶段我们经常需要这么做，没问题。但目标是越来越少。&lt;/p&gt;
@@ -59,7 +61,9 @@
 &lt;li&gt;&lt;strong&gt;交付&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Monitor Agent&lt;/strong&gt; 运行，如果有问题则创建 issue，完成闭环&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;这个工作流应该看起来很熟悉——它就是我们为拥有 60k star 的&lt;a href="https://github.com/warpdotdev/warp"&gt;开源项目&lt;/a&gt;建立的流程。你可以在 &lt;a href="http://build.warp.dev/"&gt;build.warp.dev&lt;/a&gt; 看到它的实际运行状态。我的判断是，它发挥了大概一半的效用，但我们还没有真正全身心投入。我看到 build.warp.dev 上的 ready-to-implement 状态里堆积了 1300 个 issue，心里想的是：&amp;ldquo;我们还等什么？让 agent 去实现它们。&amp;rdquo; 我们必须让它完全跑起来。&lt;/p&gt;
+&lt;p&gt;这个工作流应该看起来很熟悉——它就是我们为拥有 60k star 的&lt;a href="https://github.com/warpdotdev/warp" rel="noopener noreferrer"&gt;开源项目&lt;/a&gt;
+建立的流程。你可以在 &lt;a href="http://build.warp.dev/" rel="noopener noreferrer"&gt;build.warp.dev&lt;/a&gt;
+ 看到它的实际运行状态。我的判断是，它发挥了大概一半的效用，但我们还没有真正全身心投入。我看到 build.warp.dev 上的 ready-to-implement 状态里堆积了 1300 个 issue，心里想的是：&amp;ldquo;我们还等什么？让 agent 去实现它们。&amp;rdquo; 我们必须让它完全跑起来。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -69,7 +73,8 @@
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;每当我们不得不让人类介入流程，我们的平台 Oz 就需要记录这一点，并且让&lt;a href="https://www.warp.dev/blog/self-improvement-loop-for-skills"&gt;自我改进 agent&lt;/a&gt; 尝试优化流程，减少人类再次干预的概率。同样，我们需要自我改进 agent 持续监视工厂相关的对话，寻找 token 浪费的模式并建议效率提升方案。我们应该定期评估不同的 harness 和 prompt，记录哪些在下一次执行中表现更好。&lt;/p&gt;
+&lt;p&gt;每当我们不得不让人类介入流程，我们的平台 Oz 就需要记录这一点，并且让&lt;a href="https://www.warp.dev/blog/self-improvement-loop-for-skills" rel="noopener noreferrer"&gt;自我改进 agent&lt;/a&gt;
+ 尝试优化流程，减少人类再次干预的概率。同样，我们需要自我改进 agent 持续监视工厂相关的对话，寻找 token 浪费的模式并建议效率提升方案。我们应该定期评估不同的 harness 和 prompt，记录哪些在下一次执行中表现更好。&lt;/p&gt;
 &lt;p&gt;作为 Warp 的工程师，我们的首要工作是确保这套工作流顺畅运行，并让 Oz 提供尽可能最好的支持体验。如果我们做到了，工厂最终将达到递归自我改进的状态。这是黄金路径。&lt;/p&gt;
 &lt;p&gt;这听起来可能像是对苦差事的拥抱，或者是一个理想主义但不切实际的愿景——好像我们不能再摆弄代码了，或者要把所有时间花在审查 agent 生成的垃圾上。&lt;/p&gt;
 &lt;p&gt;我的看法不同。我认为这是软件工程最后一个、也是最重要的一个问题——可以称之为&lt;strong&gt;元工程&lt;/strong&gt;：设计一个让 coding agent 能够最高效地构建和交付有用东西的系统。&lt;/p&gt;

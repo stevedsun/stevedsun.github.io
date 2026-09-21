@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Llm Knowledge Management on Steve Sun</title><link>https://sund.site/tags/llm-knowledge-management/</link><description>Recent content in Llm Knowledge Management on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sat, 24 May 2025 12:50:40 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/llm-knowledge-management/index.xml" rel="self" type="application/rss+xml"/><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWIKI&lt;/a&gt; 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Llm Knowledge Management on Steve Sun</title><link>https://sund.site/tags/llm-knowledge-management/</link><description>Recent content in Llm Knowledge Management on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sat, 24 May 2025 12:50:40 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/tags/llm-knowledge-management/index.xml" rel="self" type="application/rss+xml"/><item><title>DeepWIKI 是如何工作的</title><link>https://sund.site/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com" rel="noopener noreferrer"&gt;DeepWIKI&lt;/a&gt;
+ 是一个从源代码仓库生成详细文档的 AI Agent 项目，由 Devin.ai 提供。自从它火了以后，我就一直非常好奇它是怎么工作的。&lt;/p&gt;
 &lt;p&gt;我梳理了网上的相关资料和一些开源项目，得到了相对清晰的工作流程。对于其中难点的部分，我会在后续文章中跟进我的发现。&lt;/p&gt;
 &lt;h2 id="生成代码结构地图"&gt;生成代码结构地图&lt;/h2&gt;
 &lt;p&gt;首先 DeepWIKI 本质是一个 RAG 系统，它读取源代码仓库作为输入，将代码进行语法分析之后转换成&lt;strong&gt;代表语法结构和文件结构的元数据&lt;/strong&gt;和&lt;strong&gt;代表代码描述和片段的向量数据&lt;/strong&gt;两部分，元数据存到关系数据库中，同时将对应的代码片段存储到向量数据库中以便后续 LLM 检索。&lt;/p&gt;
@@ -25,9 +26,11 @@
 &lt;p&gt;上述过程中，如何在嵌入（embedding）前给代码分块，是个比较值得研究的话题。一般自然语言的分块是基于段落、句子、标点符号等方式，拆分出来的 chunk 包含完整的句子或者段落上下文。&lt;/p&gt;
 &lt;p&gt;但是代码的拆分不同，比如一个函数体由&lt;code&gt;{&lt;/code&gt; &lt;code&gt;}&lt;/code&gt;包裹起来，如果使用自然语言的分词器分词，会导致上下文被拆分到不同 chunk 中，后续检索向量时准确度就会下降。&lt;/p&gt;
 &lt;p&gt;目前的解决办法有两种，一种是基于整个文件的分块，这种情况文件大小不能超过分块大小的上限，而且分块数据缺少真实的调用关系上下文。我们知道，代码的组织单元并不是文件（文件树只是方便人类阅读的组织形式），而是以类和函数为单元的网状依赖关系图。&lt;/p&gt;
-&lt;p&gt;第二种方式就是先用语法工具对代码文件做静态分析，再根据分析结果将代码以语法结构进行拆分。这种方式实现复杂，网上并没有找到相关的资料，幸而读到这篇&lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;，它介绍了如何利用语法静态分析来给代码分块，构建高效的代码仓库 RAG 系统。 但是文章也没有提供开源实现，考虑到作为商业项目的核心技术，这部分内容非常值得深入。我会持续跟进这部分内容的研究。&lt;/p&gt;
+&lt;p&gt;第二种方式就是先用语法工具对代码文件做静态分析，再根据分析结果将代码以语法结构进行拆分。这种方式实现复杂，网上并没有找到相关的资料，幸而读到这篇&lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/" rel="noopener noreferrer"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;
+，它介绍了如何利用语法静态分析来给代码分块，构建高效的代码仓库 RAG 系统。 但是文章也没有提供开源实现，考虑到作为商业项目的核心技术，这部分内容非常值得深入。我会持续跟进这部分内容的研究。&lt;/p&gt;
 &lt;h2 id="难点-2-解析语法结构"&gt;难点 2: 解析语法结构&lt;/h2&gt;
-&lt;p&gt;元数据的语法解析要比向量数据简单一些，我从另一个开源项目&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;中找到一些线索。&lt;/p&gt;
+&lt;p&gt;元数据的语法解析要比向量数据简单一些，我从另一个开源项目&lt;a href="https://github.com/ozyyshr/RepoGraph" rel="noopener noreferrer"&gt;Repo Graph&lt;/a&gt;
+中找到一些线索。&lt;/p&gt;
 &lt;p&gt;这个项目使用了 &lt;code&gt;tree-sitter&lt;/code&gt; 来分析项目语法结构，从而得到三类元数据文件：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;tag.json&lt;/code&gt;：代表一个文件、函数、类的路径、行号、描述等基础信息。&lt;/li&gt;
@@ -38,7 +41,8 @@
 &lt;p&gt;从这个项目的实现来看，难点 1 中嵌入向量的过程似乎也可以用 &lt;code&gt;tree-sitter&lt;/code&gt; 生成的代码元信息对代码按行分块。&lt;/p&gt;
 &lt;h2 id="提示词工程"&gt;提示词工程&lt;/h2&gt;
 &lt;p&gt;在 RAG 查询阶段，要根据当前元信息的类型，组装不同的提示词。&lt;/p&gt;
-&lt;p&gt;这个项目&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt; 里有不少提示词可供参考：&lt;/p&gt;
+&lt;p&gt;这个项目&lt;a href="https://github.com/metauto-ai/agent-as-a-judge" rel="noopener noreferrer"&gt;Agent as a Judge&lt;/a&gt;
+ 里有不少提示词可供参考：&lt;/p&gt;
 &lt;p&gt;生成概述的提示词&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Provide a concise overview of this repository focused primarily on:
 * Purpose and Scope: What is this project&amp;#39;s main purpose?
@@ -75,7 +79,10 @@
 &lt;p&gt;虽然目前有一些开源项目可以参考，但核心的分块策略实现仍然需要深入研究。&lt;/p&gt;
 &lt;h2 id="参考项目"&gt;参考项目&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge" rel="noopener noreferrer"&gt;Agent as a Judge&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph" rel="noopener noreferrer"&gt;Repo Graph&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open" rel="noopener noreferrer"&gt;DeepWiki Open&lt;/a&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

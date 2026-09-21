@@ -8,8 +8,10 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/elvissun/status/2065035615800864954"&gt;&lt;code&gt;/goal + Loss Functions: How to Distill a Product in 30 Hours with One Prompt [Full Playbook]&lt;/code&gt;&lt;/a&gt;
-&lt;strong&gt;作者&lt;/strong&gt;：Elvis (&lt;a href="https://x.com/elvissun"&gt;@elvissun&lt;/a&gt;)
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/elvissun/status/2065035615800864954" rel="noopener noreferrer"&gt;&lt;code&gt;/goal + Loss Functions: How to Distill a Product in 30 Hours with One Prompt [Full Playbook]&lt;/code&gt;&lt;/a&gt;
+
+&lt;strong&gt;作者&lt;/strong&gt;：Elvis (&lt;a href="https://x.com/elvissun" rel="noopener noreferrer"&gt;@elvissun&lt;/a&gt;
+)
 &lt;strong&gt;翻译&lt;/strong&gt;：AI 辅助翻译&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;99% 的人用 &lt;code&gt;/goal&lt;/code&gt; 和 agent loop 的方式是错的。&lt;/p&gt;
 &lt;p&gt;外面吹的是「长循环自主 agent：设定目标，走开，回来就拿到能跑的代码」。但顶尖的 agent 工程师半年前就在做同样的事了——用 harness engineering + spec-driven development：&lt;/p&gt;

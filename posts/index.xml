@@ -8,7 +8,8 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sairahul1/status/2072258045460226373"&gt;20 Loop Design Patterns Every AI Engineer Should Know&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sairahul1/status/2072258045460226373" rel="noopener noreferrer"&gt;20 Loop Design Patterns Every AI Engineer Should Know&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Rahul (@sairahul1)&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;大多数 AI 工程师知道如何构建一个 agent。&lt;/p&gt;
@@ -351,7 +352,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/zachlloydtweets/status/2069789929073262945"&gt;We are now factory engineers, not product engineers&lt;/a&gt;··
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/zachlloydtweets/status/2069789929073262945" rel="noopener noreferrer"&gt;We are now factory engineers, not product engineers&lt;/a&gt;
+··
 &lt;strong&gt;作者&lt;/strong&gt;：Zach Lloyd··
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;figure
@@ -372,7 +374,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;p&gt;给所有工程师无限 token 预算、让他们随意使用交互式编码 Agent 的日子正在终结。取而代之，公司会把软件生产视为可变成本，而不是研发费用。它将出现在利润表的 COGS（销货成本）行上——因为公司想知道，在软件工厂上投入越多，边际收益是多少。&lt;/p&gt;
 &lt;p&gt;我写这些是因为，这就是 Warp 需要拥抱的心态。每个工程师必须停止认为自己是在直接修改代码库和产品，而应该通过&amp;quot;改善工厂&amp;quot;的视角来看待一切。&lt;/p&gt;
 &lt;p&gt;当然，在建设和改进工厂的过程中，你仍然需要直接改善产品——毕竟我们交付的产品才是为客户和用户创造价值的东西。但每当我们的工厂失败时，我们需要从中学习，下一次再往自动化的方向推进一步。随着时间的推移，自动化的比例会越来越高，直到我们的工作纯粹是提升效率，而不是把车从流水线上搬下来自己去造。&lt;/p&gt;
-&lt;p&gt;这对 Warp 尤其重要，因为我们的公司现在本身就是做工厂的生意。我们运营着一座工厂来改进开源的 Warp 终端——近百万开发者依赖它持续变好。同时我们也在推出一个叫 &lt;a href="http://www.oz.dev/"&gt;Oz&lt;/a&gt; 的平台，帮助其他公司把同样的工作流复用到他们最重要的产品上。工厂生意将是唯一重要的软件生产力生意——既然我们在卖这个，我们最好自己先拥抱它。&lt;/p&gt;
+&lt;p&gt;这对 Warp 尤其重要，因为我们的公司现在本身就是做工厂的生意。我们运营着一座工厂来改进开源的 Warp 终端——近百万开发者依赖它持续变好。同时我们也在推出一个叫 &lt;a href="http://www.oz.dev/" rel="noopener noreferrer"&gt;Oz&lt;/a&gt;
+ 的平台，帮助其他公司把同样的工作流复用到他们最重要的产品上。工厂生意将是唯一重要的软件生产力生意——既然我们在卖这个，我们最好自己先拥抱它。&lt;/p&gt;
 &lt;h2 id="需要改变什么自动化审计"&gt;需要改变什么：自动化审计&lt;/h2&gt;
 &lt;p&gt;第一，我们必须衡量吞吐量和效率。我们必须严格审视产品中有多少比例是自主交付的、成本是多少。我们现在还没有做到。当前最需要追踪的指标是：全自动完成任务的比例，以及完成这些任务的成本。&lt;/p&gt;
 &lt;p&gt;第二，我们必须强迫自己以&amp;quot;自动化优先&amp;quot;的思维方式面对一切。也就是说，每次使用交互式 agent（即人类在回路中）写代码，都要把它视为一个需要学习的失败。对每项任务，都应该遵循工厂的工作流，只在真正需要的时候才把东西从流水线上搬下来。现阶段我们经常需要这么做，没问题。但目标是越来越少。&lt;/p&gt;
@@ -402,7 +405,9 @@ if metrics.quality &amp;lt; threshold:
 &lt;li&gt;&lt;strong&gt;交付&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Monitor Agent&lt;/strong&gt; 运行，如果有问题则创建 issue，完成闭环&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;这个工作流应该看起来很熟悉——它就是我们为拥有 60k star 的&lt;a href="https://github.com/warpdotdev/warp"&gt;开源项目&lt;/a&gt;建立的流程。你可以在 &lt;a href="http://build.warp.dev/"&gt;build.warp.dev&lt;/a&gt; 看到它的实际运行状态。我的判断是，它发挥了大概一半的效用，但我们还没有真正全身心投入。我看到 build.warp.dev 上的 ready-to-implement 状态里堆积了 1300 个 issue，心里想的是：&amp;ldquo;我们还等什么？让 agent 去实现它们。&amp;rdquo; 我们必须让它完全跑起来。&lt;/p&gt;
+&lt;p&gt;这个工作流应该看起来很熟悉——它就是我们为拥有 60k star 的&lt;a href="https://github.com/warpdotdev/warp" rel="noopener noreferrer"&gt;开源项目&lt;/a&gt;
+建立的流程。你可以在 &lt;a href="http://build.warp.dev/" rel="noopener noreferrer"&gt;build.warp.dev&lt;/a&gt;
+ 看到它的实际运行状态。我的判断是，它发挥了大概一半的效用，但我们还没有真正全身心投入。我看到 build.warp.dev 上的 ready-to-implement 状态里堆积了 1300 个 issue，心里想的是：&amp;ldquo;我们还等什么？让 agent 去实现它们。&amp;rdquo; 我们必须让它完全跑起来。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -412,7 +417,8 @@ if metrics.quality &amp;lt; threshold:
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;每当我们不得不让人类介入流程，我们的平台 Oz 就需要记录这一点，并且让&lt;a href="https://www.warp.dev/blog/self-improvement-loop-for-skills"&gt;自我改进 agent&lt;/a&gt; 尝试优化流程，减少人类再次干预的概率。同样，我们需要自我改进 agent 持续监视工厂相关的对话，寻找 token 浪费的模式并建议效率提升方案。我们应该定期评估不同的 harness 和 prompt，记录哪些在下一次执行中表现更好。&lt;/p&gt;
+&lt;p&gt;每当我们不得不让人类介入流程，我们的平台 Oz 就需要记录这一点，并且让&lt;a href="https://www.warp.dev/blog/self-improvement-loop-for-skills" rel="noopener noreferrer"&gt;自我改进 agent&lt;/a&gt;
+ 尝试优化流程，减少人类再次干预的概率。同样，我们需要自我改进 agent 持续监视工厂相关的对话，寻找 token 浪费的模式并建议效率提升方案。我们应该定期评估不同的 harness 和 prompt，记录哪些在下一次执行中表现更好。&lt;/p&gt;
 &lt;p&gt;作为 Warp 的工程师，我们的首要工作是确保这套工作流顺畅运行，并让 Oz 提供尽可能最好的支持体验。如果我们做到了，工厂最终将达到递归自我改进的状态。这是黄金路径。&lt;/p&gt;
 &lt;p&gt;这听起来可能像是对苦差事的拥抱，或者是一个理想主义但不切实际的愿景——好像我们不能再摆弄代码了，或者要把所有时间花在审查 agent 生成的垃圾上。&lt;/p&gt;
 &lt;p&gt;我的看法不同。我认为这是软件工程最后一个、也是最重要的一个问题——可以称之为&lt;strong&gt;元工程&lt;/strong&gt;：设计一个让 coding agent 能够最高效地构建和交付有用东西的系统。&lt;/p&gt;
@@ -427,11 +433,13 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sydneyrunkle/status/2066928783534289358"&gt;The Art of Loop Engineering&lt;/a&gt;··
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sydneyrunkle/status/2066928783534289358" rel="noopener noreferrer"&gt;The Art of Loop Engineering&lt;/a&gt;
+··
 &lt;strong&gt;作者&lt;/strong&gt;：Sydney Runkle (LangChain)··
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;Agent 之所以有用，是因为它们能通过在真实世界中采取行动来帮我们自动化工作。但要让 agent 可靠地完成有价值的工作，光有一个好模型是不够的——还需要一个精心设计的 harness（控制框架），且这个 harness 要适配具体的任务集。&lt;/p&gt;
-&lt;p&gt;核心 agent 算法很简单：给 LLM 上下文，让它在一个循环里反复调用工具，直到任务完成。这是最基本的循环。但远非驱动 agent 的唯一循环。@swyx 最近写了篇好文章叫 &lt;a href="https://www.latent.space/p/ainews-loopcraft-the-art-of-stacking"&gt;loopcraft：堆叠循环的艺术&lt;/a&gt;，核心思想是你可以通过堆叠和扩展循环来构建更有效的 agent。&lt;/p&gt;
+&lt;p&gt;核心 agent 算法很简单：给 LLM 上下文，让它在一个循环里反复调用工具，直到任务完成。这是最基本的循环。但远非驱动 agent 的唯一循环。@swyx 最近写了篇好文章叫 &lt;a href="https://www.latent.space/p/ainews-loopcraft-the-art-of-stacking" rel="noopener noreferrer"&gt;loopcraft：堆叠循环的艺术&lt;/a&gt;
+，核心思想是你可以通过堆叠和扩展循环来构建更有效的 agent。&lt;/p&gt;
 &lt;p&gt;下面是我们对这个堆栈的理解，以及如何用 LangChain 的各个原语来装备每一层。&lt;/p&gt;
 &lt;h2 id="循环-1agent"&gt;循环 1：Agent&lt;/h2&gt;
 &lt;p&gt;在最底层，agent 就是一个模型在循环里反复调工具，直到任务完成。&lt;/p&gt;
@@ -444,7 +452,8 @@ if metrics.quality &amp;lt; threshold:
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;这就是 LangChain 的 &lt;a href="https://docs.langchain.com/oss/python/langchain/agents"&gt;create_agent&lt;/a&gt; 给你的东西。选任意模型，接入工具，就有了一个可以工作的 agent 循环。工具赋予了 agent 在真实世界采取行动的能力。&lt;/p&gt;
+&lt;p&gt;这就是 LangChain 的 &lt;a href="https://docs.langchain.com/oss/python/langchain/agents" rel="noopener noreferrer"&gt;create_agent&lt;/a&gt;
+ 给你的东西。选任意模型，接入工具，就有了一个可以工作的 agent 循环。工具赋予了 agent 在真实世界采取行动的能力。&lt;/p&gt;
 &lt;p&gt;拿我们内部的文档 agent 举例（后面整篇文章都用它来做例子）。在第一层循环里，它收到一个文档改进的请求，模型规划并起草修改，然后用工具来克隆仓库、读文件、写文档、开 PR 等等。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
@@ -467,7 +476,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;验证循环增加了一个评分器（grader）：按评分标准检查 agent 的输出，如果不合格，带上反馈信息把结果发回去。评分器可以是确定性的，也可以是 agentic 的（LLM 当评委是经典案例）。&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/rubric"&gt;RubricMiddleware&lt;/a&gt; 处理这个模式，或者你也可以在 create_agent 上用 after_agent hook 来对接。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/rubric" rel="noopener noreferrer"&gt;RubricMiddleware&lt;/a&gt;
+ 处理这个模式，或者你也可以在 create_agent 上用 after_agent hook 来对接。&lt;/p&gt;
 &lt;p&gt;拿我们的文档 agent 来说，评分器在每次尝试后跑测试，检查所有链接是否能解析、所有 CI 检查是否通过、diff 的范围是否真的只是请求的内容。这类错误不需要人工审阅就能捕获。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
@@ -491,8 +501,12 @@ if metrics.quality &amp;lt; threshold:
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;&lt;a href="https://info.langchain.com/agent-development-platform"&gt;LangSmith Deployment&lt;/a&gt; 提供了触发器基础设施，包括 cron 定时和 webhook 支持。openclaw 中&amp;quot;心跳&amp;quot;（heartbeats）是 crons 的一个流行用法，它把你的 agent 变成了一个永远在线、主动出击的助手。&lt;/p&gt;
-&lt;p&gt;我们的文档 agent 由 &lt;a href="https://www.langchain.com/langsmith/fleet"&gt;Fleet&lt;/a&gt; 驱动，这是一个无代码 agent 构建器。Fleet 的 &lt;a href="https://docs.langchain.com/langsmith/fleet/channels"&gt;channels&lt;/a&gt; 和 &lt;a href="https://docs.langchain.com/langsmith/fleet/schedules"&gt;schedules&lt;/a&gt; 处理事件驱动和 cron 类的触发器。我们用一个 channel，当 #docs-plz Slack 频道里有消息发出时，就触发文档 agent。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://info.langchain.com/agent-development-platform" rel="noopener noreferrer"&gt;LangSmith Deployment&lt;/a&gt;
+ 提供了触发器基础设施，包括 cron 定时和 webhook 支持。openclaw 中&amp;quot;心跳&amp;quot;（heartbeats）是 crons 的一个流行用法，它把你的 agent 变成了一个永远在线、主动出击的助手。&lt;/p&gt;
+&lt;p&gt;我们的文档 agent 由 &lt;a href="https://www.langchain.com/langsmith/fleet" rel="noopener noreferrer"&gt;Fleet&lt;/a&gt;
+ 驱动，这是一个无代码 agent 构建器。Fleet 的 &lt;a href="https://docs.langchain.com/langsmith/fleet/channels" rel="noopener noreferrer"&gt;channels&lt;/a&gt;
+ 和 &lt;a href="https://docs.langchain.com/langsmith/fleet/schedules" rel="noopener noreferrer"&gt;schedules&lt;/a&gt;
+ 处理事件驱动和 cron 类的触发器。我们用一个 channel，当 #docs-plz Slack 频道里有消息发出时，就触发文档 agent。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -514,7 +528,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;每次 agent 运行都会产生一条 trace（追踪记录）：记录了模型做了什么、调用了哪些工具、评分器的反馈等等。这些 trace 里包含了关于什么在起作用、什么不起作用的高价值信号。爬坡循环运行一个分析 agent 来分析这些 trace，并根据发现重写 harness 的配置。这可以包括 prompt 调整、工具调整或评分器调整。&lt;/p&gt;
-&lt;p&gt;在 LangSmith 中，你可以用 &lt;a href="https://www.langchain.com/langsmith/engine"&gt;Engine&lt;/a&gt;（我们的 trace 分析 agent）来装备这第四层循环。&lt;/p&gt;
+&lt;p&gt;在 LangSmith 中，你可以用 &lt;a href="https://www.langchain.com/langsmith/engine" rel="noopener noreferrer"&gt;Engine&lt;/a&gt;
+（我们的 trace 分析 agent）来装备这第四层循环。&lt;/p&gt;
 &lt;p&gt;回到文档 agent 的例子：我们在文档 agent 的 trace 上跑 Engine 来检测问题。当多条 trace 指示出潜在问题时，就会开一个 issue，要求修改有问题的 prompt 或工具。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
@@ -537,7 +552,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;li&gt;在应用循环中，输出在返回给终端用户前可以经过人工审批&lt;/li&gt;
 &lt;li&gt;在爬坡循环中，harness 的改进在部署前可以经过人工审查&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;LangChain 的所有开源框架都把&amp;quot;人在回路&amp;quot;作为&lt;a href="https://docs.langchain.com/oss/python/deepagents/human-in-the-loop"&gt;一等公民原语&lt;/a&gt;来支持。&lt;/p&gt;
+&lt;p&gt;LangChain 的所有开源框架都把&amp;quot;人在回路&amp;quot;作为&lt;a href="https://docs.langchain.com/oss/python/deepagents/human-in-the-loop" rel="noopener noreferrer"&gt;一等公民原语&lt;/a&gt;
+来支持。&lt;/p&gt;
 &lt;h2 id="总结"&gt;总结&lt;/h2&gt;
 &lt;p&gt;为了方便，这里用列表来展示四个循环如何堆叠：&lt;/p&gt;
 &lt;ul&gt;
@@ -546,19 +562,30 @@ if metrics.quality &amp;lt; threshold:
 &lt;li&gt;&lt;strong&gt;循环 3：事件循环&lt;/strong&gt;（验证 + 系统）— 事件触发 agent 运行，更新真实系统 — 规模化工作 — LangSmith Deployment / Fleet channels&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;循环 4：爬坡循环&lt;/strong&gt;（系统 + 分析引擎）— 生产 trace 喂给分析 agent，改进 harness 配置 — 持续改进 — LangSmith Engine&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;这就是 loop engineering——或者说 @swyx 称之为 loopcraft——在实际中的样子。AI 领域的前沿人物如 &lt;a href="https://x.com/steipete/status/2063697162748260627"&gt;Steipete&lt;/a&gt;、&lt;a href="https://x.com/0xwhrrari/status/2064804504608887040"&gt;Boris&lt;/a&gt; 和 &lt;a href="https://www.youtube.com/watch?v=kwSVtQ7dziU"&gt;Andrej&lt;/a&gt; 都得出了相同的结论：agent 的潜力在于你围绕它们构建的循环。&lt;/p&gt;
+&lt;p&gt;这就是 loop engineering——或者说 @swyx 称之为 loopcraft——在实际中的样子。AI 领域的前沿人物如 &lt;a href="https://x.com/steipete/status/2063697162748260627" rel="noopener noreferrer"&gt;Steipete&lt;/a&gt;
+、&lt;a href="https://x.com/0xwhrrari/status/2064804504608887040" rel="noopener noreferrer"&gt;Boris&lt;/a&gt;
+ 和 &lt;a href="https://www.youtube.com/watch?v=kwSVtQ7dziU" rel="noopener noreferrer"&gt;Andrej&lt;/a&gt;
+ 都得出了相同的结论：agent 的潜力在于你围绕它们构建的循环。&lt;/p&gt;
 &lt;p&gt;我们思考循环 1 和 2 已经有一段时间了。但焦点应该转向循环 3 和 4——通过将 agent 嵌入你的生态系统并让它们根据你的标准持续改进，价值在这里复利增长。&lt;/p&gt;
-&lt;p&gt;Satya &lt;a href="https://x.com/satyanadella/status/2066182223213293753"&gt;点出了这个组织层面的意义&lt;/a&gt;：那些早期就构建学习循环的公司——人的判断和 token 资本在其中复合增长——将建立难以复制的优势。&lt;/p&gt;
+&lt;p&gt;Satya &lt;a href="https://x.com/satyanadella/status/2066182223213293753" rel="noopener noreferrer"&gt;点出了这个组织层面的意义&lt;/a&gt;
+：那些早期就构建学习循环的公司——人的判断和 token 资本在其中复合增长——将建立难以复制的优势。&lt;/p&gt;
 &lt;h2 id="致谢"&gt;致谢&lt;/h2&gt;
 &lt;p&gt;感谢 @Vtrivedy10、@masondrxy、@hwchase17 和 @huntlovell 的有益审阅。&lt;/p&gt;
 &lt;h2 id="参考链接"&gt;参考链接&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/quickstart"&gt;deepagents quickstart&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/langchain/agents"&gt;create_agent docs&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/rubric"&gt;rubric middleware&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://docs.langchain.com/langsmith/cron-jobs"&gt;cron jobs&lt;/a&gt;, &lt;a href="https://docs.langchain.com/langsmith/use-webhooks"&gt;webhooks&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.langchain.com/langsmith/engine"&gt;langsmith engine&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://docs.langchain.com/langsmith/fleet/channels"&gt;fleet channels&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/quickstart" rel="noopener noreferrer"&gt;deepagents quickstart&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/langchain/agents" rel="noopener noreferrer"&gt;create_agent docs&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/oss/python/deepagents/rubric" rel="noopener noreferrer"&gt;rubric middleware&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/langsmith/cron-jobs" rel="noopener noreferrer"&gt;cron jobs&lt;/a&gt;
+, &lt;a href="https://docs.langchain.com/langsmith/use-webhooks" rel="noopener noreferrer"&gt;webhooks&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.langchain.com/langsmith/engine" rel="noopener noreferrer"&gt;langsmith engine&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.langchain.com/langsmith/fleet/channels" rel="noopener noreferrer"&gt;fleet channels&lt;/a&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>【译文】请不要搞个"企业大脑"就指望自动形成学习循环</title><link>https://sund.site/posts/2026/dont-implement-company-brain-expect-learning-loop/</link><pubDate>Tue, 16 Jun 2026 23:00:00 +0800</pubDate><guid>https://sund.site/posts/2026/dont-implement-company-brain-expect-learning-loop/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -569,10 +596,12 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sethrosen/status/2066534763511316540"&gt;Please don&amp;rsquo;t implement a &amp;ldquo;company brain&amp;rdquo; and expect a learning loop&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sethrosen/status/2066534763511316540" rel="noopener noreferrer"&gt;Please don&amp;rsquo;t implement a &amp;ldquo;company brain&amp;rdquo; and expect a learning loop&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Seth Rosen&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
-&lt;p&gt;Satya 的那篇&lt;a href="https://x.com/satyanadella/status/2066182223213293753?s=20"&gt;推文&lt;/a&gt;爆了，不奇怪。&lt;/p&gt;
+&lt;p&gt;Satya 的那篇&lt;a href="https://x.com/satyanadella/status/2066182223213293753?s=20" rel="noopener noreferrer"&gt;推文&lt;/a&gt;
+爆了，不奇怪。&lt;/p&gt;
 &lt;p&gt;他把两件事联系在了一起——人力资本和算力资本——通过一个学习循环：人类如何引导 AI，AI 如何让人类更聪明，以及整个系统如何滚雪球。&lt;/p&gt;
 &lt;p&gt;我们团队花了九个月研究和构建这个东西。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;学习循环是你的长期 AI 战略。&lt;/strong&gt; 没有它，AI 在当下很惊艳，但长期来看会无声地衰减。&lt;/p&gt;
@@ -618,7 +647,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/omarsar0/status/2065880971031834786"&gt;Autonomous Long-Running Coding Agents&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/omarsar0/status/2065880971031834786" rel="noopener noreferrer"&gt;Autonomous Long-Running Coding Agents&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Elvis（@omarsar0），DAIR.AI Academy&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;figure
@@ -769,8 +799,10 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/elvissun/status/2065035615800864954"&gt;&lt;code&gt;/goal + Loss Functions: How to Distill a Product in 30 Hours with One Prompt [Full Playbook]&lt;/code&gt;&lt;/a&gt;
-&lt;strong&gt;作者&lt;/strong&gt;：Elvis (&lt;a href="https://x.com/elvissun"&gt;@elvissun&lt;/a&gt;)
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/elvissun/status/2065035615800864954" rel="noopener noreferrer"&gt;&lt;code&gt;/goal + Loss Functions: How to Distill a Product in 30 Hours with One Prompt [Full Playbook]&lt;/code&gt;&lt;/a&gt;
+
+&lt;strong&gt;作者&lt;/strong&gt;：Elvis (&lt;a href="https://x.com/elvissun" rel="noopener noreferrer"&gt;@elvissun&lt;/a&gt;
+)
 &lt;strong&gt;翻译&lt;/strong&gt;：AI 辅助翻译&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;99% 的人用 &lt;code&gt;/goal&lt;/code&gt; 和 agent loop 的方式是错的。&lt;/p&gt;
 &lt;p&gt;外面吹的是「长循环自主 agent：设定目标，走开，回来就拿到能跑的代码」。但顶尖的 agent 工程师半年前就在做同样的事了——用 harness engineering + spec-driven development：&lt;/p&gt;
@@ -927,7 +959,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://claude.com/blog/running-an-ai-native-engineering-org"&gt;Running an AI-native engineering org&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://claude.com/blog/running-an-ai-native-engineering-org" rel="noopener noreferrer"&gt;Running an AI-native engineering org&lt;/a&gt;
+&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Fiona Fung，Anthropic Claude Code &amp;amp; Claude Cowork 工程总监&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;翻译&lt;/strong&gt;：AI 辅助翻译&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;
@@ -1011,8 +1044,10 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://noperator.dev/posts/you-can-just-say-it/"&gt;You Can Just Say It&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Caleb Gross（&lt;a href="https://x.com/noperator"&gt;@noperator&lt;/a&gt;）&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://noperator.dev/posts/you-can-just-say-it/" rel="noopener noreferrer"&gt;You Can Just Say It&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Caleb Gross（&lt;a href="https://x.com/noperator" rel="noopener noreferrer"&gt;@noperator&lt;/a&gt;
+）&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;
 &lt;p&gt;有一种评估人类及其创造性产物价值的奇怪论证范式，大致长这样：在 AI 时代，某些角色还是应该优先用人类，因为 AI 永远无法执行该角色所需的任务。或者，至少人类做得更好。又或者，人类和 AI 的输出看起来可能差不多，但人类的产物更优，有一些微妙的风格原因是 AI 无法复制的。再或者，至少 AI 无法一致地复制它。&lt;/p&gt;
 &lt;p&gt;看看球门柱底座上那些被反复移动留下的擦痕。等混凝土凝固吧，28 天。&lt;/p&gt;
@@ -1261,7 +1296,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;h2 id="以-pi-agent-为例设计理念与架构"&gt;以 PI Agent 为例：设计理念与架构&lt;/h2&gt;
-&lt;p&gt;前面是“通用 Agent 框架设计”。现在落到最近很火的极简框架 &lt;a href="https://github.com/earendil-works/pi"&gt;PI Agent&lt;/a&gt; 。&lt;/p&gt;
+&lt;p&gt;前面是“通用 Agent 框架设计”。现在落到最近很火的极简框架 &lt;a href="https://github.com/earendil-works/pi" rel="noopener noreferrer"&gt;PI Agent&lt;/a&gt;
+ 。&lt;/p&gt;
 &lt;p&gt;一起来看看这个框架是如何设计 Agent 的。&lt;/p&gt;
 &lt;h3 id="设计理念"&gt;设计理念&lt;/h3&gt;
 &lt;ol&gt;

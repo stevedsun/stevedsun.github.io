@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Architecture on Steve Sun</title><link>https://sund.site/categories/software-architecture/</link><description>Recent content in Software Architecture on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Mon, 02 Jun 2025 07:58:17 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/software-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki/"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Architecture on Steve Sun</title><link>https://sund.site/categories/software-architecture/</link><description>Recent content in Software Architecture on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Mon, 02 Jun 2025 07:58:17 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/software-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;
+我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
 &lt;p&gt;这个问题的答案就是 AST 分块。&lt;/p&gt;
 &lt;p&gt;这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p&gt;
 &lt;h2 id="ast"&gt;AST&lt;/h2&gt;
@@ -42,13 +43,15 @@
 &lt;p&gt;后续编译器就可以遍历这个语法树，按节点转换成 Javascript 代码。&lt;/p&gt;
 &lt;p&gt;理解了 AST，就大致可以理解 DeepWIKI、甚至是 Cursor 这种代码编辑器如何构建代码索引的。&lt;/p&gt;
 &lt;h2 id="cursor"&gt;Cursor&lt;/h2&gt;
-&lt;p&gt;在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing"&gt;Cursor 的官方文档&lt;/a&gt;中，可以看到关于它如何索引用户代码的相关描述。&lt;/p&gt;
+&lt;p&gt;在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing" rel="noopener noreferrer"&gt;Cursor 的官方文档&lt;/a&gt;
+中，可以看到关于它如何索引用户代码的相关描述。&lt;/p&gt;
 &lt;p&gt;Cursor 会扫描用户代码仓库，计算文件哈希值并构建 Merkle 树，类似 Git 比较文件差异的原理，Cursor 用 Merkle 树来比较用户空间文件的差异，并且将用户修改过的文件以增量的方式上传到 Cursor 的服务器。&lt;/p&gt;
 &lt;p&gt;被上传的文件，会被分块并嵌入，存储在 Turbopuffer 数据库中。这就是将源代码构建成 RAG 的过程。&lt;/p&gt;
 &lt;p&gt;这里的分块使用了 AST 工具将代码先结构化成语法树，然后将序列化后的语法树节点切成小块，最后嵌入成向量存储起来。&lt;/p&gt;
 &lt;p&gt;Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p&gt;
 &lt;p&gt;当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p&gt;
-&lt;p&gt;有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;网友&lt;/a&gt;整理了这张流程图：&lt;/p&gt;
+&lt;p&gt;有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934" rel="noopener noreferrer"&gt;网友&lt;/a&gt;
+整理了这张流程图：&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -59,7 +62,8 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline 的官方博客&lt;/a&gt; 可以让我们窥见它的实现思路。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing" rel="noopener noreferrer"&gt;Cline 的官方博客&lt;/a&gt;
+ 可以让我们窥见它的实现思路。&lt;/p&gt;
 &lt;p&gt;Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p&gt;
 &lt;p&gt;下面是开发者对 Cline 原理的介绍：&lt;/p&gt;
 &lt;blockquote&gt;
@@ -84,9 +88,11 @@
 &lt;p&gt;总的来说，AST 是理解代码语法结构的重要工具,不同的实现方式各有优劣。&lt;/p&gt;
 &lt;h2 id="扩展阅读"&gt;扩展阅读&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/" rel="noopener noreferrer"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>Go服务端性能的一般解决思路</title><link>https://sund.site/posts/2025/go-performance/</link><pubDate>Tue, 06 May 2025 10:35:41 +0800</pubDate><guid>https://sund.site/posts/2025/go-performance/</guid><description>&lt;p&gt;最近遇到一个性能问题，客户反馈，在他们的 IPC 设备后台有两个 Go 语言编写的服务进程占用内存一直在上涨，最大时候达到了总内存的 40% 。其中一个进程就是我们日志采集 Agent。&lt;/p&gt;
-&lt;p&gt;我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/"&gt;Go 内存泄漏常见模式&lt;/a&gt;中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p&gt;
+&lt;p&gt;我首先怀疑是内存泄漏，因为过去发生过 goroutine 阻塞造成的内存泄漏（我在&lt;a href="https://sund.site/posts/2023/goroutine-leak/"&gt;Go 内存泄漏常见模式&lt;/a&gt;
+中讨论过)，所以我先针对所有创建和释放 goroutine 的地方进行排查。&lt;/p&gt;
 &lt;p&gt;在上一次教训之后，我们对代码单元测试层面做了 goruntine 内存泄漏的检测——使用&lt;code&gt;go.uber.org/goleak&lt;/code&gt;。只需要在单元测试开头加上一句:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kd"&gt;func&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;TestXXX&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;t&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nx"&gt;testing&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;defer&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;goleak&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;VerifyNone&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;
@@ -98,7 +104,8 @@
 &lt;p&gt;在我们代码里，使用了&lt;code&gt;github.com/robfig/cron/v3&lt;/code&gt;这个第三方包，它的作用是编排定时任务。用法是&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;c&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;cron&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;New&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nx"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;AddFunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;@every 10s&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;callbackFunc&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这种结构定义一个定时任务。它的实现也基于 goroutine，所以我把 go 自带的 pprof 加入到 main.go 的依赖中，重新编译了项目二进制文件并部署到测试环境上（使用跟用户相同的硬件配置）。这样启动项目后就可以在特定端口获取内存信息。（关于 pprof，你可以参考 &lt;a href="https://go.dev/blog/pprof"&gt;Profiling Go Programs&lt;/a&gt;）&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这种结构定义一个定时任务。它的实现也基于 goroutine，所以我把 go 自带的 pprof 加入到 main.go 的依赖中，重新编译了项目二进制文件并部署到测试环境上（使用跟用户相同的硬件配置）。这样启动项目后就可以在特定端口获取内存信息。（关于 pprof，你可以参考 &lt;a href="https://go.dev/blog/pprof" rel="noopener noreferrer"&gt;Profiling Go Programs&lt;/a&gt;
+）&lt;/p&gt;
 &lt;p&gt;我使用 pprof 的接口获取了不同时间间隔的 heap 数据&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;curl&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nx"&gt;o&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;heap&lt;/span&gt;&lt;span class="mf"&gt;.1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;out&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="cp"&gt;//127.0.0.1:6060/debug/pprof/heap&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后使用&lt;/p&gt;
@@ -121,7 +128,8 @@
 &lt;h2 id="解决思路"&gt;解决思路&lt;/h2&gt;
 &lt;p&gt;AI 编写代码的核心问题，可以归纳为不可观测性和缺少上下文造成的低维护性。为了解决这两个问题，我们需要先回顾一下传统软件工序如何让代码更易观测和维护。&lt;/p&gt;
 &lt;h3 id="人类主导的单元测试"&gt;人类主导的单元测试&lt;/h3&gt;
-&lt;p&gt;单元测试是代码的说明书。复杂的业务逻辑通常需要阅读大量代码才能看懂。但是熟练的程序员会先看单元测试。好的单元测试会把模块的预期输入、输出完整地写进 Case 里。在 &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt; 里，作者认为好的单元测试应该具备：&lt;/p&gt;
+&lt;p&gt;单元测试是代码的说明书。复杂的业务逻辑通常需要阅读大量代码才能看懂。但是熟练的程序员会先看单元测试。好的单元测试会把模块的预期输入、输出完整地写进 Case 里。在 &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279" rel="noopener noreferrer"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt;
+ 里，作者认为好的单元测试应该具备：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;保护回归&lt;/strong&gt;。即测试能够防止出现已经修复的问题在回归测试中复现的情况。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;抵抗重构&lt;/strong&gt;。即代码重构后，测试能正确识别出重构是否对已有功能造成影响。&lt;/li&gt;
@@ -160,8 +168,10 @@
 &lt;p&gt;文章内容会随着时间的推移，持续更新，欢迎讨论。&lt;/p&gt;</description></item><item><title>Go 语言的依赖倒置</title><link>https://sund.site/posts/2024/go-dependency-inject/</link><pubDate>Thu, 21 Nov 2024 11:26:22 +0800</pubDate><guid>https://sund.site/posts/2024/go-dependency-inject/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;这篇文章比较基础，是我在给 Java 程序员做 go 语言培训时用到的。&lt;/p&gt;&lt;/blockquote&gt;
 &lt;h2 id="为什么要做依赖倒置dip"&gt;为什么要做依赖倒置（DIP）？&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle"&gt;依赖倒置&lt;/a&gt;，或叫依赖反转、DIP，是软件开发非常重要的设计原则。很多程序员没有了解过相关知识，或者只从 Java Spring 知道大致思想。我今天想用一篇简短的文章，用 Go 语言做一个简单的例子，讲解一下怎么最简单地实现依赖倒置。&lt;/p&gt;
-&lt;p&gt;如果你还不知道它是什么，可以参考 wiki 中的描述，或者阅读&lt;a href="https://martinfowler.com/articles/dipInTheWild.html"&gt;马丁福勒关于 DIP 的文章&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle" rel="noopener noreferrer"&gt;依赖倒置&lt;/a&gt;
+，或叫依赖反转、DIP，是软件开发非常重要的设计原则。很多程序员没有了解过相关知识，或者只从 Java Spring 知道大致思想。我今天想用一篇简短的文章，用 Go 语言做一个简单的例子，讲解一下怎么最简单地实现依赖倒置。&lt;/p&gt;
+&lt;p&gt;如果你还不知道它是什么，可以参考 wiki 中的描述，或者阅读&lt;a href="https://martinfowler.com/articles/dipInTheWild.html" rel="noopener noreferrer"&gt;马丁福勒关于 DIP 的文章&lt;/a&gt;
+。&lt;/p&gt;
 &lt;p&gt;依赖倒置原则要解决一个软件开发中常见的风险：依赖。&lt;/p&gt;
 &lt;p&gt;尝试回忆一下：&lt;/p&gt;
 &lt;ol&gt;
@@ -232,7 +242,8 @@
 &lt;/ul&gt;
 &lt;p&gt;在 Go 语言中实现这两条原则并不麻烦，只要将原本的调用方-实现方，转换成注册方-调用方-实现方。在 Go 中也有一些库和框架实现依赖反转，其实核心思想并没有差异。&lt;/p&gt;</description></item><item><title>监控系统项目复盘</title><link>https://sund.site/posts/2024/metrics-project-retro/</link><pubDate>Thu, 24 Oct 2024 15:52:22 +0800</pubDate><guid>https://sund.site/posts/2024/metrics-project-retro/</guid><description>&lt;p&gt;这篇文章对我过去 3 年的一大块工作内容进行复盘。我作为项目组的架构师，在下文中也对项目早期遗留的一些问题进行反思，并分享我个人的解决思路。&lt;/p&gt;
 &lt;h2 id="项目核心依赖开源组件定制化过度"&gt;项目核心依赖开源组件，定制化过度&lt;/h2&gt;
-&lt;p&gt;我们的项目是一个运行在边缘设备上的日志、软硬件性能指标的采集/监控系统。考虑到边缘计算设备（IPC）的性能，选择开源组件时就侧重于轻量化、支持丰富的输出标准。早期部门架构师采用了 Fluent-Bit 作为项目的核心组件。Fluent-Bit 是 C 编写的开源、轻量、可轻度扩展的数据收集器。它最开始用作日志收集，后来逐渐发展成全功能的 Agent。对比流行的&lt;a href="https://github.com/open-telemetry"&gt;OpenTelemetry&lt;/a&gt;，Fluent-Bit 更开箱即用、更轻量，但是不易于修改和扩展。&lt;/p&gt;
+&lt;p&gt;我们的项目是一个运行在边缘设备上的日志、软硬件性能指标的采集/监控系统。考虑到边缘计算设备（IPC）的性能，选择开源组件时就侧重于轻量化、支持丰富的输出标准。早期部门架构师采用了 Fluent-Bit 作为项目的核心组件。Fluent-Bit 是 C 编写的开源、轻量、可轻度扩展的数据收集器。它最开始用作日志收集，后来逐渐发展成全功能的 Agent。对比流行的&lt;a href="https://github.com/open-telemetry" rel="noopener noreferrer"&gt;OpenTelemetry&lt;/a&gt;
+，Fluent-Bit 更开箱即用、更轻量，但是不易于修改和扩展。&lt;/p&gt;
 &lt;p&gt;最开始整个团队都没接触过监控系统，所以在设计系统时挖了不少坑。首先，用户在 UI 上操作过度繁琐，需要依次配置输出的目标（地址、端口、协议、格式、加密方式等等）、采集的指标类型，最后还要手动点击 Apply （应用）一下。&lt;/p&gt;
 &lt;p&gt;经过几轮迭代，适当简化了操作逻辑。但是像大部分工业 PC 上运行的程序一样，用户在初始化配置过后，通常不会主动去 UI 上修改配置。终端用户更关心占用系统资源多少、稳定性如何。所以最开始团队把这个项目做成了一个重交互的 C 端产品，这是个教训。&lt;/p&gt;
 &lt;p&gt;第二，后端开发为了满足 UI 设计的流程（比如，用户可以创建多份不同的配置项到不同的目标地址），做了复杂的 Work-around。因为 Fluent-Bit 是单进程事件驱动模型，只有单一配置文件，每次修改配置文件都要重启 Fluent-bit 进程。这就造成了 UI 上用户添加一个配置项，后台就要重新生成整个配置文件并重启 Fluent-Bit。这对于一个稳定运行的监控系统来说，无疑增加了&lt;strong&gt;重启过程中数据丢失&lt;/strong&gt;的风险。另外，如果&lt;strong&gt;新增的配置项出错，就会让整个生成的配置文件报错，导致 Fluent-Bit 进程假死&lt;/strong&gt;等问题。&lt;/p&gt;
@@ -243,7 +254,8 @@
 &lt;p&gt;总体来说，Fluent-bit 的性能基本达到了预期，但是各种小 bug（比如 pgsql 插件在目标不可达时直接 Block 整个进程），开源社区维护者并没有引起重视，我们提交给开源社区的代码也被以各种理由驳回。如果让我重新选择，我更倾向于使用其他扩展性更强的开源组件。&lt;/p&gt;
 &lt;h2 id="对-go-语言不熟悉项目结构混乱"&gt;对 Go 语言不熟悉，项目结构混乱&lt;/h2&gt;
 &lt;p&gt;团队遇到的第二个挑战是对 Go 语言不熟悉。大部分开发成员只有 Java 开发经验，所以顺理成章把 Go 写成了 Java。因为框架（Go-Gin）的限制，导致开发中问题频出。&lt;/p&gt;
-&lt;p&gt;第一个问题来自面向对象和依赖反转。依赖反转对于使用 Java Spring 的人来说不会陌生，但是用 Go 实现依赖反转，需要利用 Interface 封装，并结合 Go-Mock 库做单元测试。团队成员早期不熟悉语言特性，经常错误封装抽象，或者干脆直接函数套函数，写成&lt;a href="https://zh.wikipedia.org/zh-sg/%E9%9D%A2%E6%9D%A1%E5%BC%8F%E4%BB%A3%E7%A0%81"&gt;面条型代码&lt;/a&gt;。这充分暴露了大部分国内 Java 程序员其实没有受过良好的 OOP 训练。对于单元测试、集成测试这些工程实践也是流于形式。软件质量在大部分企业里仍然靠测试人员手动验证。&lt;/p&gt;
+&lt;p&gt;第一个问题来自面向对象和依赖反转。依赖反转对于使用 Java Spring 的人来说不会陌生，但是用 Go 实现依赖反转，需要利用 Interface 封装，并结合 Go-Mock 库做单元测试。团队成员早期不熟悉语言特性，经常错误封装抽象，或者干脆直接函数套函数，写成&lt;a href="https://zh.wikipedia.org/zh-sg/%E9%9D%A2%E6%9D%A1%E5%BC%8F%E4%BB%A3%E7%A0%81" rel="noopener noreferrer"&gt;面条型代码&lt;/a&gt;
+。这充分暴露了大部分国内 Java 程序员其实没有受过良好的 OOP 训练。对于单元测试、集成测试这些工程实践也是流于形式。软件质量在大部分企业里仍然靠测试人员手动验证。&lt;/p&gt;
 &lt;p&gt;第二个问题是 Go 语言不鼓励过度抽象。如泛型、异常处理，都要一步步重复琐碎的代码片段，这让 Sonar 静态检查经常 failed。没经验的同事就会用各种奇技淫巧逃避静态检查。这也说明开发团队定期 code review 的必要性。&lt;/p&gt;
 &lt;p&gt;第四，Go 语言其实是一个社区不那么完善的编程语言，它的很多框架（如最热门的 gorm 居然是个人开发项目），像 Flyway 这种 Java 工具链中很成熟的迁移工具，在 Go 里竟然需要组合多个开源项目来替代。所以 Go 只适合来开发中等以下规模的项目，或者对性能要求较高的平台核心组件。（在国内）不适合做复杂的业务场景。&lt;/p&gt;
 &lt;h2 id="api-接口粒度过细没有对资源对象做好抽象"&gt;API 接口粒度过细，没有对资源对象做好抽象&lt;/h2&gt;
@@ -252,10 +264,12 @@
 &lt;p&gt;总结起来，Fluent-Bit 配置的修改，其实完全可以用 3~4 个宽泛的 API 来实现，除了前文提到流程过度设计原因，项目初期的不确定性，导致开发人员过度关注松耦合，而忽略了维护性。&lt;/p&gt;
 &lt;h2 id="错误的流水线设计"&gt;错误的流水线设计&lt;/h2&gt;
 &lt;p&gt;最开始项目沿用的部门其他团队的集成测试、部署模式，把 Python 写的测试用例和项目部署脚本放在单独的 Gitlab Repo 里。结果是每次项目部署时，要人工去网页上修改版本号触发流水线。从持续集成的角度看，业务代码和测试用例分开，造成了每次 commit 都要到不同 repo 里去提交，且一旦冲突又要分别执行多次集成测试（时间长，反馈慢）。&lt;/p&gt;
-&lt;p&gt;后期我们做了一些调整，把多个小模块合并成一个&lt;a href="https://zh.wikipedia.org/wiki/Monorepo"&gt;Monorepo&lt;/a&gt;，同时把部分 API 相关的集成测试放在后端代码里，减少提交次数，也让原子提交更容易。&lt;/p&gt;
+&lt;p&gt;后期我们做了一些调整，把多个小模块合并成一个&lt;a href="https://zh.wikipedia.org/wiki/Monorepo" rel="noopener noreferrer"&gt;Monorepo&lt;/a&gt;
+，同时把部分 API 相关的集成测试放在后端代码里，减少提交次数，也让原子提交更容易。&lt;/p&gt;
 &lt;p&gt;不过部署问题依然没有被解决，原因是边缘平台上的模块太多，系统集成需要多个团队合作，部署、发布版本时间长，出错的环节太多。对于这种情况，部门技术负责人设定了严格的代码提交、测试、review、文档更新流程，但是根本问题还在于团队责任模糊、部门团队跨多个国家和时区，缺少统一的调度和沟通机制。这些问题只能留给管理层逐渐缓解，或者随着业务收敛，减少、分流项目组。&lt;/p&gt;
 &lt;h2 id="小结"&gt;小结&lt;/h2&gt;
-&lt;p&gt;整体来看，我们团队遇到的很多问题出自项目早期，缺少项目和技术团队管理经验。对业务的愿景不了解，把做 C 端 Saas 产品的经验带到工业领域，用熟悉的开发范式套用到制造业。当然，不回避地说，在业务上，部门多流程长，业务负责人只能盲人摸象，用户反馈要先到达 Support 团队，再反馈给上层，最后才到开发团队。这让我们开发出来的产品要经过至少 3-6 个月才能得到有效的反馈。迭代周期太长，研发闭门造车。&lt;/p&gt;</description></item><item><title>RESTful Web Service Cookbook 笔记</title><link>https://sund.site/posts/2024/restful-api-cookbook/</link><pubDate>Sat, 13 Jul 2024 16:12:34 +0800</pubDate><guid>https://sund.site/posts/2024/restful-api-cookbook/</guid><description>&lt;p&gt;&lt;a href="https://www.oreilly.com/library/view/restful-web-services/9780596809140/"&gt;RESTful Web Service Cookbook&lt;/a&gt; 是一本简短、精炼的 RESTful 接口设计指南。这篇文章（笔记）用来记录这本书中提到的重点。&lt;/p&gt;
+&lt;p&gt;整体来看，我们团队遇到的很多问题出自项目早期，缺少项目和技术团队管理经验。对业务的愿景不了解，把做 C 端 Saas 产品的经验带到工业领域，用熟悉的开发范式套用到制造业。当然，不回避地说，在业务上，部门多流程长，业务负责人只能盲人摸象，用户反馈要先到达 Support 团队，再反馈给上层，最后才到开发团队。这让我们开发出来的产品要经过至少 3-6 个月才能得到有效的反馈。迭代周期太长，研发闭门造车。&lt;/p&gt;</description></item><item><title>RESTful Web Service Cookbook 笔记</title><link>https://sund.site/posts/2024/restful-api-cookbook/</link><pubDate>Sat, 13 Jul 2024 16:12:34 +0800</pubDate><guid>https://sund.site/posts/2024/restful-api-cookbook/</guid><description>&lt;p&gt;&lt;a href="https://www.oreilly.com/library/view/restful-web-services/9780596809140/" rel="noopener noreferrer"&gt;RESTful Web Service Cookbook&lt;/a&gt;
+ 是一本简短、精炼的 RESTful 接口设计指南。这篇文章（笔记）用来记录这本书中提到的重点。&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;因为 RESTful 对后端开发来说实在太熟悉不过，所以我会省略掉那些习以为常的约定，只记录书中提到的、大多数开发者没有注意到的细节。&lt;/p&gt;&lt;/blockquote&gt;
 &lt;h2 id="http-method"&gt;HTTP Method&lt;/h2&gt;
@@ -427,13 +441,17 @@
 &lt;h2 id="审计日志的格式应遵循哪些协议或标准"&gt;审计日志的格式应遵循哪些协议或标准？&lt;/h2&gt;
 &lt;p&gt;对于本地运行的软件，通常 Syslog 具有更好的系统兼容性。对于使用 ELK 采集日志的项目更适合用 CEF，其他情况建议使用自定义的 JSON。&lt;/p&gt;
 &lt;p&gt;下面是三种格式（协议）的对比。&lt;/p&gt;
-&lt;h3 id="common-event-format-cef"&gt;&lt;a href="https://docs.elastic.co/en/integrations/cef"&gt;Common Event Format (CEF)&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="common-event-format-cef"&gt;&lt;a href="https://docs.elastic.co/en/integrations/cef" rel="noopener noreferrer"&gt;Common Event Format (CEF)&lt;/a&gt;
+&lt;/h3&gt;
 &lt;p&gt;Elastic-Search 使用的、一种基于 Event-souring 思想设计的日志格式。优点是冗余信息少，适合配合 ELK 体系构建监控系统。 它的传输基于 Syslog 协议，同时扩展了可读性的 key-value，基于文本的设计也可以让 CEF 格式的日志写入到文件。总体来说，它是这几种格式中在可读性、效率和标准三方面最平衡的一个。&lt;/p&gt;
-&lt;h3 id="syslog"&gt;&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424"&gt;Syslog&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="syslog"&gt;&lt;a href="https://datatracker.ietf.org/doc/html/rfc5424" rel="noopener noreferrer"&gt;Syslog&lt;/a&gt;
+&lt;/h3&gt;
 &lt;p&gt;Syslog 是 Linux 操作系统默认的审计日志格式，通常采用其 RFC5424 版本。大部分 SIEM&lt;sup id="fnref:1"&gt;&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref"&gt;1&lt;/a&gt;&lt;/sup&gt; 系统都支持这种格式的导入。
 Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传统软件的同时，最大程度保证系统的安全性。但是对于微服务来说，实现和维护标准协议成本较高。所以如 AWS CloudTrail, OpenTelemetry 等都选择更简单的 HTTPS + JSON 格式。&lt;/p&gt;
-&lt;h3 id="json-lines"&gt;&lt;a href="https://jsonlines.org/"&gt;JSON Lines&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;大部分 SaaS 产品都是用 JSON，简单高效。JSON 的特点是冗余信息多，结构容易解析。例如，下面是&lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/"&gt;OpenTelemetry 官方文档&lt;/a&gt;提到的日志模型中的字段：&lt;/p&gt;
+&lt;h3 id="json-lines"&gt;&lt;a href="https://jsonlines.org/" rel="noopener noreferrer"&gt;JSON Lines&lt;/a&gt;
+&lt;/h3&gt;
+&lt;p&gt;大部分 SaaS 产品都是用 JSON，简单高效。JSON 的特点是冗余信息多，结构容易解析。例如，下面是&lt;a href="https://opentelemetry.io/docs/specs/otel/logs/data-model/" rel="noopener noreferrer"&gt;OpenTelemetry 官方文档&lt;/a&gt;
+提到的日志模型中的字段：&lt;/p&gt;
 &lt;table&gt;
  &lt;thead&gt;
  &lt;tr&gt;
@@ -594,7 +612,8 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
 &lt;p&gt;&lt;strong&gt;审计上下文&lt;/strong&gt;：记录审计日志会显著增加系统内存和流量的使用。所以审计服务应该缓存审计相关的上下文，如服务名称和 ID 的映射关系、事件 ID 和描述等。不同服务向审计服务发送消息时应以最小长度为原则设计消息结构。审计服务的策略中应该允许用户配置日志级别，过滤规则等以减少系统负担。&lt;/p&gt;
 &lt;h2 id="日志的导出"&gt;日志的导出&lt;/h2&gt;
 &lt;p&gt;审计服务除了导出文件格式的日志，通常也要支持第三方系统的导出。我们通常把分析、存储日志的第三方服务称为 SIEM （Security information and event management）。在 kubernetes 中，导出日志到第三方 web 服务的模块称为 webhook。&lt;/p&gt;
-&lt;p&gt;导出到第三方系统通常可以采用标准的 Syslog 格式或是 JSON Lines，支持范围最广。此外，需要考虑日志截断、第三方系统批处理和流处理的配置等，可以参考 kubernetes 的&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/#webhook-backend"&gt;这篇文档&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;导出到第三方系统通常可以采用标准的 Syslog 格式或是 JSON Lines，支持范围最广。此外，需要考虑日志截断、第三方系统批处理和流处理的配置等，可以参考 kubernetes 的&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/#webhook-backend" rel="noopener noreferrer"&gt;这篇文档&lt;/a&gt;
+。&lt;/p&gt;
 &lt;h2 id="开源项目的架构设计"&gt;开源项目的架构设计&lt;/h2&gt;
 &lt;p&gt;由于设计侧重点不同，下面提供的每种开源项目都需要慎重考虑其优点和不足，其特性是否满足自身需要、系统的环境是分布式还是单体应用。&lt;/p&gt;
 &lt;h3 id="auditd"&gt;Auditd&lt;/h3&gt;
@@ -642,7 +661,8 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
 &lt;li&gt;ResponseComplete - 当响应消息体完成并且没有更多数据需要传输的时候。&lt;/li&gt;
 &lt;li&gt;Panic - 当 panic 发生时生成。&lt;/li&gt;
 &lt;/ul&gt;&lt;/blockquote&gt;
-&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/"&gt;kubernetes 审计事件&lt;/a&gt; 使用和 Event API 不同的消息结构&lt;sup id="fnref:3"&gt;&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref"&gt;3&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/audit/" rel="noopener noreferrer"&gt;kubernetes 审计事件&lt;/a&gt;
+ 使用和 Event API 不同的消息结构&lt;sup id="fnref:3"&gt;&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref"&gt;3&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
 &lt;p&gt;综上，云平台的审计服务设计可以总结为：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;优点：微服务设计，JSON 格式日志更灵活，中心化的日志收集服务易于集成更多应用服务和导出到开源数据处理工具。&lt;/li&gt;
@@ -689,13 +709,16 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
 &lt;hr&gt;
 &lt;ol&gt;
 &lt;li id="fn:1"&gt;
-&lt;p&gt;SIEM 是安全信息和事件管理(Security Information and Event Management)的缩写。&lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem"&gt;https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a&gt;&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;SIEM 是安全信息和事件管理(Security Information and Event Management)的缩写。&lt;a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem" rel="noopener noreferrer"&gt;https://www.microsoft.com/en-us/security/business/security-101/what-is-siem&lt;/a&gt;
+&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:2"&gt;
-&lt;p&gt;对于日志的加密，一般在服务端会对日志额外添加 checksum 链来校验。可以参考亚马逊的实现 &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html"&gt;server-side encryption (SSE-S3)&lt;/a&gt;.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;对于日志的加密，一般在服务端会对日志额外添加 checksum 链来校验。可以参考亚马逊的实现 &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html" rel="noopener noreferrer"&gt;server-side encryption (SSE-S3)&lt;/a&gt;
+.&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:3"&gt;
-&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event"&gt;kubernetes 审计事件结构定义&lt;/a&gt;&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io/zh-cn/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event" rel="noopener noreferrer"&gt;kubernetes 审计事件结构定义&lt;/a&gt;
+&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink"&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;</description></item><item><title>分布式缓存系统的设计</title><link>https://sund.site/posts/2021/distributed-cache/</link><pubDate>Thu, 18 Mar 2021 15:32:57 +0800</pubDate><guid>https://sund.site/posts/2021/distributed-cache/</guid><description>&lt;p&gt;很久不写技术文章了。这是一篇关于 Redis 构建分布式缓存系统的总结，结合之前项目上的使用场景，做一个系统性的梳理。&lt;/p&gt;
@@ -726,7 +749,8 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
 &lt;li&gt;库存信息是预约订单流程的必备步骤，而且是跨服务调用（预约服务 -&amp;gt; 库存服务）的数据，所以涉及到大量网络请求、数据库查询。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="指定性能优化的指标"&gt;指定性能优化的指标&lt;/h2&gt;
-&lt;p&gt;在即将完成业务系统开发时，我们就根据 &lt;a href="https://sre.google/books/"&gt;Google SRE Books&lt;/a&gt; 提到的四个黄金指标，制定了监控系统性能的四个维度：&lt;/p&gt;
+&lt;p&gt;在即将完成业务系统开发时，我们就根据 &lt;a href="https://sre.google/books/" rel="noopener noreferrer"&gt;Google SRE Books&lt;/a&gt;
+ 提到的四个黄金指标，制定了监控系统性能的四个维度：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;请求率&lt;/li&gt;
 &lt;li&gt;错误数，非 200 返回结果数量&lt;/li&gt;
@@ -741,7 +765,8 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
 &lt;h3 id="自动化测试-api-参数合法性"&gt;自动化测试 API 参数合法性&lt;/h3&gt;
 &lt;p&gt;我们的 QA 通常会写自动化脚本对后端 API 做定期的扫描，检查哪些接口的数据输入、输出有不合法的类型或是数值范围。除了巩固系统的健壮性，还能帮助缓存系统抵御&lt;strong&gt;缓存穿透&lt;/strong&gt;的风险。&lt;/p&gt;
 &lt;h3 id="缓存和数据库双写问题"&gt;缓存和数据库双写问题&lt;/h3&gt;
-&lt;p&gt;这是一个“先淘汰缓存&amp;quot;还是”先写数据库“的问题。通常没有明确的最佳方法。我们采用 &lt;a href="https://dzone.com/articles/cache-aside-pattern"&gt;&lt;strong&gt;Cache-Aside Pattern&lt;/strong&gt;&lt;/a&gt; 的方式：&lt;/p&gt;
+&lt;p&gt;这是一个“先淘汰缓存&amp;quot;还是”先写数据库“的问题。通常没有明确的最佳方法。我们采用 &lt;a href="https://dzone.com/articles/cache-aside-pattern" rel="noopener noreferrer"&gt;&lt;strong&gt;Cache-Aside Pattern&lt;/strong&gt;&lt;/a&gt;
+ 的方式：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;失效&lt;/strong&gt;：应用程序先从 cache 取数据，没有得到，则从数据库中取数据，成功后，放到缓存中。&lt;/li&gt;
@@ -750,7 +775,8 @@ Syslog 协议适配性很好，基于 mTLS 的 Syslog 传输可以在兼容传�
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;缺点：可能有小概率脏数据&lt;/strong&gt;。比如，一个是读操作，但是没有命中缓存，然后就到数据库中取数据，此时来了一个写操作，写完数据库后，让缓存失效，然后，之前的那个读操作再把老的数据放进去，所以，会造成脏数据。&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;考虑到写操作通常比读操作时间更长，所以 Cache-Aside Pattern 中的脏数据概率非常小，即便发生，用户在实际下单时系统仍然会去数据库里做数据校验，不会影响业务数据的正确性。&lt;/p&gt;
-&lt;p&gt;如果对缓存一致性有更高要求，可以采用&lt;a href="https://juejin.cn/post/6844903805641818120"&gt;延时双删策略或异步更新缓存&lt;/a&gt;。不过这两种方式本质都是用一定程度的串行化操作来解决并发造成的问题。&lt;/p&gt;
+&lt;p&gt;如果对缓存一致性有更高要求，可以采用&lt;a href="https://juejin.cn/post/6844903805641818120" rel="noopener noreferrer"&gt;延时双删策略或异步更新缓存&lt;/a&gt;
+。不过这两种方式本质都是用一定程度的串行化操作来解决并发造成的问题。&lt;/p&gt;
 &lt;h3 id="预热"&gt;预热&lt;/h3&gt;
 &lt;p&gt;预加载热点数据时需要注意的点是，要考虑好服务一旦重启或是生产环境发生事故，要避免服务重启后再次造成二次事故。&lt;/p&gt;
 &lt;h2 id="缓存系统常见的问题和应对思路"&gt;缓存系统常见的问题和应对思路&lt;/h2&gt;

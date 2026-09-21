@@ -8,7 +8,8 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sairahul1/status/2072258045460226373"&gt;20 Loop Design Patterns Every AI Engineer Should Know&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sairahul1/status/2072258045460226373" rel="noopener noreferrer"&gt;20 Loop Design Patterns Every AI Engineer Should Know&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Rahul (@sairahul1)&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;大多数 AI 工程师知道如何构建一个 agent。&lt;/p&gt;
@@ -351,7 +352,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/zachlloydtweets/status/2069789929073262945"&gt;We are now factory engineers, not product engineers&lt;/a&gt;··
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/zachlloydtweets/status/2069789929073262945" rel="noopener noreferrer"&gt;We are now factory engineers, not product engineers&lt;/a&gt;
+··
 &lt;strong&gt;作者&lt;/strong&gt;：Zach Lloyd··
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;figure
@@ -372,7 +374,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;p&gt;给所有工程师无限 token 预算、让他们随意使用交互式编码 Agent 的日子正在终结。取而代之，公司会把软件生产视为可变成本，而不是研发费用。它将出现在利润表的 COGS（销货成本）行上——因为公司想知道，在软件工厂上投入越多，边际收益是多少。&lt;/p&gt;
 &lt;p&gt;我写这些是因为，这就是 Warp 需要拥抱的心态。每个工程师必须停止认为自己是在直接修改代码库和产品，而应该通过&amp;quot;改善工厂&amp;quot;的视角来看待一切。&lt;/p&gt;
 &lt;p&gt;当然，在建设和改进工厂的过程中，你仍然需要直接改善产品——毕竟我们交付的产品才是为客户和用户创造价值的东西。但每当我们的工厂失败时，我们需要从中学习，下一次再往自动化的方向推进一步。随着时间的推移，自动化的比例会越来越高，直到我们的工作纯粹是提升效率，而不是把车从流水线上搬下来自己去造。&lt;/p&gt;
-&lt;p&gt;这对 Warp 尤其重要，因为我们的公司现在本身就是做工厂的生意。我们运营着一座工厂来改进开源的 Warp 终端——近百万开发者依赖它持续变好。同时我们也在推出一个叫 &lt;a href="http://www.oz.dev/"&gt;Oz&lt;/a&gt; 的平台，帮助其他公司把同样的工作流复用到他们最重要的产品上。工厂生意将是唯一重要的软件生产力生意——既然我们在卖这个，我们最好自己先拥抱它。&lt;/p&gt;
+&lt;p&gt;这对 Warp 尤其重要，因为我们的公司现在本身就是做工厂的生意。我们运营着一座工厂来改进开源的 Warp 终端——近百万开发者依赖它持续变好。同时我们也在推出一个叫 &lt;a href="http://www.oz.dev/" rel="noopener noreferrer"&gt;Oz&lt;/a&gt;
+ 的平台，帮助其他公司把同样的工作流复用到他们最重要的产品上。工厂生意将是唯一重要的软件生产力生意——既然我们在卖这个，我们最好自己先拥抱它。&lt;/p&gt;
 &lt;h2 id="需要改变什么自动化审计"&gt;需要改变什么：自动化审计&lt;/h2&gt;
 &lt;p&gt;第一，我们必须衡量吞吐量和效率。我们必须严格审视产品中有多少比例是自主交付的、成本是多少。我们现在还没有做到。当前最需要追踪的指标是：全自动完成任务的比例，以及完成这些任务的成本。&lt;/p&gt;
 &lt;p&gt;第二，我们必须强迫自己以&amp;quot;自动化优先&amp;quot;的思维方式面对一切。也就是说，每次使用交互式 agent（即人类在回路中）写代码，都要把它视为一个需要学习的失败。对每项任务，都应该遵循工厂的工作流，只在真正需要的时候才把东西从流水线上搬下来。现阶段我们经常需要这么做，没问题。但目标是越来越少。&lt;/p&gt;
@@ -402,7 +405,9 @@ if metrics.quality &amp;lt; threshold:
 &lt;li&gt;&lt;strong&gt;交付&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Monitor Agent&lt;/strong&gt; 运行，如果有问题则创建 issue，完成闭环&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;这个工作流应该看起来很熟悉——它就是我们为拥有 60k star 的&lt;a href="https://github.com/warpdotdev/warp"&gt;开源项目&lt;/a&gt;建立的流程。你可以在 &lt;a href="http://build.warp.dev/"&gt;build.warp.dev&lt;/a&gt; 看到它的实际运行状态。我的判断是，它发挥了大概一半的效用，但我们还没有真正全身心投入。我看到 build.warp.dev 上的 ready-to-implement 状态里堆积了 1300 个 issue，心里想的是：&amp;ldquo;我们还等什么？让 agent 去实现它们。&amp;rdquo; 我们必须让它完全跑起来。&lt;/p&gt;
+&lt;p&gt;这个工作流应该看起来很熟悉——它就是我们为拥有 60k star 的&lt;a href="https://github.com/warpdotdev/warp" rel="noopener noreferrer"&gt;开源项目&lt;/a&gt;
+建立的流程。你可以在 &lt;a href="http://build.warp.dev/" rel="noopener noreferrer"&gt;build.warp.dev&lt;/a&gt;
+ 看到它的实际运行状态。我的判断是，它发挥了大概一半的效用，但我们还没有真正全身心投入。我看到 build.warp.dev 上的 ready-to-implement 状态里堆积了 1300 个 issue，心里想的是：&amp;ldquo;我们还等什么？让 agent 去实现它们。&amp;rdquo; 我们必须让它完全跑起来。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -412,7 +417,8 @@ if metrics.quality &amp;lt; threshold:
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;每当我们不得不让人类介入流程，我们的平台 Oz 就需要记录这一点，并且让&lt;a href="https://www.warp.dev/blog/self-improvement-loop-for-skills"&gt;自我改进 agent&lt;/a&gt; 尝试优化流程，减少人类再次干预的概率。同样，我们需要自我改进 agent 持续监视工厂相关的对话，寻找 token 浪费的模式并建议效率提升方案。我们应该定期评估不同的 harness 和 prompt，记录哪些在下一次执行中表现更好。&lt;/p&gt;
+&lt;p&gt;每当我们不得不让人类介入流程，我们的平台 Oz 就需要记录这一点，并且让&lt;a href="https://www.warp.dev/blog/self-improvement-loop-for-skills" rel="noopener noreferrer"&gt;自我改进 agent&lt;/a&gt;
+ 尝试优化流程，减少人类再次干预的概率。同样，我们需要自我改进 agent 持续监视工厂相关的对话，寻找 token 浪费的模式并建议效率提升方案。我们应该定期评估不同的 harness 和 prompt，记录哪些在下一次执行中表现更好。&lt;/p&gt;
 &lt;p&gt;作为 Warp 的工程师，我们的首要工作是确保这套工作流顺畅运行，并让 Oz 提供尽可能最好的支持体验。如果我们做到了，工厂最终将达到递归自我改进的状态。这是黄金路径。&lt;/p&gt;
 &lt;p&gt;这听起来可能像是对苦差事的拥抱，或者是一个理想主义但不切实际的愿景——好像我们不能再摆弄代码了，或者要把所有时间花在审查 agent 生成的垃圾上。&lt;/p&gt;
 &lt;p&gt;我的看法不同。我认为这是软件工程最后一个、也是最重要的一个问题——可以称之为&lt;strong&gt;元工程&lt;/strong&gt;：设计一个让 coding agent 能够最高效地构建和交付有用东西的系统。&lt;/p&gt;
@@ -427,10 +433,12 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sethrosen/status/2066534763511316540"&gt;Please don&amp;rsquo;t implement a &amp;ldquo;company brain&amp;rdquo; and expect a learning loop&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sethrosen/status/2066534763511316540" rel="noopener noreferrer"&gt;Please don&amp;rsquo;t implement a &amp;ldquo;company brain&amp;rdquo; and expect a learning loop&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Seth Rosen&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
-&lt;p&gt;Satya 的那篇&lt;a href="https://x.com/satyanadella/status/2066182223213293753?s=20"&gt;推文&lt;/a&gt;爆了，不奇怪。&lt;/p&gt;
+&lt;p&gt;Satya 的那篇&lt;a href="https://x.com/satyanadella/status/2066182223213293753?s=20" rel="noopener noreferrer"&gt;推文&lt;/a&gt;
+爆了，不奇怪。&lt;/p&gt;
 &lt;p&gt;他把两件事联系在了一起——人力资本和算力资本——通过一个学习循环：人类如何引导 AI，AI 如何让人类更聪明，以及整个系统如何滚雪球。&lt;/p&gt;
 &lt;p&gt;我们团队花了九个月研究和构建这个东西。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;学习循环是你的长期 AI 战略。&lt;/strong&gt; 没有它，AI 在当下很惊艳，但长期来看会无声地衰减。&lt;/p&gt;
@@ -476,7 +484,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/omarsar0/status/2065880971031834786"&gt;Autonomous Long-Running Coding Agents&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/omarsar0/status/2065880971031834786" rel="noopener noreferrer"&gt;Autonomous Long-Running Coding Agents&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Elvis（@omarsar0），DAIR.AI Academy&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;figure
@@ -627,8 +636,10 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/elvissun/status/2065035615800864954"&gt;&lt;code&gt;/goal + Loss Functions: How to Distill a Product in 30 Hours with One Prompt [Full Playbook]&lt;/code&gt;&lt;/a&gt;
-&lt;strong&gt;作者&lt;/strong&gt;：Elvis (&lt;a href="https://x.com/elvissun"&gt;@elvissun&lt;/a&gt;)
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/elvissun/status/2065035615800864954" rel="noopener noreferrer"&gt;&lt;code&gt;/goal + Loss Functions: How to Distill a Product in 30 Hours with One Prompt [Full Playbook]&lt;/code&gt;&lt;/a&gt;
+
+&lt;strong&gt;作者&lt;/strong&gt;：Elvis (&lt;a href="https://x.com/elvissun" rel="noopener noreferrer"&gt;@elvissun&lt;/a&gt;
+)
 &lt;strong&gt;翻译&lt;/strong&gt;：AI 辅助翻译&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;99% 的人用 &lt;code&gt;/goal&lt;/code&gt; 和 agent loop 的方式是错的。&lt;/p&gt;
 &lt;p&gt;外面吹的是「长循环自主 agent：设定目标，走开，回来就拿到能跑的代码」。但顶尖的 agent 工程师半年前就在做同样的事了——用 harness engineering + spec-driven development：&lt;/p&gt;
@@ -785,7 +796,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://claude.com/blog/running-an-ai-native-engineering-org"&gt;Running an AI-native engineering org&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://claude.com/blog/running-an-ai-native-engineering-org" rel="noopener noreferrer"&gt;Running an AI-native engineering org&lt;/a&gt;
+&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Fiona Fung，Anthropic Claude Code &amp;amp; Claude Cowork 工程总监&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;翻译&lt;/strong&gt;：AI 辅助翻译&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;
@@ -869,8 +881,10 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://noperator.dev/posts/you-can-just-say-it/"&gt;You Can Just Say It&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Caleb Gross（&lt;a href="https://x.com/noperator"&gt;@noperator&lt;/a&gt;）&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://noperator.dev/posts/you-can-just-say-it/" rel="noopener noreferrer"&gt;You Can Just Say It&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Caleb Gross（&lt;a href="https://x.com/noperator" rel="noopener noreferrer"&gt;@noperator&lt;/a&gt;
+）&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;
 &lt;p&gt;有一种评估人类及其创造性产物价值的奇怪论证范式，大致长这样：在 AI 时代，某些角色还是应该优先用人类，因为 AI 永远无法执行该角色所需的任务。或者，至少人类做得更好。又或者，人类和 AI 的输出看起来可能差不多，但人类的产物更优，有一些微妙的风格原因是 AI 无法复制的。再或者，至少 AI 无法一致地复制它。&lt;/p&gt;
 &lt;p&gt;看看球门柱底座上那些被反复移动留下的擦痕。等混凝土凝固吧，28 天。&lt;/p&gt;
@@ -897,7 +911,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/intuitiveml/status/2043545596699750791"&gt;Why Your &amp;ldquo;AI-First&amp;rdquo; Strategy Is Probably Wrong&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/intuitiveml/status/2043545596699750791" rel="noopener noreferrer"&gt;Why Your &amp;ldquo;AI-First&amp;rdquo; Strategy Is Probably Wrong&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Peter Pang&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;
@@ -1036,7 +1051,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;p&gt;这些工具对任何团队都是可用的。我们的栈里没有任何东西是专有的。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;竞争优势在于围绕这些工具重新设计一切的决心，以及承受代价的意愿。&lt;/strong&gt; 代价是真实的：员工的不确定性、CTO 每天工作 18 小时、资深工程师质疑自己的价值、旧系统消失新系统尚未被证明的两周真空期。&lt;/p&gt;
 &lt;p&gt;我们承受了那个代价。两个月后，数字说明了一切。&lt;/p&gt;
-&lt;p&gt;我们是构建 agent 平台的公司。我们用 agent 构建了它。&lt;/p&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki/"&gt;DeepWIKI 是如何工作的&lt;/a&gt;我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
+&lt;p&gt;我们是构建 agent 平台的公司。我们用 agent 构建了它。&lt;/p&gt;</description></item><item><title>Cursor等AI编程工具的背后原理</title><link>https://sund.site/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/posts/2025/ast-chunk/</guid><description>&lt;p&gt;在上一篇文章&lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;DeepWIKI 是如何工作的&lt;/a&gt;
+我分享了 DeepWIKI 可能的实现方式。文中留了一个问题：DeepWIKI 是如何将源代码仓库分块的？&lt;/p&gt;
 &lt;p&gt;这个问题的答案就是 AST 分块。&lt;/p&gt;
 &lt;p&gt;这篇文章我想分析一下两个软件开发辅助工具（Cursor, Cline）都是怎么实现「索引代码」的，其实它们和 DeepWIKI 的原理没有本质区别，都使用了 AST 分块的方法。&lt;/p&gt;
 &lt;h2 id="ast"&gt;AST&lt;/h2&gt;
@@ -1080,13 +1096,15 @@ if metrics.quality &amp;lt; threshold:
 &lt;p&gt;后续编译器就可以遍历这个语法树，按节点转换成 Javascript 代码。&lt;/p&gt;
 &lt;p&gt;理解了 AST，就大致可以理解 DeepWIKI、甚至是 Cursor 这种代码编辑器如何构建代码索引的。&lt;/p&gt;
 &lt;h2 id="cursor"&gt;Cursor&lt;/h2&gt;
-&lt;p&gt;在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing"&gt;Cursor 的官方文档&lt;/a&gt;中，可以看到关于它如何索引用户代码的相关描述。&lt;/p&gt;
+&lt;p&gt;在&lt;a href="https://www.cursor.com/ja/security#codebase-indexing" rel="noopener noreferrer"&gt;Cursor 的官方文档&lt;/a&gt;
+中，可以看到关于它如何索引用户代码的相关描述。&lt;/p&gt;
 &lt;p&gt;Cursor 会扫描用户代码仓库，计算文件哈希值并构建 Merkle 树，类似 Git 比较文件差异的原理，Cursor 用 Merkle 树来比较用户空间文件的差异，并且将用户修改过的文件以增量的方式上传到 Cursor 的服务器。&lt;/p&gt;
 &lt;p&gt;被上传的文件，会被分块并嵌入，存储在 Turbopuffer 数据库中。这就是将源代码构建成 RAG 的过程。&lt;/p&gt;
 &lt;p&gt;这里的分块使用了 AST 工具将代码先结构化成语法树，然后将序列化后的语法树节点切成小块，最后嵌入成向量存储起来。&lt;/p&gt;
 &lt;p&gt;Turbopuffer 中不仅存储了向量化后的代码，而且存储了一些元信息，如这段代码的行号，源文件路径等。&lt;/p&gt;
 &lt;p&gt;当 Cursor 试图补全用户代码或根据上下文生成新代码时，Cursor 会检索这个 Turbopuffer 数据库，匹配到相似度最高的向量并得到这段代码的文件路径、行号。之后 Cursor 在用户代码仓库中查找到对应的源代码并放入 LLM 的系统上下文里。最后 LLM 返回生成的新代码给 Cursor。&lt;/p&gt;
-&lt;p&gt;有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;网友&lt;/a&gt;整理了这张流程图：&lt;/p&gt;
+&lt;p&gt;有&lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934" rel="noopener noreferrer"&gt;网友&lt;/a&gt;
+整理了这张流程图：&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -1097,7 +1115,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline 的官方博客&lt;/a&gt; 可以让我们窥见它的实现思路。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing" rel="noopener noreferrer"&gt;Cline 的官方博客&lt;/a&gt;
+ 可以让我们窥见它的实现思路。&lt;/p&gt;
 &lt;p&gt;Cline 是一个辅助编码的 AI Agent。Cline 并不上传代码并构建 RAG，而是主张更安全、可靠的方式管理用户的代码仓库。&lt;/p&gt;
 &lt;p&gt;下面是开发者对 Cline 原理的介绍：&lt;/p&gt;
 &lt;blockquote&gt;
@@ -1122,5 +1141,6 @@ if metrics.quality &amp;lt; threshold:
 &lt;p&gt;总的来说，AST 是理解代码语法结构的重要工具,不同的实现方式各有优劣。&lt;/p&gt;
 &lt;h2 id="扩展阅读"&gt;扩展阅读&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/" rel="noopener noreferrer"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

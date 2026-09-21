@@ -304,7 +304,8 @@ There must be a mechanism to &amp;ldquo;compress history while preserving key in
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;h2 id="case-study-pi-agents-design-philosophy-and-architecture"&gt;Case Study: PI Agent&amp;rsquo;s Design Philosophy and Architecture&lt;/h2&gt;
-&lt;p&gt;The above covers &amp;ldquo;general Agent framework design.&amp;rdquo; Now let&amp;rsquo;s ground it in the recently popular minimalist framework &lt;a href="https://github.com/earendil-works/pi"&gt;PI Agent&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The above covers &amp;ldquo;general Agent framework design.&amp;rdquo; Now let&amp;rsquo;s ground it in the recently popular minimalist framework &lt;a href="https://github.com/earendil-works/pi" rel="noopener noreferrer"&gt;PI Agent&lt;/a&gt;
+.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s look at how this framework designs an Agent.&lt;/p&gt;
 &lt;h3 id="design-philosophy"&gt;Design Philosophy&lt;/h3&gt;
 &lt;ol&gt;
@@ -496,7 +497,8 @@ $$&lt;/p&gt;
 &lt;p&gt;How do you communicate with an Ex-J?&lt;/p&gt;
 &lt;p&gt;I don&amp;rsquo;t know the answer either, so I humbly went to Chat for advice and asked GPT. The answer is: it takes two steps. First, soothe the other person&amp;rsquo;s emotions and express understanding. Then use vague steps in place of precise conclusions—for example, if you can&amp;rsquo;t make a plan, just say you can&amp;rsquo;t decide right now, but if X happens, here&amp;rsquo;s how we can respond. Let them see your thought process.&lt;/p&gt;
 &lt;p&gt;This way, by using rough steps or fuzzy time points instead of exact answers, you ease their need for control without letting them pull you into their pace.&lt;/p&gt;
-&lt;p&gt;Sigh, being a person is exhausting. Finally, I hope you become a P-Type. And if you really can&amp;rsquo;t, please promise me—at least be a good J-Type, okay?&lt;/p&gt;</description></item><item><title>Omarchy: Some Setup Tweaks for a Chinese-Language Environment</title><link>https://sund.site/en/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/en/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;I recently installed DHH&amp;rsquo;s &lt;a href="https://omarchy.org/"&gt;Omarchy&lt;/a&gt; (an Arch Linux distribution based on the Hyprland desktop environment) on my home computer.&lt;/p&gt;
+&lt;p&gt;Sigh, being a person is exhausting. Finally, I hope you become a P-Type. And if you really can&amp;rsquo;t, please promise me—at least be a good J-Type, okay?&lt;/p&gt;</description></item><item><title>Omarchy: Some Setup Tweaks for a Chinese-Language Environment</title><link>https://sund.site/en/posts/2025/omarchy-cn-setup/</link><pubDate>Wed, 22 Oct 2025 23:21:21 +0800</pubDate><guid>https://sund.site/en/posts/2025/omarchy-cn-setup/</guid><description>&lt;p&gt;I recently installed DHH&amp;rsquo;s &lt;a href="https://omarchy.org/" rel="noopener noreferrer"&gt;Omarchy&lt;/a&gt;
+ (an Arch Linux distribution based on the Hyprland desktop environment) on my home computer.&lt;/p&gt;
 &lt;p&gt;After installation, there were a few configuration tweaks I needed to make. I&amp;rsquo;m recording them in this post for reference.&lt;/p&gt;
 &lt;h2 id="4k-monitor-settings"&gt;4K Monitor Settings&lt;/h2&gt;
 &lt;p&gt;Modify the system menu Setup - Monitor, and set the parameters based on your own display&amp;rsquo;s resolution, following the comments in the configuration file. For example, my 27-inch 4K display:&lt;/p&gt;
@@ -506,7 +508,8 @@ monitor=,preferred,auto,1.875
 &lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;env = QT_AUTO_SCREEN_SCALE_FACTOR,1
 env = QT_SCALE_FACTOR,1.75
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="chinese-input-method"&gt;Chinese Input Method&lt;/h2&gt;
-&lt;p&gt;Refer to &lt;a href="https://manateelazycat.github.io/2024/12/17/fcitx-best-config/"&gt;Fcitx Best Configuration Practices&lt;/a&gt;. The section titled &amp;ldquo;Installing emacs-rime&amp;rdquo; in that article can be skipped if you don&amp;rsquo;t use emacs.&lt;/p&gt;
+&lt;p&gt;Refer to &lt;a href="https://manateelazycat.github.io/2024/12/17/fcitx-best-config/" rel="noopener noreferrer"&gt;Fcitx Best Configuration Practices&lt;/a&gt;
+. The section titled &amp;ldquo;Installing emacs-rime&amp;rdquo; in that article can be skipped if you don&amp;rsquo;t use emacs.&lt;/p&gt;
 &lt;h2 id="terminal-font-settings"&gt;Terminal Font Settings&lt;/h2&gt;
 &lt;p&gt;The default system fonts aren&amp;rsquo;t very friendly to Chinese in the terminal. I like the &lt;code&gt;Maple Mono&lt;/code&gt; font, which you can install via the AUR package &lt;code&gt;maple-mono-nf-cn&lt;/code&gt;. Then modify the font settings in &lt;code&gt;~/.config/alacritty/alacritty.toml&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;font&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
@@ -546,7 +549,8 @@ env = QT_SCALE_FACTOR,1.75
 &lt;p&gt;On the other hand, as a project lead, I care more about whether requirements are truly understood and delivered, and how to verify what the engineers actually built.&lt;/p&gt;
 &lt;p&gt;The arrival of AI agents has changed the agile workflow. With a combination like OpenCode + Playwright MCP server, the AI only needs to read user documentation to pick up the basics of UI operations. It can then open a browser, follow the natural-language description of a test case, and click through page elements step by step to complete an entire business flow. With a bit of guidance it can also produce the exact steps it took, the results, the issues it hit, and a complete test report. This is not far from hiring a junior QA engineer.&lt;/p&gt;
 &lt;p&gt;Because the maintenance cost drops dramatically (you only maintain a Markdown file describing the test cases), a lot of detailed UI test scenarios that were previously impractical can now be covered by an AI agent. Most importantly, this work does not depend on engineers at all — product managers, POs, or BAs can write test cases directly in natural language, closing the loop between writing user stories and verifying features, and removing the ambiguity that comes from requirements being relayed between business, engineering, and QA.&lt;/p&gt;
-&lt;p&gt;The &lt;a href="https://en.wikipedia.org/wiki/Toyota_Production_System"&gt;Toyota Production System&lt;/a&gt; lists several sources of waste in production:&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://en.wikipedia.org/wiki/Toyota_Production_System" rel="noopener noreferrer"&gt;Toyota Production System&lt;/a&gt;
+ lists several sources of waste in production:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Overproduction&lt;/li&gt;
 &lt;li&gt;Waiting&lt;/li&gt;
@@ -654,9 +658,11 @@ nvme0n1
 &lt;/ul&gt;
 &lt;p&gt;Years later, Hollywood scrapped these regulations, replacing them with a more relaxed film rating system. The photo became a classic work of art satirizing that era.&lt;/p&gt;
 &lt;p&gt;Returning to the original question: in a world where the old guard sets the rules, how do you take care of yourself?&lt;/p&gt;
-&lt;p&gt;The answer is: play &lt;a href="https://book.douban.com/subject/25742296/"&gt;an infinite game&lt;/a&gt; (?).&lt;/p&gt;
+&lt;p&gt;The answer is: play &lt;a href="https://book.douban.com/subject/25742296/" rel="noopener noreferrer"&gt;an infinite game&lt;/a&gt;
+ (?).&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Finite games are played within boundaries. Infinite games are played with boundaries.&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>How AI Coding Tools Like Cursor Work Under the Hood</title><link>https://sund.site/en/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/en/posts/2025/ast-chunk/</guid><description>&lt;p&gt;In my previous post, &lt;a href="https://sund.site/en/posts/2025/build-deepwiki/"&gt;How DeepWiki Works&lt;/a&gt;, I shared one possible way DeepWiki is implemented. I left a question there: how does DeepWiki chunk a source code repository?&lt;/p&gt;
+&lt;p&gt;Finite games are played within boundaries. Infinite games are played with boundaries.&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>How AI Coding Tools Like Cursor Work Under the Hood</title><link>https://sund.site/en/posts/2025/ast-chunk/</link><pubDate>Mon, 02 Jun 2025 07:58:17 +0800</pubDate><guid>https://sund.site/en/posts/2025/ast-chunk/</guid><description>&lt;p&gt;In my previous post, &lt;a href="https://sund.site/posts/2025/build-deepwiki"&gt;How DeepWiki Works&lt;/a&gt;
+, I shared one possible way DeepWiki is implemented. I left a question there: how does DeepWiki chunk a source code repository?&lt;/p&gt;
 &lt;p&gt;The answer is AST chunking.&lt;/p&gt;
 &lt;p&gt;In this post I want to analyze how two software development aids — Cursor and Cline — implement &amp;ldquo;code indexing.&amp;rdquo; In fact, they are not fundamentally different from DeepWiki; all of them use AST chunking.&lt;/p&gt;
 &lt;h2 id="ast"&gt;AST&lt;/h2&gt;
@@ -700,13 +706,15 @@ nvme0n1
 &lt;p&gt;A compiler can then walk this tree and translate it node by node into JavaScript code.&lt;/p&gt;
 &lt;p&gt;Once you understand ASTs, you roughly understand how DeepWiki — and even code editors like Cursor — build code indexes.&lt;/p&gt;
 &lt;h2 id="cursor"&gt;Cursor&lt;/h2&gt;
-&lt;p&gt;In &lt;a href="https://www.cursor.com/ja/security#codebase-indexing"&gt;Cursor&amp;rsquo;s official documentation&lt;/a&gt;, you can find a description of how it indexes user code.&lt;/p&gt;
+&lt;p&gt;In &lt;a href="https://www.cursor.com/ja/security#codebase-indexing" rel="noopener noreferrer"&gt;Cursor&amp;rsquo;s official documentation&lt;/a&gt;
+, you can find a description of how it indexes user code.&lt;/p&gt;
 &lt;p&gt;Cursor scans the user&amp;rsquo;s repository, computes file hashes, and builds a Merkle tree. Similar to the way Git compares file diffs, Cursor uses the Merkle tree to detect file changes in the user&amp;rsquo;s workspace and incrementally uploads modified files to Cursor&amp;rsquo;s servers.&lt;/p&gt;
 &lt;p&gt;Uploaded files are then chunked and embedded, and stored in a Turbopuffer database. This is the process of building a RAG over the source code.&lt;/p&gt;
 &lt;p&gt;The chunking step uses an AST tool to structure the code into a syntax tree, then cuts the serialized tree nodes into small chunks, and finally embeds them as vectors for storage.&lt;/p&gt;
 &lt;p&gt;Turbopuffer does not only store the vectorized code; it also stores metadata such as the line numbers and source file paths of the code segments.&lt;/p&gt;
 &lt;p&gt;When Cursor tries to autocomplete user code or generate new code from context, it queries the Turbopuffer database, finds the vectors with the highest similarity, and gets the file path and line numbers for that segment. Cursor then reads the corresponding source code from the user&amp;rsquo;s repository and puts it into the LLM&amp;rsquo;s system context. Finally, the LLM returns the newly generated code to Cursor.&lt;/p&gt;
-&lt;p&gt;A &lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934"&gt;user on X&lt;/a&gt; put together this flow diagram:&lt;/p&gt;
+&lt;p&gt;A &lt;a href="https://x.com/ProgramerJohann/status/1927296026861252934" rel="noopener noreferrer"&gt;user on X&lt;/a&gt;
+ put together this flow diagram:&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -717,7 +725,8 @@ nvme0n1
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;h2 id="cline"&gt;Cline&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing"&gt;Cline&amp;rsquo;s official blog&lt;/a&gt; offers a glimpse of how it is implemented.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://cline.bot/blog/why-cline-doesnt-index-your-codebase-and-why-thats-a-good-thing" rel="noopener noreferrer"&gt;Cline&amp;rsquo;s official blog&lt;/a&gt;
+ offers a glimpse of how it is implemented.&lt;/p&gt;
 &lt;p&gt;Cline is an AI agent that helps with coding. Cline does not upload code and build a RAG; instead, it takes a safer and more reliable approach to managing the user&amp;rsquo;s repository.&lt;/p&gt;
 &lt;p&gt;Here is the developers&amp;rsquo; description of how Cline works:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -742,8 +751,10 @@ nvme0n1
 &lt;p&gt;In general, ASTs are an important tool for understanding the syntactic structure of code, and different implementations have their own trade-offs.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;Further Reading&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>How DeepWiki Works</title><link>https://sund.site/en/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/en/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWiki&lt;/a&gt; is an AI agent project, provided by Devin.ai, that generates detailed documentation from a source code repository. Ever since it went viral, I have been curious about how it works.&lt;/p&gt;
+&lt;li&gt;&lt;a href="http://www.hubwiz.com/blog/ast-based-rag-code-chunking/" rel="noopener noreferrer"&gt;http://www.hubwiz.com/blog/ast-based-rag-code-chunking/&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>How DeepWiki Works</title><link>https://sund.site/en/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/en/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com" rel="noopener noreferrer"&gt;DeepWiki&lt;/a&gt;
+ is an AI agent project, provided by Devin.ai, that generates detailed documentation from a source code repository. Ever since it went viral, I have been curious about how it works.&lt;/p&gt;
 &lt;p&gt;I combed through online resources and several open-source projects and arrived at a relatively clear picture of the workflow. For the harder parts, I will follow up with my findings in later posts.&lt;/p&gt;
 &lt;h2 id="building-a-map-of-the-code-structure"&gt;Building a Map of the Code Structure&lt;/h2&gt;
 &lt;p&gt;At its core, DeepWiki is a RAG system. It takes a source code repository as input, parses the code, and converts it into two parts: &lt;strong&gt;metadata representing the syntactic structure and file structure&lt;/strong&gt; and &lt;strong&gt;vector data representing code descriptions and snippets&lt;/strong&gt;. The metadata is stored in a relational database, while the corresponding code snippets are stored in a vector database for later LLM retrieval.&lt;/p&gt;
@@ -770,9 +781,11 @@ nvme0n1
 &lt;p&gt;A particularly interesting part of the process above is how to chunk code before embedding. For natural language, chunking is usually based on paragraphs, sentences, and punctuation, so each chunk contains the full context of a sentence or paragraph.&lt;/p&gt;
 &lt;p&gt;For code, it is different. A function body, for example, is wrapped in &lt;code&gt;{&lt;/code&gt; and &lt;code&gt;}&lt;/code&gt;. If you tokenize it with a natural-language tokenizer, the context will be split across different chunks, which hurts the accuracy of vector retrieval.&lt;/p&gt;
 &lt;p&gt;There are currently two approaches. The first is to chunk the whole file. In that case, the file size cannot exceed the chunk-size limit, and the chunks lack the real call-relationship context. We know that the unit of code organization is not the file (the file tree is just a human-friendly organization) — it is a graph of class- and function-level dependencies.&lt;/p&gt;
-&lt;p&gt;The second approach is to first use a syntax tool to perform static analysis on the code file, and then split the code along the syntactic structure based on the analysis. This is more complex to implement, and I could not find much material on it online. Fortunately, I came across &lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;, which describes how to use static syntax analysis to chunk code and build an efficient RAG system for a code repository. The article does not provide an open-source implementation, though. Considering that this is a core technology of a commercial product, it is well worth digging deeper into. I will keep following this area of research.&lt;/p&gt;
+&lt;p&gt;The second approach is to first use a syntax tool to perform static analysis on the code file, and then split the code along the syntactic structure based on the analysis. This is more complex to implement, and I could not find much material on it online. Fortunately, I came across &lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/" rel="noopener noreferrer"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;
+, which describes how to use static syntax analysis to chunk code and build an efficient RAG system for a code repository. The article does not provide an open-source implementation, though. Considering that this is a core technology of a commercial product, it is well worth digging deeper into. I will keep following this area of research.&lt;/p&gt;
 &lt;h2 id="difficulty-2-parsing-the-syntax-structure"&gt;Difficulty 2: Parsing the Syntax Structure&lt;/h2&gt;
-&lt;p&gt;Parsing metadata is somewhat simpler than vector data. I found some clues in another open-source project, &lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Parsing metadata is somewhat simpler than vector data. I found some clues in another open-source project, &lt;a href="https://github.com/ozyyshr/RepoGraph" rel="noopener noreferrer"&gt;Repo Graph&lt;/a&gt;
+.&lt;/p&gt;
 &lt;p&gt;That project uses &lt;code&gt;tree-sitter&lt;/code&gt; to analyze the project&amp;rsquo;s syntax structure and produces three types of metadata files:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;tag.json&lt;/code&gt;: basic information such as the path, line number, and description of a file, function, or class.&lt;/li&gt;
@@ -783,7 +796,8 @@ nvme0n1
 &lt;p&gt;From this implementation, it looks like the embedding process in Difficulty 1 could also use the code metadata generated by &lt;code&gt;tree-sitter&lt;/code&gt; to chunk the code by line.&lt;/p&gt;
 &lt;h2 id="prompt-engineering"&gt;Prompt Engineering&lt;/h2&gt;
 &lt;p&gt;In the RAG query phase, you need to assemble different prompts based on the type of metadata being processed.&lt;/p&gt;
-&lt;p&gt;The &lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt; project has plenty of prompts worth referencing:&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://github.com/metauto-ai/agent-as-a-judge" rel="noopener noreferrer"&gt;Agent as a Judge&lt;/a&gt;
+ project has plenty of prompts worth referencing:&lt;/p&gt;
 &lt;p&gt;Prompt for generating an overview:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Provide a concise overview of this repository focused primarily on:
 * Purpose and Scope: What is this project&amp;#39;s main purpose?
@@ -820,7 +834,10 @@ nvme0n1
 &lt;p&gt;Although there are some open-source projects to reference, the core chunking strategy implementation still needs to be studied in depth.&lt;/p&gt;
 &lt;h2 id="reference-projects"&gt;Reference Projects&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge" rel="noopener noreferrer"&gt;Agent as a Judge&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph" rel="noopener noreferrer"&gt;Repo Graph&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open" rel="noopener noreferrer"&gt;DeepWiki Open&lt;/a&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

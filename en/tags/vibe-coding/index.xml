@@ -6,7 +6,8 @@
 &lt;p&gt;On the other hand, as a project lead, I care more about whether requirements are truly understood and delivered, and how to verify what the engineers actually built.&lt;/p&gt;
 &lt;p&gt;The arrival of AI agents has changed the agile workflow. With a combination like OpenCode + Playwright MCP server, the AI only needs to read user documentation to pick up the basics of UI operations. It can then open a browser, follow the natural-language description of a test case, and click through page elements step by step to complete an entire business flow. With a bit of guidance it can also produce the exact steps it took, the results, the issues it hit, and a complete test report. This is not far from hiring a junior QA engineer.&lt;/p&gt;
 &lt;p&gt;Because the maintenance cost drops dramatically (you only maintain a Markdown file describing the test cases), a lot of detailed UI test scenarios that were previously impractical can now be covered by an AI agent. Most importantly, this work does not depend on engineers at all — product managers, POs, or BAs can write test cases directly in natural language, closing the loop between writing user stories and verifying features, and removing the ambiguity that comes from requirements being relayed between business, engineering, and QA.&lt;/p&gt;
-&lt;p&gt;The &lt;a href="https://en.wikipedia.org/wiki/Toyota_Production_System"&gt;Toyota Production System&lt;/a&gt; lists several sources of waste in production:&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://en.wikipedia.org/wiki/Toyota_Production_System" rel="noopener noreferrer"&gt;Toyota Production System&lt;/a&gt;
+ lists several sources of waste in production:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Overproduction&lt;/li&gt;
 &lt;li&gt;Waiting&lt;/li&gt;
@@ -16,7 +17,8 @@
 &lt;li&gt;Unnecessary motion&lt;/li&gt;
 &lt;li&gt;Defects&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;AI agents address, to some extent, three of these wastes: &amp;ldquo;overproduction&amp;rdquo; (writing test code over and over), &amp;ldquo;waiting&amp;rdquo; (waiting from requirements to implementation to test cases before a feature can be verified), and &amp;ldquo;unnecessary transport&amp;rdquo; (business requirements being passed between different people).&lt;/p&gt;</description></item><item><title>How DeepWiki Works</title><link>https://sund.site/en/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/en/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com"&gt;DeepWiki&lt;/a&gt; is an AI agent project, provided by Devin.ai, that generates detailed documentation from a source code repository. Ever since it went viral, I have been curious about how it works.&lt;/p&gt;
+&lt;p&gt;AI agents address, to some extent, three of these wastes: &amp;ldquo;overproduction&amp;rdquo; (writing test code over and over), &amp;ldquo;waiting&amp;rdquo; (waiting from requirements to implementation to test cases before a feature can be verified), and &amp;ldquo;unnecessary transport&amp;rdquo; (business requirements being passed between different people).&lt;/p&gt;</description></item><item><title>How DeepWiki Works</title><link>https://sund.site/en/posts/2025/build-deepwiki/</link><pubDate>Sat, 24 May 2025 12:50:40 +0800</pubDate><guid>https://sund.site/en/posts/2025/build-deepwiki/</guid><description>&lt;p&gt;&lt;a href="https://deepwiki.com" rel="noopener noreferrer"&gt;DeepWiki&lt;/a&gt;
+ is an AI agent project, provided by Devin.ai, that generates detailed documentation from a source code repository. Ever since it went viral, I have been curious about how it works.&lt;/p&gt;
 &lt;p&gt;I combed through online resources and several open-source projects and arrived at a relatively clear picture of the workflow. For the harder parts, I will follow up with my findings in later posts.&lt;/p&gt;
 &lt;h2 id="building-a-map-of-the-code-structure"&gt;Building a Map of the Code Structure&lt;/h2&gt;
 &lt;p&gt;At its core, DeepWiki is a RAG system. It takes a source code repository as input, parses the code, and converts it into two parts: &lt;strong&gt;metadata representing the syntactic structure and file structure&lt;/strong&gt; and &lt;strong&gt;vector data representing code descriptions and snippets&lt;/strong&gt;. The metadata is stored in a relational database, while the corresponding code snippets are stored in a vector database for later LLM retrieval.&lt;/p&gt;
@@ -43,9 +45,11 @@
 &lt;p&gt;A particularly interesting part of the process above is how to chunk code before embedding. For natural language, chunking is usually based on paragraphs, sentences, and punctuation, so each chunk contains the full context of a sentence or paragraph.&lt;/p&gt;
 &lt;p&gt;For code, it is different. A function body, for example, is wrapped in &lt;code&gt;{&lt;/code&gt; and &lt;code&gt;}&lt;/code&gt;. If you tokenize it with a natural-language tokenizer, the context will be split across different chunks, which hurts the accuracy of vector retrieval.&lt;/p&gt;
 &lt;p&gt;There are currently two approaches. The first is to chunk the whole file. In that case, the file size cannot exceed the chunk-size limit, and the chunks lack the real call-relationship context. We know that the unit of code organization is not the file (the file tree is just a human-friendly organization) — it is a graph of class- and function-level dependencies.&lt;/p&gt;
-&lt;p&gt;The second approach is to first use a syntax tool to perform static analysis on the code file, and then split the code along the syntactic structure based on the analysis. This is more complex to implement, and I could not find much material on it online. Fortunately, I came across &lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;, which describes how to use static syntax analysis to chunk code and build an efficient RAG system for a code repository. The article does not provide an open-source implementation, though. Considering that this is a core technology of a commercial product, it is well worth digging deeper into. I will keep following this area of research.&lt;/p&gt;
+&lt;p&gt;The second approach is to first use a syntax tool to perform static analysis on the code file, and then split the code along the syntactic structure based on the analysis. This is more complex to implement, and I could not find much material on it online. Fortunately, I came across &lt;a href="https://www.qodo.ai/blog/rag-for-large-scale-code-repos/" rel="noopener noreferrer"&gt;RAG for a Codebase with 10k Repos&lt;/a&gt;
+, which describes how to use static syntax analysis to chunk code and build an efficient RAG system for a code repository. The article does not provide an open-source implementation, though. Considering that this is a core technology of a commercial product, it is well worth digging deeper into. I will keep following this area of research.&lt;/p&gt;
 &lt;h2 id="difficulty-2-parsing-the-syntax-structure"&gt;Difficulty 2: Parsing the Syntax Structure&lt;/h2&gt;
-&lt;p&gt;Parsing metadata is somewhat simpler than vector data. I found some clues in another open-source project, &lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Parsing metadata is somewhat simpler than vector data. I found some clues in another open-source project, &lt;a href="https://github.com/ozyyshr/RepoGraph" rel="noopener noreferrer"&gt;Repo Graph&lt;/a&gt;
+.&lt;/p&gt;
 &lt;p&gt;That project uses &lt;code&gt;tree-sitter&lt;/code&gt; to analyze the project&amp;rsquo;s syntax structure and produces three types of metadata files:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;tag.json&lt;/code&gt;: basic information such as the path, line number, and description of a file, function, or class.&lt;/li&gt;
@@ -56,7 +60,8 @@
 &lt;p&gt;From this implementation, it looks like the embedding process in Difficulty 1 could also use the code metadata generated by &lt;code&gt;tree-sitter&lt;/code&gt; to chunk the code by line.&lt;/p&gt;
 &lt;h2 id="prompt-engineering"&gt;Prompt Engineering&lt;/h2&gt;
 &lt;p&gt;In the RAG query phase, you need to assemble different prompts based on the type of metadata being processed.&lt;/p&gt;
-&lt;p&gt;The &lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt; project has plenty of prompts worth referencing:&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://github.com/metauto-ai/agent-as-a-judge" rel="noopener noreferrer"&gt;Agent as a Judge&lt;/a&gt;
+ project has plenty of prompts worth referencing:&lt;/p&gt;
 &lt;p&gt;Prompt for generating an overview:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Provide a concise overview of this repository focused primarily on:
 * Purpose and Scope: What is this project&amp;#39;s main purpose?
@@ -93,10 +98,14 @@
 &lt;p&gt;Although there are some open-source projects to reference, the core chunking strategy implementation still needs to be studied in depth.&lt;/p&gt;
 &lt;h2 id="reference-projects"&gt;Reference Projects&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge"&gt;Agent as a Judge&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph"&gt;Repo Graph&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open"&gt;DeepWiki Open&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>Why You Shouldn't Let AI Generate Your Unit Tests</title><link>https://sund.site/en/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/en/posts/2025/do-not-vibe-testing/</guid><description>&lt;p&gt;Recently I heard Hailong Zhang, founder of Gru.ai, mention in a &lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9"&gt;podcast&lt;/a&gt; that automatically generating unit tests is the main direction they are pursuing in AI coding.&lt;/p&gt;
+&lt;li&gt;&lt;a href="https://github.com/metauto-ai/agent-as-a-judge" rel="noopener noreferrer"&gt;Agent as a Judge&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ozyyshr/RepoGraph" rel="noopener noreferrer"&gt;Repo Graph&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/AsyncFuncAI/deepwiki-open" rel="noopener noreferrer"&gt;DeepWiki Open&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Why You Shouldn't Let AI Generate Your Unit Tests</title><link>https://sund.site/en/posts/2025/do-not-vibe-testing/</link><pubDate>Thu, 01 May 2025 09:27:36 +0800</pubDate><guid>https://sund.site/en/posts/2025/do-not-vibe-testing/</guid><description>&lt;p&gt;Recently I heard Hailong Zhang, founder of Gru.ai, mention in a &lt;a href="https://www.xiaoyuzhoufm.com/episode/671c9a42eb46cd6655da1e6f?s=eyJ1IjogIjVlN2M2M2UzYjNjNWJjYTVmNjQxMTJkNCJ9" rel="noopener noreferrer"&gt;podcast&lt;/a&gt;
+ that automatically generating unit tests is the main direction they are pursuing in AI coding.&lt;/p&gt;
 &lt;p&gt;Gru.ai&amp;rsquo;s website has these two lines:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Forget about unit testing – get covered automatically
@@ -118,7 +127,9 @@ Harness the expertise of AI engineers to boost your team&amp;rsquo;s testing eff
 &lt;p&gt;From a cost perspective, Gemini 2.0 Flash Thinking is a fast and economical model for simple problems. For complex problems, going straight to Claude 3.7 may be easier to keep costs under control.&lt;/p&gt;
 &lt;p&gt;For task execution (Act), Deepseek-V3 is very inconsistent—it often gets stuck in loops or loses context. Claude is too expensive, while Gemini 2.0 Flash is a relatively accurate and cost-effective model. The domestic Qwen series doesn&amp;rsquo;t fully support Function Calling, and Cline doesn&amp;rsquo;t support them either, so I can&amp;rsquo;t test them for now.&lt;/p&gt;
 &lt;h2 id="tackling-the-tricky-problems-of-ai-coding"&gt;Tackling the Tricky Problems of AI Coding&lt;/h2&gt;
-&lt;p&gt;I recently read the article &lt;a href="https://ezyang.github.io/ai-blindspots/"&gt;AI Blindspots&lt;/a&gt;. The author systematically catalogs the problems encountered in AI programming and shares his thinking. It was very inspiring to me. I used an Agent to translate it into Chinese and then polished it by hand—you can read it here: &lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5"&gt;AI Programming Blindspots&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I recently read the article &lt;a href="https://ezyang.github.io/ai-blindspots/" rel="noopener noreferrer"&gt;AI Blindspots&lt;/a&gt;
+. The author systematically catalogs the problems encountered in AI programming and shares his thinking. It was very inspiring to me. I used an Agent to translate it into Chinese and then polished it by hand—you can read it here: &lt;a href="https://sund.notion.site/AI-1be8ce9d275d80649a29e541d310d5c5" rel="noopener noreferrer"&gt;AI Programming Blindspots&lt;/a&gt;
+.&lt;/p&gt;
 &lt;p&gt;In summary, the three key points to solving AI problems are still: more accurate prompts, more complete context, and a smaller problem scope.&lt;/p&gt;
 &lt;p&gt;I believe that as technology evolves, programming paradigms will undergo earth-shaking changes. If refactoring becomes this easy, should Martin Fowler&amp;rsquo;s &lt;em&gt;Refactoring&lt;/em&gt; get a new edition for the AI era? If documentation is no longer read by people but fed to models as context, what should documentation look like? Will providing a vectorized documentation interface for large models to call become the new normal in future programming frameworks?&lt;/p&gt;
 &lt;p&gt;I look forward to the future.&lt;/p&gt;</description></item></channel></rss>

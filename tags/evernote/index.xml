@@ -42,8 +42,10 @@
 &lt;p&gt;基于这两种原则去管理分类和标签，就可以保证你的检索体系不崩溃的同时，检索效率最高。比如我先搜索「健身」分类，发现文章太多，于是我加上&lt;code&gt;饮食&lt;/code&gt;相关的标签，就可以轻松过滤掉大部分信息。标签越具体，组合越详细，过滤效果越好。&lt;/p&gt;
 &lt;p&gt;另外，假设我只记得文章的模糊内容，也可以直接搜索标签或内容。&lt;/p&gt;
 &lt;h2 id="完全标签化的思路"&gt;完全标签化的思路&lt;/h2&gt;
-&lt;p&gt;现在流行一种管理方式，抛弃分类，完全用标签管理。拿印象笔记为例，在这篇 &lt;a href="https://medium.com/@thomashoneyman/using-evernote-the-right-way-ef61f530d1ad"&gt;《Using Evernote (the right way)》&lt;/a&gt; 的文章中，作者抛弃了常见的笔记本分类法，完全用标签来整理笔记。笔记本只保留「收件箱」、「收藏夹」和「废纸篓」。这种方式免去了整理笔记本的麻烦，但同时，造成了检索时必须依赖标签。作者为了解决这一难题，提出了一种被我称之为**「给标签分类」（ 原文是 Organize Tags）**的做法。&lt;/p&gt;
-&lt;p&gt;其实给标签分类的做法非常常见，以 &lt;a href="https://www.douban.com/"&gt;豆瓣&lt;/a&gt; 为例，你肯定见过下边的标签分类方式：&lt;/p&gt;
+&lt;p&gt;现在流行一种管理方式，抛弃分类，完全用标签管理。拿印象笔记为例，在这篇 &lt;a href="https://medium.com/@thomashoneyman/using-evernote-the-right-way-ef61f530d1ad" rel="noopener noreferrer"&gt;《Using Evernote (the right way)》&lt;/a&gt;
+ 的文章中，作者抛弃了常见的笔记本分类法，完全用标签来整理笔记。笔记本只保留「收件箱」、「收藏夹」和「废纸篓」。这种方式免去了整理笔记本的麻烦，但同时，造成了检索时必须依赖标签。作者为了解决这一难题，提出了一种被我称之为**「给标签分类」（ 原文是 Organize Tags）**的做法。&lt;/p&gt;
+&lt;p&gt;其实给标签分类的做法非常常见，以 &lt;a href="https://www.douban.com/" rel="noopener noreferrer"&gt;豆瓣&lt;/a&gt;
+ 为例，你肯定见过下边的标签分类方式：&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;

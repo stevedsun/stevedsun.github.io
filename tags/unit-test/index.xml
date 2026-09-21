@@ -8,7 +8,8 @@
 &lt;h2 id="解决思路"&gt;解决思路&lt;/h2&gt;
 &lt;p&gt;AI 编写代码的核心问题，可以归纳为不可观测性和缺少上下文造成的低维护性。为了解决这两个问题，我们需要先回顾一下传统软件工序如何让代码更易观测和维护。&lt;/p&gt;
 &lt;h3 id="人类主导的单元测试"&gt;人类主导的单元测试&lt;/h3&gt;
-&lt;p&gt;单元测试是代码的说明书。复杂的业务逻辑通常需要阅读大量代码才能看懂。但是熟练的程序员会先看单元测试。好的单元测试会把模块的预期输入、输出完整地写进 Case 里。在 &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt; 里，作者认为好的单元测试应该具备：&lt;/p&gt;
+&lt;p&gt;单元测试是代码的说明书。复杂的业务逻辑通常需要阅读大量代码才能看懂。但是熟练的程序员会先看单元测试。好的单元测试会把模块的预期输入、输出完整地写进 Case 里。在 &lt;a href="https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279" rel="noopener noreferrer"&gt;Unit Testing Principles, Practices, and Patterns&lt;/a&gt;
+ 里，作者认为好的单元测试应该具备：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;保护回归&lt;/strong&gt;。即测试能够防止出现已经修复的问题在回归测试中复现的情况。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;抵抗重构&lt;/strong&gt;。即代码重构后，测试能正确识别出重构是否对已有功能造成影响。&lt;/li&gt;

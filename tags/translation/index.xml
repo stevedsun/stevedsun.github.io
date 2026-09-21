@@ -8,7 +8,8 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sairahul1/status/2072258045460226373"&gt;20 Loop Design Patterns Every AI Engineer Should Know&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sairahul1/status/2072258045460226373" rel="noopener noreferrer"&gt;20 Loop Design Patterns Every AI Engineer Should Know&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Rahul (@sairahul1)&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;大多数 AI 工程师知道如何构建一个 agent。&lt;/p&gt;
@@ -351,10 +352,12 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sethrosen/status/2066534763511316540"&gt;Please don&amp;rsquo;t implement a &amp;ldquo;company brain&amp;rdquo; and expect a learning loop&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/sethrosen/status/2066534763511316540" rel="noopener noreferrer"&gt;Please don&amp;rsquo;t implement a &amp;ldquo;company brain&amp;rdquo; and expect a learning loop&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Seth Rosen&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
-&lt;p&gt;Satya 的那篇&lt;a href="https://x.com/satyanadella/status/2066182223213293753?s=20"&gt;推文&lt;/a&gt;爆了，不奇怪。&lt;/p&gt;
+&lt;p&gt;Satya 的那篇&lt;a href="https://x.com/satyanadella/status/2066182223213293753?s=20" rel="noopener noreferrer"&gt;推文&lt;/a&gt;
+爆了，不奇怪。&lt;/p&gt;
 &lt;p&gt;他把两件事联系在了一起——人力资本和算力资本——通过一个学习循环：人类如何引导 AI，AI 如何让人类更聪明，以及整个系统如何滚雪球。&lt;/p&gt;
 &lt;p&gt;我们团队花了九个月研究和构建这个东西。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;学习循环是你的长期 AI 战略。&lt;/strong&gt; 没有它，AI 在当下很惊艳，但长期来看会无声地衰减。&lt;/p&gt;
@@ -400,7 +403,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/omarsar0/status/2065880971031834786"&gt;Autonomous Long-Running Coding Agents&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/omarsar0/status/2065880971031834786" rel="noopener noreferrer"&gt;Autonomous Long-Running Coding Agents&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Elvis（@omarsar0），DAIR.AI Academy&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;figure
@@ -551,8 +555,10 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/elvissun/status/2065035615800864954"&gt;&lt;code&gt;/goal + Loss Functions: How to Distill a Product in 30 Hours with One Prompt [Full Playbook]&lt;/code&gt;&lt;/a&gt;
-&lt;strong&gt;作者&lt;/strong&gt;：Elvis (&lt;a href="https://x.com/elvissun"&gt;@elvissun&lt;/a&gt;)
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/elvissun/status/2065035615800864954" rel="noopener noreferrer"&gt;&lt;code&gt;/goal + Loss Functions: How to Distill a Product in 30 Hours with One Prompt [Full Playbook]&lt;/code&gt;&lt;/a&gt;
+
+&lt;strong&gt;作者&lt;/strong&gt;：Elvis (&lt;a href="https://x.com/elvissun" rel="noopener noreferrer"&gt;@elvissun&lt;/a&gt;
+)
 &lt;strong&gt;翻译&lt;/strong&gt;：AI 辅助翻译&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;99% 的人用 &lt;code&gt;/goal&lt;/code&gt; 和 agent loop 的方式是错的。&lt;/p&gt;
 &lt;p&gt;外面吹的是「长循环自主 agent：设定目标，走开，回来就拿到能跑的代码」。但顶尖的 agent 工程师半年前就在做同样的事了——用 harness engineering + spec-driven development：&lt;/p&gt;
@@ -635,7 +641,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://claude.com/blog/running-an-ai-native-engineering-org"&gt;Running an AI-native engineering org&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://claude.com/blog/running-an-ai-native-engineering-org" rel="noopener noreferrer"&gt;Running an AI-native engineering org&lt;/a&gt;
+&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Fiona Fung，Anthropic Claude Code &amp;amp; Claude Cowork 工程总监&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;翻译&lt;/strong&gt;：AI 辅助翻译&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;
@@ -719,8 +726,10 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://noperator.dev/posts/you-can-just-say-it/"&gt;You Can Just Say It&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Caleb Gross（&lt;a href="https://x.com/noperator"&gt;@noperator&lt;/a&gt;）&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://noperator.dev/posts/you-can-just-say-it/" rel="noopener noreferrer"&gt;You Can Just Say It&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;作者&lt;/strong&gt;：Caleb Gross（&lt;a href="https://x.com/noperator" rel="noopener noreferrer"&gt;@noperator&lt;/a&gt;
+）&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;
 &lt;p&gt;有一种评估人类及其创造性产物价值的奇怪论证范式，大致长这样：在 AI 时代，某些角色还是应该优先用人类，因为 AI 永远无法执行该角色所需的任务。或者，至少人类做得更好。又或者，人类和 AI 的输出看起来可能差不多，但人类的产物更优，有一些微妙的风格原因是 AI 无法复制的。再或者，至少 AI 无法一致地复制它。&lt;/p&gt;
 &lt;p&gt;看看球门柱底座上那些被反复移动留下的擦痕。等混凝土凝固吧，28 天。&lt;/p&gt;
@@ -747,7 +756,8 @@ if metrics.quality &amp;lt; threshold:
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/intuitiveml/status/2043545596699750791"&gt;Why Your &amp;ldquo;AI-First&amp;rdquo; Strategy Is Probably Wrong&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://x.com/intuitiveml/status/2043545596699750791" rel="noopener noreferrer"&gt;Why Your &amp;ldquo;AI-First&amp;rdquo; Strategy Is Probably Wrong&lt;/a&gt;
+&lt;br&gt;
 &lt;strong&gt;作者&lt;/strong&gt;：Peter Pang&lt;br&gt;
 &lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;

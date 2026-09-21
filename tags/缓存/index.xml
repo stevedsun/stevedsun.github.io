@@ -26,7 +26,8 @@
 &lt;li&gt;库存信息是预约订单流程的必备步骤，而且是跨服务调用（预约服务 -&amp;gt; 库存服务）的数据，所以涉及到大量网络请求、数据库查询。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="指定性能优化的指标"&gt;指定性能优化的指标&lt;/h2&gt;
-&lt;p&gt;在即将完成业务系统开发时，我们就根据 &lt;a href="https://sre.google/books/"&gt;Google SRE Books&lt;/a&gt; 提到的四个黄金指标，制定了监控系统性能的四个维度：&lt;/p&gt;
+&lt;p&gt;在即将完成业务系统开发时，我们就根据 &lt;a href="https://sre.google/books/" rel="noopener noreferrer"&gt;Google SRE Books&lt;/a&gt;
+ 提到的四个黄金指标，制定了监控系统性能的四个维度：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;请求率&lt;/li&gt;
 &lt;li&gt;错误数，非 200 返回结果数量&lt;/li&gt;
@@ -41,7 +42,8 @@
 &lt;h3 id="自动化测试-api-参数合法性"&gt;自动化测试 API 参数合法性&lt;/h3&gt;
 &lt;p&gt;我们的 QA 通常会写自动化脚本对后端 API 做定期的扫描，检查哪些接口的数据输入、输出有不合法的类型或是数值范围。除了巩固系统的健壮性，还能帮助缓存系统抵御&lt;strong&gt;缓存穿透&lt;/strong&gt;的风险。&lt;/p&gt;
 &lt;h3 id="缓存和数据库双写问题"&gt;缓存和数据库双写问题&lt;/h3&gt;
-&lt;p&gt;这是一个“先淘汰缓存&amp;quot;还是”先写数据库“的问题。通常没有明确的最佳方法。我们采用 &lt;a href="https://dzone.com/articles/cache-aside-pattern"&gt;&lt;strong&gt;Cache-Aside Pattern&lt;/strong&gt;&lt;/a&gt; 的方式：&lt;/p&gt;
+&lt;p&gt;这是一个“先淘汰缓存&amp;quot;还是”先写数据库“的问题。通常没有明确的最佳方法。我们采用 &lt;a href="https://dzone.com/articles/cache-aside-pattern" rel="noopener noreferrer"&gt;&lt;strong&gt;Cache-Aside Pattern&lt;/strong&gt;&lt;/a&gt;
+ 的方式：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;失效&lt;/strong&gt;：应用程序先从 cache 取数据，没有得到，则从数据库中取数据，成功后，放到缓存中。&lt;/li&gt;
@@ -50,7 +52,8 @@
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;缺点：可能有小概率脏数据&lt;/strong&gt;。比如，一个是读操作，但是没有命中缓存，然后就到数据库中取数据，此时来了一个写操作，写完数据库后，让缓存失效，然后，之前的那个读操作再把老的数据放进去，所以，会造成脏数据。&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;考虑到写操作通常比读操作时间更长，所以 Cache-Aside Pattern 中的脏数据概率非常小，即便发生，用户在实际下单时系统仍然会去数据库里做数据校验，不会影响业务数据的正确性。&lt;/p&gt;
-&lt;p&gt;如果对缓存一致性有更高要求，可以采用&lt;a href="https://juejin.cn/post/6844903805641818120"&gt;延时双删策略或异步更新缓存&lt;/a&gt;。不过这两种方式本质都是用一定程度的串行化操作来解决并发造成的问题。&lt;/p&gt;
+&lt;p&gt;如果对缓存一致性有更高要求，可以采用&lt;a href="https://juejin.cn/post/6844903805641818120" rel="noopener noreferrer"&gt;延时双删策略或异步更新缓存&lt;/a&gt;
+。不过这两种方式本质都是用一定程度的串行化操作来解决并发造成的问题。&lt;/p&gt;
 &lt;h3 id="预热"&gt;预热&lt;/h3&gt;
 &lt;p&gt;预加载热点数据时需要注意的点是，要考虑好服务一旦重启或是生产环境发生事故，要避免服务重启后再次造成二次事故。&lt;/p&gt;
 &lt;h2 id="缓存系统常见的问题和应对思路"&gt;缓存系统常见的问题和应对思路&lt;/h2&gt;

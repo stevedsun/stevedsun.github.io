@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on Steve Sun</title><link>https://sund.site/en/categories/python/</link><description>Recent content in Python on Steve Sun</description><generator>Hugo</generator><language>en</language><copyright>© 2013-2026, Steve Sun</copyright><lastBuildDate>Thu, 19 Jan 2023 08:05:27 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/en/categories/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Research on Python Dependency Management Tools</title><link>https://sund.site/en/posts/2023/python-packaging/</link><pubDate>Thu, 19 Jan 2023 08:05:27 +0800</pubDate><guid>https://sund.site/en/posts/2023/python-packaging/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
-&lt;p&gt;If you&amp;rsquo;re working on an engineering project, &lt;a href="https://python-poetry.org/"&gt;poetry&lt;/a&gt; is currently the best solution. But if you don&amp;rsquo;t like Python&amp;rsquo;s virtualenv, give &lt;a href="https://pdm.fming.dev/latest/"&gt;pdm&lt;/a&gt; a try.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re working on an engineering project, &lt;a href="https://python-poetry.org/" rel="noopener noreferrer"&gt;poetry&lt;/a&gt;
+ is currently the best solution. But if you don&amp;rsquo;t like Python&amp;rsquo;s virtualenv, give &lt;a href="https://pdm.fming.dev/latest/" rel="noopener noreferrer"&gt;pdm&lt;/a&gt;
+ a try.&lt;/p&gt;
 &lt;h2 id="the-mess-that-is-python"&gt;The Mess That Is Python&lt;/h2&gt;
 &lt;p&gt;Python&amp;rsquo;s dependency management tool, &lt;code&gt;pip&lt;/code&gt;, has long been a target of complaints from developers. From my perspective, &lt;code&gt;pip&lt;/code&gt; has three fatal flaws:&lt;/p&gt;
 &lt;ul&gt;
@@ -25,8 +27,10 @@
 &lt;p&gt;Additionally, due to compatibility issues between Python versions and the uncontrollable forces of low-level implementation, wheel builds can fail inexplicably.&lt;/p&gt;
 &lt;h2 id="existing-solutions"&gt;Existing Solutions&lt;/h2&gt;
 &lt;p&gt;Over time, a number of tools have appeared: &lt;code&gt;pipx&lt;/code&gt;, &lt;code&gt;pipenv&lt;/code&gt;, &lt;code&gt;conda&lt;/code&gt;, &lt;code&gt;poetry&lt;/code&gt;, and the more recent &lt;code&gt;pdm&lt;/code&gt; I&amp;rsquo;ve come across. They all address Python&amp;rsquo;s pain points to some degree. This article:&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging"&gt;How to improve Python packaging, or why fourteen tools are at least twelve too many&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;compares the pros and cons of various tools. The conclusion is that poetry and pdm are the most appropriate tools at present. And pdm is currently the only dependency management tool that supports &lt;a href="https://peps.python.org/pep-0582/"&gt;PEP 582&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging" rel="noopener noreferrer"&gt;How to improve Python packaging, or why fourteen tools are at least twelve too many&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;compares the pros and cons of various tools. The conclusion is that poetry and pdm are the most appropriate tools at present. And pdm is currently the only dependency management tool that supports &lt;a href="https://peps.python.org/pep-0582/" rel="noopener noreferrer"&gt;PEP 582&lt;/a&gt;
+.&lt;/p&gt;
 &lt;h3 id="what-is-pep-582"&gt;What Is PEP 582&lt;/h3&gt;
 &lt;blockquote&gt;
 &lt;p&gt;This PEP proposes to add to Python a mechanism to automatically recognize a &lt;code&gt;__pypackages__&lt;/code&gt; directory and prefer importing packages installed in this location over user or global site-packages. This will avoid the steps to create, activate or deactivate &amp;ldquo;virtual environments&amp;rdquo;. Python will use the &lt;code&gt;__pypackages__&lt;/code&gt; from the base directory of the script when present.&lt;/p&gt;&lt;/blockquote&gt;

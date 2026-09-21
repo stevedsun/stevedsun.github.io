@@ -1,6 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Efficiency on Steve Sun</title><link>https://sund.site/categories/efficiency/</link><description>Recent content in Efficiency on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sat, 31 Aug 2024 00:23:37 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/efficiency/index.xml" rel="self" type="application/rss+xml"/><item><title>Windows Efficient Setup</title><link>https://sund.site/posts/2024/windows-efficient-setup/</link><pubDate>Sat, 31 Aug 2024 00:23:37 +0800</pubDate><guid>https://sund.site/posts/2024/windows-efficient-setup/</guid><description>&lt;p&gt;Last month I read DHH&amp;rsquo;s blog post &lt;a href="https://world.hey.com/dhh/introducing-omakub-354db366"&gt;Introducing Omakub&lt;/a&gt;. Omakub is a project that helps you to setup your Ubuntu machine by running a single command. DHH composed a list of tools he uses on his Ubuntu.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Efficiency on Steve Sun</title><link>https://sund.site/categories/efficiency/</link><description>Recent content in Efficiency on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sat, 31 Aug 2024 00:23:37 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/categories/efficiency/index.xml" rel="self" type="application/rss+xml"/><item><title>Windows Efficient Setup</title><link>https://sund.site/posts/2024/windows-efficient-setup/</link><pubDate>Sat, 31 Aug 2024 00:23:37 +0800</pubDate><guid>https://sund.site/posts/2024/windows-efficient-setup/</guid><description>&lt;p&gt;Last month I read DHH&amp;rsquo;s blog post &lt;a href="https://world.hey.com/dhh/introducing-omakub-354db366" rel="noopener noreferrer"&gt;Introducing Omakub&lt;/a&gt;
+. Omakub is a project that helps you to setup your Ubuntu machine by running a single command. DHH composed a list of tools he uses on his Ubuntu.&lt;/p&gt;
 &lt;p&gt;In spirit of the post, I decided to setup my Windows machine efficiently like Omakub.&lt;/p&gt;
-&lt;p&gt;You can find the full setup script &lt;a href="https://gist.github.com/stevedsun/319f0c05b02e739207743dd441b6239a"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You can find the full setup script &lt;a href="https://gist.github.com/stevedsun/319f0c05b02e739207743dd441b6239a" rel="noopener noreferrer"&gt;here&lt;/a&gt;
+.&lt;/p&gt;
 &lt;p&gt;Following is the keyboard Layout I am using.&lt;/p&gt;
 &lt;h2 id="keyboard-layout"&gt;Keyboard Layout&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Tool&lt;/strong&gt;: AutoHotKey, PowerToys&lt;/p&gt;
@@ -31,7 +33,8 @@
  &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;ol&gt;
-&lt;li&gt;Download &lt;a href="https://github.com/Ciantic/VirtualDesktopAccessor/releases/tag/2024-01-25-windows11"&gt;VirtualDesktopAccessor.dll&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Download &lt;a href="https://github.com/Ciantic/VirtualDesktopAccessor/releases/tag/2024-01-25-windows11" rel="noopener noreferrer"&gt;VirtualDesktopAccessor.dll&lt;/a&gt;
+&lt;/li&gt;
 &lt;li&gt;Put the &lt;code&gt;.dll&lt;/code&gt; and &lt;code&gt;.ahk&lt;/code&gt; files in one folder, create a shortcut for &lt;code&gt;Config.ahk&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;Copy the shortcut to path &lt;code&gt;C:\Users\&amp;lt;YourName&amp;gt;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup&lt;/code&gt; to make it auto startup.&lt;/li&gt;
 &lt;li&gt;Install &lt;code&gt;PowerToys&lt;/code&gt;, remap &lt;code&gt;LWin&lt;/code&gt; and &lt;code&gt;LAlt&lt;/code&gt;.&lt;/li&gt;
@@ -41,9 +44,12 @@
 &lt;p&gt;As we know, the Windows shortcut is very limited when switching between apps and desktops. For users who are not English native speakers, switching input method when typing is also not a good experience.&lt;/p&gt;
 &lt;p&gt;Comparing with Windows, MacOS has a very powerful shortcut system. You can always use &lt;code&gt;cmd + q&lt;/code&gt; to close a window, &lt;code&gt;caplock&lt;/code&gt; to switch between input methods.&lt;/p&gt;
 &lt;p&gt;DHH moved the MacOS&amp;rsquo; advantages to Linux. The Windows users can also refer to the Omakub project and build a more powerful development environment.&lt;/p&gt;</description></item><item><title>用 Notion 实践卡片盒笔记法</title><link>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</link><pubDate>Sat, 12 Dec 2020 22:42:53 +0800</pubDate><guid>https://sund.site/posts/2020/2020-12-12_notion-as-zettelkasten/</guid><description>&lt;p&gt;今天给大家介绍一种整理和回顾碎片知识的方法——卡片盒笔记法。&lt;/p&gt;
-&lt;p&gt;应该不少人都读过少数派作者玉树芝兰老师写的&lt;a href="https://sspai.com/post/59109"&gt;关于卡片盒笔记法的文章&lt;/a&gt;。&lt;a href="https://pmthinking.com/"&gt;产品沉思录&lt;/a&gt;的主理人少楠也写过很多相关的内容，最近他们还出了一个工具（Flomo - 浮墨笔记）也是基于这套方法论的。&lt;/p&gt;
+&lt;p&gt;应该不少人都读过少数派作者玉树芝兰老师写的&lt;a href="https://sspai.com/post/59109" rel="noopener noreferrer"&gt;关于卡片盒笔记法的文章&lt;/a&gt;
+。&lt;a href="https://pmthinking.com/" rel="noopener noreferrer"&gt;产品沉思录&lt;/a&gt;
+的主理人少楠也写过很多相关的内容，最近他们还出了一个工具（Flomo - 浮墨笔记）也是基于这套方法论的。&lt;/p&gt;
 &lt;p&gt;在这篇文章中，我会结合自己用 Notion 的经验，分享一下我如何用 Notion 做卡片笔记。&lt;/p&gt;
-&lt;p&gt;本文参考了 &lt;a href="https://www.youtube.com/channel/UC66w1T4oMv66Jn1LR5CW2yg"&gt;Youtube 频道 Mukul Khanna&lt;/a&gt; 关于 Notion 的一系列使用方法。&lt;/p&gt;
+&lt;p&gt;本文参考了 &lt;a href="https://www.youtube.com/channel/UC66w1T4oMv66Jn1LR5CW2yg" rel="noopener noreferrer"&gt;Youtube 频道 Mukul Khanna&lt;/a&gt;
+ 关于 Notion 的一系列使用方法。&lt;/p&gt;
 &lt;h2 id="什么是卡片盒笔记法"&gt;什么是卡片盒笔记法&lt;/h2&gt;
 &lt;p&gt;卡片盒笔记法（Zettelkasten）是一种将零散的想法、笔记和文献，通过编号、引用、索引等方式彼此关联起来，形成知识网络并提取有效信息的方法。其著名使用者——社会学家 Niklas Luhmann 一生创建了 9 万多张索引卡片，发布了 70 多本专著和 400 多篇学术论文。&lt;/p&gt;
 &lt;p&gt;卡片盒笔记法可以类比为人类大脑记忆和归纳知识的回路。&lt;/p&gt;
@@ -76,7 +82,8 @@
 &lt;h2 id="notion-为什么适合做卡片盒笔记法"&gt;Notion 为什么适合做卡片盒笔记法&lt;/h2&gt;
 &lt;p&gt;Notion 在前一段时间更新了 Backlinks （反向链接）功能，这一功能的推出，把 Notion 和新晋的几款网状知识管理工具（Roam Search、Obsidian）的差异大大缩小，成为了做卡片盒笔记法的合适工具。相对于专注做卡片笔记的软件来说，Notion 的优势是更加灵活的配置和用途广泛的页面元素。&lt;/p&gt;
 &lt;h2 id="用-notion-实践卡片盒笔记法"&gt;用 Notion 实践卡片盒笔记法&lt;/h2&gt;
-&lt;p&gt;我们首先脱离 Notion 这个软件，看看通常情况下一张卡片由哪些部分组成。下图是来自 &lt;a href="https://zettelkasten.de/introduction/"&gt;Introduction to the Zettelkasten&lt;/a&gt; 文章的配图，呈现了一张卡片的样子：&lt;/p&gt;
+&lt;p&gt;我们首先脱离 Notion 这个软件，看看通常情况下一张卡片由哪些部分组成。下图是来自 &lt;a href="https://zettelkasten.de/introduction/" rel="noopener noreferrer"&gt;Introduction to the Zettelkasten&lt;/a&gt;
+ 文章的配图，呈现了一张卡片的样子：&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -129,7 +136,8 @@
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;为了从网页上剪藏这样一篇文章，我在 Chrome 浏览器里安装了 &lt;a href="https://chrome.google.com/webstore/detail/ldmmifpegigmeammaeckplhnjbbpccmm"&gt;Save to Notion&lt;/a&gt; 这个扩展，它的优点就是可以在剪藏网页内容同时设置好笔记的属性。把 Save to Notion 保存位置设置成你已经建立好的文献库，就可以一键保存到 Notion 了。&lt;/p&gt;
+&lt;p&gt;为了从网页上剪藏这样一篇文章，我在 Chrome 浏览器里安装了 &lt;a href="https://chrome.google.com/webstore/detail/ldmmifpegigmeammaeckplhnjbbpccmm" rel="noopener noreferrer"&gt;Save to Notion&lt;/a&gt;
+ 这个扩展，它的优点就是可以在剪藏网页内容同时设置好笔记的属性。把 Save to Notion 保存位置设置成你已经建立好的文献库，就可以一键保存到 Notion 了。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -217,13 +225,19 @@
 &lt;p&gt;卡片盒笔记法的核心是构筑彼此关联的笔记网络，在此基础上通过顺序、发散的回顾方式不断产生新的回路，抽象成为创作的素材。借助 Notion 的特性，我们可以在多个页面之间关联、跳转、搭建属于自己的高速公路。&lt;/p&gt;
 &lt;p&gt;以上就是本文的内容，希望对你有用，你可以在延伸阅读里找到更多相关文章，也欢迎你关注我的公众号随时订阅我的新发现。&lt;/p&gt;
 &lt;h2 id="延伸阅读"&gt;延伸阅读&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://index.pmthinking.com/effa3aa294af4d07ac279e74aec69602"&gt;花园与溪流的隐喻&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://sspai.com/post/61886"&gt;Matrix 圆桌 | 网状结构笔记工具是一阵风吗？&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://zettelkasten.de/"&gt;Zettelkasten 介绍&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://takesmartnotes.com/"&gt;Take Smart Notes&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=lOY-drtTJX0&amp;amp;feature=youtu.be"&gt;How I use Zettelkasten in Notion | Best note-taking knowledge-management system 📝&lt;/a&gt;&lt;/p&gt;</description></item><item><title>番茄工作法和Keep是绝配</title><link>https://sund.site/posts/2020/2020-2-17_wfh/</link><pubDate>Mon, 17 Feb 2020 20:43:43 +0800</pubDate><guid>https://sund.site/posts/2020/2020-2-17_wfh/</guid><description>&lt;h2 id="要有路线图"&gt;要有路线图&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://index.pmthinking.com/effa3aa294af4d07ac279e74aec69602" rel="noopener noreferrer"&gt;花园与溪流的隐喻&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://sspai.com/post/61886" rel="noopener noreferrer"&gt;Matrix 圆桌 | 网状结构笔记工具是一阵风吗？&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://zettelkasten.de/" rel="noopener noreferrer"&gt;Zettelkasten 介绍&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://takesmartnotes.com/" rel="noopener noreferrer"&gt;Take Smart Notes&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=lOY-drtTJX0&amp;feature=youtu.be" rel="noopener noreferrer"&gt;How I use Zettelkasten in Notion | Best note-taking knowledge-management system 📝&lt;/a&gt;
+&lt;/p&gt;</description></item><item><title>番茄工作法和Keep是绝配</title><link>https://sund.site/posts/2020/2020-2-17_wfh/</link><pubDate>Mon, 17 Feb 2020 20:43:43 +0800</pubDate><guid>https://sund.site/posts/2020/2020-2-17_wfh/</guid><description>&lt;h2 id="要有路线图"&gt;要有路线图&lt;/h2&gt;
 &lt;p&gt;平时在办公室里，大家可以面对面沟通，有问题、回复都可以迅速得到反馈，好像一个走正步的方队，每个人的节奏都可以从余光中确认。但是在家办公，这种节奏就乱掉了。&lt;/p&gt;
-&lt;p&gt;我最近正好转到数据团队做一些数据工程的工作，急需恶补很多知识。我在网上搜到几张数据工程师知识图谱和一些&lt;a href="https://www.coursera.org/specializations/gcp-data-machine-learning"&gt;认证课程&lt;/a&gt;。按照自己的能力，我规划了学习路线，并且用 Notion 记录下来。这份路线图里包含了一些书籍和网络课程，能够帮我快速上手实践，以备在复工后快速进入状态。&lt;/p&gt;
+&lt;p&gt;我最近正好转到数据团队做一些数据工程的工作，急需恶补很多知识。我在网上搜到几张数据工程师知识图谱和一些&lt;a href="https://www.coursera.org/specializations/gcp-data-machine-learning" rel="noopener noreferrer"&gt;认证课程&lt;/a&gt;
+。按照自己的能力，我规划了学习路线，并且用 Notion 记录下来。这份路线图里包含了一些书籍和网络课程，能够帮我快速上手实践，以备在复工后快速进入状态。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -234,7 +248,8 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;h2 id="寻找免费的学习资源"&gt;寻找免费的学习资源&lt;/h2&gt;
-&lt;p&gt;有了路线，就要去找学习资源，付费的电子书和网络教程很多，我想重点说说那些免费资源（抛开盗版不谈），比如著名的动物书出版商 O’Reilly 就有一大堆&lt;a href="https://www.oreilly.com/free/"&gt;免费的正版技术类电子书&lt;/a&gt;可供下载。&lt;/p&gt;
+&lt;p&gt;有了路线，就要去找学习资源，付费的电子书和网络教程很多，我想重点说说那些免费资源（抛开盗版不谈），比如著名的动物书出版商 O’Reilly 就有一大堆&lt;a href="https://www.oreilly.com/free/" rel="noopener noreferrer"&gt;免费的正版技术类电子书&lt;/a&gt;
+可供下载。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -254,11 +269,13 @@
  &lt;figcaption&gt;https://tva1.sinaimg.cn/large/4a41845fly1gbzlumpbuxj21de14m7mr.jpg&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;我在 Youtube 还意外发现一些 &lt;a href="https://www.youtube.com/channel/UCFd-9jAfbuUjwDZjisOwv1w"&gt;健身 Youtuber&lt;/a&gt; 们分享的健身教学视频，也非常适合闲暇时间提高姿势水平。&lt;/p&gt;
+&lt;p&gt;我在 Youtube 还意外发现一些 &lt;a href="https://www.youtube.com/channel/UCFd-9jAfbuUjwDZjisOwv1w" rel="noopener noreferrer"&gt;健身 Youtuber&lt;/a&gt;
+ 们分享的健身教学视频，也非常适合闲暇时间提高姿势水平。&lt;/p&gt;
 &lt;h2 id="任务要和时间绑定"&gt;任务要和时间绑定&lt;/h2&gt;
 &lt;p&gt;完成一个长计划的第一步，是拆解任务。工作中同事们总强调 Tasking （拆解任务）的重要性。要保证完成计划的质量，必须把计划按步骤拆解成可执行和回顾的小任务。相信喜欢折腾 GTD 之类效率工具的人很清楚其中的意义。但是&lt;strong&gt;在没有约束的家庭环境里，光拆解任务可能还不够，更重要的是把任务和时间绑定，给自己一个记录时间的习惯&lt;/strong&gt;。&lt;/p&gt;
 &lt;h3 id="不局限于工具的番茄工作法"&gt;不局限于工具的番茄工作法&lt;/h3&gt;
-&lt;p&gt;番茄工作法固然好，但是市面上很少真正提高效率的工具。手机上的番茄工作法 App 唯一给我的教训就是增加了我拿起手机的次数。所以我最后矬子里拔大个，选了 Toggl 的 Mac 桌面版，它自带番茄时钟可以很好的兼顾时间记录和定时提醒功能。我还尝试用 NFC 贴纸提高我记录时间的效率（主要记录做饭之类碎片的时间）。至于如何使用 NFC 贴纸，参考这篇《&lt;a href="https://sspai.com/post/57394"&gt;5 个实用生活场景，iPhone 上的 NFC 还能这么用》&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;番茄工作法固然好，但是市面上很少真正提高效率的工具。手机上的番茄工作法 App 唯一给我的教训就是增加了我拿起手机的次数。所以我最后矬子里拔大个，选了 Toggl 的 Mac 桌面版，它自带番茄时钟可以很好的兼顾时间记录和定时提醒功能。我还尝试用 NFC 贴纸提高我记录时间的效率（主要记录做饭之类碎片的时间）。至于如何使用 NFC 贴纸，参考这篇《&lt;a href="https://sspai.com/post/57394" rel="noopener noreferrer"&gt;5 个实用生活场景，iPhone 上的 NFC 还能这么用》&lt;/a&gt;
+&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -294,7 +311,8 @@
 &lt;p&gt;我平时很少看电视，最近又把吃灰半年的《歧路旅人》拿出来玩，我给自己规定的是每天必须天黑才能打开游戏机，而且玩到 20%电量之前必须关机休息。这样每天娱乐时间就不会超过 2 个小时。&lt;/p&gt;
 &lt;p&gt;最近奥斯卡颁奖后，一批电影片单也出来了，不如趁这段时间把 2019 年错过的好电影也补一补。&lt;/p&gt;
 &lt;h2 id="用音乐和灯光隔离出个人空间"&gt;用音乐和灯光隔离出个人空间&lt;/h2&gt;
-&lt;p&gt;我在几个月前发的一篇文章&lt;a href="https://mp.weixin.qq.com/s/OuZigL_Y8Ep3rLl38Hxc0A"&gt;《用一个模型理解什么是注意力的边缘》&lt;/a&gt;里已经分析过怎么用「聚光灯效应」和背景音乐来创造专注的环境，对这部分感兴趣的同学可以去阅读一下。&lt;/p&gt;
+&lt;p&gt;我在几个月前发的一篇文章&lt;a href="https://mp.weixin.qq.com/s/OuZigL_Y8Ep3rLl38Hxc0A" rel="noopener noreferrer"&gt;《用一个模型理解什么是注意力的边缘》&lt;/a&gt;
+里已经分析过怎么用「聚光灯效应」和背景音乐来创造专注的环境，对这部分感兴趣的同学可以去阅读一下。&lt;/p&gt;
 &lt;h2 id="小结"&gt;小结&lt;/h2&gt;
 &lt;p&gt;综上，充分利用假期的时间去充电吧，要给自己指定任务、要有追踪任务的工具，多利用闲暇时间锻炼、多关注平时上班时没空去关注的生活细节，给 2019 年错过的好东西一个补救的机会。&lt;/p&gt;</description></item><item><title>如何练习双拼输入法</title><link>https://sund.site/posts/2020/2020-1-19_xnheulpb/</link><pubDate>Sun, 19 Jan 2020 07:21:17 +0800</pubDate><guid>https://sund.site/posts/2020/2020-1-19_xnheulpb/</guid><description>&lt;h2 id="双拼输入法是什么"&gt;双拼输入法是什么？&lt;/h2&gt;
 &lt;p&gt;「双拼输入法」类似于我们大多人使用的全拼输入法，也是一种基于汉语拼音的汉字输入方案。&lt;/p&gt;
@@ -334,7 +352,8 @@
 &lt;/p&gt;
 &lt;h2 id="双拼输入法能提高打字效率吗"&gt;双拼输入法能提高打字效率吗？&lt;/h2&gt;
 &lt;p&gt;学习之前我们通常有个疑问：这玩意真能提高打字效率？&lt;/p&gt;
-&lt;p&gt;我带着这个疑问，找到了一个测试汉字打字速度的&lt;a href="https://dz.wubidz.cn/"&gt;网站&lt;/a&gt;，我通过一个月的使用，对比了前后的输入速度，得出的答案让我确信写这篇文章能够帮助你通过双拼提高打字效率。（不要吐槽我每分钟字数太少，测速网站采用了古诗词作为输入，一定程度上屏蔽输入法智能联想的效果。你可以亲自去尝试一下 😛）&lt;/p&gt;
+&lt;p&gt;我带着这个疑问，找到了一个测试汉字打字速度的&lt;a href="https://dz.wubidz.cn/" rel="noopener noreferrer"&gt;网站&lt;/a&gt;
+，我通过一个月的使用，对比了前后的输入速度，得出的答案让我确信写这篇文章能够帮助你通过双拼提高打字效率。（不要吐槽我每分钟字数太少，测速网站采用了古诗词作为输入，一定程度上屏蔽输入法智能联想的效果。你可以亲自去尝试一下 😛）&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -424,7 +443,8 @@
 &lt;/p&gt;
 &lt;p&gt;你可以把这张图保存起来，放在桌面壁纸里或是打印出来放在键盘前边，练习时用来对照。&lt;/p&gt;
 &lt;h2 id="记忆工具"&gt;记忆工具&lt;/h2&gt;
-&lt;p&gt;小鹤双拼&lt;a href="https://www.flypy.com/index.html"&gt;官网&lt;/a&gt;提供了多种练习工具。你可以微信扫一扫这个小程序，随时用手机练习。&lt;/p&gt;
+&lt;p&gt;小鹤双拼&lt;a href="https://www.flypy.com/index.html" rel="noopener noreferrer"&gt;官网&lt;/a&gt;
+提供了多种练习工具。你可以微信扫一扫这个小程序，随时用手机练习。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -434,7 +454,9 @@
  &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
-&lt;p&gt;桌面端推荐一个在线的&lt;a href="https://api.ihint.me/shuang/"&gt;网页双拼练习工具&lt;/a&gt;，地址是 &lt;a href="https://api.ihint.me/shuang/"&gt;https://api.ihint.me/shuang/&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;桌面端推荐一个在线的&lt;a href="https://api.ihint.me/shuang/" rel="noopener noreferrer"&gt;网页双拼练习工具&lt;/a&gt;
+，地址是 &lt;a href="https://api.ihint.me/shuang/" rel="noopener noreferrer"&gt;https://api.ihint.me/shuang/&lt;/a&gt;
+。&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -445,12 +467,14 @@
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;h2 id="测试工具"&gt;测试工具&lt;/h2&gt;
-&lt;p&gt;为了测试打字速度，你可以使用上文提到的&lt;a href="https://dz.wubidz.cn/"&gt;在线网页打字测速工具&lt;/a&gt;，地址是&lt;a href="https://dz.wubidz.cn/"&gt;https://dz.wubidz.cn/&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;为了测试打字速度，你可以使用上文提到的&lt;a href="https://dz.wubidz.cn/" rel="noopener noreferrer"&gt;在线网页打字测速工具&lt;/a&gt;
+，地址是&lt;a href="https://dz.wubidz.cn/" rel="noopener noreferrer"&gt;https://dz.wubidz.cn/&lt;/a&gt;
+。&lt;/p&gt;
 &lt;h2 id="小结"&gt;小结&lt;/h2&gt;
 &lt;p&gt;本文以小鹤双拼为例，为你分析了汉语拼音组合原理和双拼输入法的映射规律。未来你在学习任何拼音输入法时都可以按照这种规律，以分层结构提高对键盘布局的认识。&lt;/p&gt;
 &lt;p&gt;从练习时间角度，掌握双拼要一周左右，超过全拼打字速度也只需要两周多。所以双拼是非常值得学习的输入方案。&lt;/p&gt;
 &lt;p&gt;目前所有平台都有比较成熟的双拼输入法 App，例如 iOS 和 Mac 系统自带的双拼输入法、Google 的移动端输入法 Gboard。某些国产输入法，在我的测试下经常会出现「过度联想」的问题，比如输入一个字母，自动联想出一个甚至更多汉字，这和双拼输入法一个汉字两个字母的敲键节奏稍有违背，我个人倾向于在移动端使用 Gboard 或默认输入法。&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://www.buymeacoffee.com/stevedsun"&gt;&lt;figure
+&lt;p&gt;&lt;a href="https://www.buymeacoffee.com/stevedsun" rel="noopener noreferrer"&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -458,9 +482,15 @@
  
  &lt;figcaption&gt;Buy Me A Coffee&lt;/figcaption&gt;
 &lt;/figure&gt;
-&lt;/a&gt;&lt;/p&gt;</description></item><item><title>为 Mac OS 10.15 开启 HiDPI，让 2K 显示器更舒适</title><link>https://sund.site/posts/2019/macbook-hidpi/</link><pubDate>Sun, 24 Nov 2019 16:11:00 +0800</pubDate><guid>https://sund.site/posts/2019/macbook-hidpi/</guid><description>&lt;p&gt;以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户&lt;a href="https://github.com/xzhih"&gt;ZeRo° Xu&lt;/a&gt; 在 &lt;a href="https://github.com/xzhih/one-key-hidpi"&gt;一键开启 HiDPI 脚本&lt;/a&gt; 里的 &lt;a href="https://github.com/syscl/Enable-HiDPI-OSX/issues/49"&gt;Github Issue&lt;/a&gt; 和一篇博文 &lt;a href="https://www.smslit.top/2019/01/02/mac_hidpi/"&gt;《为 mac 连接的 2k 显示器开启 HiDPI》&lt;/a&gt;。&lt;/p&gt;
+&lt;/a&gt;
+&lt;/p&gt;</description></item><item><title>为 Mac OS 10.15 开启 HiDPI，让 2K 显示器更舒适</title><link>https://sund.site/posts/2019/macbook-hidpi/</link><pubDate>Sun, 24 Nov 2019 16:11:00 +0800</pubDate><guid>https://sund.site/posts/2019/macbook-hidpi/</guid><description>&lt;p&gt;以前手抖买了台 Dell P2416D 显示器，接上 Macbook 发现原生的分辨率设置在 2K 显示器上字体很小，换成 1080P 分辨率显示效果又特别模糊。上网查了一下发现可以为 Macbook 强行开启 HiDPI。下文的教程结合了 Github 上用户&lt;a href="https://github.com/xzhih" rel="noopener noreferrer"&gt;ZeRo° Xu&lt;/a&gt;
+ 在 &lt;a href="https://github.com/xzhih/one-key-hidpi" rel="noopener noreferrer"&gt;一键开启 HiDPI 脚本&lt;/a&gt;
+ 里的 &lt;a href="https://github.com/syscl/Enable-HiDPI-OSX/issues/49" rel="noopener noreferrer"&gt;Github Issue&lt;/a&gt;
+ 和一篇博文 &lt;a href="https://www.smslit.top/2019/01/02/mac_hidpi/" rel="noopener noreferrer"&gt;《为 mac 连接的 2k 显示器开启 HiDPI》&lt;/a&gt;
+。&lt;/p&gt;
 &lt;h2 id="什么是-hidpi"&gt;什么是 HiDPI&lt;/h2&gt;
-&lt;p&gt;引用自 Github 用户 &lt;a href="https://github.com/xzhih"&gt;ZeRo° Xu&lt;/a&gt; ：&lt;/p&gt;
+&lt;p&gt;引用自 Github 用户 &lt;a href="https://github.com/xzhih" rel="noopener noreferrer"&gt;ZeRo° Xu&lt;/a&gt;
+ ：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;它使用横纵 2 个物理像素也就是 4 个物理像素来显示 1 个像素区域，结果就是图像的细节得到翻倍、更清晰、边缘更平滑。&lt;/p&gt;
 &lt;p&gt;拿 13 寸的 MacBook Pro 举例，它的屏幕物理分辨率是 2560 x 1600，所以原生的 HIDPI 分辨率就是 1280x800。更高的一档 1440x900 hidpi 缩放分辨率，则是虚拟出一个 2880x1800 的分辨率，再进行软缩放输入。所以你能发现苹果的电脑总是有很高的分辨率。&lt;/p&gt;
@@ -468,7 +498,8 @@
 &lt;p&gt;这个脚本的功能是虚拟出比你的屏幕物理分辨率更高的假分辨率，也就是你看到的 3360 x 1888，这样你就可以使用 1680 x 944 hidpi 这个缩放分辨率了。&lt;/p&gt;
 &lt;p&gt;如果你要开启 1080p 的 HIDPI 分辨率，就虚拟一个 3840 x 2160 的假分辨率，然后 MacOS 会使用 4 个像素来显示 1 个像素区域，也就是和你物理分辨率一样的 1080p 分辨率，开不开启看起来没任何区别，最大的效果就是显卡压力增大系统变卡、截图可以得到高分辨率图像。&lt;/p&gt;&lt;/blockquote&gt;
 &lt;h2 id="自动配置-hidpi"&gt;自动配置 HiDPI&lt;/h2&gt;
-&lt;p&gt;上文 &lt;a href="https://github.com/xzhih/one-key-hidpi"&gt;链接&lt;/a&gt; 里提到一键配置脚本，你不妨先按照脚本的步骤开启 HiDPI 试试。但是脚本并没有适配所有显示器的情况（至少我的 Dell P2416D 使用后无效），所以就有了下面的步骤。&lt;/p&gt;
+&lt;p&gt;上文 &lt;a href="https://github.com/xzhih/one-key-hidpi" rel="noopener noreferrer"&gt;链接&lt;/a&gt;
+ 里提到一键配置脚本，你不妨先按照脚本的步骤开启 HiDPI 试试。但是脚本并没有适配所有显示器的情况（至少我的 Dell P2416D 使用后无效），所以就有了下面的步骤。&lt;/p&gt;
 &lt;h2 id="手动配置-hidpi"&gt;手动配置 HiDPI&lt;/h2&gt;
 &lt;p&gt;本教程测试环境：&lt;/p&gt;
 &lt;ul&gt;
@@ -477,7 +508,8 @@
 &lt;li&gt;操作系统：MacOS Catalina (Version 10.15.1)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="0-安装-rdm"&gt;0. 安装 RDM&lt;/h3&gt;
-&lt;p&gt;相信很多人已经装过这个工具了，它是用来修改显示分辨率的，如果没装，请在&lt;a href="https://avi.alkalay.net/software/RDM/"&gt;RDM 下载页面&lt;/a&gt;安装它。&lt;/p&gt;
+&lt;p&gt;相信很多人已经装过这个工具了，它是用来修改显示分辨率的，如果没装，请在&lt;a href="https://avi.alkalay.net/software/RDM/" rel="noopener noreferrer"&gt;RDM 下载页面&lt;/a&gt;
+安装它。&lt;/p&gt;
 &lt;h3 id="1-关闭-mac-的-sip"&gt;1. 关闭 Mac 的 SIP&lt;/h3&gt;
 &lt;p&gt;SIP 是苹果公司为防止你胡乱篡改系统文件用的保护机制，请先按照下面步骤把它关闭，以便后续操作：&lt;/p&gt;
 &lt;ol&gt;
@@ -500,12 +532,14 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;li&gt;分别输入上面两个命令之后&lt;code&gt;return(↩)&lt;/code&gt;，每个命令会返回一个带有数字的结果。那个数字就是 macbook 默认的&lt;code&gt;DisplayVendorID&lt;/code&gt;和&lt;code&gt;DisplayProductID&lt;/code&gt;了&lt;/li&gt;
 &lt;li&gt;接入显示器&lt;/li&gt;
 &lt;li&gt;再分别输入那两个命令，每个命令会分别返回两条带有数字的结果。对比刚才 macbook 默认的结果，另一个数字就是你显示器的&lt;code&gt;DisplayVendorID&lt;/code&gt;和&lt;code&gt;DisplayProductID&lt;/code&gt;了&lt;/li&gt;
-&lt;li&gt;把这两个数字分别转成对应的 16 进制数，用这个&lt;a href="https://tool.oschina.net/hexconvert"&gt;进制转换工具&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;把这两个数字分别转成对应的 16 进制数，用这个&lt;a href="https://tool.oschina.net/hexconvert" rel="noopener noreferrer"&gt;进制转换工具&lt;/a&gt;
+&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;现在，回到桌面，新建一个文件夹命名为&lt;code&gt;DisplayVendorID-[你刚才查到的DisplayVendorID的16进制数]&lt;/code&gt;，例如&lt;code&gt;DisplayVendorID-10ac&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;之后在这个刚建好的文件夹下增加一个文件，命名为&lt;code&gt;DisplayProductID-[你刚才查到的DisplayProductID的16进制数]&lt;/code&gt;，例如&lt;code&gt;DisplayProductID-a0c3&lt;/code&gt;。&lt;/p&gt;
 &lt;h3 id="4-为你的显示器生成-plist-文件"&gt;4. 为你的显示器生成 plist 文件&lt;/h3&gt;
-&lt;p&gt;到 &lt;a href="https://comsysto.github.io/Display-Override-PropertyList-File-Parser-and-Generator-with-HiDPI-Support-For-Scaled-Resolutions/"&gt;这个网站&lt;/a&gt; ，在左侧的空里分别输入显示器型号，DisplayProductID 和 DisplayVendorID，注意填 16 进制的数字，并且检查下后边 10 进制的数字是不是和你刚才命令查到的一致。如果需要添加自己额外的分辨率，直接在下边新建一条分辨率配置就行。最后，复制右边生成 XML 格式文本，粘贴到刚才新建的文件里。（也可以直接从网站下载文件，去掉文件名后缀 &lt;code&gt;.plist&lt;/code&gt; ）&lt;/p&gt;
+&lt;p&gt;到 &lt;a href="https://comsysto.github.io/Display-Override-PropertyList-File-Parser-and-Generator-with-HiDPI-Support-For-Scaled-Resolutions/" rel="noopener noreferrer"&gt;这个网站&lt;/a&gt;
+ ，在左侧的空里分别输入显示器型号，DisplayProductID 和 DisplayVendorID，注意填 16 进制的数字，并且检查下后边 10 进制的数字是不是和你刚才命令查到的一致。如果需要添加自己额外的分辨率，直接在下边新建一条分辨率配置就行。最后，复制右边生成 XML 格式文本，粘贴到刚才新建的文件里。（也可以直接从网站下载文件，去掉文件名后缀 &lt;code&gt;.plist&lt;/code&gt; ）&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;XML 文件类似下边这样：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
@@ -585,8 +619,10 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;p&gt;基于这两种原则去管理分类和标签，就可以保证你的检索体系不崩溃的同时，检索效率最高。比如我先搜索「健身」分类，发现文章太多，于是我加上&lt;code&gt;饮食&lt;/code&gt;相关的标签，就可以轻松过滤掉大部分信息。标签越具体，组合越详细，过滤效果越好。&lt;/p&gt;
 &lt;p&gt;另外，假设我只记得文章的模糊内容，也可以直接搜索标签或内容。&lt;/p&gt;
 &lt;h2 id="完全标签化的思路"&gt;完全标签化的思路&lt;/h2&gt;
-&lt;p&gt;现在流行一种管理方式，抛弃分类，完全用标签管理。拿印象笔记为例，在这篇 &lt;a href="https://medium.com/@thomashoneyman/using-evernote-the-right-way-ef61f530d1ad"&gt;《Using Evernote (the right way)》&lt;/a&gt; 的文章中，作者抛弃了常见的笔记本分类法，完全用标签来整理笔记。笔记本只保留「收件箱」、「收藏夹」和「废纸篓」。这种方式免去了整理笔记本的麻烦，但同时，造成了检索时必须依赖标签。作者为了解决这一难题，提出了一种被我称之为**「给标签分类」（ 原文是 Organize Tags）**的做法。&lt;/p&gt;
-&lt;p&gt;其实给标签分类的做法非常常见，以 &lt;a href="https://www.douban.com/"&gt;豆瓣&lt;/a&gt; 为例，你肯定见过下边的标签分类方式：&lt;/p&gt;
+&lt;p&gt;现在流行一种管理方式，抛弃分类，完全用标签管理。拿印象笔记为例，在这篇 &lt;a href="https://medium.com/@thomashoneyman/using-evernote-the-right-way-ef61f530d1ad" rel="noopener noreferrer"&gt;《Using Evernote (the right way)》&lt;/a&gt;
+ 的文章中，作者抛弃了常见的笔记本分类法，完全用标签来整理笔记。笔记本只保留「收件箱」、「收藏夹」和「废纸篓」。这种方式免去了整理笔记本的麻烦，但同时，造成了检索时必须依赖标签。作者为了解决这一难题，提出了一种被我称之为**「给标签分类」（ 原文是 Organize Tags）**的做法。&lt;/p&gt;
+&lt;p&gt;其实给标签分类的做法非常常见，以 &lt;a href="https://www.douban.com/" rel="noopener noreferrer"&gt;豆瓣&lt;/a&gt;
+ 为例，你肯定见过下边的标签分类方式：&lt;/p&gt;
 &lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
@@ -747,7 +783,8 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;p&gt;结构性理财比非结构性理财高些。(既然买银行理财就是图安全，所以要买保本或风险低的。
-&lt;a href="http://www.chinawealth.com.cn/zzlc/index.shtml"&gt;中国理财网&lt;/a&gt;可以查看风险和收益，是权威的半官方类网站。银行 T+0 产品随时可以到帐，适合大量临时性资金的理财)&lt;/p&gt;&lt;/blockquote&gt;
+&lt;a href="http://www.chinawealth.com.cn/zzlc/index.shtml" rel="noopener noreferrer"&gt;中国理财网&lt;/a&gt;
+可以查看风险和收益，是权威的半官方类网站。银行 T+0 产品随时可以到帐，适合大量临时性资金的理财)&lt;/p&gt;&lt;/blockquote&gt;
 &lt;ul&gt;
 &lt;li&gt;保险理财。虽然名字叫保险，但是本身没有保障功能，是保险公司包装出来的理财产品。&lt;/li&gt;
 &lt;li&gt;信托、券商资产管理计划&lt;/li&gt;
@@ -765,13 +802,15 @@ ioreg -l | grep &amp;#34;DisplayProductID&amp;#34;
 &lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;p&gt;财经信息来源：财联社，财新网
-读研报推荐迈博汇金。又叫慧博投研资讯。网址是&lt;a href="http://www.microbell.com/newweb/web/search?index=0"&gt;http://www.microbell.com/newweb/web/search?index=0&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+读研报推荐迈博汇金。又叫慧博投研资讯。网址是&lt;a href="http://www.microbell.com/newweb/web/search?index=0" rel="noopener noreferrer"&gt;http://www.microbell.com/newweb/web/search?index=0&lt;/a&gt;
+&lt;/p&gt;&lt;/blockquote&gt;
 &lt;h3 id="浮动收益类资产"&gt;浮动收益类资产&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;基金&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;理财工具&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;蚂蚁聚宝&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://fund.chinastock.com.cn/jjpj/"&gt;基金评价报表&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://fund.chinastock.com.cn/jjpj/" rel="noopener noreferrer"&gt;基金评价报表&lt;/a&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;em&gt;分类&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;

@@ -13,7 +13,8 @@
 &lt;li&gt;写出风格统一、用户友好的错误信息&lt;/li&gt;
 &lt;li&gt;提高代码的可维护性，降低沟通成本&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Google 文档原文：&lt;a href="https://developers.google.com/tech-writing/error-messages"&gt;Error Messages&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Google 文档原文：&lt;a href="https://developers.google.com/tech-writing/error-messages" rel="noopener noreferrer"&gt;Error Messages&lt;/a&gt;
+&lt;/p&gt;
 &lt;h2 id="基本原则"&gt;基本原则&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;错误不应该被掩盖 (Don&amp;rsquo;t fail silently)&lt;/li&gt;
@@ -45,7 +46,8 @@
 &lt;/ul&gt;
 &lt;h2 id="清晰的错误信息"&gt;清晰的错误信息&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;简明扼要，使用主动语态。（这方面内容可以参考&lt;a href="https://sund.site/posts/2022/technical-writing/"&gt;技术文档写作指南&lt;/a&gt;）&lt;/li&gt;
+&lt;li&gt;简明扼要，使用主动语态。（这方面内容可以参考&lt;a href="https://sund.site/posts/2022/technical-writing/"&gt;技术文档写作指南&lt;/a&gt;
+）&lt;/li&gt;
 &lt;li&gt;避免出现双重否定句式。&lt;/li&gt;
 &lt;li&gt;让目标用户能够理解，即根据用户掌握的知识，提供有帮助的内容。&lt;/li&gt;
 &lt;li&gt;专业术语应前后一致。&lt;/li&gt;
@@ -71,7 +73,8 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nt"&gt;&amp;#34;error&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Bad Request - Request is missing a required parameter: -collection_name. Update parameter and resubmit. Issue Reference Number BR0x0071&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><guid>https://sund.site/posts/2022/technical-writing/</guid><description>&lt;p&gt;本文内容摘录自 &lt;a href="https://developers.google.com/tech-writing/overview"&gt;Technical Writing&lt;/a&gt; （谷歌技术文档写作指南）的第一部分。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>技术文档写作指南</title><link>https://sund.site/posts/2022/technical-writing/</link><pubDate>Sun, 21 Aug 2022 15:29:00 +0800</pubDate><guid>https://sund.site/posts/2022/technical-writing/</guid><description>&lt;p&gt;本文内容摘录自 &lt;a href="https://developers.google.com/tech-writing/overview" rel="noopener noreferrer"&gt;Technical Writing&lt;/a&gt;
+ （谷歌技术文档写作指南）的第一部分。&lt;/p&gt;
 &lt;p&gt;本文适用于想要提高技术文档写作、技术领域日常沟通能力的读者，对于一些商务的、非文学性质的英语办公场景沟通，也能起一定帮助作用。&lt;/p&gt;
 &lt;p&gt;阅读过本文的读者可以：&lt;/p&gt;
 &lt;ul&gt;
@@ -290,7 +293,8 @@
 &lt;/ul&gt;
 &lt;h2 id="标点符号punctuation"&gt;标点符号（Punctuation）&lt;/h2&gt;
 &lt;p&gt;&lt;em&gt;这部分原文涉及英文标点符号的用法，大部分和汉语规则近似，略过不译。以下是我在排版方面的经验：
-大多数中国人对英文排版易错的地方是空格的滥用。可以参考这篇文章： &lt;a href="https://zhuanlan.zhihu.com/p/110266694"&gt;英文标点要如何排版？&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+大多数中国人对英文排版易错的地方是空格的滥用。可以参考这篇文章： &lt;a href="https://zhuanlan.zhihu.com/p/110266694" rel="noopener noreferrer"&gt;英文标点要如何排版？&lt;/a&gt;
+&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;概括起来：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;, ; : . ? !&lt;/code&gt; 这些符号后加空格&lt;/li&gt;
@@ -318,7 +322,10 @@
 &lt;/ul&gt;
 &lt;h2 id="延伸阅读资料"&gt;延伸阅读资料&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://docsfordevelopers.com/"&gt;Docs for Developers&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.oreilly.com/library/view/software-engineering-at/9781492082781/"&gt;Software Engineering at Google&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/"&gt;Gitlab Technical Writing Fundamentals courese&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docsfordevelopers.com/" rel="noopener noreferrer"&gt;Docs for Developers&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.oreilly.com/library/view/software-engineering-at/9781492082781/" rel="noopener noreferrer"&gt;Software Engineering at Google&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://about.gitlab.com/handbook/engineering/ux/technical-writing/fundamentals/" rel="noopener noreferrer"&gt;Gitlab Technical Writing Fundamentals courese&lt;/a&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

@@ -10,6 +10,10 @@
     /* Typography */
     --font-primary: 'Charter', 'Bitstream Charter', 'Source Serif 4', 'Lora',
                      'Source Han Serif SC', 'Noto Serif SC', serif;
+    /* Body text is sans (思源黑体 / Source Han Sans). Headings stay serif. */
+    --font-body: 'Inter', 'Source Han Sans SC', 'Source Han Sans CN',
+                 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB',
+                 'Microsoft YaHei', sans-serif;
     --font-secondary: 'JetBrains Mono', 'Source Code Pro', 'SF Mono', Menlo,
                        Consolas, monospace;
 
@@ -79,7 +83,7 @@
    Body — serif everywhere, comfortable reading
    ============================================================ */
 body {
-    font-family: var(--font-primary);
+    font-family: var(--font-body);
     font-size: var(--font-size-primary);
     margin: auto;
     padding: 20px;
@@ -98,12 +102,19 @@ body {
        keeps light/dark in lock-step with the toggle. */
 }
 
-/* All headings: serif, weight 700, NOT sans-serif */
-h1, h2, h3, h4, h5, h6, strong, b {
+/* All headings: serif (思源宋体), weight 700.
+   Inline emphasis (strong/b) follows whatever font it sits in — so it is
+   sans inside body paragraphs and serif inside a heading. */
+h1, h2, h3, h4, h5, h6 {
     color: var(--text-color-primary);
     font-family: var(--font-primary);
     font-weight: 700;
     letter-spacing: -0.005em;
+}
+
+strong, b {
+    color: var(--text-color-primary);
+    font-weight: 700;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -146,6 +157,7 @@ a:visited {
 .title {
     text-decoration: none;
     border: 0;
+    font-family: var(--font-primary);
     color: var(--text-color-primary);
 }
 

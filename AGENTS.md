@@ -41,6 +41,24 @@ No `images`, `featured_image`, `cover` fields. All images are inline Markdown `!
 - Comments: Giscus (GitHub Discussions)
 - Tags are Chinese + English mixed
 
+## Typography — intentionally split serif/sans
+
+Body text and headings use **different** font families. This is deliberate; don't
+"unify" them.
+
+| Element | Family | Var |
+|---------|--------|-----|
+| Body text, lists, blockquotes, tables, nav, footer | sans — `Inter` + `Noto Sans SC` (思源黑体) | `--font-body` |
+| `h1`–`h6`, site title (`.title`), TOC (`.toc-nav a`) | serif — `Source Serif 4` + `Noto Serif SC` (思源宋体) | `--font-primary` |
+
+- Defined in `layouts/partials/style.html`; the Google Fonts `<link>` is in
+  `layouts/partials/custom_head.html`. Both families must stay in that one link
+  tag (`display=swap`).
+- Inline `strong` / `b` has **no** `font-family` of its own — it inherits, so it
+  renders sans inside a paragraph and serif inside a heading. Keep it that way.
+- `.title` and `.toc-nav a` set `font-family` explicitly because they no longer
+  inherit a serif body.
+
 ## Bilingual post rule — mandatory check before every new post
 
 This site uses **Hugo native multilingual** (not inline mixing). Both languages share `contentDir = "content"`; English files use the `.en.md` suffix convention.

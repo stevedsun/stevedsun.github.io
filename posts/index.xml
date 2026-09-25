@@ -1,4 +1,189 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>文章 on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in 文章 on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Thu, 02 Jul 2026 00:00:01 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】每个 AI 工程师都应该知道的 20 个循环设计模式</title><link>https://sund.site/posts/2026/20-loop-design-patterns-every-ai-engineer-should-know/</link><pubDate>Thu, 02 Jul 2026 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2026/20-loop-design-patterns-every-ai-engineer-should-know/</guid><description>&lt;p&gt;&lt;figure
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>文章 on Steve Sun</title><link>https://sund.site/posts/</link><description>Recent content in 文章 on Steve Sun</description><generator>Hugo</generator><language>zh</language><copyright>版权所有 © 2013-2026, Steve Sun</copyright><lastBuildDate>Sat, 26 Sep 2026 01:20:00 +0800</lastBuildDate><follow_challenge><feedId>41397727810093074</feedId><userId>56666701051455488</userId></follow_challenge><atom:link href="https://sund.site/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>【译文】当 AI 什么都能生成，如何建立品味</title><link>https://sund.site/posts/2026/how-to-build-taste/</link><pubDate>Sat, 26 Sep 2026 01:20:00 +0800</pubDate><guid>https://sund.site/posts/2026/how-to-build-taste/</guid><description>&lt;p&gt;&lt;figure
+ class="image-caption"
+&gt;
+ 
+ &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/how-to-build-taste-header.png" alt="" loading="lazy" /&gt;
+ 
+ &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;/strong&gt;：&lt;a href="https://vikasmalpani.com/how-to-build-taste/" rel="noopener noreferrer"&gt;How to Build Taste When AI Makes Everything&lt;/a&gt;
+&lt;br&gt;
+&lt;strong&gt;作者&lt;/strong&gt;：Vikas Malpani&lt;br&gt;
+&lt;strong&gt;声明&lt;/strong&gt;：本文由 AI 翻译，可能包含错误&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;过去几周，我的信息流一直在围绕「品味」争吵。Paul Graham 说，当任何人都能做任何东西时，差异化就变成了你选择做什么。一位知名工程师宣称，品味现在才是真正的工程能力。然后 Linear 的产品负责人强力反驳：你的品味大概并不比 AI 好，别再假装那是你的优势了。还有人补了一句我至今记得的话——整场关于品味的对话之所以成立，恰恰因为它含糊、无法被证伪、并且让引用它的人显得体面。&lt;/p&gt;
+&lt;p&gt;所有这些都是一次性的部分。名字会换，引用推文会滚走，下个月同一场争吵会在另一个话题标签下重开。不会过期的是它底下那个问题，而这个问题是真的：当机器能在几秒钟内做出几乎任何东西的合格版本时，人的贡献究竟是什么？「品味」是一个严肃的答案，还是一个舒服的托词？&lt;/p&gt;
+&lt;p&gt;我诚实的看法是，两边各对一半，而两边都漏掉了同一件事。把品味当护城河来卖的人，很少说清品味是什么、以及怎么把它建得更多，所以质疑者可以把它当成自我，一挥手就打发掉。质疑者说得也对：在一个已经吸收了每一座设计奖、每一本畅销书的模型面前，你不可能靠「在品味上普遍更好」取胜。但他们从一个为真的前提得出了错误的结论。品味是真实的，是可以建的，而真正要紧的那个版本，不是他们在攻击的版本。这篇文章讲的是那个要紧的版本，以及如何有意地把它建起来。&lt;/p&gt;
+&lt;h2 id="目录"&gt;目录&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;这场关于「品味」的争论，真正争的是什么&lt;/li&gt;
+&lt;li&gt;品味的解剖结构&lt;/li&gt;
+&lt;li&gt;AI 真正从你手里拿走的东西&lt;/li&gt;
+&lt;li&gt;平均品味 vs 作者品味&lt;/li&gt;
+&lt;li&gt;每一层怎么练&lt;/li&gt;
+&lt;li&gt;品味是一套拒绝机制&lt;/li&gt;
+&lt;li&gt;品味是不是护城河：证据&lt;/li&gt;
+&lt;li&gt;品味债：跳过拒绝之后，你交付了什么&lt;/li&gt;
+&lt;li&gt;品味地图&lt;/li&gt;
+&lt;li&gt;质疑者对在哪里，以及为什么这救不了他们&lt;/li&gt;
+&lt;li&gt;周一早上该做什么&lt;/li&gt;
+&lt;li&gt;常见问题&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="这场关于品味的争论真正争的是什么"&gt;这场关于「品味」的争论，真正争的是什么&lt;/h2&gt;
+&lt;p&gt;先从数字说起，因为它们解释了为什么这场争论忽然显得紧迫，而不是学院式的清谈。到 2026 年，做出一件「还过得去」的东西，成本已经跌到接近于零。斯坦福互联网观测站的一项估算显示，单个内容工厂现在平均每天产出 94,000 篇文章。两千多个图像生成工具每天生成的 AI 图片约有 3400 万张。Ahrefs 的一项研究指出，新创建的网页中约 74% 含有 AI 生成的文本，接近 58% 的新内容带着低投入机器写作的痕迹。相比 2023 年的基线，Google 的内容下架动作增长了 300% 以上。对这样的结果，客气的说法叫「丰盛」；人们实际用的词是 slop。&lt;/p&gt;
+&lt;p&gt;生产昂贵的时候，「能生产」本身就是优势。你只要交付得更多、更快，或者只要交付得出来，就能赢。这个优势没有了。当每个人都能在一顿午饭之前生成一个干净的落地页、一个能用的 logo、一篇语法完美的文章、一个能跑的原型，生成的能力不再稀缺，选择的能力成了全部。这才是 Graham 那句话的真正含义：瓶颈从「做」移到了「选」。&lt;/p&gt;
+&lt;p&gt;这也正是为什么像 Taste Labs 这样的公司能在 2026 年年中拿到 1850 万美元融资，使命是教模型别再产出垃圾内容；也解释了它的创始人给品味下的那个值得借用的定义：在没有正确答案的地方，那条质量线。一个建造者做出的重要决定，大多数没有正确答案。标题能不能打动人、引导流程是否让人觉得可信、一个产品有没有灵魂——这些都没有单元测试。品味是你在正确答案用尽之后动用的能力，而正确答案比你作为工程师愿意承认的更早、更频繁地用尽。&lt;/p&gt;
+&lt;p&gt;所以这场争论真的不在「品味重不重要」上。所有人都默默同意它重要。争论在于：品味究竟是一件可以命名、可以训练、可以为之负责的东西，还是一种含糊的品质——赢家事后用它来解释自己的运气。质疑者攻击的是后一种版本，他们攻得对。本文余下的部分要给你前一种版本，因为能被定义的东西，就能被训练。&lt;/p&gt;
+&lt;h2 id="品味的解剖结构"&gt;品味的解剖结构&lt;/h2&gt;
+&lt;p&gt;下面是我实际在用的模型。品味不是一样东西，而是四样东西层层嵌套；几乎所有人只建了最外面那一层，然后纳闷为什么自己的判断力显得浅。你可以把它想成一组逐层收紧的提炼，每一层都比外面那层更窄、更难获得。&lt;/p&gt;
+&lt;p&gt;最外面一层是&lt;strong&gt;见识&lt;/strong&gt;。它是原材料，是你所见一切构成的文库。见识广的人看过成千上万的产品，跨类型地读过，研究过与自己相邻领域里的作品。见识是必需的，而大多数人就停在这里。他们把「我看过很多」误当成「我有品味」，就像把「我有很多书」误当成「我能写一本」。&lt;/p&gt;
+&lt;p&gt;见识里面是&lt;strong&gt;辨别力&lt;/strong&gt;，用语言说出一样东西为什么比另一样好——不是耸耸肩、凭个感觉。这一层分出批评者和粉丝。粉丝知道自己喜欢什么；有辨别力的人能告诉你，这个界面让人感觉更安静，是因为它只用了两种字号而不是五种；或者这段文字读起来拖沓，是因为每句话长度都一样。感觉被转换成语言，而语言才让品味可以教、可以传。&lt;/p&gt;
+&lt;p&gt;辨别力里面是&lt;strong&gt;立场&lt;/strong&gt;，是对「什么值得做」真正持有的态度。辨别力让你能评估任何东西；立场意味着你有意地为一些东西站台、与另一些东西对立，即便众人不同意。品味在这里从一种接收性的能力变成一种创造性的能力。而在最中心、最小也最稀有的一层，是&lt;strong&gt;拒绝&lt;/strong&gt;：愿意按立场行事，把不符合它的作品杀掉——包括你自己的，包括已经做得很好的作品。拒绝是唯一会出现在产品里的那一层，因为它是顾客唯一能看到的一层。外面那三层是私有的，最里面这层才上线。&lt;/p&gt;
+&lt;h2 id="ai-真正从你手里拿走的东西"&gt;AI 真正从你手里拿走的东西&lt;/h2&gt;
+&lt;p&gt;现在到不舒服的部分，也就是质疑者说对的部分。现代模型拥有的见识比历史上任何一个人都多。它读得更多、看得更多，能在瞬间调取的参考比你一生吸收的还多。它的辨别力也很强，因为它吞下了数百万条评论，能流畅地解释为什么一个设计比另一个更干净。所以在外面的两层——见识和辨别力——机器赢，而且赢得没有悬念。&lt;/p&gt;
+&lt;p&gt;这就是为什么「你的品味并不比 AI 好」这句话听起来是真的。在大多数人用「品味」指代的那个维度上——关于质量的一般性良好判断——模型确实吸收了人类有史以来一切好东西的平均值。你让它做一个好看的 logo，你会得到一个好看的 logo；你让它改你的文案，它通常真的能改好。质量的地板被抬到了机器的位置，而机器现在就舒舒服服地坐在那块地板上。&lt;/p&gt;
+&lt;p&gt;但再看仔细一点，看模型产出的是&lt;strong&gt;哪一种&lt;/strong&gt;好，因为这方面研究异常清晰。大语言模型有一种记录得很充分的倾向：向训练分布的中心收缩，研究者称之为&lt;strong&gt;模式坍缩&lt;/strong&gt;（mode collapse）。2025 到 2026 年间的一系列研究——包括 ICML 上关于逃离模式坍缩的工作，以及越堆越多的关于输出同质化的论文——从不同角度指向同一件事：对同一个模型反复采样，结果会收敛到同样的几个想法上；独立训练的模型之间也会互相收敛。当机器写的文本淹没网络、并成为下一代模型的训练数据，整个系统就漂向——用某篇论文的话说——「平淡的中心倾向」。研究者给这个终点起了名字：&lt;strong&gt;知识坍缩&lt;/strong&gt;（knowledge collapse），被表达出来的想法缓慢收窄到一个越来越小的集合里。&lt;/p&gt;
+&lt;p&gt;仔细读这一段，机器的真实形状就浮现了。AI 不是一台品味机器，它是一台求平均的机器。它给你一切好东西的均值，所以它的产物永远合格，几乎从不令人意外；永远安全，很少具体。它在构造上就向中间回归，而且随着它越来越多地拿自己被同质化的输出去训练自己，它在边缘处只会越来越差，不会越来越好。它从你手里夺走的，是「泛泛地好」的价值。它在结构上拿不走的，是「具体地特别」的价值。这是两种不同的能力，整场关于品味的争论，关键就在把这两者分开。&lt;/p&gt;
+&lt;h2 id="平均品味-vs-作者品味"&gt;平均品味 vs 作者品味&lt;/h2&gt;
+&lt;p&gt;这就是化解这场争论的那个区分。人们称为品味的东西其实有两种，而现在只有一种值得去建。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;平均品味&lt;/strong&gt;是稳定地产出并识别共识质量的能力。它知道一般意义上的好是什么样，并且能打到那个标准。这确实有价值，而这正是模型现在大量拥有的东西。如果你的优势是平均品味，质疑者说的就是你。你在机器最强的那一条轴上跟机器比赛，而你会输，因为它能更快、更便宜地在凌晨三点做出那个「好的平均值」。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;作者品味&lt;/strong&gt;是另一回事。它是一种具体的、一贯的立场，毫不退缩地执行，而一个向均值回归的系统守不住它。它不关于比平均值更好，它关于在你选定的方向上可靠地偏离中心。它的全部价值恰恰来自它不是共识——而那正是模型被造出来要回避的区域。作者品味是有意图的偏离，反复到成为签名。平均品味问的是「这个好吗」，作者品味问的是「这是我们的吗」，这两个问题把答案拉向分布的两端。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;维度&lt;/th&gt;
+ &lt;th&gt;平均品味（AI 拥有的）&lt;/th&gt;
+ &lt;th&gt;作者品味（你要建的）&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;它问的问题&lt;/td&gt;
+ &lt;td&gt;这个好吗？&lt;/td&gt;
+ &lt;td&gt;这是我们的吗？&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;它在曲线上的位置&lt;/td&gt;
+ &lt;td&gt;在均值上，拥挤的中心。&lt;/td&gt;
+ &lt;td&gt;偏离中心，故意的，在你选定的方向上。&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;它优化什么&lt;/td&gt;
+ &lt;td&gt;共识质量，打到那个标准。&lt;/td&gt;
+ &lt;td&gt;可辨认的具体性，一种签名。&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;对模型的可防御性&lt;/td&gt;
+ &lt;td&gt;没有。这恰恰是它免费产出的东西。&lt;/td&gt;
+ &lt;td&gt;高。模式坍缩把这台机器推向别处。&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;它怎么失败&lt;/td&gt;
+ &lt;td&gt;可替换、过目即忘、到处都是。&lt;/td&gt;
+ &lt;td&gt;方向错了，一个没人想要的签名。&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;一旦看见这个切分，质疑者的论点就溶解了。Nan Yu 说得对，你的通用品味不比 AI 好。那是平均品味，你在那里从来赢不了。但真正有品味的人，从一开始就不在那里竞争。那些让人觉得「无法被复制」的创始人，产出的并不是一个更好的平均值。他们一贯地产出一种特定的东西，市场能辨认出来，而机器一碰就把它压平。我在&lt;a href="https://vikasmalpani.com/read-write-inversion/" rel="noopener noreferrer"&gt;读写倒置&lt;/a&gt;
+那篇里讲过相关的论证：品味是你能以多快的速度接受或拒绝廉价产出之上的吞吐限制。本文要讲的是它下面那一层——不是你判断得多快，而是这个判断是通用的，还是你的。&lt;/p&gt;
+&lt;h2 id="每一层怎么练"&gt;每一层怎么练&lt;/h2&gt;
+&lt;p&gt;好消息是这四层全都可以训练，而且训练方法枯燥地具体。它不是你与生俱来的性格。它是练手次数——和我在 &lt;a href="https://vikasmalpani.com/reps-problem/" rel="noopener noreferrer"&gt;reps 问题&lt;/a&gt;
+里写的同一种刻意练手，只是瞄准的是判断而不是产出。下面是每一层怎么建，以及你忽略它时它具体的失效方式。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;层级&lt;/th&gt;
+ &lt;th&gt;它是什么&lt;/th&gt;
+ &lt;th&gt;怎么建&lt;/th&gt;
+ &lt;th&gt;失效模式&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;见识&lt;/td&gt;
+ &lt;td&gt;一个可检索的文库，装着你所在领域及邻近领域里最好和最差的作品。&lt;/td&gt;
+ &lt;td&gt;每天收集参考。按&lt;strong&gt;原则&lt;/strong&gt;打标签，不要按感觉，这样你能在一分钟内找到对的那一个。从与你相邻的领域偷师。&lt;/td&gt;
+ &lt;td&gt;游客品味：你看过很多，但只在一条道上，于是你做出来的东西看起来跟那条道上的所有人一样。&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;辨别力&lt;/td&gt;
+ &lt;td&gt;用语言说出为什么一个东西胜过另一个。&lt;/td&gt;
+ &lt;td&gt;每天拿一个佳作和一个弱作，写两句话说明确切差别。把感觉逼进语言里。&lt;/td&gt;
+ &lt;td&gt;粉丝品味：你知道自己喜欢什么，但说不出为什么，于是你没法教它、没法为它辩护、压力下也没法调用它。&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;立场&lt;/td&gt;
+ &lt;td&gt;对什么值得做、什么不值得做持有态度。&lt;/td&gt;
+ &lt;td&gt;写下三条你对自己手艺的信念——聪明同行会不同意的那种。公开为它们辩护。缓慢修订它们。&lt;/td&gt;
+ &lt;td&gt;委员会品味：你把房间里所有意见平均一遍然后交付那个平均值，而那正是 AI 已经免费给你的东西。&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;拒绝&lt;/td&gt;
+ &lt;td&gt;杀掉不符合立场的作品，包括好作品。&lt;/td&gt;
+ &lt;td&gt;设一个标准，在自己的产出上执行它。练习对那些「还行但不属于你」的东西说不。测量你扔掉了多少。&lt;/td&gt;
+ &lt;td&gt;乘客品味：你有意见，但工具产出什么你就交什么，于是内层没有一层能到达顾客手里。&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;注意这些失效的形状。它们是一把「差一点就成」的阶梯。游客品味有见识但没有辨别力；粉丝品味有辨别力但没有立场；委员会品味有立场但没有拒绝，于是它把自己稀释回平均值；乘客品味前三层私有品质都有，却从不执行，于是交付出去的东西与一个完全没有品味的人做出来的毫无区别。每一种失效都只差一层，就差那一层让它变得具体。作者品味之所以稀有，不是因为哪一层特别难，而是因为你需要四层都在，而这个世界奖励提前停下。&lt;/p&gt;
+&lt;p&gt;如果这个季度你只建一层，那就建那个参考文库，因为它会复利，而且是上面一切层的输入。我认识的那些判断力最锐利的设计师，并没有什么神奇的眼睛。他们有一个打了标签、能搜索、装着成千上万个例子的档案库，以及每天往里加东西的习惯。从外面看起来像直觉的品味，几乎总是一个庞大的私人文库加上快速的检索。&lt;/p&gt;
+&lt;h2 id="品味是一套拒绝机制"&gt;品味是一套拒绝机制&lt;/h2&gt;
+&lt;p&gt;四层里最值得盯住的是拒绝，因为品味在这里才真正变得可见，而这也正是 AI 最明显欠缺的一层。有一句话我总在回头想：品味不是一只眼睛，品味是一次拒绝。有品味的人不是随处都能看见美的人，而是花了多年学会哪些好看的选项对这个具体的东西来说是错的，并且反复地、出声地对它们说不——哪怕说「是」更省事，而且没人会注意到。&lt;/p&gt;
+&lt;p&gt;这把品味从一种接收性的能力重塑成一种做减法的能力。你展示品味，靠的不是你能欣赏什么，而是你愿意扔掉什么。而这恰恰是模型做不到的动作，原因不是它缺乏判断，而是它缺少代价。模型多产出一个变体没有成本，没有一个具体要上线的东西押着它的声誉，没有一套积累起来的身份会被某些选项背叛。在「好」的范围内，它对一切都说是，因为说是是免费的，而且它没有自我要保护。拒绝需要一个「某个人」。它需要一个立场，让某些可以接受的选项构成对它的冒犯。&lt;/p&gt;
+&lt;p&gt;这里藏着一个简单的指标，我已经开始追踪它：&lt;strong&gt;拒绝率&lt;/strong&gt;。对一件作品，你生成了多少，留下了多少？按平均品味运作的人生成一个选项就交付，因为这个选项是好的，而「好」就是目标。按作者品味运作的人生成十个、杀掉九个，因为其中八个虽然好，却对这个东西来说依然是错的。低拒绝率是一盏警示灯。它通常意味着你接受了机器的平均值，因为它越过了质量线——而质量从来不是那条要紧的线。拒绝才是那份工作。如果你扔掉的很少，你不是在运用品味，你是在替共识洗钱。&lt;/p&gt;
+&lt;p&gt;这也是为什么品味在自动驾驶模式下活不下来。拒绝是一块肌肉，就像我在 &lt;a href="https://vikasmalpani.com/reps-problem/" rel="noopener noreferrer"&gt;reps 问题&lt;/a&gt;
+里描述的那种判断练手，当工具开始替你拿主意，它会很快变弱。每一次你因为「还行」、因为你累了，就把模型递给你的第一个合格产物交出去，你都从那个本该是你优势的能力上扣掉一次练手。工具不只是替你省下产出的力气。它还会悄悄提出，也替你省下选择的力气——而选择才是这份工作的全部。&lt;/p&gt;
+&lt;h2 id="品味是不是护城河证据"&gt;品味是不是护城河：证据&lt;/h2&gt;
+&lt;p&gt;对上面这一切，质疑者有一个公道的挑战：拿钱给我看。如果作者品味是真实的、可建的、可防御的，那就指一家靠它赢了的企业，别给我一份赞美它的宣言。公道。看 Linear。&lt;/p&gt;
+&lt;p&gt;Linear 在一个最拥挤、最不性感的软件品类里做项目管理工具，对手是 Jira 和一堆资金充裕的仿制品。它赢了：估值超过十亿美元，而据报道营销花费只有几万美元量级。它的做法是把「手艺」当作全部战略。不是功能，是手艺。每一次交互都以百毫秒以下的响应为目标，工单更新的耗时大约 47 毫秒，而 Jira 大约 3.2 秒——差了将近七十倍，用户手上感觉得到，即便他们从不去测量。这个团队对「先做快做丑、以后再修」这套标准创业剧本说了不。他们持有一个具体的、不流行的立场：速度和克制和精致，值得为它慢下来——并且在每一个屏幕上执行它。&lt;/p&gt;
+&lt;p&gt;他们故事里有句话应该终结这场品味之争，几乎就是照他们拥趸的说法引用的：竞争对手能抄走功能，但没有那支队伍就抄不走品味。这就是护城河的定义。功能是一份规格书，规格书可以交给任何人，包括模型，并被复制出来。作者品味不是规格书。它是某个特定群体做出的一千次一致的小拒绝，那群人共享同一个立场，而它不能随一张截图转移。Superhuman 在邮件这个所有人都以为已经结束的品类里跑了同一套剧本，每月收 30 美元，提供一个更快、更有主张的收件箱，靠死磕竞争对手认为不值得的细节，把留存保持在 80% 以上。这两家公司都没有比市场更高的平均品味。它们有更锐利的作者品味，而它复利成了一门生意。&lt;/p&gt;
+&lt;p&gt;这就是对「数据和分发才是唯一的真护城河」这个说法的实务回答。那确实是护城河，我在别处也这么论证过。但作者品味在这两者上游。它让一个产品值得被谈论——这就是你获得自然分发的方式；它让人们在功能清单完全相同的时候选你——这就是市场被洪水淹没时保护你的东西。在这场争论爆发之前，我就写过&lt;a href="https://vikasmalpani.com/taste-moat-founders/" rel="noopener noreferrer"&gt;没有过期时钟的护城河&lt;/a&gt;
+，那篇论证的是品味为什么可防御。这一篇讲的是质疑者一直在索要的机制：不是品味是不是护城河，而是哪一种品味、怎么建。&lt;/p&gt;
+&lt;h2 id="品味债跳过拒绝之后你交付了什么"&gt;品味债：跳过拒绝之后，你交付了什么&lt;/h2&gt;
+&lt;p&gt;跳过内层是有代价的，而且它不会立刻显现——这才是它危险的地方。我把它叫做&lt;strong&gt;品味债&lt;/strong&gt;，它值得和我写过的另一个相关概念&lt;a href="https://vikasmalpani.com/cognitive-debt-founders/" rel="noopener noreferrer"&gt;认知债&lt;/a&gt;
+仔细分开。认知债关于你自己：当你把思考外包出去，你自己的思考能力萎缩。品味债关于产品：当你把未经拒绝的机器产物一次次交进产品里，你的产出向均值漂移，一决定接一决定；无论你自己的能力是否退化，它都会在顾客看得见的东西上累积。&lt;/p&gt;
+&lt;p&gt;机制是简单的复利。每一次你接受模型的合格平均值，而没有让它过一遍你的立场和你的拒绝，你就把一个产品决策往分布中心推了一格。单独一个这样的决策是看不见的。但一百个这样的决策——分布在你的文案、界面、引导流程、邮件、错误提示、定价页上——你的产品就悄悄变成了你所在品类里所有产品的平均值。它没毛病。它越过了每一条质量线。而它完全可以被替换，因为你是用每一个竞争对手都在取用的同一份共识造出来的，来自同样的模型、训练在同一个被同质化的网络上。&lt;/p&gt;
+&lt;p&gt;对严肃的建造者来说，这才是 slop 时代的真正风险，而且风险不是你的产品会变差。做得差你会注意到。风险是你的产品会以一万个其他产品「好」的完全相同的方式变好，而这种雷同从内部看不见，因为每一个单独的决策看起来都合理。品味债就是「每个选择都没问题」和「整个东西没有任何签名」之间的那道缝。你只能用还债唯一的方式把它还掉，刻意地做：把拒绝重新插回循环里——把机器输出当成草稿而不是判决，对每一件东西问的不是「这个好吗」而是「这是我们的吗」，然后把那些仅仅是「好」的杀掉。我在&lt;a href="https://vikasmalpani.com/velocity-illusion/" rel="noopener noreferrer"&gt;速度幻觉&lt;/a&gt;
+里碰到过这件事的体感版本：速度掩盖了你其实什么都没在决定。品味债就是那种幻觉在产品里留下的残留。&lt;/p&gt;
+&lt;h2 id="品味地图"&gt;品味地图&lt;/h2&gt;
+&lt;p&gt;为了让选择变得具体，把其中两层互相画在坐标上。一个轴是你有多少见识和辨别力，大致就是你分辨好坏的能力；另一个轴是你的立场有多「作者」，也就是你持有的是立场还是默认的共识。四个位置就出来了，而只有一个位置能挡得住一台占有了平均值的机器。&lt;/p&gt;
+&lt;p&gt;左下角是&lt;strong&gt;衍生型作品&lt;/strong&gt;：没有眼光，也没有立场——就是工具现在以工业规模产出的纯 slop。左上角是&lt;strong&gt;自信的业余者&lt;/strong&gt;：全是主张，没有参考，是那类立场鲜明、文库却很薄、嗓门很大又经常说错的人。大多数关于「要有自己的观点」的建议，都在无意中把人推到这里——推给有立场、却没有见识撑住它的人，而这本身是另一种噪音。&lt;/p&gt;
+&lt;p&gt;右下角是&lt;strong&gt;真正要紧的那个陷阱&lt;/strong&gt;，因为有才华的人会掉进去。叫它「有品味但通用」：一双真正好的眼睛，真实的辨别力，却没有作者的立场。这个人每次都能做出干净、合格、正确的作品，而它恰恰就是 AI 现在免费发放的东西。如果你花了多年练出一双好眼睛，却感觉脚下的地在移动，原因就在这。你的平均品味是真实的成就，而它刚刚被商品化了。该做的不是去弄一双更好的眼睛，而是加上那个纵向的维度——去取一个立场，去成为「作者」。右上角——锐利的眼睛加上通过拒绝执行的真实立场——是这台求平均的机器唯一占不住的象限，因为要占住它，你必须有意地成为某个具体的人。那就是全部的目标。这篇文章里的一切，都是通往那个角落的路线。&lt;/p&gt;
+&lt;h2 id="质疑者对在哪里以及为什么这救不了他们"&gt;质疑者对在哪里，以及为什么这救不了他们&lt;/h2&gt;
+&lt;p&gt;让我把对面那一方认真地立起来，因为他们比「品味就是一切」派愿意承认的要更对。质疑者有三个好论点。第一，通常被援引的「品味」是不可证伪的，是人们用来解释自己的胜利、又不必指明任何东西的一个词，因此它成了自我的完美载体。第二，你的通用判断几乎肯定不比一个前沿模型好，所以把优势押在「在品味上胜过机器」上是妄想。第三，有很多人躲在品味后面，逃避分发、工程和销售这些更难、更可衡量的工作。三条都成立，我一条都不反驳。&lt;/p&gt;
+&lt;p&gt;而它们没有一条经得起本文赖以建立的那个区分的检验。不可证伪的那个版本，是被包装成神秘主义的平均品味，我同意它主要是自我。但作者品味是可证伪的。它做出一个预测：你的作品会可辨认地属于你，一贯地逆着共识被选出来，陌生人能在去掉标签之后分辨出你的产出和竞争对手的产出。这是可以检验的。做那个盲测。如果没人能在混排里挑出你的作品，你没有作者品味，你有的是一双好眼睛加上没有签名；你应该停止管它叫品味，开始去建立立场。质疑者对那个含糊版本说得对，他们攻击的是真实版本的一个稻草人。&lt;/p&gt;
+&lt;p&gt;下面是我能给整件事下的最锋利的说法。质疑者说你赢不了 AI 的品味，他们说对了，而这不重要，因为「比平均值更好」从来不是那个制胜的动作。制胜的动作，是在你选定的方向上可靠地偏离中心——那是一个被造出来向均值回归的系统在结构上回避的区域。你不是在跟机器比质量，你是在比具体性，而具体性是这台机器设计上的盲点。我现在看到有才华的人犯的最大错误，是把力气倒进「在质量上超过一个已经在质量上赢了的模型」；而真正的空地，是在具体性上超过一个根本没能力对任何事具体的模型。不要试图比平均值更好。要试图成为平均值装不下的那个人。&lt;/p&gt;
+&lt;p&gt;还有那个公道的配重，因为它总在：作者品味是真风险，不是免费午餐。一个强立场架在一个薄文库上，就是大声地说错话；而一个市场不想要的签名，无论多一贯，都是一门失败的生意。品味不免除你要在「人们看重什么」这件事上是对的。它是一个赌注：赌一个特定方向值得押上去，而具体的赌注会输。质疑者说品味不能替代分发、不能替代对市场的判断——这话对。品味是让你在拿到分发之后，那份分发值得拥有的东西。两者都对，而一个严肃的建造者同时持有两者；这也是我在这几篇文章里一直在画的 &lt;a href="https://vikasmalpani.com/founder-operating-system-ai-age/" rel="noopener noreferrer"&gt;AI 时代创始人操作系统&lt;/a&gt;
+的其中一部分。&lt;/p&gt;
+&lt;h2 id="周一早上该做什么"&gt;周一早上该做什么&lt;/h2&gt;
+&lt;p&gt;理论够了。下面是具体动作，而且全都能装进一个正常的工作周。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对自己做一次品味测试。&lt;/strong&gt; 翻出你最近交付的五件有模型参与的东西。对每一件，写一句话，准确说明你为什么留着它，而不是你放弃的那些备选。如果你写不出来——因为根本没有备选，你交付了第一个合格的输出——你刚刚找到了你的问题所在。你有的是偏好，不是品味，而偏好是机器已经有的东西。做一周，这个落差会变得无法忽视。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;这周就把参考文库建起来。&lt;/strong&gt; 开一个可以搜索的地方，每天往里加。截图、段落、产品，你所在领域和相邻领域里最好和最差的都行。给每一条按它展示的&lt;strong&gt;原则&lt;/strong&gt;打标签，而不是按它长什么样，这样三个月后你能在一分钟内调出对的例子。这是清单上回报最高的习惯，因为它喂养其他每一层；这也是我写&lt;a href="https://vikasmalpani.com/what-to-learn-ai-era/" rel="noopener noreferrer"&gt;在廉价产出时代哪些东西值得学&lt;/a&gt;
+时放在最前面的东西之一。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;写下你的三条拒绝。&lt;/strong&gt; 不是你喜欢什么，而是你拒绝什么。在你的品类里常见、合格、人人可接受，而你故意不做的三件事，因为它们不是你的。这是一套作者立场的脊椎。把它们公开贴出来，这样当它们变得不方便时，你不能悄悄放弃。私藏的立场是偏好；承诺的立场才是品味。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;在一个项目上追踪你的拒绝率。&lt;/strong&gt; 数一数你生成了多少、留下了多少。如果你留下的几乎是全部，你就是在替平均值洗钱；你应该刻意地生成更多选项、杀掉更多，直到「扔掉」感觉像是那份真工作——因为它就是。拒绝才是会上线的那一层。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;每季度做一次盲测。&lt;/strong&gt; 把你作品里的一件去掉品牌，和三个竞争对手的、以及一份模型原始输出混在一起，让一个诚实的人挑出你的。如果他们能挑出来，你的签名是真的，而且在变强。如果挑不出来，你就在「有品味但通用」那个角落里，而你现在确切知道接下来该建哪一层。这是判断力所能允许的最接近单元测试的东西；对一个单打独斗的建造者来说，它也是少数值得当作「&lt;a href="https://vikasmalpani.com/one-person-company-incompressible-core/" rel="noopener noreferrer"&gt;不可压缩的那部分&lt;/a&gt;
+」保护起来、任何工具都吸收不走的能力之一。&lt;/p&gt;
+&lt;p&gt;这些都不需要你与生俱来的天赋。它需要的是瞄准判断而非产出的练手、一个文库、一个立场，以及把好作品扔掉的意愿。机器把一切好东西的平均值即时、免费地给你。你现在全部的工作，就是有意地具体——因为具体性是它唯一复制不了的东西。把四层建起来，让拒绝这块肌肉活着，你就占住了洪水中唯一到不了的那个角落。如果你想看这件事所处的更大背景，&lt;a href="https://vikasmalpani.com/ai-opportunity-map-2026/" rel="noopener noreferrer"&gt;AI 机会地图&lt;/a&gt;
+标出了这样的判断力在一门生意里从哪里开始变现。&lt;/p&gt;
+&lt;h2 id="常见问题"&gt;常见问题&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;问：在 AI 什么都能做的时候，「建立品味」是什么意思？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;答：它意味着刻意发展四种层叠的能力：见识（一个可搜索的、存放佳作与劣作的文库）、辨别力（用语言说出一样东西为什么胜过另一样）、立场（对什么值得做持有态度）、拒绝（杀掉不符合这个立场的作品）。AI 已经用零成本产出合格的平均作品淹没了外面的几层，所以人的优势向内移动，移到「持有一个具体而一贯的立场」上——那是向均值回归的模型复制不出来的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;问：品味真的是一项可建的能力，还是天生的？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;答：它是可建的能力，而把它当成天生的，正是人们从不发展它的主要原因。品味是从见识、练习和重复中压缩出来的判断，跟任何专家直觉的形成方式一样。眼睛最锐利的设计师，几乎总是维持着一个庞大的打标签参考文库，以及每天分析一个强例子和一个弱例子的习惯。从外面看像魔法的直觉，通常是一个大的私人文库加上快速检索和一个承诺了的立场。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;问：人的品味真的比 AI 好吗？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;答：平均而言不好，而且这是个错误的问题框架。前沿模型比任何个人拥有更多见识和更强的通用辨别力，所以在通用质量上它赢。但模型在构造上就向均值回归——研究者称之为模式坍缩——并且随着它们拿自己的输出去训练自己，会越来越同质化。所以人不是在平均质量上赢 AI。人能守住一件 AI 在结构上守不住的事：一个具体的、偏离中心的、作者性的立场，被一贯地执行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;问：平均品味和作者品味的区别是什么？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;答：平均品味是产出并识别共识质量的能力，打到一般意义上的「好」那个标准。那正是 AI 现在用很低成本就能做到的事，所以在那里竞争是必输的游戏。作者品味是一个具体而一贯的立场，持在共识的对面；有意图的偏离，重复直到成为签名。价值来自可辨认的「特别」，而那是向均值回归的模型被造出来要回避的区域。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;问：为什么 AI 生成的作品即便技术上很好，也常常平淡？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;答：因为模型产出的是它训练数据的统计中心。2025 到 2026 年关于模式坍缩和输出同质化的研究显示，模型会收敛到同样的想法上——无论是对同一模型反复采样，还是在独立训练的系统之间；而当 AI 内容成为下一代模型的训练数据，整个系统会漂向平淡的中心倾向。输出之所以合格，是因为它是好作品的平均值；它之所以过目即忘，也是同一个原因：一切的平均，对什么都没有针对性。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;问：什么是拒绝机制，为什么它比一双好眼睛更重要？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;答：品味显现的地方，不是你能欣赏什么，而是你愿意扔掉什么。拒绝机制是这样一个实践：从你的立场出发设一个标准，并杀掉不符合它的作品——包括那些很好但不属于你的作品。它重要，是因为拒绝是顾客唯一能看到的那一层，也是模型最明显欠缺的那一层，因为模型没有代价、没有声誉、也没有一个会被某些选项背叛的自我。追踪你的拒绝率：如果你留下的几乎是全部，你交付的是平均值，而不是在运用品味。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;问：品味真的能成为商业护城河吗？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;答：能。最清楚的证据是 Linear 这样的公司：它靠手艺赢下了一个拥挤的软件品类，在营销花费只有几万美元量级的情况下达到超过十亿美元的估值，持有一个具体的、不流行的关于速度与精致的立场，并在所有地方执行它。竞争对手能抄功能——功能是谁都能复制的规格书——但没有那支持有它的队伍，就抄不走作者品味，因为那是一千次一贯的拒绝，而不是一份文档。Superhuman 在邮件里跑了同一套剧本。品味同时处在分发和定价权的上游。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;问：什么是品味债？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;答：品味债，是你反复交付未经拒绝的机器产物时，你的产品向均值发生的漂移。每一个被接受的平均值，都是一个被推向分布中心的决策；一百个小选择之后，你的产品就变得可以替换成任何一个从同样的模型、同样的同质化网络里取料的竞争对手。它和认知债不同，认知债是你自己思考能力的萎缩；品味债住在产品里，而不是你脑子里。还债的方式是把模型输出当草稿，对每一件东西问的不是「这个好吗」而是「这是我们的吗」，并杀掉那些仅仅是「好」的。&lt;/p&gt;</description></item><item><title>【译文】每个 AI 工程师都应该知道的 20 个循环设计模式</title><link>https://sund.site/posts/2026/20-loop-design-patterns-every-ai-engineer-should-know/</link><pubDate>Thu, 02 Jul 2026 00:00:01 +0800</pubDate><guid>https://sund.site/posts/2026/20-loop-design-patterns-every-ai-engineer-should-know/</guid><description>&lt;p&gt;&lt;figure
  class="image-caption"
 &gt;
  
@@ -1064,317 +1249,4 @@ if metrics.quality &amp;lt; threshold:
 &lt;p&gt;&lt;em&gt;&amp;ldquo;人的尊严不依赖于人的能力。&amp;rdquo;&lt;/em&gt; —— Magnifica Humanitas, §50&lt;/p&gt;
 &lt;p&gt;神学中也使用类似的术语。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;本文由 AI 翻译，可能存在错误&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>如何设计一个智能体（AI Agent）</title><link>https://sund.site/posts/2026/how-to-make-an-agent/</link><pubDate>Tue, 26 May 2026 16:11:00 +0800</pubDate><guid>https://sund.site/posts/2026/how-to-make-an-agent/</guid><description>&lt;p&gt;&lt;figure
- class="image-caption"
-&gt;
- 
- &lt;img src="https://raw.githubusercontent.com/stevedsun/blog-img/main/ai-agent-dot-matrix-header-900x383.png" alt="" loading="lazy" /&gt;
- 
- &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/p&gt;
-&lt;p&gt;AI 智能体（Agent）很有可能是未来AI软件设计的范式，所以对于大部分开发者、刚接触 vibe coding 的非技术人员，了解它的设计方式和背后的原理，就能在未来设计新时代的应用软件时更得心应手。&lt;/p&gt;
-&lt;p&gt;本文试图用通俗易懂的语言，让你理解什么是 AI Agent，它解决了什么问题，以它为基础设施，有哪些协议和工具将在未来派上用场。&lt;/p&gt;
-&lt;p&gt;本文目标读者：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Vibe coding 人群（快速做原型、边做边改）&lt;/li&gt;
-&lt;li&gt;程序员&lt;/li&gt;
-&lt;li&gt;刚接触编程的非技术用户&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;h2 id="从第一性原理出发agent-框架到底在解决什么问题"&gt;从第一性原理出发：Agent 框架到底在解决什么问题&lt;/h2&gt;
-&lt;h3 id="模型很强但不可靠"&gt;模型很强，但不可靠&lt;/h3&gt;
-&lt;p&gt;大模型（LLM）会“猜”，不会“保证”。
-所以你不能把它当确定性程序（同样输入一定同样输出）。&lt;/p&gt;
-&lt;p&gt;需要解决的问题：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;如何让不稳定输出进入可控流程&lt;/li&gt;
-&lt;li&gt;如何在失败时知道失败在哪里&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="现实中的任务结果往往不是一个简单的答复而是一个完整的流程产出物"&gt;现实中的任务结果往往不是一个简单的答复，而是一个完整的流程产出物&lt;/h3&gt;
-&lt;p&gt;真实任务往往是：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;读信息&lt;/li&gt;
-&lt;li&gt;做决策&lt;/li&gt;
-&lt;li&gt;调用工具&lt;/li&gt;
-&lt;li&gt;根据工具结果继续决策&lt;/li&gt;
-&lt;li&gt;最终产出文档、代码或者其他&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;这意味着 Agent 的设计目标不仅局限在“一问一答”，而是一套“循环决策系统”。&lt;/p&gt;
-&lt;h3 id="用户不想等到最后才看到结果"&gt;用户不想等到最后才看到结果&lt;/h3&gt;
-&lt;p&gt;在和AI交互过程中，用户通常希望：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;过程可见（streaming，流式显示）&lt;/li&gt;
-&lt;li&gt;可以打断（abort，中止当前任务）&lt;/li&gt;
-&lt;li&gt;可以中途追加指令（steer，在执行任务过程中给予引导）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;所以系统必须天然支持实时交互，而不是一次性黑盒执行。&lt;/p&gt;
-&lt;h3 id="上下文会越来越大成本会越来越高"&gt;上下文会越来越大，成本会越来越高&lt;/h3&gt;
-&lt;p&gt;对话越长，输入越大，速度越慢，费用越高，甚至会超限。
-必须有“压缩历史、保留关键信息”的机制。&lt;/p&gt;
-&lt;h3 id="一个内核要服务多种交互方式"&gt;一个内核要服务多种交互方式&lt;/h3&gt;
-&lt;p&gt;同一个 Agent 要能跑在：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;终端界面（TUI，Terminal UI，终端交互界面）&lt;/li&gt;
-&lt;li&gt;远程调用（RPC，Remote Procedure Call，远程过程调用）&lt;/li&gt;
-&lt;li&gt;未来可能的 Web 或 App&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;所以&amp;quot;智能内核&amp;quot;和&amp;quot;界面层&amp;quot;必须解耦（彼此独立，不绑死）。&lt;/p&gt;
-&lt;hr&gt;
-&lt;h2 id="从问题到需求再到设计"&gt;从问题到需求，再到设计&lt;/h2&gt;
-&lt;h3 id="需求清单"&gt;需求清单&lt;/h3&gt;
-&lt;p&gt;一个可用 Agent 框架至少要满足：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;可循环：支持“思考 -&amp;gt; 调工具 -&amp;gt; 再思考”&lt;/li&gt;
-&lt;li&gt;可观察：每一步都能被 UI 或日志系统看到&lt;/li&gt;
-&lt;li&gt;可控制：能暂停、取消、插队、续跑&lt;/li&gt;
-&lt;li&gt;可恢复：失败后可重试，可继续上一次会话&lt;/li&gt;
-&lt;li&gt;可扩展：能加新工具、新模型、新前端&lt;/li&gt;
-&lt;li&gt;可治理：对成本、上下文、权限有边界&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id="端到端流程图"&gt;端到端流程图&lt;/h3&gt;
-&lt;p&gt;以问题驱动需求，需求驱动设计的方式，我们就可以得出下面的流程图：&lt;/p&gt;
-&lt;div class="mermaid"&gt;flowchart TD
- A[用户提出目标] --&gt; B[Agent 理解当前任务]
- B --&gt; C[是否需要工具?]
- C -- 否 --&gt; D[直接给出答案]
- C -- 是 --&gt; E[生成工具调用请求]
- E --&gt; F[执行工具]
- F --&gt; G[拿到工具结果]
- G --&gt; H[结果是否足够?]
- H -- 否 --&gt; B
- H -- 是 --&gt; D
-
- D --&gt; I[流式返回给用户]
- I --&gt; J[用户可中断/追加要求]
- J --&gt; B&lt;/div&gt;
-&lt;p&gt;这个图表达的是：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Agent 是闭环系统，不是单次函数。&lt;/li&gt;
-&lt;li&gt;“工具”是能力放大器，不是附属品。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;用户在回路内，而不是回路外&lt;/strong&gt;。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="整体架构图"&gt;整体架构图&lt;/h3&gt;
-&lt;div class="mermaid"&gt;graph LR
- subgraph Interaction Layer[交互层]
- UI1[TUI/CLI]
- UI2[RPC/API]
- UI3[Web/App]
- end
-
- subgraph Runtime Layer[运行时层]
- SESSION[会话编排器]
- POLICY[策略中心: 重试/压缩/预算]
- end
-
- subgraph Core Layer[核心层]
- LOOP[Agent 决策循环]
- STATE[状态管理]
- EVENTS[事件总线]
- end
-
- subgraph Capability Layer[能力层]
- TOOLS[工具系统]
- MODEL[模型适配层]
- MEMORY[记忆与上下文管理]
- end
-
- UI1 --&gt; SESSION
- UI2 --&gt; SESSION
- UI3 --&gt; SESSION
- SESSION --&gt; LOOP
- SESSION --&gt; POLICY
- LOOP &lt;--&gt; STATE
- LOOP --&gt; EVENTS
- LOOP &lt;--&gt; TOOLS
- LOOP &lt;--&gt; MODEL
- POLICY &lt;--&gt; MEMORY
- MODEL --&gt; LLM[外部模型服务]&lt;/div&gt;
-&lt;h3 id="组件图理解谁负责什么"&gt;组件图（理解“谁负责什么”）&lt;/h3&gt;
-&lt;div class="mermaid"&gt;flowchart LR
- USER[用户]
- ORCH[会话编排器]
- CORE[Agent Core]
- ADAPTER[模型适配器]
- TOOLRUN[工具执行器]
- OBS[观察与事件]
-
- USER &lt;--&gt; ORCH
- ORCH &lt;--&gt; CORE
- CORE &lt;--&gt; ADAPTER
- CORE &lt;--&gt; TOOLRUN
- CORE --&gt; OBS
- OBS --&gt; ORCH&lt;/div&gt;
-&lt;p&gt;职责拆分：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;会话编排器：处理用户输入、会话状态、重试和压缩策略。&lt;/li&gt;
-&lt;li&gt;Agent Core：只做“思考循环”和“状态推进”。&lt;/li&gt;
-&lt;li&gt;模型适配器：屏蔽不同模型供应商差异。&lt;/li&gt;
-&lt;li&gt;工具执行器：统一执行本地或远程工具。&lt;/li&gt;
-&lt;li&gt;观察与事件：把过程变成可见信号给 UI/日志系统。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;h2 id="落地这些设计必备协议和基础设计模式是什么"&gt;落地这些设计，必备协议和基础设计模式是什么&lt;/h2&gt;
-&lt;p&gt;这一节是完成上面设计的“最小必需品”。需要从协议、设计模式角度考虑引入哪些工程实践。（好比盖摩天大楼，需要先定义好用什么材料、哪些通用的工程设计可以拿来就用、如何让建筑结构从力学上经得起时间验证）。&lt;/p&gt;
-&lt;p&gt;这些协议目前大部分由开发者按需设计实现，但是在不远的未来，很可能逐个出现标准规范。&lt;/p&gt;
-&lt;h3 id="必备协议不全就会失控"&gt;必备协议（不全就会失控）&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;消息协议（Message Protocol）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;统一描述用户消息、助手消息、工具结果。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="2"&gt;
-&lt;li&gt;事件协议（Event Protocol）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;统一描述开始、更新、结束、错误、工具执行状态。&lt;/li&gt;
-&lt;li&gt;目的：让 UI 和日志看到“过程”，不是只看到“结论”。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="3"&gt;
-&lt;li&gt;工具协议（Tool Contract）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;工具名、参数结构（Schema，字段规则）、执行返回格式必须固定。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="4"&gt;
-&lt;li&gt;流式协议（Streaming Contract）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;支持增量输出（delta，分段输出），保证用户实时反馈。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="5"&gt;
-&lt;li&gt;取消协议（Cancellation Contract）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;任意环节都应响应中止信号，避免“停不下来”。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="6"&gt;
-&lt;li&gt;错误协议（Error Contract）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;失败必须结构化（可机器处理），不能只靠字符串报错。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="需要理解的基础设计模式"&gt;需要理解的基础设计模式&lt;/h3&gt;
-&lt;p&gt;对于没有编程经验的读者，下面的一些编程基础设计模式，需要你先从其他资料中理解。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;状态机（State Machine）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;Agent 每一步都有状态转移（例如：等待输入 -&amp;gt; 生成输出 -&amp;gt; 工具执行 -&amp;gt; 回到生成）。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="2"&gt;
-&lt;li&gt;发布-订阅（Pub/Sub，发布与订阅）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;Core 发事件，UI/日志订阅事件。&lt;/li&gt;
-&lt;li&gt;好处：核心逻辑不依赖具体界面。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="3"&gt;
-&lt;li&gt;适配器（Adapter）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;把不同模型接口包装成统一调用方式。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="4"&gt;
-&lt;li&gt;策略模式（Strategy）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;重试策略、工具并发策略、压缩策略可替换。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="5"&gt;
-&lt;li&gt;管道与过滤（Pipeline）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;输入预处理 -&amp;gt; 模型调用 -&amp;gt; 工具执行 -&amp;gt; 后处理，是可插拔链路。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="6"&gt;
-&lt;li&gt;幂等与可恢复（Idempotency/Recoverability）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;同一操作重复执行不应产生灾难性副作用，失败后能恢复。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;h2 id="以-pi-agent-为例设计理念与架构"&gt;以 PI Agent 为例：设计理念与架构&lt;/h2&gt;
-&lt;p&gt;前面是“通用 Agent 框架设计”。现在落到最近很火的极简框架 &lt;a href="https://github.com/earendil-works/pi" rel="noopener noreferrer"&gt;PI Agent&lt;/a&gt;
- 。&lt;/p&gt;
-&lt;p&gt;一起来看看这个框架是如何设计 Agent 的。&lt;/p&gt;
-&lt;h3 id="设计理念"&gt;设计理念&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;内核最小化&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;Core 只负责循环、状态、事件、工具编排。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="2"&gt;
-&lt;li&gt;外围可插拔&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;模型、工具、重试、上下文处理都可替换。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="3"&gt;
-&lt;li&gt;过程优先于结果&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;先保证过程可见、可控，再追求“聪明输出”。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start="4"&gt;
-&lt;li&gt;会话优先于请求&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;把 Agent 当长期会话系统，不当单次 API 调用。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="agent-core-逻辑流程图"&gt;Agent Core 逻辑流程图&lt;/h3&gt;
-&lt;div class="mermaid"&gt;flowchart TD
- START[开始一次会话回合] --&gt; TURN[开启 turn]
- TURN --&gt; CALL[调用模型并流式接收输出]
- CALL --&gt; CHECK{输出里有工具调用?}
-
- CHECK -- 否 --&gt; STOPCHECK{是否停止?}
- CHECK -- 是 --&gt; TOOL[执行工具批次]
- TOOL --&gt; MERGE[把工具结果写回上下文]
- MERGE --&gt; STOPCHECK
-
- STOPCHECK -- 停止 --&gt; END[结束并发出结束事件]
- STOPCHECK -- 继续 --&gt; NEXT[进入下一回合]
- NEXT --&gt; TURN&lt;/div&gt;
-&lt;h3 id="agent-core-组件关系图"&gt;Agent Core 组件关系图&lt;/h3&gt;
-&lt;div class="mermaid"&gt;graph TD
- CORE[Agent Core]
- S[State 状态存储]
- L[Loop 回合循环]
- E[Events 事件发射]
- T[Tool Executor 工具执行]
- M[Model Stream 模型流调用]
- Q[Queue 消息队列: steer/followUp]
-
- CORE --&gt; S
- CORE --&gt; L
- L --&gt; M
- L --&gt; T
- L --&gt; E
- L --&gt; Q
- T --&gt; E
- M --&gt; E
- E --&gt; S&lt;/div&gt;
-&lt;p&gt;这个结构的价值是：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;交互层只看事件，不碰核心状态。&lt;/li&gt;
-&lt;li&gt;模型替换不会改循环骨架。&lt;/li&gt;
-&lt;li&gt;工具扩展不会破坏核心控制流。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
-&lt;p&gt;Agent 架构不是“让模型更聪明”，而是“让不确定的模型在可控系统里稳定工作”。&lt;/p&gt;
-&lt;p&gt;你可以把它记成这个公式：&lt;/p&gt;
-&lt;p&gt;$$
-\text{可用 Agent} = \text{模型能力} \times \text{工程控制能力}
-$$&lt;/p&gt;
-&lt;p&gt;其中工程控制能力主要来自：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;循环设计&lt;/li&gt;
-&lt;li&gt;协议设计&lt;/li&gt;
-&lt;li&gt;事件可观察性&lt;/li&gt;
-&lt;li&gt;可恢复与可扩展性&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;从目前的趋势看，这大概率将是下一代应用软件的基础范式。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;&lt;strong&gt;本文由 AI 翻译，可能存在错误&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

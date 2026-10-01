@@ -45,7 +45,10 @@
         var current = root.getAttribute('data-theme');
         var resolved;
         if (current === 'dark') {
-            root.removeAttribute('data-theme');
+            // Explicitly set 'light' rather than removing the attribute:
+            // the CSS uses `:root:not([data-theme])` to follow the system
+            // preference, so removing it would leave dark-mode users stuck.
+            root.setAttribute('data-theme', 'light');
             resolved = 'light';
         } else if (current === 'light') {
             root.setAttribute('data-theme', 'dark');

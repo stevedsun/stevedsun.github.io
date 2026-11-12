@@ -2,7 +2,7 @@
 title: "Steve Sun"
 ---
 
-![](https://raw.githubusercontent.com/stevedsun/blog-img/main/home-header-900x383.png)
+{{< ascii-vortex >}}
 
 - Deconstruct complex problems.
 - Write about good software design taste.

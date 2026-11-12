@@ -1,0 +1,134 @@
+{{- /*
+  ASCII 游鱼动画 —— 首页头图。
+  纯 JS 渲染到 <pre>，无外部依赖；文字用 currentColor，随主题深浅色自动适配。
+  尊重 prefers-reduced-motion：只渲染一帧静态画面。
+*/ -}}
+<pre id="ascii-fish" class="ascii-fish" aria-hidden="true"></pre>
+<style>
+.ascii-fish {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.15;
+  text-align: center;
+  overflow: hidden;
+  margin: 0 auto 1em;
+  user-select: none;
+}
+@media (max-width: 600px) {
+  .ascii-fish { font-size: 7px; }
+}
+</style>
+<script>
+(function () {
+  var el = document.getElementById('ascii-fish');
+  if (!el) return;
+
+  var COLS = 84, ROWS = 20, SURFACE = 3;
+
+  /* 鱼的两帧姿态（尾巴 { } 交替 = 摆尾），5 行高 */
+  var FISH_R = [
+    ["        ____    ", "     .-'    '-. ", " }  /   o      >", " }  \\         / ", "     '-.____.-' "],
+    ["        ____    ", "     .-'    '-. ", " {  /   o      >", " {  \\         / ", "     '-.____.-' "]
+  ];
+  var FISH_L = [
+    ["    ____        ", " .-'    '-.     ", "<      o   \\  { ", " /         \\  { ", " '-.____.-'     "],
+    ["    ____        ", " .-'    '-.     ", "<      o   \\  } ", " /         \\  } ", " '-.____.-'     "]
+  ];
+  var FLEN = 16, FH = 5;
+
+  var fishes = [
+    { y: 7, speed: 5.0, dir: 1, phase: 0.00 }
+  ];
+
+  var weeds = [
+    { x: 10, h: 3 }, { x: 38, h: 2 }, { x: 66, h: 3 }, { x: 78, h: 2 }
+  ];
+
+  var bubbles = [];
+  var last = 0, prevT = 0;
+
+  function frame(t, dt) {
+    var grid = [];
+    var x, y, i;
+    for (y = 0; y < ROWS; y++) {
+      grid.push(new Array(COLS).fill(' '));
+    }
+
+    /* 水面波浪：两行错相位的 ~ */
+    for (x = 0; x < COLS; x++) {
+      if (Math.sin(x * 0.30 + t * 2.2) > 0.1) grid[1][x] = '~';
+      if (Math.sin(x * 0.24 - t * 1.7 + 2) > 0.35) grid[2][x] = '~';
+    }
+
+    /* 水草：交替 ( ) 模拟摇曳 */
+    for (i = 0; i < weeds.length; i++) {
+      var w = weeds[i];
+      for (var k = 0; k < w.h; k++) {
+        var wy = ROWS - 1 - k;
+        var sway = Math.sin(t * 1.8 + k * 0.9 + w.x) > 0;
+        grid[wy][w.x + (sway && k > 0 ? 1 : 0)] = (k % 2 === 0) ? '(' : ')';
+      }
+    }
+
+    /* 气泡：从底部随机升起，越大越靠下 */
+    if (dt > 0) {
+      if (bubbles.length < 12 && Math.random() < 0.08) {
+        bubbles.push({ x: 4 + Math.random() * (COLS - 8), y: ROWS - 2, s: 2.5 + Math.random() * 2.5, seed: Math.random() * 6.28 });
+      }
+      for (i = bubbles.length - 1; i >= 0; i--) {
+        var b = bubbles[i];
+        b.y -= b.s * dt;
+        b.x += Math.sin(t * 3 + b.seed) * 0.15;
+        if (b.y <= SURFACE) bubbles.splice(i, 1);
+      }
+    }
+    for (i = 0; i < bubbles.length; i++) {
+      var bb = bubbles[i];
+      var bx = Math.round(bb.x), by = Math.round(bb.y);
+      if (bx >= 0 && bx < COLS && by > SURFACE && by < ROWS) {
+        var ratio = bb.y / ROWS;
+        grid[by][bx] = ratio > 0.75 ? 'O' : (ratio > 0.45 ? 'o' : '.');
+      }
+    }
+
+    /* 鱼：匀速游动 + 身体上下浮动，出界后从另一侧绕回 */
+    var span = COLS + FLEN * 2;
+    for (i = 0; i < fishes.length; i++) {
+      var f = fishes[i];
+      var xx = ((f.phase * span + f.speed * t) % span + span) % span;
+      var fx = Math.floor(f.dir > 0 ? xx - FLEN : COLS + FLEN - xx);
+      var fy = f.y + Math.round(Math.sin(t * 1.5 + i * 2) * 0.6);
+      var sprite = (f.dir > 0 ? FISH_R : FISH_L)[Math.floor(t * 5 + i * 1.3) % 2];
+      for (var r = 0; r < FH; r++) {
+        for (var c = 0; c < FLEN; c++) {
+          var px = fx + c, py = fy + r;
+          var ch = sprite[r][c];
+          if (ch !== ' ' && px >= 0 && px < COLS && py >= 0 && py < ROWS) {
+            grid[py][px] = ch;
+          }
+        }
+      }
+    }
+
+    var lines = new Array(ROWS);
+    for (y = 0; y < ROWS; y++) lines[y] = grid[y].join('');
+    el.textContent = lines.join('\n');
+  }
+
+  var qs = new URLSearchParams(location.search);
+  var fixedT = parseFloat(qs.get('t'));
+  if (!isNaN(fixedT) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    frame(isNaN(fixedT) ? 2.3 : fixedT, 0);
+    return;
+  }
+  function loop(ts) {
+    var t = ts / 1000;
+    if (ts - last > 100) {
+      frame(t, prevT ? t - prevT : 0.1);
+      last = ts; prevT = t;
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>

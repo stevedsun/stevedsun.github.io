@@ -2,7 +2,7 @@
 title: "Steve Sun"
 ---
 
-{{< ascii-vortex >}}
+{{< ascii-fish >}}
 
 - Deconstruct complex problems.
 - Write about good software design taste.

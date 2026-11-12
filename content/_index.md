@@ -2,7 +2,7 @@
 title: "Steve Sun"
 ---
 
-{{< ascii-vortex >}}
+{{< ascii-fish >}}
 
 - 拆解复杂问题。
 - 聊聊好的软件设计品味。
